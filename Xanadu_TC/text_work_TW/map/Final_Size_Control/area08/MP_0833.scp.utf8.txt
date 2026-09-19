@@ -1,0 +1,129 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1821)
+	ON_SKIP(2)
+	KAGI("d1821",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1821")
+
+	// SE再生
+	SE("SE_VOLCANO")
+
+	// ミノタウロス
+	put_monster("m00",388,13,0,0,0)
+	put_monster("m01",388,13,0,0,1)
+	// サラマンダー
+	put_monster("m02",387,13,0,0,2)
+	put_monster("m03",387,13,0,0,3)
+	put_monster("m04",387,13,0,0,4)
+	put_monster("m05",387,13,0,0,5)
+	put_monster("m06",387,13,0,0,6)
+
+set_rain_inf("EFC_HINOKO",1, 45, 15,45)
+rain(1)
+set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.60)
+raster(1,1)
+
+
+	CHECK_GAME_FLAG(825)
+	OFF_JUMP NEXT
+	INIT_SWITCH_ON("h1")
+	INIT_SWITCH_ON("h2")
+	INIT_SWITCH_ON("h3")
+	HIDE_CHR("daiza")
+
+NEXT:
+
+//鍵チェック
+//	CHECK_GAME_FLAG(801)
+//	ON_JUMP NEXT
+//	LOCK("key",2)
+//	JUMP NEXT2
+//
+//NEXT:
+//	INIT_SWITCH_ON("key")
+
+//NEXT2:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(825)
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板擋住了。")
+
+}
+
+
+
+//DEF("key")
+//RES("KEY")
+//{
+//	GAME_FLAG_ON(801)
+
+//	STOP_PC(0)
+//	CROSS_FADE(10)
+//	RESET_MAP_ROT_Y(6,1)
+//	WAIT(2)
+//	CINEMA_ON(0)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA_EX( "key", -1, -45,180,0,10,32)
+//	WAIT(60)
+	
+//	SE("SE_KEY")
+//	SWITCH_ON("key")
+//	WAIT(30)
+	
+//	CINEMA_OFF(0)
+//	CROSS_FADE(10)
+//	PERMIT_SCRIPT_CAMERA(0)
+//}
+
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1821")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1821)
+}

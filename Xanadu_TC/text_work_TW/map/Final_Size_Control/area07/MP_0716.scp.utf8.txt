@@ -1,0 +1,348 @@
+//////////////////////////////////////////////////////////////////////
+// 
+// 地下入り口サラマンダー
+//
+// room_flag
+//	0 : 
+//	1 : サラマンダーイベント
+//
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// SE再生
+	SE("SE_WIND")
+
+	// 中ボスストッパー隱し
+	INIT_SWITCH_ON("stop")
+
+	// 中ボス出現の前フリ
+	CHECK_GAME_FLAG(727)
+	ON_SKIP 1
+	stop_bgm(0,2000)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1705)
+	ON_SKIP(2)
+	KAGI("d1705",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1705")
+
+	// カギ設定
+	CHECK_GAME_FLAG(727)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1706)
+	ON_SKIP(2)
+	KAGI("d1706",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1706")
+
+
+	// フェード處理
+	CHECK_ENTRY_GATE("0716_0582")
+	OFF_JUMP NEXT3
+
+	CINEMA_OFF(0)
+
+	FADE_IN(-1)
+
+	// エリアネーム表示
+	DISP_PLACE(2)
+
+NEXT3:
+
+:END
+}
+
+RES("EXIT")
+{
+	// 中ボスで消えたＢＧＭ對策
+	CHECK_GAME_FLAG(727)
+	ON_SKIP 1
+	BGM(-1, 0, -1)
+}
+
+
+
+// ボス倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(727)
+	ON_JUMP next
+
+		STOP_PC(0)
+		WAIT(60)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("stop")
+		SWITCH_ON("stop")
+		wait(90)
+		EFC("EFC_ADD_TREASURE",0,-2.00,10.0)
+		SHOW_CHR("box")
+		WAIT(120)
+
+		bgm(-1,0,-1)
+
+	// カギ設定
+	KAGI("d1706",1)
+
+	GAME_FLAG_ON(727)
+
+//-- アニエス登場イベント --------------------------------------------
+
+	fade_out(60)
+	wait(60)
+
+	STOP_PC(0)
+	PC_WEAPON( 0,1)
+	permit_script_camera(1)
+	set_script_camera(-0.10,0.00,3.93,  -45.5,225.0,0.0, 12, 15.0)
+
+	ENTRY_CHR(00, 448)
+	PUT_CHR( 0, "Aniece",  0.04,0.00,-6.35, 0)
+
+	// グラディウス、バックラー、ローブ
+	load_npc_eqp(00,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+
+	set_pos("PC", -0.10,0.00,3.93)
+	set_deg("PC", 0)
+
+	wait(60)
+	fade_in(60)
+	wait(60)
+
+	set_skip_label("SKIP")
+
+
+//アニエス登場
+	MSG_EX("#S3#C0女人的聲音「幹得不錯嘛。」",-1,2)
+
+	set_deg("PC", 320)
+	look_chr("PC", "Aniece")
+
+	move_script_look_at(0,0,-2, 200, 1)
+	wait(60)
+
+	INIT_WALK_DST("Aniece")
+	set_walk_dst("Aniece", 0.0,0.00,-1.30)
+	walk_pos("Aniece",0,0.022)
+	wait(180)
+
+	set_deg("PC", 270)
+	look_chr("PC", "Aniece")
+
+	MSG_EX("#S3#C0阿尼艾絲「不愧是騎士啊。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「唔……」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0阿尼艾絲「……好，決定了！」",-1,2)
+
+	INIT_WALK_DST("Aniece")
+	set_walk_dst("Aniece", 0.0,0.00,-0.02)
+	walk_pos("Aniece",0,0.03)
+	wait_walk("Aniece")
+
+	set_deg("PC", 225)
+	look_chr("PC", "Aniece")
+
+	MSG_EX("#S3#C0阿尼艾絲「從現在開始，|　　　　你就是我的搭檔了。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「你的劍術加上我的直覺……|　　　　一定會是最強的獵人組合。」",-1,2)
+	wait(30)
+	look_chr("PC", "-")
+	wait(30)
+	set_deg("Aniece", 340)
+	look_chr("Aniece", "PC")
+	wait(30)
+	MSG_EX("#S3#C0阿尼艾絲「……什麼嘛，幹嘛擺出那麼困惑的表情啊？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「懂禮儀的騎士|　　　　不是不能擺出那副表情嗎。」",-1,2)
+
+	look_chr("PC", "Aniece")
+	wait(30)
+
+	MSG_EX("#S3#C0阿尼艾絲「總之，就這麼決定了。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「你去消滅魔物，|　　　　然後我去取財寶……」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「簡直就是完美的組合啊。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「請多關照，搭檔！」",-1,2)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	cross_fade(60)
+	CINEMA_OFF(0)
+
+	END
+
+SKIP:
+
+	set_deg("PC", 225)
+
+	STOP_WALK("Aniece")
+	SET_POS("Aniece",0,0,-0.02)
+	set_deg("Aniece", 340)
+	SET_MOTION("Aniece","STAND",0)
+	WAIT(30)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	cross_fade(60)
+	CINEMA_OFF(0)
+	FADE_IN(60)
+
+next:
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	//ボス倒したかどうか
+	CHECK_GAME_FLAG(727)
+	OFF_JUMP next
+
+	//開けたかどうか
+	CHECK_GAME_FLAG(751)
+	OFF_SKIP(1)
+
+	INIT_SWITCH_ON("box")
+	END
+
+next:
+	HIDE_CHR("box")
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box")
+
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 229, 0,-2,10, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99ITEM_GET","box","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(229,1)
+	GAME_FLAG_ON(751)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1705")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1705)
+}
+
+DEF("d1706")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1706)
+}
+
+
+// ----------------------------------------------------------------------------
+// 道標
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("千古迷道")
+}
+
+// ----------------------------------------------------------------------------
+// 中ボスイベントトリガー
+// ----------------------------------------------------------------------------
+
+DEF("boss")
+RES("EVENT")
+{
+	// 既に倒しているのでは
+	CHECK_GAME_FLAG(727)
+	ON_JUMP next
+
+	// 二度目に踏んでも何も出ないよ
+	CHECK_ROOM_FLAG(1)
+	ON_JUMP next
+
+	// イベント開始
+	QUAKE(0,10,60)
+	SWITCH_OFF("stop")
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	WAIT(60)
+	FOCUS_CHR("null")
+
+	// 小ボス曲
+	BGM(14,0,-1)
+
+	// サラマンダー出現
+	put_monster("m00",007,3,2,0,0)
+	QUAKE(0,10,60)
+
+	QUAKE(0,10,60)
+	WAIT(120)
+	CINEMA_OFF(0)
+
+	ROOM_FLAG_ON(1)
+
+next:
+}
+
+//////////////////////////////////////////////////////////////////////
+// アニエス
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE", "阿尼艾絲")
+
+	MSG("説起來，|竟然有那樣的魔物埋伏在這裡……")
+	MSG("呼，|我的直覺果然沒有錯。")
+
+}
+
+DEF("ITEM")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+//	GAME_FLAG_ON(725)
+}
+

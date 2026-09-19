@@ -1,0 +1,1863 @@
+// ============================================================================
+// 寺院（初期化）
+// ============================================================================
+
+
+//-- ROOM_FLAG -------------------------------------------------------
+// 0 エリック會話
+// 1 アイラ會話
+// 2 リーゼ會話
+// 3 アプサラスを選んだ
+// 4 メルクリウスを選んだ
+// 5 リーフェルトを選んだ
+// 6  ドヴォルザーク
+// 7  ガンダルチュア
+// 8  シュトゥルム
+// 9  ベアトリーチェ
+// 10 アバターラハ
+// 11 ティオバルト
+// 12 
+// 13 
+// 14 
+// 15 
+
+///////////////
+DEF("MAP")
+RES("INIT")
+{
+	ATTACH_EFC("EFC_99JIIN_KAGE","kage","POS")
+
+
+	// 店員とカウンターの關連付け
+	link_ev_pop("Liese2","Liese")
+
+	// シャルは基本的にいない
+	HIDE_CHR("Char")
+
+//--------------------------------------------------------------------
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	OFF_JUMP NEXT2
+
+	// リーゼいない
+	HIDE_CHR("Liese")
+
+	// 3800	EV 祭壇の花嫁
+	CHECK_GAME_FLAG(3800)
+	on_jump EXIST_FLEURETTE
+
+	// 3804	EV D-0-1 フローレットの回想
+	check_game_flag(3804)
+	on_jump EXIST_FLEURETTE
+
+	// 4017	0627	ポータルエリア５、中盤　街でフローレのイベント起動にも利用します
+	check_game_flag(4017)
+	on_jump NO_FLEURETTE
+
+	// フローレットにかわる
+EXIST_FLEURETTE:
+	ENTRY_CHR(0, 398)
+	PUT_CHR( 0, "Fleurette",    0.00,0.50,3.23, 180)
+	jump EXIT
+
+NO_FLEURETTE:
+	// カウンターも停止
+	HIDE_CHR("Liese2")
+	jump EXIT
+
+//--------------------------------------------------------------------
+NEXT2:
+	// EV C-11 黑き花嫁
+	CHECK_GAME_FLAG(3710)
+	OFF_JUMP NEXT
+
+	ENTRY_CHR(0, 398)
+	ENTRY_CHR(1,  36)
+	ENTRY_CHR(2,  37)
+	ENTRY_CHR(3,  38)
+	ENTRY_CHR(4,  39)
+	ENTRY_CHR(5,  40)
+	ENTRY_CHR(6,  41)
+	PUT_CHR( 0, "Fleurette",    0.00,0.70, 8.50, 180)
+	PUT_CHR( 1, "Avatarlaha",   1.35,0.25, 0.75, 240)
+	PUT_CHR( 6, "Beatrice",    -2.10,0.00,-0.70,  95)
+	PUT_CHR( 5, "Dvorak",       2.10,0.00,-0.70, 265)
+	PUT_CHR( 2, "Tiowald",     -1.35,0.25, 0.75, 120)
+	PUT_CHR( 3, "Sturm",       -2.20,0.00,-2.40,  90)
+	PUT_CHR( 4, "Gandaltua",    2.20,0.00,-2.40, 270)
+	load_npc_eqp(7,00)
+	DVORAK(0)
+
+	// リーゼいない
+	HIDE_CHR("Liese")
+	//HIDE_CHR("Liese2")
+	jump EXIT
+//--------------------------------------------------------------------
+NEXT:
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump EXIT
+	// 1		カニグモを倒したか？
+	check_game_flag( 1)
+	off_jump EXIT
+
+NO_LIESE:
+	HIDE_CHR("Liese")
+	HIDE_CHR("Liese2")
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+EXIT:
+	END
+
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// リーゼロットイベント
+
+DEF("Liese")
+
+RES("INIT")
+{
+
+	// EV 赤子を抱いた母親
+	check_game_flag(3514)
+	on_jump NEXT
+
+	jump EVENT1
+
+//--------------------------------------------------------------------
+
+NEXT:
+	jump EXIT
+
+
+//-- 赤子を抱いた母親の降靈の儀式 ------------------------------------
+
+EVENT1:
+	stop_bgm(1,1000)
+
+	ENTRY_CHR(7, 534)
+	PUT_CHR( 7, "Mother1",    0.00,0.50, 2, 00)
+	set_pos("Mother1",0,0.5,2)
+	set_deg_ex("Mother1","Liese")
+	set_deg_ex("Liese","Mother1")
+
+	STOP_PC(0)
+	set_motion("PC", "STAND",-1)
+	set_deg_ex("PC","Mother1")
+	look_chr("PC", "Mother1")
+
+//　　精靈堂に入ると、祭司リーゼが降靈の儀式を行っているムービー。
+//　　イベント專用ＮＰＣ(赤子を抱いた母親)が祭壇の前にかがんで
+//　　いて、光に包まれている。
+//　　以降、降靈の儀式イベント畫面へ。
+//　　以前あったイベントを流用します。
+//    同じカメラが續いてしまうので、こっちのは若干あっさりめにしてみました（井
+
+	set_skip_label("SKIP3")
+
+	// SE再生
+	SE("SE_EVENT_00")
+
+	set_motion("Liese","EMPTY4",0)
+	set_motion("Liese2","EMPTY1",0)
+
+	CINEMA_ON(0)
+	permit_script_camera(1)
+	set_script_camera(0.12,0.50,-4.56,  -45.5,225.0,0.0, 12, 15.0)
+	move_script_look_at(0.0,0.00,5.0, 200, 1)
+	wait(200)
+
+	fade_out(60)
+	wait(100)
+
+	permit_script_camera(1)
+	set_script_camera_ex("Liese",1, -5,200,0, 5, 40)
+	scale_script_camera( 1.2, 380, 0 )
+	fade_in(60)
+	wait(300)
+
+	cross_fade(40)
+	SET_SCRIPT_CAMERA( 0.2,0.5,1,  -60,-30,0, 6, 30 )
+	scale_script_camera( 0.8, 360, 0 )
+	wait(300)
+
+	fade_out(60)
+	wait(60)
+	STOP_ENV_SE("SE_EVENT_00", 2000)
+	wait(120)
+
+//　　儀式が終わると、基本畫面に戻して
+//　　以下のメッセージを表示。
+
+	set_pos("PC",1.24,0.50,-4.52)
+	set_motion("Liese2","STAND",0)
+	DELETE_EFC("Liese2")
+	DELETE_EFC("Liese")
+	set_motion("Liese","STAND",0)
+
+	//座り老婆と插げ替え
+	HIDE_CHR("Mother1")
+	ENTRY_CHR(8, 122)
+	PUT_CHR( 8, "Mother2",    0.00,0.50, 2, 00)
+	set_pos("Mother2",0,0.5,2)
+	set_deg_ex("Mother2","Liese")
+	LOOK_CHR("Mother2","Liese")
+	LOOK_CHR("PC","Mother2")
+
+	// BGM 戻す
+	bgm(-1, 0, -1)
+	set_script_camera_EX("Mother2",1,-45,225.0,0.0, 12, 15.0)
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲「……這樣降靈的儀式就結束了。」",-1,2)
+	MSG_EX("#S3#C0莉絲「峠片中的守護精靈|　　　已經順利地寄宿在孩子的身體裡了。」",-1,2)
+
+	LOOK_CHR("Mother2","-")
+	MSG_EX("#S3#C0母親「哦哦，小寶寶……太好了。」",-1,2)
+	MSG_EX("#S3#C0母親「莉絲大人，非常感謝您。」",-1,2)
+	set_motion("Mother2","ATTACK2",30)
+	WAIT(70)
+
+	MSG_EX("#S3#C0莉絲「不客氣……|　　　祝願孩子的身心都能健康地成長。」",-1,2)
+	MSG_EX("#S3#C0莉絲「願新的生命之光受到守護精靈的保佑。」",-1,2)
+	WAIT(30)
+
+//　　イベント後、親子が退場してプレイヤーに操作許可。
+
+	INIT_WALK_DST("Mother2")
+	set_walk_dst("Mother2", 0.07,0.50,-4.40)
+	walk_pos("Mother2",0,0.02)
+	move_script_look_at(0.0,0.00,-5.0, 200, 1)
+
+	wait_walk("Mother2")
+
+	se("SE_DOOR")
+	switch_on("Door1")
+	wait(60)
+
+	INIT_WALK_DST("Mother2")
+	set_walk_dst("Mother2", 0.07,0.50,-7.40)
+	walk_pos("Mother2",0,0.02)
+
+	fade_out(60)
+	wait(60)
+
+SKIP3:
+	// BGM 戻す
+	bgm(-1, 0, -1)
+	STOP_ENV_SE("SE_EVENT_00")
+	HIDE_CHR("Mother1")
+	HIDE_CHR("Mother2")
+	LOOK_CHR("PC","-")
+	set_pos("PC",1.24,0.50,-4.52)
+	set_motion("Liese2","STAND",0)
+	DELETE_EFC("Liese2")
+	DELETE_EFC("Liese")
+	set_motion("Liese","STAND",0)
+
+	// EV 赤子を抱いた母親
+	game_flag_on(3514)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	switch_off("Door1")
+	end
+
+EXIT:
+	END
+
+}
+
+RES("CLICK")
+{
+	MSG_EX("#S3#C0莉絲「您進到這裡來讓我很為難啊，騎士大人。」",-1,2)
+	end
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "ガーディアンの變更" //////////////////////////////////////////////////
+@change_card
+{
+//	call_shop(7)
+	call_shop(5)
+	ret
+}
+
+// "ボーナス割り振り" //////////////////////////////////////////////////
+@division_bonus
+{
+	call_shop(6)
+	ret
+}
+
+// "レベルダウン" //////////////////////////////////////////////////
+@leveldown
+{
+	CHECK_LEVEL(2)
+	OFF_JUMP NOT_LEVEL
+
+	MSG("騎士大人，|您想要重新修煉嗎……")
+	MSG("武器熟練度以外的狀態|都會回到上一次升級前的數值哦。")
+	MSG("即使這樣也沒關系嗎？")
+	SEL("#C1　下降等級　|#C2　下降等級　|還是算了")
+	check_select(0)
+	on_jump LEVEL
+
+	ret
+
+LEVEL:
+	LEVEL_DOWN(0)
+	SYS("#C2等級下降了。")
+	MSG("後退也是需要勇氣的……|騎士大人的氣魄真是了不起。")
+	ret
+
+NOT_LEVEL:
+	MSG("如果在此之上再繼續解放能力值的話，|騎士大人您自身就會崩潰了。")
+	MSG("下降等級的事情，|請您最好重新考慮一下……")
+	ret
+}
+
+
+
+
+// "カードの鑑定" ////////////////////////////////////////////////////////
+@analyze_card
+{
+	check_card(0)
+	on_jump analyze
+	
+	SYS("沒有峠片。")
+	ret
+	
+analyze:
+	call_shop(9)
+	ret
+}
+
+// "ガーディアンの閲覧" //////////////////////////////////////////////////
+@card_library
+{
+	call_shop(8)
+	ret
+}
+
+///////////////
+//-- リーゼロットの祭壇 ----------------------------------------------
+DEF("Liese2")
+RES("CLICK")
+{
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	OFF_JUMP NEXT2
+
+//-- フローレバージョン ----------------------------------------------
+
+	set_deg_ex("Fleurette","")
+	active_chr("Fleurette")
+	focus_chr("Fleurette")
+	SET_NAME("FLEURETTE","芙羅蕾特")
+
+	// 3807	TK 祭壇の花嫁後、フローレットに話しかけた
+	CHECK_GAME_FLAG(3807)
+	on_jump SelMenuF
+
+	// 3800	EV 祭壇の花嫁
+	CHECK_GAME_FLAG(3800)
+	on_jump TALK2
+
+SelMenuF:
+	SEL("#C1　想要做什麼？　|#C2對話|守護精靈的降靈|能力值分配|下降等級|取消")
+
+	check_select(0)
+	on_jump TALK2
+	check_select(1)
+	on_jump GURDIAN2
+	check_select(2)
+	on_jump BONUS2
+	check_select(3)
+	on_jump LEVEL2
+
+	jump EXIT
+
+// 會話
+TALK2:
+	call TALK_Fleurette
+	jump SelMenuF
+
+// "ガーディアンの變更"
+GURDIAN2:
+	call change_card
+	jump SelMenuF
+
+// "ボーナス"
+BONUS2:
+	call division_bonus
+	jump SelMenuF
+
+// "レベル"
+LEVEL2:
+	call leveldown
+	jump SelMenuF
+
+//-- リーゼバージョン ------------------------------------------------
+NEXT2:
+
+	set_deg_ex("Liese","")
+	active_chr("Liese")
+	focus_chr("Liese")
+	SET_NAME("LIESE","莉絲")
+//	set_motion("Liese","ATTACK1",-1)
+
+	// 初めてガーディアンカードを持ってきたときのメッセージ
+	call LIESE_CARD
+
+SelMenu:
+
+	// EV C-4 相似の二人
+	check_game_flag(3703)
+	on_jump SelMenu3
+
+//	// EV C-2 リーゼが倒れる
+//	check_game_flag(3701)
+//	on_jump SelMenu2
+
+	//3622	EV B-9e インフェルノ倒した後、リーゼと話した
+	check_game_flag(3622)
+	on_jump SelMenu2
+
+	// EV インフェルノを倒した
+	check_game_flag(4)
+	on_jump TALK
+
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump SelMenu2
+
+	// EV カニグモを倒した
+	check_game_flag(1)
+	on_jump TALK
+
+	// 3531	EV 降靈の儀式本編
+	check_game_flag(3531)
+	on_jump SelMenu2
+
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump SelMenu1
+
+	// GF[街外れの遺跡の話を聞いた]
+	CHECK_GAME_FLAG(3512)
+	ON_JUMP TALK
+
+	// TK リーゼと初めて話した
+	check_game_flag(3515)
+	off_jump TALK
+
+SelMenu1:
+//	SEL("【寺院メニュー】|#c2體のことを相談する|やめる")
+//	check_select(0)
+//	on_jump TALK
+
+	SEL("#C1　想要做什麼？　|#C2對話|能力值分配|下降等級|取消")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump BONUS
+	check_select(2)
+	on_jump LEVEL
+	jump EXIT
+
+SelMenu2:
+	SEL("#C1　想要做什麼？　|#C2對話|守護精靈的降靈|能力值分配|下降等級|取消")
+	jump SelMenuCheck
+
+SelMenu3:
+	SEL("#C1　想要做什麼？　|#C2關於奇岩城的石像|守護精靈的降靈|能力值分配|下降等級|取消")
+	jump SelMenuCheck
+
+SelMenuCheck:
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump GURDIAN
+	check_select(2)
+	on_jump BONUS
+	check_select(3)
+	on_jump LEVEL
+
+	jump EXIT
+
+
+// 會話
+TALK:
+	call TALK_Liese
+	jump SelMenu
+
+// "ガーディアンの變更"
+GURDIAN:
+	////////////////////////////////////////////////////
+	// ★05/09/10:ショップ説明スクリプトを入店時に再生
+	check_game_flag(75)
+	on_jump skip_help1
+	game_flag_on(75)
+	add_shop_script("help1")
+skip_help1:
+	////////////////////////////////////////////////////
+	call change_card
+	jump SelMenu
+
+// "ボーナス"
+BONUS:
+	////////////////////////////////////////////////////
+	// ★05/09/10:ショップ説明スクリプトを入店時に再生
+	check_game_flag(76)
+	on_jump skip_help2
+	game_flag_on(76)
+	add_shop_script("help2")
+skip_help2:
+	////////////////////////////////////////////////////
+	call division_bonus
+	jump SelMenu
+
+// "レベル"
+LEVEL:
+	call leveldown
+	jump SelMenu
+
+EXIT:
+	end
+}
+
+RES("INIT")
+{
+	// マップの回轉角度を強制變更（所要時間 1 フレームで方向 6 に回轉）
+	RESET_MAP_ROT_Y(1,1)
+}
+
+
+@LIESE_CARD
+{
+	// 3626	TK リーゼに初めてカードを渡したときのメッセージ
+	check_game_flag(3626)
+	on_jump EXIT
+
+	// デモンカッツェ
+	CHECK_GAME_FLAG(701)
+	on_jump CARD
+	// ソーサリアン
+	CHECK_GAME_FLAG(731)
+	on_jump CARD
+	// ベラドーナ
+	CHECK_GAME_FLAG(575)
+	on_jump CARD
+	// デュランダル
+	CHECK_GAME_FLAG(595)
+	on_jump CARD
+	// フリューゲル
+	CHECK_GAME_FLAG(723)
+	on_jump CARD
+	// ヴァナポルト
+	CHECK_GAME_FLAG(598)
+	on_jump CARD
+	// ツヴェルク
+	CHECK_GAME_FLAG(583)
+	on_jump CARD
+	// ガーネシア
+	CHECK_GAME_FLAG(822)
+	on_jump CARD
+	// グレイアッシュ
+	CHECK_GAME_FLAG(918)
+	on_jump CARD
+	// セルベスク
+	CHECK_GAME_FLAG(653)
+	on_jump CARD
+	// ベル・フロイデ　3639	アニエスシステム：靈藥を渡した
+	CHECK_GAME_FLAG(3639)
+	on_jump CARD
+
+	jump EXIT
+
+CARD:
+	MSG("騎士大人，這是……")
+	MSG("您好像找到|守護精靈的峠片了呢。")
+	MSG("這峠片就由我保管吧。")
+	MSG("存在這裡的守護精靈|隨時可以供您差遣。")
+	MSG("如果需要更換守護精靈的話，|請告訴我一聲。")
+
+	SYS_EX("將守護精靈峠片寄放在莉絲那裡。"-1,0X00000200)
+
+	// 3626	TK リーゼに初めてカードを渡したときのメッセージ
+	game_flag_on(3626)
+	ret
+
+EXIT:
+	ret
+
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// フローレット會話
+
+@TALK_Fleurette
+{
+	// 3800	EV 祭壇の花嫁
+	check_game_flag(3800)
+	on_jump TALK3
+
+	// 3804	EV D-0-1 フローレットの回想
+	check_game_flag(3804)
+	on_jump TALK2
+
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+TALK3:
+	// 3807	TK 祭壇の花嫁後、フローレットに話しかけた
+	check_game_flag(3807)
+	on_jump TALK3_2
+
+	SYS("將導師們的事情告訴了芙羅蕾特。")
+
+	MSG("哎，大家都……？")
+	MSG("騎士大人，等阿巴塔拉哈回來之後，|我也會馬上趕去奇岩城。")
+	MSG("馬上就是決戰了……")
+	MSG("騎士大人，請以您的力量幫助我。|這次一定要打倒加爾西斯和黑色新娘……")
+	// 3807	TK 祭壇の花嫁後、フローレットに話しかけた
+	game_flag_on(3807)
+	jump EXIT
+
+//　　☆以降、繰り返し
+TALK3_2:
+	MSG("騎士大人，等阿巴塔拉哈回來之後，|我也會馬上趕去奇岩城。")
+	MSG("馬上就是決戰了……")
+	jump EXIT
+
+TALK2:
+	MSG("騎士大人……")
+	MSG("我外出的事情，|要對七導師們保密呀。")
+	MSG("我不怎麼會説謊，|大概馬上就會被拆穿的……")
+	jump EXIT
+
+TALK1:
+	check_room_flag(2)
+	on_jump TALK1_2
+
+	MSG("雖然黑色新娘的確是我的姐姐，|但是在討伐她這點上我決不會猶豫。")
+	MSG("因為那是應該討伐的敵人……")
+	MSG("騎士大人，我和導師們|也會不遺餘力地幫助您的。")
+	MSG("把魔王和黑色新娘一起消滅吧。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　※繰り返し
+TALK1_2:
+	MSG("雖然黑色新娘的確是我的姐姐，|但是在討伐她這點上我決不會猶豫。")
+	MSG("因為那是應該討伐的敵人……")
+	jump EXIT
+
+EXIT:
+	ret
+}
+
+//////////////////////////////////////////////////////////////////////
+// リーゼ會話
+
+@TALK_Liese
+{
+//	//▼障壁消滅後
+//	check_game_flag(3710)
+//	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump TALK1_8
+
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼奇岩城出現後
+TALK6:
+	game_flag_on(3622)
+	// 3703	EV C-4 相似の二人
+	check_game_flag(3703)
+	on_jump TALK6_1
+
+	MSG("騎士大人………|奇岩城的身姿終於展現在我們面前了。")
+	MSG("在城中一定有|關於聖劍的線索。")
+	MSG("要是有什麼|進入城內的方法就好了……")
+	ret
+
+TALK6_1:
+	check_room_flag(2)
+	on_jump TALK6_2
+
+	MSG("………………………………")
+	MSG("那是…………")
+	MSG("不……對我來説什麼也……")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK6_2:
+	MSG("………………………………")
+	jump EXIT
+
+//▼インフェルノ戰後
+TALK5:
+	MSG("騎士大人，現在的您看起來非常可靠。")
+	MSG("看起來您已經完全恢復了。")
+	MSG("您一定是被聖劍選中的……")
+	MSG("我有這樣的感覺。")
+	//3622	EV B-9e インフェルノ倒した後、リーゼと話した
+	game_flag_on(3622)
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+TALK4:
+	MSG("……我有時也會眺望著湖水，|任時光流逝。")
+	MSG("我有些在意……")
+	MSG("最近一段時間，|奇岩城顯露身影的時候變多了。")
+	MSG("這是什麼預兆嗎……")
+	ret
+
+//▼トレント戰後
+TALK3:
+	// 3620	TK B-4b トレント戰後のリーゼ會話
+	check_game_flag(3620)
+	on_jump TALK3_1
+
+	MSG("騎士大人，那個王冠是……？")
+	MSG("…………我從中感覺到了非常強大的力量。")
+	MSG("光明而又黑暗……|溫暖而又冰冷……")
+	MSG("那不可思議的力量猶如光影交錯襲來……")
+	MSG("或許和奇岩城或者聖劍|有什麼關系也説不定。")
+	MSG("這個還是由騎士大人您帶在身上比較好。")
+	game_flag_on(3620)
+	jump EXIT
+
+TALK3_1:
+	check_room_flag(2)
+	on_jump TALK3_2
+
+	MSG("騎士大人……")
+	MSG("您也許知道了，|守護精靈會同宿主一同成長。")
+	MSG("您注意到遺跡裡巫女的聖像了嗎？")
+	MSG("那個雕像中的人物，|就是以前發明守護精靈降靈術的人。")
+	MSG("聖像有幫助寄宿中的|守護精靈成長的作用。")
+	MSG("如果在遺跡中找到聖像的話，|試著觸控一下看看吧。")
+	MSG("……雖然您的時間非常有限，|但是現在一步一步踏實前進更為重要。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_2:
+	MSG("騎士大人，您注意到|遺跡裡巫女的聖像了嗎？")
+	MSG("聖像有幫助寄宿中的守護精靈成長的作用。")
+	MSG("如果在遺跡中找到聖像的話，|試著觸控一下看看吧。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(2)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("騎士大人……您的身體怎麼樣了？")
+	MSG("調查已經結束，|您可以出入北邊的遺跡了。")
+	MSG("非常遺憾，|關於這次的案件一點線索也沒得到……")
+	MSG("不過從對方武技高強這點來推斷，|殺害旅行者的犯人和與您戰斗的劍士|有可能是同一個人。")
+	MSG("如果您打算探索遺跡的話，|請一定要小心謹慎。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("……寄宿在騎士大人您身上的|守護精靈是可以更換的。")
+	MSG("如果找到了守護精靈峠片，|請拿到我這裡來。")
+	MSG("各種各樣的精靈都嘗試一下吧。")
+	jump EXIT
+
+TALK1:
+	// GF[街外れの遺跡の話を聞いた]
+	CHECK_GAME_FLAG(3512)
+	ON_JUMP TALK1_3
+
+TALK1_1:
+	// TK リーゼと初めて話した
+	CHECK_GAME_FLAG(3515)
+	ON_JUMP TALK1_2
+
+	GAME_FLAG_ON(3515)
+	MSG("您是……")
+	MSG("看起來您是一名騎士，|到這個精靈堂來有什麼事嗎？")
+	MSG("…………奇岩城的線索？")
+	MSG("十分抱歉，|在北邊的遺跡剛剛發生了案件，|所以在調查結束之前禁止出入。")
+	MSG("請您耐心等待一段時間……")
+	ret
+//　　※以降、繰り返し
+
+TALK1_2:
+	MSG("十分抱歉，|在北邊的遺跡剛剛發生了案件，|所以在調查結束之前禁止出入。")
+	MSG("請您耐心等待一段時間……")
+	ret
+
+TALK1_3:
+	// TK リーゼと初めて話した
+	CHECK_GAME_FLAG(3515)
+	ON_JUMP TALK1_4
+
+	MSG("您是……")
+	MSG("我聽説有騎士和研究者|來這裡調查奇岩城的事情，|大概指的就是您吧。")
+	MSG("我是負責管理這間精靈堂的祭司。|叫我莉絲就可以了。")
+	MSG("不巧的是，|北邊的遺跡剛剛發生了不幸的案件，|所以在調查結束之前禁止進入……")
+	GAME_FLAG_ON(3515)
+
+TALK1_4:
+	CHECK_GAME_FLAG(3516)
+	ON_JUMP TALK1_5
+
+	MSG("哎……您想到鎮外的遺跡去？|為什麼要去那種地方呢……？")
+	MSG("………………………………")
+	MSG("……是因為史密斯先生啊……|他真是會給人添麻煩……")
+	MSG("…………沒辦法。")
+	MSG("進遺跡雖然沒什麼關系，|不過裡面已經被魔物所盤踞。")
+	MSG("請做好萬全的準備|再進行調查。")
+
+TALK1_5:
+	CHECK_MAX_ITEM(0)
+	ON_JUMP TALK1_6
+
+	MSG("那麼我這就|把遺跡大門的鑰匙給您吧。")
+
+	SE("SE_GETITEM")
+	SYS("#C2莉絲拿出『鎮外遺跡的鑰匙』。")
+	GET_ITEM(200, 1)
+	GAME_FLAG_ON(3517)
+
+	room_flag_on(2)
+	jump TALK1_8
+
+TALK1_6:
+	GAME_FLAG_ON(3516)
+	MSG("因為要給您遺跡大門的鑰匙，|所以請先整理一下行李。")
+	ret
+
+TALK1_8:
+	check_room_flag(2)
+	on_jump TALK1_9
+
+//▽遺跡の鍵を手に入れた後&&一度屋外マップに出た
+	MSG("騎士大人，探索遺跡的事情怎麼樣了？")
+	MSG("在最初階段，|升級的時候儘快將點數|分配給能力值比較好。")
+	MSG("升級之後，|請不要忘記到這間精靈堂來。")
+
+	ret
+
+TALK1_9:
+	MSG("和騎士大人您一樣|來調查奇岩城的人絡繹不絕。")
+	MSG("其中也有不少人一踏進遺跡，|就再也沒有回來。")
+	MSG("請務必小心謹慎。")
+
+
+EXIT:
+	ret
+}
+
+//////////////////////////////////////////////////////////////////////
+// エリック
+
+//精靈堂內の邪魔にならない場所へ配置|
+
+DEF("Erick")
+RES("CLICK")
+{
+	FOCUS_CHR("Erick")
+	SET_NAME("ERICK","埃裡克")
+	SET_MOTION("Erick","ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump TALK1_5
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("…………………………")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("已經開始了嗎……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("騎士大人…………")
+	MSG("…………………………")
+	MSG("不管發生什麼事情，|我們都會相信莉絲大人並跟著她走下去。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump TALK4_5
+	MSG("騎士大人，|莉絲大人剛剛出去了。")
+	MSG("我想她肯定就在城裡……")
+	jump EXIT
+//▽破魔矢イベント終了後
+TALK4_5:
+	MSG("莉絲大人已經回來了。")
+	MSG("是我多心了嗎……|今天似乎比平時回來的時間要晚……")
+	MSG("平常的話，|她會很準時地回來的啊。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("騎士大人，您的身體|已經適應守護精靈了嗎？")
+	MSG("……在身上寄宿守護精靈的風俗|從很早以前就有了。")
+	MSG("對，|比這雷蘭德建國還要久遠……")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("等級上升時如果有剩餘點數，|可以留到下次升級再分配。")
+	MSG("如果沒有必要|急著提高能力值，|將點數留到下次升級也是一種選擇。")
+	MSG("以後如果出現了需要強化的能力值，|可以用以前剩餘的點數來補充。")
+	jump EXIT
+
+//▽遺跡の鍵を手に入れた後
+TALK1_5:
+	check_room_flag(0)
+	on_jump TALK1_6
+
+	MSG("在這個精靈堂可以|將升級時得到的『點數』|分配給『能力值』。")
+	MSG("到下次升級之前，|能力值可以隨意增減。")
+	MSG("如果和敵人戰鬥時陷入苦戰，|最好重新考慮調整能力值。")
+	MSG("但是要注意，|一旦升級，|之前的能力值就不能再變更。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_6:
+	MSG("在這個精靈堂可以|將升級時得到的『點數』|分配給『能力值』。")
+	MSG("到下次升級之前，|能力值可以隨意增減。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("這裡是可以進行|『洗禮』和『降靈儀式』的精靈堂。")
+	MSG("也可以進行|『能力值』的分配和『下降等級』，|有需要時請與祭壇前的莉絲大人談話。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Erick","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// アイラ
+
+// 精靈堂內の邪魔にならない場所へ配置|
+DEF("Ira")
+RES("CLICK")
+{
+	FOCUS_CHR("Ira")
+	SET_NAME("IRA","愛拉")
+	SET_MOTION("Ira","ATTACK1",-1)
+
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump TALK1_5
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("莉絲大人…………")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("那是奇岩城……")
+	MSG("大家都被|嚇到了呢……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("如您所知，|莉絲大人是一位非常嚴厲的人。")
+	MSG("但是…………")
+	MSG("我想那正是|懐有慈悲之心才產生的嚴厲。")
+	MSG("不僅作為精靈堂的祭司，|作為一名女性來説，|莉絲大人也是非常值得尊敬的。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump TALK4_5
+	MSG("我想莉絲大人|應該是去外面散步了。")
+	MSG("這個時間|她應該在湖邊。")
+	jump EXIT
+//▽破魔矢イベント終了後
+TALK4_5:
+	MSG("據説透過在遺跡盡頭的魔粧之森，|就可以到達靈峰哈萊克山。")
+	MSG("但是聽説那座森林常使人迷失，|是很可怕的森林……")
+	MSG("願騎士大人|受到守護精靈的保護……")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("在島上的遺跡中，|也許存在著|我們還不知道的守護精靈。")
+	MSG("如果能夠寄宿在身上，|我想應該能成為值得依靠的搭檔……")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("在遺跡中仔細尋找，|應該可以找得到|封印著守護精靈的峠片。")
+	MSG("雖然那種峠片|是很久以前製作的東西，|不過一定還可以好好使用。")
+	MSG("如果找到了新的峠片，|請交給莉絲大人。")
+	jump EXIT
+
+//▽遺跡の鍵を手に入れた後
+TALK1_5:
+	check_room_flag(1)
+	on_jump TALK1_6
+
+	MSG("所謂『下降等級』正如字面的意思一樣，|就是將自己的等級下降。")
+	MSG("此時所有的能力值都會回到|上一次升級前的狀態。")
+	MSG("但是武器熟練度不會變，|而且經驗值也會保留升級必要量的50%。")
+	MSG("所以可以在|略微有利的條件下重新成長。")
+	MSG("等級可以多次下降。")
+	MSG("如果之前成長為非常極端的狀態，|想重新培養時推薦使用下降等級。")
+	room_flag_on(1)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_6:
+	MSG("所謂『下降等級』正如字面的意思一樣，|就是將自己的等級下降。")
+	MSG("此時所有的能力值都會回到|上一次升級前的狀態。")
+	MSG("但是武器熟練度不會變，|而且經驗值也會保留升級必要量的50%。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(1)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("在這個地方出生的人，|在精靈堂被賦予『守護精靈』|是一種風俗。")
+	MSG("你問守護精靈是什麼？|這個嘛……")
+	MSG("顧名思義，|就是寄宿在每個人身上守護著他的精靈。")
+	MSG("當然，|我和莉絲大人身上也有守護精靈存在。")
+	room_flag_on(1)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("守護精靈就是|寄宿在每個人身上守護著他的精靈。")
+	MSG("在這個地方出生的人，|在精靈堂被賦予『守護精靈』|是一種風俗。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Ira","STAND",-1)
+	END
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// フローレットイベント
+
+DEF("Fleurette")
+RES("INIT")
+{
+
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	ON_JUMP EXIT
+
+	// EV C-11 黑き花嫁
+	CHECK_GAME_FLAG(3710)
+	OFF_JUMP EXIT
+
+//--------------------------------------------------------------------
+
+//　　奇岩城內でリーゼロットとのイベントを終えて、精靈堂に入ると
+//　　イベント開始。精靈堂の中にはフローレットと六人の導師たちが
+//　　全員控えている。以下のような並び順。
+//　　　 祭壇
+//　　　　■
+//　　　　○フ
+//　　ア○　○テ
+//　　ベ○　○シュ
+//　　ド○　○ガ
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PC_WEAPON( 0 , 1 )
+	INIT_SWITCH_ON("Door1")
+	SET_DEG("PC", "0")
+
+	BGM(18, 0, -1)
+
+	look_chr("Beatrice","PC")
+	look_chr("Tiowald","PC")
+	look_chr("Sturm","PC")
+	look_chr("Avatarlaha","PC")
+	look_chr("Gandaltua","PC")
+	look_chr("Dvorak","PC")
+
+//初期カメラ設定
+	permit_script_camera(1)
+	set_script_camera(-0.09,0.50,-6.30,  -50,225.0,0.0, 10, 15.0)
+	fade_in(120)
+	wait(120)
+	move_script_look_at(0,0,7.0, 200, 1)
+
+//ドラスレ２本ゲットを迴避するために最初に取り引き
+	PICK_ITEM(187)
+	PICK_ITEM(188)
+	PICK_ITEM(189)
+	PICK_ITEM(190)
+	GET_ITEM(36, 1)
+
+
+	set_skip_label("SKIP")
+	wait(200)
+
+//各司祭臺詞
+	cross_fade(60)
+	set_script_camera(2,-1,0.25,  -50,225.0,0.0, 12.5, 15.0)
+	wait(60)
+
+	look_chr("PC", "Beatrice")
+	SET_MOTION("Beatrice", "ATTACK1",-1)
+	MSG_EX("#S3#C0貝亞特里奇「來了啊。」",-1,2)
+
+	look_chr("PC", "Tiowald")
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+	MSG_EX("#S3#C0提歐巴特「辛苦您了，#N0大人。」",-1,2)
+
+	look_chr("PC", "Sturm")
+	SET_MOTION("Sturm", "ATTACK1",-1)
+	MSG_EX("#S3#C0修特威爾姆「能夠打敗洛蕾萊……幹得漂亮。」",-1,2)
+
+	look_chr("PC", "Avatarlaha")
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+	MSG_EX("#S3#C0阿巴塔拉哈「請到這邊來。」",-1,2)
+
+	LOOK_CHR("PC", "")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0.00,0.00,-2.19)
+	walk_pos("PC",0,0.03)
+	wait(60)
+
+	look_chr("PC", "Gandaltua")
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「首先先讓我表達謝意。|　　　　　竟然能將奇岩城的障壁消除。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「大家都很感謝你呢。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「託你的福，|　　　　　某個魯莽的傢伙也保住了性命。」",-1,2)
+
+	look_chr("PC", "Dvorak")
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+	MSG_EX("#S3#C0德沃夏克「該怎麼説呢……那個……非常感謝。」",-1,2)
+
+	look_chr("PC", "Gandaltua")
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「你似乎在奇岩城中碰到了黑色新娘呢。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「既然這樣我就開門見山吧。|　　　　　有個人想見你。」",-1,2)
+
+	stop_bgm(0, 1000)
+	wait(30)
+
+//フローレット步いてくる
+	cross_fade(30)
+	set_script_camera(0.0,0.25,6,  -40,200,0,  10, 15.0)
+	wait(30)
+	wait_walk("PC")
+
+	BGM(03, 0, -1)
+
+	MSG_EX("#S3#C0白袍女性「初次見面，騎士大人。」",-1,2)
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", 0, 0.5, 3.23)
+	walk_pos("Fleurette",0,0.022)
+	move_script_look_at(0,0,-0.5, 80, 1)
+	look_chr("PC", "Fleurette")
+
+	SET_DEG_EX("Dvorak", "PC")
+	SET_DEG_EX("Sturm", "PC")
+	SET_DEG_EX("Avatarlaha", "PC")
+	SET_DEG_EX("Gandaltua", "PC")
+	SET_DEG_EX("Beatrice", "PC")
+	SET_DEG_EX("Tiowald", "PC")
+
+	look_chr("Beatrice","-")
+	look_chr("Tiowald","-")
+	look_chr("Sturm","-")
+	look_chr("Avatarlaha","-")
+	look_chr("Gandaltua","-")
+	look_chr("Dvorak","-")
+	wait(80)
+
+	cross_fade(30)
+	set_script_camera(0,1.4,5.3,  0,265,0,  2.5, 15.0)
+	move_script_look_at(0,0.1,-0.3, 190, 1)
+	blur(10)
+	wait(190)
+
+
+//フローレット自己紹介
+	cross_fade(30)
+	set_script_camera(0,1.8,3.23,  3,180,0, 3.5, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.9, 1000, 1)
+	set_pos("Fleurette",  0.00,0.50,3.23)
+	look_chr("Fleurette", "PC")
+	blur(0)
+	wait(120)
+	
+	MSG_EX("#S3#C0白袍女性「我是仙那度第十四王朝的第二公主……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「名叫芙羅蕾特。|　　　　　這樣我們就算認識了。」",-1,2)
+	wait(30)
+	stop_camera(0)
+
+
+//わいわいがやがや
+	cross_fade(60)
+	set_script_camera(2,-1,0.25,  -50,225.0,0.0, 12.5, 15.0)
+	wait(60)
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「哈哈，看來你很吃驚吧。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「是不是覺得在哪裡見過呢？」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0芙羅蕾特「對不起，讓您受驚了。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「莉絲洛特，不……|　　　　　黑色新娘是我的孿生姐姐。」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0剛達爾奇「還有，你調查過遺跡的話，|　　　　　也許已經知道了……」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「説到芙羅蕾特公主，|　　　　　就是打敗魔王加爾西斯的英雄對吧。」",-1,2)
+	wait(40)
+	look_chr("Fleurette", "Gandaltua")
+	MSG_EX("#S3#C0芙羅蕾特「打倒加爾西斯？」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「我？」",-1,2)
+
+	look_chr("Gandaltua","Fleurette")
+	MSG_EX("#S3#C0剛達爾奇「哈哈，我也很吃驚呢。」",-1,2)
+
+	look_chr("Dvorak","Gandaltua")
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+	MSG_EX("#S3#C0德沃夏克「不要開玩笑了，|　　　　　不覺得説這些閒話對芙羅蕾特大人很不禮貌嗎。」",-1,2)
+
+	look_chr("Gandaltua","-")
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「哦哦，好可怕啊……」",-1,2)
+	look_chr("Dvorak","-")
+
+//謎明かし。
+	cross_fade(60)
+	set_script_camera_EX("Fleurette",1,  -20,180.0,0.0, 8, 15.0)
+	look_chr("Fleurette", "PC")
+	wait(90)
+
+	MSG_EX("#S3#C0芙羅蕾特「……好像流傳下來的歷史和事實是不一樣的呢。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「的確，我曾和魔王戰鬥過，|　　　　　但是還沒有到能被稱為英雄的程度。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「請允許我把事情的經過説明一下。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「……首先，在這裡的這些人|　　　　　都是曾經伴隨我與魔王和黑色新娘戰鬥過的人。」",-1,2)
+
+	rotate_script_camera(10,0,0, 800, 1)
+
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+	MSG_EX("#S3#C0提歐巴特「我們是在仙那度任職的七導師。」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「我們的任務是和芙羅蕾特大人一起|　　　　　將魔王封印在結界中。」",-1,2)
+
+	SET_MOTION("Sturm", "ATTACK1",-1)
+	MSG_EX("#S3#C0修特威爾姆「時間要追溯到５００年以前……」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「那是發生在芙羅蕾特公主|　　　　　被選為巫女的那一天的事情。」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「突然，莉絲洛特公主將|　　　　　封印在王城中的魔王解放了出來。」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「然後，竟然宣佈要成為魔王的新娘……」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+	MSG_EX("#S3#C0芙羅蕾特「七導師中的一人，洛蕾萊……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「體弱多病的姐姐受她的唆使，|　　　　　被魔王的力量所迷惑。」",-1,2)
+
+	SET_MOTION("Beatrice", "ATTACK1",-1)
+	MSG_EX("#S3#C0貝亞特里奇「莉絲洛特公主被剝奪了身份，|　　　　　　國王立刻下達了討伐令。」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「我們為了討伐魔王和國賊黑色新娘，|　　　　　　而攻入了奇岩城……」",-1,2)
+
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+	MSG_EX("#S3#C0阿巴塔拉哈「但是，就在芙羅蕾特公主用聖劍|　　　　　　將魔王加爾西斯逼入絕境的瞬間……」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「我們不小心被黑色新娘鑚了空子，|　　　　　　被奪去了『時間』。」",-1,2)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「我們被變成散在各處的石像，|　　　　　就是因為在戰鬥中被施了法術。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「唉唉，變成那種樣子真是丟臉，|　　　　　不過也是沒辦法的事情。」",-1,2)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+	MSG_EX("#S3#C0德沃夏克「然後，那法術到現在才被解開了。」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+	MSG_EX("#S3#C0芙羅蕾特「但是，沉睡中的魔王也會被再度喚醒。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「黑色新娘想在這個國家|　　　　　也召喚來黑暗的時代。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「雖然仙那度已經毀滅了，|　　　　　但是這次一定要消滅黑色新娘和魔王。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「這正是我們在這個時代覺醒的使命。」",-1,2)
+	wait(60)
+	look_chr("Tiowald", "Fleurette")
+	MSG_EX("#S3#C0提歐巴特「………………………………」",-1,2)
+	wait(60)
+
+	wait(60)
+	cross_fade(60)
+	set_script_camera(0.00,-0.00,-0.39,  -55,10.0,0.0, 15.0, 15.0)
+	rotate_script_camera(0,-20,0, 1500, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「而且，騎士先生……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「看起來，你好象也背負著使命。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「你是在尋找聖劍屠龍劍吧。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「對於掌管封印的巫女來説有兩個任務。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「一個是以生命為代價|　　　　　將魔王加爾西斯永久封印的任務…」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「另一個，則是在必要的時候|　　　　　將聖劍交付給有資格的人。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「也就是説掌管封印的巫女|　　　　　也是要選擇聖劍繼承人的人。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「在五百年前的戰鬥中繼承者並沒有出現，|　　　　　所以我自己手持聖劍與魔王戰鬥。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「但是現在…………」",-1,2)
+
+	wait(60)
+	cross_fade(60)
+	set_script_camera_EX("Fleurette",1,  -20,180.0,0.0, 8, 15.0)
+	rotate_script_camera(10,0,0, 800, 1)
+	wait(60)
+
+	look_chr("Tiowald", "-")
+	wait(60)
+	MSG_EX("#S3#C0提歐巴特「不久前，|　　　　　天空中耀眼的三顆希琉加之星合併成了一顆……」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「自古以來，|　　　　　那就是聖劍的繼承者已經出現的證明。」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0芙羅蕾特「像你這樣擁有力量和榮譽的人|　　　　　在這個時刻出現在了我們的面前……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人，我…………」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「我選定你成為聖劍的繼承人，|　　　　　並將屠龍劍交託於你。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「再沒有什麼可説的了。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「因為你與黑色新娘有緣，|　　　　　而且有互相對抗的命運。」",-1,2)
+
+	set_deg_EX("Tiowald", "Fleurette")
+	MSG_EX("#S3#C0提歐巴特「芙羅蕾特公主，那麼……」",-1,2)
+
+	look_chr("Fleurette", "Tiowald")
+	wait(40)
+	MSG_EX("#S3#C0芙羅蕾特「嗯……」",-1,2)
+	wait(80)
+//	set_deg_EX("Fleurette", "Dvorak")
+	look_chr("Fleurette", "Dvorak")
+	MSG_EX("#S3#C0芙羅蕾特「德沃夏克，|　　　　　將『扎格琉伊勒斯』拿過來。」",-1,2)
+
+	set_deg_EX("Dvorak", "Fleurette")
+	MSG_EX("#S3#C0德沃夏克「是。」",-1,2)
+
+	look_chr("Fleurette", "PC")
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人，|　　　　　你拿著三個王冠吧？」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「把他們放到這裡……」",-1,2)
+
+	fade_out(120)
+	wait(180)
+
+
+//クラウン→ドラスレイベント。エフェクトとか動きとか諸々決めうちで======================================================
+//作ってるので、修正要望ある時は井上まで================================================================================
+//======================================================================================================================
+
+	MSG_EX("#S3#C0芙羅蕾特「雷比克、庫奧基、泰朧、|　　　　　還有扎格琉伊勒斯……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「這四個王冠是仙那度的象徵，|　　　　　也是解開聖劍封印的鑰匙。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「而且，這地方流傳著的|　　　　　在身體裡寄宿守護精靈的風俗……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「那正是利用了|　　　　　我們巫女對自己所施的法術。」",-1,2)
+
+	//邪魔なので位置變え
+	set_pos("PC",  0,0.25,-2.5)
+
+	set_pos("Avatarlaha",   2.2,0, 0.75)
+	set_pos("Tiowald",     -2.2,0, 0.75)
+	set_pos("Beatrice",    -2.2,0,-0.70)
+	set_pos("Sturm",       -2.2,0,-2.40)
+	set_pos("Dvorak",       2.2,0,-0.70)
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG_EX("Avatarlaha", "Fleurette")
+	SET_DEG_EX("Tiowald",    "Fleurette")
+	SET_DEG_EX("Beatrice",   "Fleurette")
+	SET_DEG_EX("Sturm",      "Fleurette")
+	SET_DEG_EX("Dvorak",     "Fleurette")
+	SET_DEG_EX("Gandaltua",  "Fleurette")
+
+//カメラ
+	set_script_camera(0,1.5,2,  -20,180,0, 10, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.8, 1000, 1)
+	fade_in(120)
+	SET_MOTION("Fleurette", "EMPTY4",0)
+	SET_MOTION("Ds", "EMPTY1",0)
+	SE(SE_EVENT_36)
+	MSG_EX("#S3#C0芙羅蕾特「……作為太祖忽必烈可汗的後裔，|　　　　　我芙羅蕾特在此祈願……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「太古時代狩龍獵人的英靈啊……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「顯形吧，成為在希琉加之光|引導下的使者的兵刃……」",-1,2)
+//	MSG_EX("#S3#C0フローレット「……古の盟約により、我、フローレットと|　　　　　　　開祖クーブラ・カーンの名のもとに願い奉る……」",-1,2)
+//	MSG_EX("#S3#C0フローレット「汝、姿成し、シリューガの|　　　　　　　光に導かれし使徒の干戈とならん……」",-1,2)
+
+//ここで暗轉しつつクラウンに光收束、空中で合體
+	SE(SE_EVENT_37)
+	SET_MOTION("Ds", "EMPTY2",0)
+	wait(120)
+	SET_MOTION("Ds", "EMPTY3",0)
+	wait(60)
+	SET_MOTION("Ds", "EMPTY4",0)
+	wait(110)
+	SE(SE_EVENT_38)
+	wait(60)
+	SET_MOTION("Ds", "EMPTY5",0)
+	MSG_EX("#S3#C0芙羅蕾特「出來吧，我的守護精靈……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「……屠龍劍。」",-1,2)
+
+//クラウン、ドラスレへ
+	cross_fade(30)
+	set_script_camera(0,2.3,1.5,  -10,182,0, 3.5, 15.0)
+	rotate_script_camera(0,-4,0, 500, 1)
+	DELETE_EFC("Ds")
+	SE(SE_EVENT_40)
+	SET_MOTION("Ds", "EMPTY6",0)
+	SE(SE_EVENT_39)
+	wait(250)
+//	SE(SE_EVENT_39)
+	FADE_OUT_EX( 120, 1,"0xffffffff",0)
+	wait(120)
+	STOP_ENV_SE( "SE_EVENT_36", 2000 )
+	wait(240)
+	SE(SE_EVENT_41)
+
+//ＰＣ劍を取る。
+	set_script_camera(0,1.5,-0.25,  -30,180,0, 8, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.8, 1000, 1)
+	SET_MOTION("Fleurette", "STAND",0)
+	SET_MOTION("Ds", "EMPTY7",0)
+	DELETE_EFC("Ds")
+	DELETE_EFC("Fleurette")
+	SET_DEG("Avatarlaha",-90)
+	SET_DEG("Tiowald",  90)
+	SET_DEG("Beatrice", 90)
+	SET_DEG("Sturm",  90)
+	SET_DEG("Dvorak",-90)
+	SET_DEG("Gandaltua", -90)
+	STOP_ENV_SE( "SE_EVENT_39",2000 )
+	FADE_IN_EX( 60, 1,"0xffffffff",0)
+	wait(150)
+
+	MSG_EX("#S3#C0芙羅蕾特「這就是唯一一把能夠毀滅|　　　　　魔王加爾西斯和黑色新娘的聖劍……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「騎士先生，請拿著它吧。」",-1,2)
+	wait(100)
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0,0,-0.6)
+	walk_pos("PC",0,0.03)
+	wait(120)
+	SET_MOTION("PC", "EMPTY7",40)
+	wait(30)
+	SE(SE_EVENT_42)
+	FADE_OUT_EX( 20, 1,"0xffffffff",0)
+	SCALE_SCRIPT_CAMERA( 0.3, 20, 1)
+	blur(10)
+	wait(40)
+	blur(0)
+
+	STOP_ENV_SE( "SE_EVENT_41",2000 )
+	FADE_IN_EX( 20, 1,"0xffffffff",0)
+	set_script_camera(0,1.5,-3.4,  2,-10,0,  2.6, 15)
+	rotate_script_camera(-20,30,0, 1000, 0)
+	DELETE_EFC("Ds")
+	set_pos("Ds",  0,0.25,-0.495)
+	set_pos("PC",  0,0.25,-2.85)
+
+	SET_MOTION("Ds", "EMPTY8",0)
+	SET_MOTION("PC", "EMPTY9",0)
+	wait(300)
+	wait(300)
+	fade_out(120)
+	wait(150)
+
+	// 全部の效果音を止めちゃう
+	STOP_SE(0)
+
+//=====================================================================================================
+//=====================================================================================================
+//=====================================================================================================
+//=====================================================================================================
+
+
+//ドラスレ入手後會話
+//	PICK_ITEM(187)
+//	PICK_ITEM(188)
+//	PICK_ITEM(189)
+//	PICK_ITEM(190)
+//	GET_ITEM(36, 1)
+	//いろいろ元に戻す
+	SET_MOTION("Ds", "STAND",0)
+	SET_MOTION("PC", "STAND",0)
+	DELETE_EFC("Ds")
+
+	set_pos("PC",  0,0,-0.5)
+	set_pos("Avatarlaha",   1.35,0.25, 0.75)
+	set_pos("Tiowald",     -1.35,0.25, 0.75)
+	set_pos("Beatrice",    -2.1,0,-0.70)
+	set_pos("Sturm",       -2.2,0,-2.40)
+	set_pos("Dvorak",       2.1,0,-0.70)
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG_EX("Avatarlaha", "PC")
+	SET_DEG_EX("Tiowald",    "PC")
+	SET_DEG_EX("Beatrice",   "PC")
+	SET_DEG_EX("Sturm",      "PC")
+	SET_DEG_EX("Dvorak",     "PC")
+	SET_DEG_EX("Gandaltua",  "PC")
+
+	
+
+	set_script_camera(0.0,0.25,1.5,  -40,180.0,0.0, 13, 15.0)
+	fade_in(120)
+	wait(150)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+	MSG_EX("#S3#C0德沃夏克「哦哦……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「似乎得到聖劍的承認了……|　　　　　這樣一來也説明你的身體恢復了。」",-1,2)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「現在還不是説恭喜的時候。」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+	MSG_EX("#S3#C0芙羅蕾特「黑色新娘為了迎接魔王|　　　　　應該會到奇岩城的裡面去。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人，最好趕快去追她。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「請放心，這裡的儀式|　　　　　今後全都由我芙羅蕾特來進行。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「騎士先生……祝武運亨通。」",-1,2)
+
+	BGM(-1, 0, -1)
+
+	cross_fade(80)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	game_flag_on(3711)
+	wait(60)
+	END
+
+
+SKIP:
+	//後處理
+	blur(0)
+//	PICK_ITEM(187)
+//	PICK_ITEM(188)
+//	PICK_ITEM(189)
+//	PICK_ITEM(190)
+//	GET_ITEM(36, 1)
+	DELETE_EFC("Ds")
+	DELETE_EFC("Fleurette")
+	STOP_WALK("Fleurette")
+	STOP_WALK("PC")
+
+	SET_MOTION("Ds", "STAND",0)
+	SET_MOTION("Fleurette", "STAND",0)
+	SET_MOTION("PC", "STAND",0)
+	SET_MOTION("Avatarlaha", "STAND",0)
+	SET_MOTION("Tiowald", "STAND",0)
+	SET_MOTION("Beatrice", "STAND",0)
+	SET_MOTION("Sturm", "STAND",0)
+	SET_MOTION("Dvorak", "STAND",0)
+	SET_MOTION("Gandaltua", "STAND",0)
+
+	set_pos("Fleurette",  0.00,0.50,3.23)
+	SET_DEG("Fleurette",180)
+	set_pos("PC",  0,0,-0.5)
+	SET_DEG("PC", 0)
+	set_pos("Avatarlaha",   1.35,0.25, 0.75)
+	SET_DEG("Avatarlaha",-90)
+	set_pos("Tiowald",     -1.35,0.25, 0.75)
+	SET_DEG("Tiowald",  90)
+	set_pos("Beatrice",    -2.1,0,-0.70)
+	SET_DEG("Beatrice", 90)
+	set_pos("Sturm",       -2.2,0,-2.40)
+	SET_DEG("Sturm",  90)
+	set_pos("Dvorak",       2.1,0,-0.70)
+	SET_DEG("Dvorak",-90)
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG("Gandaltua", -90)
+
+	look_chr("Fleurette", "PC")
+	look_chr("Avatarlaha", "PC")
+	look_chr("Tiowald", "PC")
+	look_chr("Beatrice", "PC")
+	look_chr("Sturm", "PC")
+	look_chr("Dvorak", "PC")
+	look_chr("Gandaltua", "PC")
+
+	STOP_SE(0)
+	BGM(-1, 0, -1)
+
+	CINEMA_OFF(0)
+	cross_fade(80)
+	permit_script_camera(0)
+	FOCUS_CHR("PC")
+	game_flag_on(3711)
+	fade_in(60)
+	wait(60)
+
+EXIT:
+END
+}
+
+RES("CLICK")
+{
+	MSG_EX("#S3#C0芙羅蕾特「如果有什麼事情請到正面來。」",-1,2)
+end
+}
+
+
+
+
+DEF("Dvorak")
+RES("CLICK")
+{
+	FOCUS_CHR("Dvorak")
+	SET_NAME("DVORAK","德沃夏克")
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+
+	check_room_flag(6)
+	on_jump TALK2
+
+	MSG("騎士啊，你成長了不少……")
+	MSG("沒想到|會發生這樣的情況……")
+	MSG("也並非完全沒有料到……|只不過也來得太早了。")
+	MSG("你是為了什麼而戰斗的呢……")
+	MSG("真希望有一天能夠|一邊和你對飲一邊聊天啊。")
+	room_flag_on(6)
+	jump EXIT
+
+//　　※繰り返し
+TALK2:
+	MSG("騎士啊，你成長了不少……")
+	MSG("沒想到|會發生這樣的情況……")
+
+EXIT:
+	SET_MOTION("Dvorak","STAND",-1)
+	END
+}
+
+DEF("Gandaltua")
+RES("CLICK")
+{
+	FOCUS_CHR("Gandaltua")
+	SET_NAME("GANDALTUA","剛達爾奇")
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+
+	check_room_flag(7)
+	on_jump TALK2
+
+	MSG("馬上就要開始決戰了啊……")
+	MSG("我們也打算|跟在你後面進入奇岩城。")
+	MSG("至少能不扯你的後腿，|給你提供一些幫助。")
+	room_flag_on(7)
+	jump EXIT
+
+//　　※繰り返し
+TALK2:
+	MSG("我們也打算|跟在你後面進入奇岩城。")
+	MSG("至少能不扯你的後腿，|給你提供一些幫助。")
+
+EXIT:
+	SET_MOTION("Gandaltua","STAND",-1)
+	END
+}
+
+DEF("Sturm")
+RES("CLICK")
+{
+	FOCUS_CHR("Sturm")
+	SET_NAME("STURM","修特威爾姆")
+	SET_MOTION("Sturm", "ATTACK1",-1)
+	MSG("離魔王復活應該沒剩多少時間了……")
+	MSG("最好快一點行動……")
+
+EXIT:
+	SET_MOTION("Sturm","STAND",-1)
+	END
+}
+
+DEF("Beatrice")
+RES("CLICK")
+{
+	FOCUS_CHR("Beatrice")
+	SET_NAME("BEATRICE","貝亞特里奇")
+	SET_MOTION("Beatrice", "ATTACK1",-1)
+	MSG("這還是約裡頓王時代之後|聖劍勇者首次出現……")
+	MSG("説不定可以做到……|這次一定要把加爾西斯和黑色新娘給……")
+
+EXIT:
+	SET_MOTION("Beatrice","STAND",-1)
+	END
+}
+
+DEF("Avatarlaha")
+RES("CLICK")
+{
+	FOCUS_CHR("Avatarlaha")
+	SET_NAME("AVATARLAHA","阿巴塔拉哈")
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+	MSG("騎士大人，魔王加爾西斯的城堡|奇岩城是個相當大的建築物。")
+	MSG("請做好充分準備。")
+
+EXIT:
+	SET_MOTION("Avatarlaha","STAND",-1)
+	END
+}
+
+DEF("Tiowald")
+RES("CLICK")
+{
+	FOCUS_CHR("Tiowald")
+	SET_NAME("TIOWALD","提歐巴特")
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+	MSG("在奇岩城中有一座巨大的塔。")
+	MSG("恐怕魔王加爾西斯|就沉睡在那座塔的頂層。")
+	MSG("呵呵，走到這裡真不容易啊。")
+
+EXIT:
+	SET_MOTION("Tiowald","STAND",-1)
+	END
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 初入店時HELPメッセージ（ガーディアン降靈編）
+@help1
+{
+	MSG_EX("#W0　",70,0X00000002)
+	SYS_EX("#F0#C2關於【守護精靈的降靈】",-1,0X20000400)
+	SYS_EX("#F0#C2可以在精靈堂更換守護精靈。",-1,0X20000400)
+	SYS_EX("#F0#C2請在畫面左下角的守護精靈一覧表中|點撃需要降靈的守護精靈。",-1,0X20000400)
+	SYS_EX("#F0#C2更換守護精靈的次數不限。",-1,0X20000400)
+}
+
+//////////////////////////////////////////////////////////////////////
+// 初入店時HELPメッセージ（ボーナス割り振り編）
+@help2
+{
+	MSG_EX("#W0　",70,0X00000002)
+	SYS_EX("#F0#C2關於【點數的分配】",-1,0X20000400)
+	SYS_EX("#F0#C2在精靈堂可以用等級上升時得到的點數|增加各項能力值。",-1,0X20000400)
+	SYS_EX("#F0#C2請用＋／－鍵設定分配的點數，|用ACCEPT鍵確定。",-1,0X20000400)
+	SYS_EX("#F0#C2分配過的點數可以在下次升級之前|重新調整。",-1,0X20000400)
+}

@@ -1,0 +1,431 @@
+// ==========================================================================
+// 祠入り口、ガンダルチュアの石像あり
+// ==========================================================================
+//
+// ROOM_FLAG
+//	0 シュトゥルム
+//
+
+// ----------------------------------------------------------------------------
+// マップ                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// SE再生
+	SE("SE_BIRD")
+
+	CHECK_ENTRY_GATE("0790_09c6")
+	OFF_JUMP NEXT2
+	DISP_PLACE(2)
+
+//-- 城が出現後 ------------------------------------------------------
+NEXT2:
+//	// EV C-3 奇岩城出現
+//	check_game_flag(3702)
+//	off_jump NEXT
+	// TK シャルと城が現れたことについて話す
+	check_game_flag(3723)
+	off_jump NEXT
+
+	HIDE_CHR("Aniece")
+	HIDE_CHR("Light")
+	LOAD_MAP("MP_0756")
+	LOAD_HITMAP("MP_0756h")
+
+	HIDE_CHR("hana1")
+	HIDE_CHR("hana2")
+	HIDE_CHR("hana3")
+	HIDE_CHR("kusa1")
+	HIDE_CHR("kusa2")
+	HIDE_CHR("kusa3")
+
+	// 3705	EV C-6 ドヴォルザーク
+	check_game_flag(3705)
+	on_jump EXIT
+
+	STOP_PC(0)
+	CANCEL_PC_WARP(0)
+	set_motion("PC", "STAND",-1)
+	ENTRY_CHR(0, 40)
+	ENTRY_CHR(1, 38)
+	PUT_CHR( 0, "Dvorak",  -3.31,0.13,-0.03, 104)
+	PUT_CHR( 1, "Sturm",   2.96,0.13,-0.07, 271)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+NEXT:
+	set_rain_inf("EFC_HINOKO4",1, 45, 15,30)
+	rain(1)
+
+//--------------------------------------------------------------------
+
+	HIDE_CHR("Aniece")
+
+	// EV B-1 聖劍の探索へ(シャルとの會話)
+	check_game_flag(3600)
+	off_jump EXIT
+	// 3601	EV B-2 ガンダルチュア前(アニエスとの會話)
+	check_game_flag(3601)
+	off_jump EV_Aniece
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+EV_Aniece:
+	// アニエス初期座標
+	SHOW_CHR("Aniece")
+	set_pos("Aniece", -1.88,0.13,-1.12)
+	set_deg("Aniece", 45.0)
+
+	// グラディウス、バックラー、ローブ
+	load_npc_eqp(00,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+
+	// EV B-2 ガンダルチュア前(アニエスとの會話)
+	check_game_flag(3601)
+	on_jump EXIT
+
+	fade_out(0)
+	stop_bgm(1,2000)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// アニエス
+
+DEF("Aniece")
+
+RES("INIT")
+{
+	// EV B-1 聖劍の探索へ(シャルとの會話)
+	check_game_flag(3600)
+	off_jump EXIT
+	// EV B-2 ガンダルチュア前(アニエスとの會話)
+	check_game_flag(3601)
+	off_jump EV_Aniece
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+EV_Aniece:
+
+//▼北の遺跡・祠のガンダルチュア前
+
+	STOP_PC(0)
+	set_motion("PC", "STAND",-1)
+	CINEMA_ON(0)
+
+//初期カメラ
+	permit_script_camera(1)
+	set_script_camera(-1.00,3.0,-0.01,  -10.5,270.0,0.0, 15, 20.0)
+
+//　　マップに入ったら、イベント開始。
+//　　ガンダルチュアの石像前でアニエスが物思いにふけっている。
+
+	fade_in(120)
+	move_script_look_at(4,-1.5,0, 600, 1)
+	PC_WEAPON(0,1)
+	wait(120)
+	
+
+	set_skip_label("SKIP")
+
+	MSG_EX("#S3#C0高傲的女性「猶如時間停止一般的寂靜中|　　　　　　卻能感覺到強有力的脈搏的這種表現力……」",-1,2)
+	MSG_EX("#S3#C0高傲的女性「就像一觸即發的樣子。」",-1,2)
+	wait(60)
+
+//	石像を丹念に見やるアニー
+	cross_fade(80)
+	set_script_camera(1.15,1.25,-0.75,  -13,210,0,  3.65, 15)
+	rotate_script_camera( -10,-30,0,2000,0)
+	move_script_look_at( 0,0.2,0, 2000, 0)
+	set_deg("Aniece", 90)
+	set_pos("Aniece",1.15,0.125,-1)
+	set_motion("Aniece", "EMPTY19",0)
+	wait(400)
+	set_motion("Aniece", "EMPTY18",0)
+	MSG_EX("#S3#C0高傲的女性「如果是仙那度時期的物品，|　　　　　　作為美術品的價值是很高的……」",-1,2)
+	MSG_EX("#S3#C0高傲的女性「不過可惜拿不回去啊。」",-1,2)
+	WAIT(90)
+
+//	PCの足音、轉ぶアニエス
+	se("SE_FOOT_C")
+	wait(5)
+	se("SE_FOOT_C")
+	wait(30)
+	set_motion("Aniece", "EMPTY17",4)
+	WAIT(35)
+	set_motion("Aniece", "EMPTY13",5)
+	MSG_EX("#S3#C0高傲的女性「誰！？」",-1,2)
+	set_motion("Aniece", "EMPTY14",5)
+	WAIT(50)
+	fade_out(30)
+	MSG_EX("#S3#C0高傲的女性「……啊！」",-1,2)
+	wait(5)
+
+//　　起き上がって會話
+	WAIT(90)
+	BGM( 18, 1, 1000 )
+	set_script_camera(-1.00,1.0,-1.1,  -10.5,290.0,0.0, 9, 20.0)
+	SCALE_SCRIPT_CAMERA( 0.9, 2000, 1)
+		set_motion("Aniece", "EMPTY16",0)
+		set_pos("Aniece",1.0,0.125,-1.1)
+		set_deg("Aniece", 270)
+	fade_in(90)
+		set_pos("PC", -10.03,0.00,-0.02)
+		set_deg("PC", 90.0)
+		INIT_WALK_DST("PC")
+		set_walk_dst("PC", -6.02,0.00,-0.02)
+		walk_pos("PC",0,0.022)
+		wait_walk("PC")
+	MSG_EX("#S3#C0高傲的女性「疼疼疼……」",-1,2)
+	set_motion("Aniece", "EMPTY15",15)
+	WAIT(60)
+	MSG_EX("#S3#C0高傲的女性「不要嚇我啊！」",-1,2)
+	MSG_EX("#S3#C0高傲的女性「哎，你是……？」",-1,2)
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG_EX("#S3#C0高傲的女性「……騎士？」",-1,2)
+	MSG_EX("#S3#C0高傲的女性「唔……真是了不起啊。」",-1,2)
+	MSG_EX("#S3#C0高傲的女性「我名叫阿尼艾絲。|　　　　　　盜賊兼財寶獵人。」",-1,2)
+	WAIT(30)
+
+//更に會話
+	cross_fade(30)
+	set_script_camera(-1.00,3.0,-0.01,  -10.5,270.0,0.0, 15, 20.0)
+	WAIT(30)
+	MSG_EX("#S3#C0阿尼艾絲「……你那種眼神是什麼呀？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「話雖如此，|　　　　不可能所有的人都像你一樣那麼出色。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「首先，|　　　　這個世界根本不可能這麼公平。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「那，優秀的騎士大人|　　　　來這種地方到底要幹什麼呢？」",-1,2)
+
+	set_motion("Aniece", "EMPTY20",-1)
+
+	MSG_EX("#S3#C0阿尼艾絲「……奇岩城！？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「好大的口氣啊……」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「只憑精湛的劍術，|　　　　可是到不了那座城堡的。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「因為這個島上的遺跡|　　　　連我都感到很棘手。」",-1,2)
+
+	// 3615	EV B-2c 圓盤扉を調べた
+	CHECK_GAME_FLAG(3615)
+	ON_JUMP EV_Looked_Door
+
+	// 圓盤扉を見ていない
+	MSG_EX("#S3#C0阿尼艾絲「這道門用鑰匙也打不開，|　　　　我正感到為難呢。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「上面有個圓洞的門……|　　　　到底怎麼才能開啟呢？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「我想應該有什麼東西可以作為鑰匙，|　　　　那會是什麼東西呢……嗯～……」",-1,2)
+
+	jump EV_END
+
+EV_Looked_Door:
+
+	// すでに圓盤扉を見ている
+	MSG_EX("#S3#C0阿尼艾絲「這道門用鑰匙也打不開，|　　　　我正感到為難呢。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「不過現在我已經把謎題解開了。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「用我剛才得到的圓盤式的鑰匙|　　　　應該就能夠開啟了。」",-1,2)
+
+//後處理
+EV_END:
+	focus_chr("PC")
+	reset_map_rot_y(2,0)
+
+	cross_fade(60)
+	set_script_camera_EX("PC",0,-35,270,0.0, 20, 15.0)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 0, 1000)
+	wait(60)
+
+	// EV B-2 ガンダルチュア前(アニエスとの會話)フラグオン
+	game_flag_on(3601)
+
+EXIT:
+	end
+
+SKIP:
+	//各キャラの位置を指定の位置へ
+	set_motion("Aniece", "STAND",-1)
+	set_pos("Aniece",1.0,0.125,-1.1)
+	set_deg("Aniece", 270)
+	STOP_WALK("PC")
+	set_pos("PC", -6.02,0.00,-0.02)
+	set_deg("PC", 90)
+	reset_map_rot_y(2,0)
+	CROSS_FADE(60)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 0, 1000)
+
+	// 3615	EV B-2c 圓盤扉を調べた
+	CHECK_GAME_FLAG(3615)
+	OFF_JUMP EV_NO_LOOK
+
+EV_NO_LOOK:
+	// EV B-2 ガンダルチュア前(アニエスとの會話)
+	game_flag_on(3601)
+	focus_chr("PC")
+	fade_in(60)
+	wait(60)
+	END
+
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE", "阿尼艾絲")
+	SET_MOTION("Aniece", "EMPTY20",-1)
+
+	// 3615	EV B-2c 圓盤扉を調べた
+	CHECK_GAME_FLAG(3615)
+	OFF_JUMP TALK1
+
+	MSG("普通鑰匙打不開的門之謎|終於解開了。")
+	MSG("用你剛剛得到的|那個圓盤一樣的鑰匙就可以開啟了。")
+	jump EXIT
+
+TALK1:
+	MSG("那扇有個圓洞的門……|到底怎麼才能開啟呢？")
+	MSG("説起來，|你從寶箱中得到過一個圓形的石板吧……")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Aniece","STAND",-1)
+	END
+}
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザークとシュトゥルム
+
+DEF("Sturm")
+RES("INIT")
+{
+	// EV C-3 奇岩城出現
+	check_game_flag(3702)
+	off_jump EXIT
+
+	// 3705	EV C-6 ドヴォルザーク
+	check_game_flag(3705)
+	on_jump EXIT
+
+//--------------------------------------------------------------------
+	CINEMA_ON(0)
+	STOP_PC(0)
+	set_motion("PC", "STAND",-1)
+
+	BGM( 18, 0, -1 )
+	cross_fade(60)
+
+	permit_script_camera(1)
+	set_script_camera(3.69,0.13,-0.00,  -20.0,270.0,0.0, 10, 15.0)
+	move_script_look_at(-1,0,0, 700, 1)
+
+	set_skip_label("SKIP")
+
+	MSG_EX("#S3#C0德沃夏克「修特威爾姆啊，讓開一點。」",-1,2)
+
+	MSG_EX("#S3#C0修特威爾姆「………………………………」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「奇岩城的障壁|　　　　　不可能從外面解除。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「只有透過『縫隙』|　　　　　進入城堡內部了。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「守護這裡的剛達爾奇的|　　　　　石化狀態也被解開了……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「現在應該可以從裡面的祠堂進入『縫隙』。」",-1,2)
+
+	MSG_EX("#S3#C0修特威爾姆「冷靜點……德沃夏克。」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「你不至於會忘掉|　　　　　幽禁在那裡的是誰吧……」",-1,2)
+
+	wait(60)
+
+	MSG_EX("#S3#C0德沃夏克「背叛了仙那度和我們七導師，|　　　　　造就了黑色新娘的女人，洛蕾萊……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「我知道那傢伙的力量有多強大。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「五百年前，好不容易才把那傢伙|　　　　　封印在縫隙裡的不是別人，正是我。」",-1,2)
+
+	MSG_EX("#S3#C0修特威爾姆「那麼，為什麼……」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「這不用我説你也知道吧。|　　　　　是為了及早救出公主。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「在奇岩城現身的現在，|　　　　　已經一刻也不能猶豫了。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「讓我去吧。」",-1,2)
+
+//　　ドヴォルザーク、シュトゥルムを避けて北方面へ去っていく。
+//　　シュトゥルムはそのまま。振り返ったりしない。
+
+	LOOK_CHR("Sturm","Dvorak")
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", -1.37,0.13,-1.12)
+	set_walk_dst("Dvorak",  4.03,0.13,-1.30)
+	set_walk_dst("Dvorak",  6.09,0.13,-0.58)
+	walk_pos("Dvorak",0,0.03)
+	wait(240)
+	fade_out(60)
+	wait(60)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0德沃夏克「不戰斗的人亦是弱者……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「這是我的使命，我必須要去。」",-1,2)
+
+SKIP:
+	BGM( -1, 0, -1 )
+	HIDE_CHR("Dvorak")
+	LOOK_CHR("Sturm","-")
+
+	game_flag_on(3705)
+
+	CINEMA_OFF(0)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	fade_in(60)
+
+
+EXIT:
+	end
+
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("Sturm")
+	SET_NAME("STURM", "修特威爾姆")
+	SET_MOTION("Sturm", "ATTACK1",-1)
+
+	check_room_flag(0)
+	on_jump TALK2
+
+	MSG("你…………")
+	MSG("原來如此，你是大家都在談論的那個騎士啊。")
+//	MSG("ヤツを追いかけるなら止めはせん……|それがお前の定めなのだろう。")
+	MSG("因為奇岩城的出現，|命運之輪開始轉動了……")
+	MSG("事到如今任何人都不能阻止了……")
+	room_flag_on(0)
+	end
+
+//　　※以降、繰り返し
+TALK2:
+	MSG("因為你讓奇岩城出現，|命運之輪開始轉動了……")
+	MSG("事到如今任何人都不能阻止了……")
+	end
+}
+
+
+
+//--------------------------------------------------------------------
+//--------------------------------------------------------------------

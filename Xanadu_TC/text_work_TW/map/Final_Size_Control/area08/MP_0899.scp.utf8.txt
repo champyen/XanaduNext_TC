@@ -1,0 +1,543 @@
+
+// ------------------------------------------------------------------
+// 初期狀態                                                                    
+// ------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	check_game_flag(4)
+	on_jump no_env_se
+	SE("SE_VOLCANO")
+no_env_se:
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+
+// 死神出さない
+PERMIT_DEATH(0)
+// スポット出さない
+//PERMIT_SPOT(0)
+set_rain_inf("EFC_HINOKO3",1, 45, 15,60)
+rain(1)
+set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+
+// キャラの特定サーフェイスのＺ書き込みをＯＦＦにする
+	SET_CHR_SURFACE_ATTR("ashi1","O_0822b",0)
+	SET_CHR_SURFACE_ATTR("ashi2","O_0822b",0)
+	SET_CHR_SURFACE_ATTR("ashi3","O_0822b",0)
+	SET_CHR_SURFACE_ATTR("magma","O_0815c",0)
+	SET_CHR_SURFACE_ATTR("magma","O_0815d",0)
+	SET_CHR_SURFACE_ATTR("magma","O_0815b",0)
+	SET_CHR_SURFACE_ATTR("magma","O_0815a",0)
+	SET_CHR_SURFACE_ATTR("magma","O_0815e",0)
+	SET_CHR_SURFACE_ATTR("huchi1","O_0823",0)
+	SET_CHR_SURFACE_ATTR("huchi2","O_0823",0)
+	SET_CHR_SURFACE_ATTR("huchi3","O_0823",0)
+
+// ボスがらみ -------------------------------------------------------
+
+	//とりあえず隱しとく。
+	HIDE_CHR("demo_box")
+	HIDE_CHR("box")
+	HIDE_CHR("tbox")
+	HIDE_CHR("devil")
+	CAMERA_OFF("空中戰")
+	CAMERA_OFF("地上戰")
+	CAMERA_OFF("勝利後")
+
+	//ボスを倒したかどうか
+	CHECK_GAME_FLAG(4)
+	ON_JUMP NEXT
+
+	raster(1,1)
+	GAME_FLAG_OFF(817)
+	HIDE_CHR("jimen")
+
+	END
+
+
+NEXT:
+	//ボスを倒していればマグマ關係オブジェクトとかを消し去ってしまう魔法の言葉
+	HIDE_CHR("magma")
+	HIDE_CHR("effect")
+	HIDE_CHR("ashi1")
+	HIDE_CHR("ashi2")
+	HIDE_CHR("ashi3")
+	HIDE_CHR("huchi1")
+	HIDE_CHR("huchi2")
+	HIDE_CHR("huchi3")
+	raster(1,0)
+
+//	//クラウン④をとったかどうか
+//	CHECK_GAME_FLAG(818)
+//	ON_JUMP NEXT2
+	SHOW_CHR("box")
+
+NEXT2:
+	//ラングストーンをとったかどうか
+	CHECK_GAME_FLAG(833)
+	ON_JUMP NEXT3
+	SHOW_CHR("tbox")
+
+NEXT3:
+
+	CAMERA_ON("勝利後")
+
+	END
+	
+
+}
+
+
+
+// ----------------------------------------------------------------
+// ボス登場                                                                   
+// ----------------------------------------------------------------
+DEF("START")
+RES("EVENT")
+{
+	//ボス登場デモを見たかどうか。
+	CHECK_GAME_FLAG(817)
+	ON_JUMP NEXT
+
+	CINEMA_ON(0)
+	bgm(15,0,-1)
+
+	GAME_FLAG_ON(817)
+	LOAD_HITMAP("MP_0899ch")
+
+	// PCの動きを止める
+	STOP_PC(0)
+	// マグマダメージ時の復活ポイント設定
+	set_recover_pos( 0.0, 2.0, 9.5)
+	set_recover_pos( 0.0, 2.0,-9.5)
+	set_recover_pos( 9.5, 2.0, 0.0)
+	set_recover_pos(-9.5, 2.0, 0.0)
+
+// ★NEWスキップ處理(05/02/16)
+set_skip_label("SKIP")
+
+	//足場壞す
+	WAIT(30)
+	QUAKE(0,5,300)
+	SE("SE_B3_66000")
+//	KILL_CHR("ashi3",0,0,200)
+//	SET_COLOR("huchi3",0x00000000,200,0)
+	switch_on("ashi3")
+	SET_COLOR("huchi3",0x00000000,240,0)
+	WAIT(30)
+//	KILL_CHR("ashi2",0,0,200)
+	switch_on("ashi2")
+	SET_COLOR("huchi2",0x00000000,240,0)
+	WAIT(30)
+//	KILL_CHR("ashi1",0,0,200)
+	switch_on("ashi1")
+	SET_COLOR("huchi1",0x00000000,240,0)
+	WAIT(30)
+//	LOAD_HITMAP("MP_0899ch")イベント始まったらすぐ呼ぶことに
+
+	//背中ごしカメラ
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX("devil",2, -30,-100,0, 12, 32 )
+	ROTATE_SCRIPT_CAMERA(0,30,0,240,1)
+	SHOW_CHR("devil")
+	set_motion("devil","EMPTY1")
+	SE("SE_B1_61000")
+	WAIT(120)
+	SE("SE_B3_66003")
+	WAIT(120)
+
+	//顏アップカメラ
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA_EX("devil",1, -20,80,0, 6, 14)
+	SCALE_SCRIPT_CAMERA(1.2, 180,1)
+	set_motion("devil","EMPTY1")
+	BLUR(30)
+	SLOW(1)
+
+	SE("SE_B3_66004")
+	CALL NAME
+	wait(150)
+	CALL NAME_ERASE
+	wait(30)
+
+	BLUR(0)
+	SLOW(0)
+
+	// 戰鬥用カメラ始動
+	PERMIT_SCRIPT_CAMERA(0)
+	CAMERA_ON("空中戰")
+	set_target_chr("devil")
+	FOCUS_CHR("PC")
+	RESET_MAP_ROT_Y(6,0)
+	CINEMA_OFF(0)
+	CROSS_FADE(60)
+	// ＨＰバー表示
+//	disp_hp_bar("devil")
+	// BGM變更
+//	bgm(5,0,0,0,-1)
+//	bgm(5,0,-1)
+	END
+
+
+// ★スキップボタンを押した時は一瞬で最後の狀態にしちゃう ----------------------
+SKIP:
+	// 早めの黑フェードIN
+	FADE_OUT(30)
+	WAIT(30)
+
+	CALL NAME_ERASE2
+
+	//足場壞す
+	set_motion("ashi3","HOOK")
+	set_motion("ashi2","HOOK")
+	set_motion("ashi1","HOOK")
+	SET_COLOR("huchi3",0x00000000,1,0)
+	SET_COLOR("huchi2",0x00000000,1,0)
+	SET_COLOR("huchi1",0x00000000,1,0)
+	delete_efc("ashi3")
+	delete_efc("ashi2")
+	delete_efc("ashi1")
+	//基本姿勢に戻しとく
+	SHOW_CHR("devil")
+	SET_POS("devil",0,0,0)
+	set_motion("devil","EMPTY1")
+
+	// ブラーとかOFF
+	blur(0)
+	slow(0)
+	shake(0,0)
+	STOP_SE(0)
+	// 05/09/07:環境SEまで消しちゃってたので再度再生
+	SE("SE_VOLCANO")
+
+	// 戰鬥用カメラ始動
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	CAMERA_ON("空中戰")
+	set_target_chr("devil")
+	RESET_MAP_ROT_Y(6,0)
+	cinema_off(0)
+
+	// 早めの黑フェードOUT
+	FADE_IN(30)
+	WAIT(30)
+	
+	end
+
+NEXT:
+
+}
+
+
+// マップ名--------------------------------------------------------------
+@NAME
+{
+	ENTRY_IMG(0,"BOSS04",0)
+
+	// αが'1'の時は'加算モード'なので「透明」にする時は、
+	// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+	//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+	SET_IMG( 0, 192,346, 0,  0,128,255, 64, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//	SET_IMG( 2, 192,346, 0,  0, 48,255, 48, 1, 0xff000000, 0xff000000, 1.5,1.5, 0, 1,1)
+	IMG_ON(0)
+//	IMG_ON(2)
+
+	// 發生までに'間'が欲しい場合はこんな風にします。
+//	SUSPEND_IMG(0,45)
+//	SUSPEND_IMG(2,30)
+
+	// フェードイン
+	COLOR_IMG    (0, 0xffffffff, 0xff000000, 30, 1)
+//	SCALE_IMG    (2, 1, 1,                   30, 1)
+//	COLOR_IMG_EX (2, 0xffdfffaf, 0xff000000, 30, 1, 0, 1, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 45, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE2
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 1, 1)
+//	COLOR_IMG(2, 0xff000000, 0xff000000, 1, 1)
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// ボスの設定                                                                    
+// ----------------------------------------------------------------------------
+DEF("devil")
+RES("KILL")
+{
+	// 倒したよフラグ
+	GAME_FLAG_ON(4)
+	// PCの動きを止める
+	STOP_PC(0)
+	
+	// 溶岩SE殺す
+	STOP_ENV_SE("SE_VOLCANO",1500)
+
+	set_target_chr("-")
+
+	QUAKE(0,30,20)
+	SLOW(1)
+	BLUR(50)
+	MOVE_VEC("magma", 0,2.13,0, 400)
+	MOVE_VEC("effect", 0,2.13,0, 400)
+	HIDE_CHR("effect",0,0,400)
+
+	//デビルを殺す
+	set_motion("devil","DOWN")
+	ATTACH_EFC("EFC_SPI_DEAD","devil","CTR")
+//	SE("SE_B3_67000")
+	SE("SE_B3_67002")
+	WAIT(50)
+
+	CROSS_FADE(60)
+	CINEMA_ON(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX("devil",1, -20,90,0, 8, 32 )
+	ROTATE_SCRIPT_CAMERA(0,30,0,450,1)
+	SLOW(2)
+	WAIT(250)
+	SLOW(0)
+	KILL_CHR("devil",0,1,200)
+	FADE_OUT_EX( 200, 0, ("0xffffffff"), 0)
+	WAIT(200)
+
+	CAMERA_OFF("空中戰")
+	CAMERA_OFF("地上戰")
+	CAMERA_ON("勝利後")
+
+	BLUR(0)
+	stop_bgm(0,1000)
+	WAIT(100)
+	bgm(-1,0,-1)
+
+	//カメラ指定2（マグマが消える樣を寫す）
+	FADE_IN_EX( 120, 0, ("0xffffffff"), 0)
+	SET_SCRIPT_CAMERA( 8,5,3, -50,-30,15,20, 32 )
+	MOVE_SCRIPT_LOOK_AT( 5,0,0,400,0)
+	QUAKE(0,5,400)
+	SE("SE_EVENT_12")
+//  05/09/07:KILLイベント開始時に止める事になった。
+//	STOP_ENV_SE("SE_VOLCANO",1500)
+	WAIT(120)
+	SHOW_CHR("jimen")
+	SET_COLOR("magma",0x00000000,280,1)
+	// ★05/06/22:水沒してた寶箱（ラングストーン）が浮上してくる演出を追加
+	SHOW_CHR("tbox")
+	SET_COLOR("tbox",0x00000000,0,1)
+	SET_COLOR("tbox",0xff000000,280,1)
+	WAIT(280)
+
+	//いらないものを消す
+	HIDE_CHR("magma",0,0,1)
+	raster(1,0)
+	LOAD_HITMAP("MP_0899h")
+
+	CROSS_FADE(60)
+	// 寶箱
+	SET_SCRIPT_CAMERA( 0,0.5,0,-45,90,0,15,32 )
+	SCALE_SCRIPT_CAMERA(0.95, 150,0)
+	WAIT(30)
+	EFC("EFC_ADD_TREASURE",0,0,0)
+	SHOW_CHR("box")
+//	SE("SE_BOX5")
+	WAIT(120)
+
+	// 全快！
+	refresh("PC")
+
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+	CINEMA_OFF(0)
+	INIT_SWITCH_ON("beatevilwurm")
+	
+	// 地圖表示戻す
+		enable_system_window(0,1)
+	END
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(818)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box")
+	INIT_SWITCH_ON("box")
+NEXT:
+}
+
+
+RES("CLICK")
+{
+	FADE_OUT(30)
+	WAIT(60)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "box", -2, -30,60,0, 4, 15)
+	ROTATE_SCRIPT_CAMERA( 5,20,0, 300, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,0.5,0, 300,1)
+	SET_POS("PC",1.35,0,0)
+	SET_DEG_EX("PC","box")
+	PC_WEAPON(0,1)
+//	STOP_BGM(0, 2000)
+	FADE_BGM( 0, 10, 2000)
+	WAIT(20)
+
+	//カメラ１
+	SET_MOTION("PC","OPENBOX",0)
+	SWITCH_ON("box")
+	ATTACH_EFC("EFC_99K4","box","POS")
+	FADE_IN(30)
+	WAIT(240)
+
+	//カメラ２
+	CROSS_FADE(20)
+	SET_SCRIPT_CAMERA_EX("PC", -3, -30,180,0, 4, 10)
+	ROTATE_SCRIPT_CAMERA( 5,0,0, 300, 1)
+	SCALE_SCRIPT_CAMERA( 1.05, 300,1)
+	WAIT(240)
+
+//荷物が一杯かどうかチェック。
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	GET_ITEM(190, 1)
+	GAME_FLAG_ON(818)
+
+	//後處理
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+//	HIDE_CHR("box")
+	DELETE_EFC("box")
+	PERMIT_SCRIPT_CAMERA(0)
+	SE("SE_GETITEM")
+	SYS_EX("得到【王冠雷比克】！",-1,0X00000200)
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+	END
+
+EXIT:
+	CROSS_FADE(60)
+	DELETE_EFC("box")
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(30)
+	SE("SE_ERROR")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+}
+
+
+
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(833)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+//ラングストーン
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 180, 22,-0.5,-4, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	GET_ITEM(180, 1)
+	GAME_FLAG_ON(833)
+
+	SYS_EX("得到【兩棲之石】！",-1,0X00000200)
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於特殊道具【兩棲之石】",-1,0X00000200)
+	SYS_EX("裝備上【兩棲之石】，|就可以在水中自由行動。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	//FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ストッパー
+
+DEF("EV_Stop")
+RES("EVENT")
+{
+	// まだボス倒していない
+	CHECK_GAME_FLAG(4)
+	OFF_JUMP EXIT
+
+	// もう寶箱取った
+	CHECK_GAME_FLAG(818)
+	ON_JUMP EXIT
+
+	stop_pc(0)
+	SYS("寶箱還未開啟。")
+	cross_fade(60)
+	set_pos("PC", 25.40,-0.00,-0.13)
+	set_deg("PC", 90)
+
+EXIT:
+	end
+}

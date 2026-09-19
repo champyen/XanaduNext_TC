@@ -1,0 +1,2984 @@
+
+// ----------------------------------------------------------------------------
+// マップ街外觀                                                                    
+// ----------------------------------------------------------------------------
+
+//-- ROOM_FLAG -------------------------------------------------------
+//  0 ギュンター會話
+//  1 ダーナ會話
+//  2 ゾーイ會話
+//  3 リュー會話
+//  4 パティ會話
+//  5 ダモン會話
+//  6 デボラ會話
+//  7 ロドニー會話
+//  8 アラーナ會話
+//  9 ネッド會話
+// 10 ジーン會話
+// 11 シャル會話
+//
+
+
+DEF("MAP")
+
+// マップ出るときに呼ばれる ---------------------------------------------------
+//RES("EXIT")
+//{
+//	// "地名錶示"が終わっていない可能性があるので強制消去
+//	IMG_OFF(0)
+//	IMG_OFF(1)
+//	IMG_OFF(2)
+//	IMG_OFF(3)
+//	CINEMA_OFF(0)
+//}
+
+// マップ入るときに呼ばれる ---------------------------------------------------
+RES("INIT")
+{
+	//シャルと會話用限定カメラ。イベントでグリンッってならない為だけの物です。普段は必ずオフにすること。
+	CAMERA_OFF("全體２")
+
+
+	//水マップか否か
+	CHECK_GAME_FLAG(3302)
+	OFF_SKIP(3)
+	LOAD_MAP("MP_008d")
+	HIDE_CHR("boat")
+	SKIP(1)
+
+	SE("SE_NAMI")
+
+//-- 火山0813マップ炎壁のハマリ防止用 ------------------------------------------
+	GAME_FLAG_OFF(800)
+
+
+//-- アニエスシステム初期化 ------------------------------------------
+
+	game_flag_off(3630)
+	game_flag_off(3631)
+	game_flag_off(3632)
+	game_flag_off(3633)
+	game_flag_off(3634)
+	game_flag_off(3635)
+	game_flag_off(3636)
+	game_flag_off(3637)
+
+//-- ワープの強制停止處理 --------------------------------------------
+
+	// 3603	EV B-4 トレント戰後(ドヴォルザークとの會話)
+	check_game_flag(3603)
+	off_jump NO_WARP
+	// 3623	TK B-4c トレント戰後、クラウンについてのシャルの會話
+	check_game_flag(3623)
+	off_jump WARP_STOP
+
+	// 4		インフェルノを倒したか？
+	check_game_flag(   4)
+	off_jump NO_WARP
+	// 3617	EV B-9b インフェルノ倒した後、シャルと話した
+	check_game_flag(3617)
+	off_jump WARP_STOP
+
+	jump NO_WARP
+
+WARP_STOP:
+	cancel_pc_warp(0)
+
+NO_WARP:
+
+//--------------------------------------------------------------------
+	// 3518	EV 遺跡の扉を開けた
+	CHECK_GAME_FLAG(3518)
+	OFF_JUMP CLOSE_DOOR
+
+	INIT_SWITCH_ON("t_door")
+
+CLOSE_DOOR:
+
+// 地名錶示 --------------------------------------------------------------------
+
+	// フェード處理（下記ゲート以外から來たらマップ名錶示）
+	CHECK_ENTRY_GATE("0097_0093")
+	ON_JUMP NEXT
+	CHECK_ENTRY_GATE("0097_0094")
+	ON_JUMP NEXT
+	CHECK_ENTRY_GATE("0097_0095")
+	ON_JUMP NEXT
+	CHECK_ENTRY_GATE("0097_0096")
+	ON_JUMP NEXT
+	CHECK_ENTRY_GATE("0097_009b")
+	ON_JUMP NEXT
+
+	// オープニングからきたのでなければ終了(最初からはじめていないはず) 
+	check_game_flag(3500)
+	off_jump OPEN
+	// OP すでにイベントを見ていたら終了
+	check_game_flag(3501)
+	off_jump NEXT
+
+	// INN SCROLL すでにイベントを見ていたら終了
+	check_game_flag(3531)
+	off_jump OPEN
+	check_game_flag(3532)
+	off_jump NEXT
+
+	// EV C-2 リーゼが倒れる
+	check_game_flag(3701)
+	off_jump OPEN
+	// EV C-2b リーゼが倒れて寺院から出た處理。
+	check_game_flag(3721)
+	off_jump NEXT
+
+OPEN:
+	GAME_FLAG_OFF(3000)
+
+	// エリアネーム表示
+	DISP_PLACE(0)
+
+NEXT:
+
+
+
+// NPCの初期化 ---------------------------------------------------------------
+
+	HIDE_CHR("Char")
+	HIDE_CHR("Boatman")
+
+	ENTRY_CHR( 0, 076)
+	ENTRY_CHR( 1, 069)
+	ENTRY_CHR( 2, 068)
+	ENTRY_CHR( 3, 073)
+	ENTRY_CHR( 4, 057)
+	ENTRY_CHR( 5, 070)
+	ENTRY_CHR( 6, 058)
+	ENTRY_CHR( 7, 074)
+	ENTRY_CHR( 8, 122)
+	ENTRY_CHR( 9, 468)
+	ENTRY_CHR(10, 513)
+	ENTRY_CHR(11, 071)
+	ENTRY_CHR(12, 398)
+
+	PUT_CHR( 0, "Gunter",  2.42,0.00,25.75, 181)
+	PUT_CHR( 1, "Dana",   -5.81,0.00,13.88, 143)
+	PUT_CHR( 2, "Zoe",    -4.88,0.00,14.82, 171)
+	PUT_CHR( 3, "Lew",    -4.43,0.00,10.06, 359)
+	PUT_CHR( 4, "Paty",   -3.76,0.00,11.45, 334)
+	PUT_CHR( 5, "Damon", -13.39,0.63, 9.21, 332)
+	PUT_CHR( 6, "Deborah", 11.05,-2.77,-13.82, 177)
+	PUT_CHR( 7, "Rodney", -5.81,0.00,-1.40, 174)
+	PUT_CHR( 8, "Alana",  -3.3,0.00,22.86, 347)
+	PUT_CHR( 9, "Ned",     4.89,0.00,13.04, 124)
+	PUT_CHR(10, "Jean",   -3.15,-1.00,-10.62, 173)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	off_jump POS_7
+
+	set_pos("Dana",  -0.67,-4.88,-17.80)
+	set_deg("Dana", 186)
+	set_pos("Zoe",  -1.76,-4.82,-17.51)
+	set_deg("Zoe", 157)
+	set_pos("Damon", 3.77,-3.76,-13.28)
+	set_deg("Damon", 184)
+	set_pos("Ned",   -10.15,-4.91,-18.22)
+	set_deg("Ned", 181)
+	set_pos("Lew",    2.14,-5.32,-20.73)
+	set_deg("Lew", 175)
+	set_pos("Paty",   3.33,-5.61,-20.71)
+	set_deg("Paty", 209)
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+	set_walk_range("Rodney", 3.0, 50, 90)
+	jump POS_END
+
+POS_7:
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	off_jump POS_6
+
+	set_pos("Rodney", -8.54,-4.75,-17.32)
+	set_deg("Rodney", 186)
+	set_pos("Dana",  -0.67,-4.88,-17.80)
+	set_deg("Dana", 186)
+	set_pos("Zoe",  -1.76,-4.82,-17.51)
+	set_deg("Zoe", 157)
+	set_pos("Damon", 3.77,-3.76,-13.28)
+	set_deg("Damon", 184)
+	set_pos("Ned",   -10.15,-4.91,-18.22)
+	set_deg("Ned", 181)
+	set_pos("Lew",    2.14,-5.32,-20.73)
+	set_deg("Lew", 175)
+	set_pos("Paty",   3.33,-5.61,-20.71)
+	set_deg("Paty", 209)
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+
+	// TK シャルと城が現れたことについて話す
+	check_game_flag(3723)
+	on_jump POS_END
+	SHOW_CHR("Char")
+	SET_POS("Char",  10.61,0.00,-6.30)
+	SET_DEG("Char", 168)
+
+	jump POS_END
+
+POS_6:
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	off_jump POS_5
+
+	set_pos("Ned",   -4.43,0.00,10.06)
+	set_deg("Ned", 359)
+	set_pos("Rodney",   -3.76,0.00,11.45)
+	set_deg("Rodney", 334)
+	set_pos("Lew",    7.31,-3.23,-13.10)
+	set_deg("Lew", 170)
+	set_pos("Paty",   9.06,-3.21,-14.24)
+	set_deg("Paty", 240)
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+	jump POS_END
+
+POS_5:
+	//▼カニグモ戰後
+	check_game_flag(1)
+	off_jump POS_4
+
+	set_pos("Jean",   4.06,-2.86,-8.18)
+	set_deg("Jean", 211)
+
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+	set_walk_range("Rodney", 3.0, 50, 90)
+	jump POS_END
+
+POS_4:
+	//▼トレント戰後
+	check_game_flag(3)
+	off_jump POS_3
+
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+	set_walk_range("Rodney", 3.0, 50, 90)
+	jump POS_END
+
+POS_3:
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	off_jump POS_2
+
+	set_pos("Alana",  11.05,0.00,5.52)
+	set_deg("Alana", 195)
+	set_walk_range("Rodney", 3.0, 50, 90)
+	jump POS_END
+
+POS_2:
+	//▼ゲーム開始直後
+
+	// 3514	EV 赤子を抱いた母親
+	check_game_flag(3514)
+	on_skip 1
+	hide_chr("Alana")
+
+	// EV 宿酒場のイベント(調查開始)
+	check_game_flag(3502)
+	on_skip 2
+	hide_chr("Rodney")
+	skip 1
+	set_walk_range("Rodney", 3.0, 50, 90)
+
+
+POS_END:
+
+
+
+//-- リーゼとフローレットの特殊處理 ----------------------------------
+
+	// 1		カニグモを倒したか？
+	check_game_flag( 1)
+	off_jump NO_LIESE
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump NO_LIESE
+
+	PUT_CHR(11, "Liese",   -4.82,-1.00,-13.99, 180)
+	NO_LOOK_PC("Liese")
+	look_chr("Liese","-")
+
+NO_LIESE:
+
+	// 3800	EV 祭壇の花嫁
+	CHECK_GAME_FLAG(3800)
+	on_jump NO_FLEURETTE
+
+	// 3804	EV D-0-1 フローレットの回想
+	check_game_flag(3804)
+	on_jump NO_FLEURETTE
+
+	// 4017	0627	ポータルエリア５、中盤　街でフローレのイベント起動にも利用します
+	check_game_flag(4017)
+	off_jump NO_FLEURETTE
+
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	OFF_JUMP NO_FLEURETTE
+
+	PUT_CHR(12, "Fleurette",   5.18,0.00,-2.51, 96)
+	look_chr("Fleurette","-")
+	set_pos("Alana", 7.38,0.00,-3.78)
+	set_deg_ex("Fleurette","Alana")
+	set_deg_ex("Alana","Fleurette")
+
+NO_FLEURETTE:
+
+//--------------------------------------------------------------------
+
+	// 地下道への柵は破壞されていないか？
+	CHECK_GAME_FLAG(3001)
+	OFF_SKIP(1)
+	HIDE_CHR("saku")
+
+	// カギ設定
+	CHECK_GAME_FLAG(591)
+	OFF_SKIP(6)
+	CHECK_GAME_FLAG(1519)
+	ON_SKIP(2)
+	KAGI("d1519",1)
+	SKIP(2)
+	INIT_SWITCH_ON("d1519")
+	ENABLE_EV_POP("d1519",0)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1814)
+	ON_SKIP(2)
+	KAGI("d1814",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1814")
+
+}
+
+//// 地名錶示を消す ----------------------------------------------------------
+//DEF("kesu")
+//RES("IMG")
+//{
+//	COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+//	COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+//	CINEMA_OFF(0)
+//
+//NEXT:
+//	END
+//}
+
+//====================================================================
+//====================================================================
+//====================================================================
+//== システム系 ======================================================
+//====================================================================
+//====================================================================
+//====================================================================
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1519")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1519)
+	SWITCH_ON("d1519")
+	ENABLE_EV_POP("d1519",0)
+}
+
+RES("CLICK")
+{
+//	CINEMA_ON(0)
+//	STOP_PC(0)
+	CHECK_GAME_FLAG(591)
+	ON_SKIP(4)
+	WAIT(30)
+	SYS("#C2門裡面好像有什麼東西峠住了")
+	CINEMA_OFF(0)
+	END
+
+
+
+}
+
+DEF("d1814")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1814)
+}
+
+
+// ----------------------------------------------------------------------------
+// セーブ
+// ----------------------------------------------------------------------------
+
+DEF("save")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	refresh("PC")
+	se("SE_HEAL")
+
+	SEL("　存檔嗎？　|#C2存檔|取消")
+	CHECK_SELECT(0)
+	OFF_JUMP SEL_A
+
+		CALL_SHOP(4)
+//		SE("SE_UP_PRM")
+//		SYS("#c2今までの冒險を記錄しました。")
+
+SEL_A:
+	CHECK_SELECT(1)
+
+	CINEMA_OFF(0)
+}
+
+
+// ============================================================================
+// 門(exit)
+// ============================================================================
+
+DEF("gate")
+RES("CLICK")
+{
+	// EV 降靈の儀式終了、シャルとの會話
+	check_game_flag(3532)
+	on_jump NEXT
+
+	STOP_PC(0)
+
+	ACTIVE_CHR("Gunter")
+	SET_NAME("GUNTER","門衛岡特")
+	SET_MOTION("Gunter", "ATTACK1",-1)
+
+	SET_DEG_EX("Gunter", "PC")
+
+	call TALK_Gunter
+
+EXIT:
+	SET_MOTION("Gunter","STAND",-1)
+	SET_DEG("Gunter", 180)
+	END
+
+//-- 出入り可能 ------------------------------------------------------
+NEXT:
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("　外出嗎？　|#C2外出|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SELALL_1
+	JUMP SELALL_2
+
+SELALL_1:
+	WAIT(30)
+	SHAKE(0,10)
+	SHAKE(0,10)
+	SWITCH_ON("gate")
+	WAIT(30)
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+//	GAME_FLAG_ON(3301)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0710_out")
+	END
+
+SELALL_2:
+	CINEMA_OFF(0)
+	END
+
+}
+
+//RES("INIT")
+//{
+//	CHECK_GAME_FLAG(2)
+//	ON_JUMP NEXT
+//
+//	// スキップ許可
+//	skip_enable(1)
+//
+//	// オープニングイベントへ
+//	CALL opening_event
+//
+//NEXT:
+//}
+
+
+// ============================================================================
+// 地下道入り口
+// ============================================================================
+
+DEF("gate2TEST")
+RES("CLICK")
+{
+	//↑testを付け足して無力化
+
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("#C2　外出嗎？　|外出|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL1
+	JUMP SEL2
+
+SEL1:
+	WAIT(30)
+	SHAKE(0,10)
+	SHAKE(0,10)
+
+		CHECK_GAME_FLAG(591)
+		ON_SKIP(4)
+		WAIT(30)
+	SYS("#C2門裡面好像有什麼東西峠住了")
+		CINEMA_OFF(0)
+		END
+
+	SWITCH_ON("gate2")
+	WAIT(30)
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+//	GAME_FLAG_ON(3301)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0588_0097")
+	END
+
+SEL2:
+	CINEMA_OFF(0)
+	END
+}
+
+// ============================================================================
+// 火山入り口
+// ============================================================================
+
+DEF("gate3")
+RES("CLICK")
+{
+
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+//	SEL("　#c2街から出ますか？　|　　・はい|　　・いいえ")
+	SEL("　外出嗎？　|#C2外出|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SELALL_1
+	JUMP SELALL_2
+
+SELALL_1:
+	WAIT(30)
+	SHAKE(0,10)
+	SHAKE(0,10)
+	SWITCH_ON("gate3")
+	WAIT(30)
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+//	GAME_FLAG_ON(3301)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0861_0097")
+	END
+
+SELALL_2:
+	CINEMA_OFF(0)
+	END
+
+}
+
+// ============================================================================
+// 柵
+// ============================================================================
+
+DEF("saku")
+RES("KILL")
+{
+	KILL_CHR("saku",0,0,-1)
+	GAME_FLAG_ON(3001)
+}
+
+
+
+
+
+
+//====================================================================
+//====================================================================
+//====================================================================
+//== ＮＰＣ會話 ======================================================
+//====================================================================
+//====================================================================
+//====================================================================
+
+
+//////////////////////////////////////////////////////////////////////
+// ギュンター
+
+DEF("Gunter")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Gunter")
+	SET_NAME("GUNTER","門衛岡特")
+	SET_MOTION("Gunter", "ATTACK1",-1)
+
+	call TALK_Gunter
+
+}
+
+@TALK_Gunter
+{
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("奇岩城顯現了身姿……|同時天空也被烏雲籠罩……")
+	MSG("接下來到底會發生什麼事呢？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	check_room_flag(0)
+	on_jump TALK6_2
+
+TALK6_1:
+	MSG("剛才似乎有些沒見過的陌生人|在鎮外面徘徊。")
+	MSG("……也許就是以前殺害旅行者的犯人。")
+	MSG("他們好像|去了三葉草遺跡的東邊……")
+	MSG("如果你不介意的話，|能不能幫我去看看情況？")
+	MSG("鎮上的居民還是暫時不要外出比較好。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK6_2:
+	MSG("剛才似乎有些沒見過的陌生人|在鎮外面徘徊。")
+	MSG("他們好像|去了三葉草遺跡的東邊……")
+	MSG("如果你不介意的話，|能不能幫我去看看情況？")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("是我多心嗎……|你不覺得今天出奇地安靜嗎？")
+	MSG("……似乎是有什麼事要發生的前兆。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("你見過那種|露出自己骨頭的|不死系魔物吧。")
+	MSG("打倒它們有可能得到|製作鑰匙所需要的『骨』。")
+	MSG("如果記住它們常出現的地方，|在鑰匙不足的時候就能派上用場……")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("在遺跡中可以看到|不可思議的圓形古代裝置。")
+	MSG("我記得在離這裡不遠的地方……|石像附近也有同樣的東西。")
+	MSG("那到底是用來幹什麼的呢……")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(0)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("外出請格外小心。")
+	MSG("遺跡中的道路很復雜，|會通往|各種各樣的地方。")
+	MSG("不要迷惑，|好好把握自己勇往直前。")
+	MSG("話雖如此，還是不要太勉強。")
+	MSG("如果感覺不妙，|一定要馬上回到鎮上來。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("遺跡中的道路很復雜，|會通往|各種各樣的地方。")
+	MSG("不要迷惑，|好好把握自己勇往直前。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(0)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("昨天在北邊的三葉草遺跡，|有一位男性旅客被殺害了……")
+	MSG("在這件事情平息之前，|暫時不要外出比較好。")
+	MSG("不管怎麼説，|在調查結束之前誰也不能出去。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("昨天在北邊的三葉草遺跡，|有一位男性旅客被殺害了……")
+	MSG("在這件事情平息之前，|暫時不要外出比較好。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Gunter","STAND",-1)
+	RET
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ダーナ
+
+DEF("Dana")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Dana")
+	SET_NAME("DANA","丹娜")
+	SET_MOTION("Dana", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("剛才我看到那邊|有個穿黑色裙子的女人……")
+	MSG("不過剛看到她就消失了。")
+	MSG("那個人……去了哪兒呢？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("那就是總能在湖上看到的城堡？")
+	MSG("……不知怎麼回事，|一見到實物就有種毛骨悚然的感覺。")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("喂喂，這位哥哥，|偶爾也一起去跳個舞吧？")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("呼，肚子餓了。")
+	MSG("一會兒在小酒館吃飯吧。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("我們非常喜歡這個地方。")
+	MSG("如果人能夠再多點，|來看我們跳舞的話|就好了……")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(1)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("每個人身上都寄宿著精靈，|是多麼絕妙的事情啊。")
+	MSG("在湖上出現了不可思議的城堡，|真是浪漫啊……")
+	MSG("啊～|我要是也出生在這個地方就好了。")
+	MSG("我一定要裝備|能夠讓舞跳得更好的守護精靈。")
+	room_flag_on(1)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("啊～|我要是也出生在這個地方就好了。")
+	MSG("我一定要裝備|能夠讓舞跳得更好的守護精靈。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("哎呀，這位哥哥，|真是個俊俏的男人。")
+	MSG("我們是旅行藝人。|如果可以的話請看我們跳舞吧。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Dana","STAND",-1)
+	END
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ゾーイ
+
+DEF("Zoe")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Zoe")
+	SET_NAME("ZOE","喬伊")
+	SET_MOTION("Zoe", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("丹娜是不是因為昨天熬夜，|看到了幻覺？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("城堡出現的時候，|天氣突然就變得惡劣起來了……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("阿爾科特先生|想邀請我們在旅館裡跳舞……")
+	MSG("不過我們還是喜歡在外面跳舞。")
+	MSG("因為只有和著風之歌、舞動的草、流轉的雲的舞蹈|才是我們的舞蹈。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("這樣就能在這裡，|看到大家的笑容……")
+	MSG("真是想不到，|最近發生了大規模的戰爭，|現在依然有很多人飽受其苦……")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("不只是丹娜，|我也很喜歡這個地方。")
+	MSG("又安定，又舒適……|我們再在這裡多呆些時間吧。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(2)
+	on_jump TALK2_2
+
+	MSG("林德爾湖群地區的領主|似乎因為生病已經臥床多年了。")
+	MSG("聽説是非常奇怪的病……")
+	MSG("聽説這裡能如此和平|都是這位領主的功労，|希望他能早日恢復健康……")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("林德爾湖群地區的領主|似乎因為生病已經臥床多年了。")
+	MSG("聽説這裡能如此和平|都是這位領主的功労，|希望他能早日恢復健康……")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(2)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("我們是從國外來的舞者。")
+	MSG("在多年前|我們也曾經到過這個國家……")
+	MSG("覺得這裡和那個時候比起來|荒蕪了許多啊。")
+	MSG("也許是受到騎士戰爭的影響吧……")
+	MSG("林德爾湖群地區|非常和平安定。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("聽説在王都周圍|有很多失去了家和親人的孩子。")
+	MSG("好可憐……")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Zoe","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// リュー
+
+
+DEF("Lew")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Lew")
+	SET_NAME("LEW","盧")
+	SET_MOTION("Lew", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("哥哥説進入奇岩城太亂來了，|罵了我一頓。")
+	MSG("不過，的確是個令人毛骨悚然的地方……")
+	MSG("那樣的城堡裡|真的會有屠龍劍嗎？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("真厲害……那就是奇岩城？")
+	MSG("那裡真的有|被稱為『屠龍劍』的聖劍嗎？")
+	MSG("好，我一定要去把它找出來！")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	check_room_flag(3)
+	on_jump TALK5_2
+
+TALK5_1:
+	MSG("羅德尼哥哥|捕魚和釣魚都很厲害哦。")
+	MSG("就算周圍的人都抓不到，|哥哥也總能抓到大魚。")
+	MSG("一起釣魚的時候，|我怎麼也釣不上來，|羅德尼哥哥卻一放下釣線魚就上鈎。")
+	room_flag_on(3)
+	jump EXIT
+
+//　　★繰り返し
+TALK5_2:
+	MSG("……不要打擾我哦。")
+	MSG("魚會跑掉的。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("今天玩什麼呢。")
+	MSG("我從黛博拉婆婆那裡|聽説了不死鳥的事情。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("馬上就到|去精靈堂祈禱的時間了。")
+	MSG("啊～真麻煩啊。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(3)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("有個鬍子叔叔手裡拿著像王冠一樣的東西|從地下出來，|然後就消失了！")
+	MSG("但是，別人都説沒有看到。")
+	MSG("……説不定是住在遺跡裡的幽靈？")
+	room_flag_on(3)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("我看到了住在遺跡裡的幽靈。")
+	MSG("還好聽了莉絲姐姐的話，|沒有到地下去玩……")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("哥哥，你知道嗎？|聽説在鎮裡發現了遺跡。")
+	MSG("雖然我想偷偷溜進去，|不過不知道什麼時候|入口被鎖住了。")
+	MSG("嘁，|本來想去尋找屠龍劍的。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Lew","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// パティ
+
+DEF("Paty")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Paty")
+	SET_NAME("PATY","絈蒂")
+	SET_MOTION("Paty", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("那個城堡，總覺得很可怕……")
+	MSG("還是回家待著比較好……")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("嚇了我一跳……")
+	MSG("我正在戲水，水突然退走了。")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("如果能像魚兒一樣游泳的話，|心情也會很好吧。")
+	MSG("可是我不會游泳啊……")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("不死鳥是出現在童話裡的|擁有永恒生命的鳥。")
+	MSG("它會引導拯救世界的人。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	check_room_flag(4)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("盧也真是的……")
+	MSG("一定要感謝|寄宿在自己身上的守護精靈啊。")
+	MSG("因為這是包含了|父親和母親願望的禮物。")
+	MSG("一生都要好好珍惜。")
+	room_flag_on(4)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_2:
+	MSG("一定要感謝|寄宿在自己身上的守護精靈啊。")
+	MSG("因為這是包含了|父親和母親願望的禮物。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("領主大人得了一種醒不過來的病。")
+	MSG("據説直到死亡|都不會醒過來。")
+	MSG("領主大人，真可憐……")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("初次見面，大哥哥。|你是乘剛才那條船來的？")
+	MSG("我知道了，|大哥哥也是來這裡調查奇岩城的吧？")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Paty","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ダモン
+
+DEF("Damon")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Damon")
+	SET_NAME("DAMON","達蒙")
+	SET_MOTION("Damon", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("你進過那座城是嗎？")
+	MSG("裡面到底發生了什麼事情？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("我吃驚得嘴都合不上了……")
+	MSG("這是夢還是別的什麼？")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("遺跡裡面的怪物|比以前增多了。")
+	MSG("……希望這不是|發生糟糕的事情的前兆。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	check_room_flag(5)
+	on_jump TALK4_3
+
+	MSG("這是從|我父親那裡聽説的……")
+	MSG("據説很久很久以前在伊格利特山中|棲息著巨大的火焰魔神。")
+	MSG("魔人用巨大的劍|隨意操縱火焰和熔岩。")
+	MSG("……這個哈萊克島本來就是|伊格利特山噴發形成的。")
+	MSG("也就是説火山噴火|不是那個魔神操縱的。")
+	room_flag_on(5)
+	jump EXIT
+
+//　　★繰り返し
+TALK4_3:
+	MSG("據説很久很久以前在伊格利特山中|棲息著巨大的火焰魔神。")
+	MSG("魔人用巨大的劍|隨意操縱火焰和熔岩。")
+	jump EXIT
+
+//▼トレント戰後
+TALK3:
+	// エレベータ動いた？
+	CHECK_GAME_FLAG(805)
+	on_jump TALK3_3
+
+	check_room_flag(5)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("你難道就是最近|在調查遺跡的那個騎士？")
+	MSG("如果你要去伊格利特山的話，|能不能幫我看看升降機的情況？")
+	MSG("以前可以|乘裡面的升降機上到登山口。")
+	MSG("但是由於機械出了故障，|升降機降不下來了。")
+	MSG("可惡……|這樣的話，什麼也幹不了了。")
+	room_flag_on(5)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_2:
+	MSG("如果你要去伊格利特山的話，|能不能幫我看看升降機的情況？")
+	MSG("以前可以|乘裡面的升降機上到登山口。")
+	MSG("可惡……|這樣的話，什麼也幹不了了。")
+	jump EXIT
+
+TALK3_3:
+	// 3621	TK 昇降機復歸後のダモン報酬
+	check_game_flag(3621)
+	on_jump TALK3_4
+
+	MSG("哦，升降機回來了嗎！")
+	MSG("謝謝，|這樣一來就可以繼續工作了。")
+	MSG("騎士小哥，|你也對那些火蜥蜴感到很棘手吧？")
+	MSG("不管怎麼説，|伊格利特山就像那些傢伙的巢穴一樣……")
+	MSG("總之，託你的福總算得救了。")
+	MSG("這是一點心意。|請收下吧。")
+
+//	SYS("５００Ｇ手に入れた。")
+	SE("SE_GETITEM")
+	SYS_EX("得到【500Ｇ】。",-1,0X00000200)
+
+	GET_GOLD(500)
+
+	game_flag_on(3621)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_4:
+	MSG("騎士小哥，|你也對那些火蜥蜴感到很棘手吧？")
+	MSG("不管怎麼説，|伊格利特山就像那些傢伙的巢穴一樣……")
+	jump EXIT
+//▼ガーディアン取得後
+TALK2:
+	MSG("寄宿在我身上的是|可以提高運勢的守護精靈。")
+	MSG("因為我家裡世世代代都是礦工。")
+	MSG("父親説為了能找到更多的礦石，|而給我寄宿了這種守護精靈。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("麻煩了……|升降機出故障了。")
+	MSG("這樣的話，就不能工作了啊。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Damon","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// デボラ
+
+DEF("Deborah")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Deborah")
+	SET_NAME("DEBORAH","黛博拉婆婆")
+	SET_MOTION("Deborah", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("籠罩在城堡周圍的綠色障壁|好像消失了。")
+	MSG("不知道發生了什麼事情，|但是總有一種不好的預感。")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("哦哦……老眼昏花的我|也能清楚地看到啊……")
+	MSG("那就是奇岩城吧？")
+	MSG("活了這麼長時間，|真是什麼事情都遇到了啊……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("今天湖上|也瀰漫著霧氣……")
+	MSG("等到了秋天天空就會變得晴朗，|能夠清楚地看到對岸的歐斯頓漁村呢。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	check_room_flag(6)
+	on_jump TALK4_2
+
+TALK4_1:
+	MSG("有沒有聽説過關於不死鳥的傳聞？|是這個地方流傳著的古老傳説。")
+	MSG("據説不死鳥從很久以前|就一直守護著這片土地。")
+	MSG("……放著不管的話，|人類世界就容易偏向不好的方向發展。")
+	MSG("但是，如果我們回顧漫長的歷史，|這世上有好事也有壞事。")
+	MSG("讓邪惡回歸善良，|保持善惡平衡的就是不死鳥。")
+	MSG("在亂世之中|引導救世主的也是不死鳥。")
+	room_flag_on(6)
+	jump EXIT
+
+//　　★繰り返し
+TALK4_2:
+	MSG("據説不死鳥從很久以前|就一直守護著這片土地。")
+	MSG("讓邪惡回歸善良，|保持善惡平衡的就是不死鳥。")
+	MSG("在亂世之中|引導救世主的也是不死鳥。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	check_room_flag(6)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("這段時間歐威魯湖上|常常瀰漫著霧氣。")
+	MSG("據説如果看到放晴的歐威魯湖，|男人會取得成功，而女性的婚期會推遲。")
+	MSG("真是差勁的傳説啊。")
+	MSG("但是，你不覺得這些霧氣|好像是想要隱藏什麼重要的事情嗎？")
+	room_flag_on(6)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_2:
+	MSG("這段時間歐威魯湖上|常常瀰漫著霧氣。")
+	MSG("你不覺得這些霧氣|好像是想要隱藏什麼重要的事情嗎？")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(6)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("歐威魯湖是個四周|被綠色群山環繞的美麗湖泊。")
+	MSG("據説在很久以前，|西方伊格利特火山噴發，|形成了這個湖。")
+	MSG("在歐威魯湖的東側，|有一個叫塞布里亞湖的姐妹湖，|此外還散佈著很多湖泊……")
+	MSG("因為這裡有很多湖泊，|所以這裡被叫做林德爾湖群地區。")
+	room_flag_on(6)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("歐威魯湖是個四周|被綠色群山環繞的美麗湖泊。")
+	MSG("因為這裡有很多湖泊，|所以這裡被叫做林德爾湖群地區。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("在歐威魯湖上出現奇岩城|大概是１０年前的事情。")
+	MSG("那時候只能在霧中隱約看到一些影子，|所以還曾被認為是幽靈船而引起很大騒動。")
+	MSG("能夠看到城堡清晳的樣子，|連鐘聲都能清楚地聽到，|是這兩三年才開始的事情。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Deborah","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ロドニー
+
+DEF("Rodney")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Rodney")
+	SET_NAME("RODNEY","羅德尼")
+	SET_MOTION("Rodney", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	check_room_flag(7)
+	on_jump TALK7_2
+
+TALK7_1:
+	MSG("可惡的老爸……")
+	MSG("竟然嚇我説|奇岩城中住著可怕的魔女。")
+	MSG("一聽説這個，|晚上都睡不著覺了……")
+	room_flag_on(7)
+	jump EXIT
+
+//　　★繰り返し
+TALK7_2:
+	MSG("竟然嚇我説|奇岩城中住著可怕的魔女。")
+	MSG("一聽説這個，|晚上都睡不著覺了……")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("這不是真的吧……")
+	MSG("那個是什麼啊……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("老爸到王都去的時候，|我拜託他幫忙捎帶時髦的衣服……")
+	MSG("可是，為什麼|買來的是大漁旗啊。")
+	MSG("你知道我為什麼墮落了吧？")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("我也想在王都當個僱傭兵什麼的|來大顯身手……")
+	MSG("可是寄宿在我身上的守護精靈|是擅長捕魚的熊守護精靈。")
+	MSG("沒有幹勁，真讓人洩氣。|……真是的，老爸一點都不開竅啊。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("你是騎士吧？|不過現今已經過時了。")
+	MSG("又沒有錢賺，|為什麼要做這樣的事呢？")
+	MSG("……我？")
+	MSG("雖然老爸想讓我當個漁夫，|但是我一點也不想繼承他的想法。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("雖然現在不是説這個的時候，|不過這個島完全沒有遊玩的地方啊。")
+	MSG("這麼無聊的地方，|等我長大了一定要馬上和它説再見。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("你正在尋找奇岩城吧？|還是不要找了比較好。")
+	MSG("那座城堡只是錯覺吧。|去找它真是浪費時間啊。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Rodney","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// アラーナ
+
+DEF("Alana")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Alana")
+	SET_NAME("ALANA","艾蘭娜")
+	SET_MOTION("Alana", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	// 3514	EV 赤子を抱いた母親
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	// 4017	0627	ポータルエリア５、中盤　街でフローレのイベント起動にも利用します
+	check_game_flag(4017)
+	off_jump TALK7_3
+	// 3804	EV D-0-1 フローレットの回想
+	check_game_flag(3804)
+	on_jump TALK7_2
+
+	// フローレットがいる場合
+	MSG("你有沒有覺得|莉絲大人給人的感覺變了？")
+	MSG("大概是因為袍子的顏色變了的原因吧……")
+	jump EXIT
+
+	// フローレットがいない場合
+TALK7_2:
+	MSG("和莉絲大人談了些話，|好不容易這孩子也不哭了。")
+	MSG("太好了…………")
+	MSG("但是，也許是心理作用吧，|總覺得莉絲大人今天十分親切。")
+	jump EXIT
+
+	//▽フローレットが屋外へ移動する前
+TALK7_3:
+	MSG("正是在這種時候，|更必須要去精靈堂祈禱……")
+	MSG("我想如果是莉絲大人的話，|一定能給我一些建議。")
+	jump EXIT
+
+//▼奇岩城出現後
+TALK6:
+	MSG("自從那座城堡出現之後，|這孩子就一直沒有停止哭泣……")
+	MSG("啊啊，真是可憐……")
+	MSG("那座城堡裡是不是|有什麼不好的東西存在呢？")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("孩子好像睜開眼睛了……")
+	MSG("照看孩子的成長真是幸福啊。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("今天也必須要去精靈堂祈禱……")
+	MSG("因為這個孩子|還不能自己做祈禱……")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("以前，有一位偉大的巫女，|聽説寄宿守護精靈的風俗就是她發起的。")
+	MSG("在這個島的遺跡裡|到處都有模仿她的樣子做的石像。")
+	MSG("如果對她祈禱的話，|會加速守護精靈的成長……")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("宿主成長的同時，|寄宿在身上的守護精靈也會一同成長。")
+	MSG("如果這個孩子長大的話，|守護著他的守護精靈|也會給予他比以前更大的保護……")
+	MSG("真是謝天謝地……")
+	jump EXIT
+
+//▽精靈堂でリーゼの儀式を見た後
+TALK1:
+	MSG("據説這個是供奉守護精靈們的嗣柱。")
+	MSG("願守護精靈能好好保護這個孩子。")
+	MSG("鎮子外面也有這樣的嗣柱，|觸控它的話身體的傷痛就會痊癒。")
+	MSG("好不容易才得到這個孩子，|一定要好好把他撫育成人……")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Alana","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ネッド
+
+DEF("Ned")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Ned")
+	SET_NAME("NED","漁夫內德")
+	SET_MOTION("Ned", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("最初那個城堡出現的時候，|鎮上的人都很興奮……")
+	MSG("但是看到那種令人毛骨悚然的樣子，|現在人們之間開始擴散不安的氣氛。")
+	MSG("城堡裡好像到處都是魔物，|的確沒辦法歡迎它的到來。")
+	MSG("騎士先生啊，|想想辦法讓大家安心吧。")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	check_room_flag(9)
+	on_jump TALK6_2
+
+TALK6_1:
+	MSG("喂喂，真讓人吃驚啊。")
+	MSG("我正在捕魚，|湖水突然就消失了。")
+	MSG("外出打漁走著回來|還是第一次。")
+	MSG("湖水看起來像是|被吸進了某個地方，|到底發生了什麼事？")
+	room_flag_on(9)
+	jump EXIT
+
+//　　★繰り返し
+TALK6_2:
+	MSG("哎呀呀，這樣一來生意也泡湯了呢。")
+	MSG("哈哈，|還是回家鬱悶地睡覺吧。")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	check_room_flag(9)
+	on_jump TALK5_2
+
+TALK5_1:
+	MSG("我兒子好像|不願意做漁夫……")
+	MSG("不過就算放著他不管，|他也肯定會成漁夫的。")
+	MSG("在不知不覺之間|他的血就會開始期望成為漁夫了。")
+	room_flag_on(9)
+	jump EXIT
+
+//　　★繰り返し
+TALK5_2:
+	MSG("現在要出去打漁了。")
+	MSG("最近，大概是因為常常起霧的原因，|看到奇岩城的次數增多了啊。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("在歐威魯湖有種|叫做守株待兎的特別捕魚法。")
+	MSG("魚有撞上障礙物|就會躱避它的本能對吧？")
+	MSG("就是利用這個本能把它逼進狹窄的地方。")
+	MSG("哈哈，真是不錯的想法阿。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("喂，騎士先生。|在這個湖裡捕到的白身魚可是極品啊。")
+	MSG("對了，我推薦加鹽烤著吃。|這樣烤出來從頭到尾都十分香脆。")
+	MSG("趁新鮮的時候曬成生魚片，|也非常好吃。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("哎呀……這不是昨天受了重傷、|被送到精靈堂的小兄弟嗎？")
+	MSG("喂喂，傷已經痊癒了嗎？")
+	MSG("就算莉絲大人的醫術再怎麼高明，|這也恢復得太快了吧？")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(9)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("就算你讓我|告訴你關於奇岩城的事情也……")
+	MSG("因為我是漁夫，|所以看到那城堡的機會很多。|但是我也不知道什麼詳細情況。")
+	MSG("只知道它會在多霧的天氣出現、|出現之前會鳴鐘……|還有接近之後就會消失這些了。")
+	MSG("還有……")
+	MSG("這個島上遺跡眾多。|調查一下關於這個島的歷史|也許會知道些什麼。")
+	MSG("這麼説來，|上次在鎮外似乎也發現了遺跡。")
+	room_flag_on(9)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("因為我是漁夫，|所以看到那城堡的機會很多。|但是我也不知道什麼詳細情況。")
+	MSG("只知道它會在多霧的天氣出現、|出現之前會鳴鐘……|還有接近之後就會消失這些了。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Ned","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ジーン
+
+DEF("Jean")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Jean")
+	SET_NAME("JEAN","簡")
+	SET_MOTION("Jean", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("從這裡可以看到在城堡上空|聚集著許多怪物。")
+	MSG("他們要是來襲撃這裡的話，|該怎麼辦才好啊……")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("那就是奇岩城……|的確和在霧中看到的城堡一樣。")
+	MSG("但是，為什麼會突然出現呢……")
+	MSG("還有那綠色的障壁……|到底是什麼東西呢？")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("騎士先生常常到處旅行嗎？")
+	MSG("我從來沒有離開過這個島，|所以很羨慕你啊。")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	check_room_flag(10)
+	on_jump TALK4_2
+
+TALK4_1:
+	MSG("祭司莉絲大人|似乎總是在這個時間去散步。")
+	MSG("……莉絲大人風姿凜凜，|同為女性，也覺得她非常了不起。")
+	MSG("但是，|她散步時的身影總讓人感到很悲傷……")
+	MSG("是我多心了嗎……|你怎麼認為？")
+	room_flag_on(10)
+	jump EXIT
+//　　★繰り返し
+TALK4_2:
+	MSG("散步時的莉絲大人|總是很悲傷似的……")
+	MSG("是我多心了嗎……|你怎麼認為？")
+	jump EXIT
+
+//▼トレント戰後
+TALK3:
+	MSG("今天有點熱啊……")
+	MSG("……在湖裡遊游泳吧。")
+	MSG("你也脫掉那看起來很重的鎧甲，|一起來游泳怎麼樣？")
+	MSG("可以忘掉不愉快的事情哦！")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("聽説有一個昨天受了重傷的旅行者……")
+	MSG("難道就是你？")
+	MSG("……不可能吧。|看你這麼健康的樣子。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(10)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("你好！|你是剛才坐船來的人吧。")
+	MSG("歡迎來到哈萊克鎮。|風吹著的感覺很不錯吧？")
+	MSG("這裡雖然很小，|不過給人的感覺很舒適。")
+	MSG("你能喜歡我們就再高興不過了。")
+	room_flag_on(10)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("這裡雖然很小，|不過給人的感覺很舒適。")
+	MSG("你能喜歡我們就再高興不過了。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Jean","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// リーゼ 港でたたずみ、破魔矢をくれるイベント
+
+DEF("Liese")
+
+RES("INIT")
+{
+	look_chr("Liese","-")
+}
+
+RES("CLICK")
+{
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(-5.39,0.00,-12.61,  -10.0,160.0,0.0, 6, 15.0)
+	rotate_script_camera(0,-10,0, 800, 1)
+
+	set_skip_label("SKIP")
+	cinema_on(0)
+
+	stop_pc(0)
+	set_pos("PC", -6.12,-1.00,-13.16)
+	set_deg("PC", 129)
+
+	set_deg("Liese", 193)
+	NO_LOOK_PC("Liese")
+	look_chr("Liese", "PC")
+
+	wait(120)
+
+//　　船著場にいるリーゼに話しかけると、フェード＆キャラ再配置
+//　　してイベント開始。リーゼは體は湖に向けて顏だけ主人公側に、
+//　　主人公は體ごとリーゼのほうを向いている。
+
+	MSG_EX("#S3#C0莉絲「騎士大人…………」",-1,2)
+	MSG_EX("#S3#C0莉絲「今天起霧了，|　　　我想奇岩城也許會出現……」",-1,2)
+
+//　　顏を正面に戻して、湖面を見據えるリーゼロット
+	look_chr("Liese", "-")
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲「所以就在這裡眺望湖面。」",-1,2)
+	MSG_EX("#S3#C0莉絲「奇岩城總是在霧中徘徊。」",-1,2)
+	MSG_EX("#S3#C0莉絲「也有人説它是為了保護聖劍|　　　才把自己隱藏起來……」",-1,2)
+	MSG_EX("#S3#C0莉絲「不過在我看來，|　　　那座城堡好像難以忍受孤獨，在向我們呼救。」",-1,2)
+	MSG_EX("#S3#C0莉絲「好不容易撥開迷霧、顯露身姿，|　　　但是馬上又再次被霧氣籠罩起來了。」",-1,2)
+	MSG_EX("#S3#C0莉絲「感覺非常寂寞啊……」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0莉絲「……但是，霧總有一天會散的。」",-1,2)
+	MSG_EX("#S3#C0莉絲「把奇岩城從霧的詛咒中解放出來，|　　　讓人們能看到它的樣子……」",-1,2)
+
+//　　リーゼロット、再び主人公のほうを向く。
+	cross_fade(60)
+	set_deg("Liese", 220)
+	look_chr("Liese", "PC")
+	set_script_camera(-5.26,0.20,-12.74,  -10.0,180.0,0.0, 4, 15.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲「騎士大人，我相信你。」",-1,2)
+	MSG_EX("#S3#C0莉絲「夏兒都告訴我了。|　　　遺跡的調查進行得很順利。」",-1,2)
+	wait(30)
+	CHECK_MAX_ITEM(0)
+	ON_JUMP NO_ITEM
+
+	set_deg("Liese", 250)
+	MSG_EX("#S3#C0莉絲「無論如何，請……收下這個。」",-1,2)
+	wait(30)
+
+	SE("SE_GETITEM")
+	SYS_EX("得到【莉絲的破魔箭】。",-1,0X00000200)
+	wait(30)
+
+	look_chr("Liese", "-")
+	MSG_EX("#S3#C0莉絲「沒什麼驚人的效果，|　　　就把它當成護身符吧。」",-1,2)
+	MSG_EX("#S3#C0莉絲「雖然可能幫不上您的忙，|　　　但是請至少收下這個……」",-1,2)
+	look_chr("Liese", "PC")
+	MSG_EX("#S3#C0莉絲「我馬上就要回精靈堂了。|　　　騎士大人，祝您百戰百勝……」",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+SKIP:
+	CHECK_MAX_ITEM(0)
+	ON_JUMP SKIP_NO_ITEM
+
+	// EV B-11 リーゼの破魔矢イベント
+	game_flag_on(3610)
+	GET_ITEM(191, 1)
+
+	hide_chr("Liese")
+	permit_script_camera(0)
+	wait(60)
+	cinema_off(0)
+
+	fade_in(60)
+	end
+
+
+NO_ITEM:
+	MSG_EX("#S3#C0莉絲「因為有東西想要給您，|　　　請您先整理一下行李吧。」",-1,2)
+
+	cross_fade(60)
+	permit_script_camera(0)
+	wait(60)
+	cinema_off(0)
+
+	// TK 持ち物がいっぱいで破魔矢をもらえなかった
+	GAME_FLAG_ON(3612)
+	end
+
+SKIP_NO_ITEM:
+	permit_script_camera(0)
+	cinema_off(0)
+
+	// TK 持ち物がいっぱいで破魔矢をもらえなかった
+	GAME_FLAG_ON(3612)
+
+	fade_in(60)
+}
+
+//////////////////////////////////////////////////////////////////////
+// フローレットとＮＰＣのアラーナが立ち話している
+
+DEF("Fleurette")
+
+RES("CLICK")
+{
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(4.52,1.00,-1.07,  -10.0,190.0,0.0, 6, 15.0)
+	rotate_script_camera(0,-10,0, 800, 1)
+
+	cinema_on(0)
+
+	stop_pc(0)
+	set_pos("PC", 3.56,0.00,-1.07)
+	set_deg("PC", 155)
+	set_deg("Fleurette", 282)
+
+	set_skip_label("SKIP")
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「啊，騎士大人。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「難得見到這個時代的城鎮，|　　　　　我就不由得來到了外面。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「雖然導師們阻止我，不過……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「姐姐就是在這個鎮上|　　　　　看守著魔王所在的那座城堡啊……」",-1,2)
+	wait(20)
+	set_deg("Fleurette", 240)
+	wait(20)
+	MSG_EX("#S3#C0芙羅蕾特「以前的姐姐非常善良，|　　　　　對我來説是位值得仰慕的女性。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「雖然我們是孿生姐妹，長得也很相像，|　　　　　但無論做什麼我都比不上她。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「不過，姐姐天生體弱多病，|　　　　　在修行中曾經數次病倒。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「雖然姐姐沒有説出來，|　　　　　但是她似乎一直為此感到自卑。」",-1,2)
+	wait(20)
+	look_chr("Fleurette", "PC")
+	wait(20)
+	MSG_EX("#S3#C0芙羅蕾特「但是，姐姐的離去|　　　　　是絕對不能原諒的事情。」",-1,2)
+	wait(20)
+	look_chr("Fleurette", "-")
+	wait(20)
+	MSG_EX("#S3#C0芙羅蕾特「五百年前的那個時候……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「我想作為妹妹的我至少可以喚回她，|　　　　　可是卻反被她撃敗。」",-1,2)
+	wait(20)
+	look_chr("Fleurette", "PC")
+	set_deg("Fleurette", 282)
+	wait(20)
+	MSG_EX("#S3#C0芙羅蕾特「騎士先生，無論如何請打倒我姐姐。|　　　　　這也是為了姐姐好……」",-1,2)
+	wait(40)
+	cross_fade(60)
+	set_script_camera(4.52,1.00,-1.07,  -10.0,190.0,0.0, 10, 15.0)
+	MSG_EX("#S3#C0芙羅蕾特「……我差不多該要回精靈堂了。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「要是被德沃夏克看見，|　　　　　又要囉嗦半天了。」",-1,2)
+
+//　　畫面、フェードアウト。フローレットを屋外から消して精靈堂
+//　　へ移動。プレイヤー操作許可。
+
+	fade_out(60)
+	wait(60)
+
+SKIP:
+	// 3804	EV D-0-1 フローレットの回想
+	game_flag_on(3804)
+
+	hide_chr("Fleurette")
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	wait(60)
+	cinema_off(0)
+
+	fade_in(60)
+	end
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// シャル
+
+DEF("Char")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Char")
+	SET_NAME("CHAR","夏兒")
+	SET_MOTION("Char", "ATTACK1",-1)
+
+	// 3703	EV C-4 相似の二人(アニエスに會った)
+	check_game_flag(3703)
+	on_jump TALK2
+
+	// まだあってない
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+TALK1:
+//　　▽奇岩城でアニエスに會っていない場合
+	check_room_flag(11)
+	on_jump TALK1_2
+
+	MSG("#N0！")
+	MSG("我都看到了，終於成功了啊！！")
+	MSG("趕快去奇岩城吧？")
+	MSG("水被抽乾了，|似乎從湖邊就可以進入城堡。")
+	room_flag_on(11)
+	// 3729	TK シャルと城が現れてから初めて會話した
+	game_flag_on(3729)
+	jump EXIT
+
+//　　※以降、繰り返し用
+TALK1_2:
+	MSG("趕快去奇岩城吧？")
+	MSG("水被抽乾了，|似乎從小鎮的南面就可以進入城堡。")
+	jump EXIT
+
+//--------------------------------------------------------------------
+//　　▽奇岩城でアニエスに會っている場合
+TALK2:
+	// 3729	TK シャルと城が現れてから初めて會話した
+	check_game_flag(3729)
+	on_jump TALK2_1
+
+//　　→奇岩城出現後、初めて話す場合
+	MSG("#N0！")
+	MSG("我都看到了，終於成功了啊！！")
+	jump TALK2_2
+
+//　　　　→奇岩城出現後、話したことがある場合
+TALK2_1:
+	MSG("#N0，怎麼樣了？")
+
+//　　→ここで統合
+TALK2_2:
+	MSG("……哎，|奇岩城周圍布滿了障壁過不去？")
+	MSG("那透明的綠色牆壁啊……")
+	MSG("唔……對了……")
+	MSG("石板和手記中也許會有什麼線索。")
+	MSG("還有，|也可能和在奇岩城前面的女人的石像有關系。")
+	MSG("和莉絲姐姐長得很像，|也是理所當然的……")
+	MSG("和遺跡中被石化了的人們應該也有關系吧？")
+	MSG("……到現在為止周圍的遺跡中|還有未被解開石化狀態的人嗎？")
+	MSG("如果心裡有答案的話，|也許那裡會有線索。")
+	MSG("我也在屋子裡做些調查看看。")
+
+	fade_out(60)
+	wait(60)
+
+	// 3723	TK シャルと城が現れたことについて話す
+	game_flag_on(3723)
+
+	hide_chr("Char")
+
+	wait(60)
+	fade_in(60)
+	end
+
+EXIT:
+	SET_MOTION("Jean","STAND",-1)
+	END
+
+}
+
+//====================================================================
+//====================================================================
+//====================================================================
+//== イベント處理 ====================================================
+//====================================================================
+//====================================================================
+//====================================================================
+
+
+//====================================================================
+// ボートを使ってイベント制御
+//====================================================================
+
+DEF("boat")
+
+RES("INIT")
+{
+	// 3711	EV C-12 聖劍の巫女姬
+	check_game_flag(3711)
+	off_jump NEXT
+	// 3803	EV D-0 シャルの心配
+	check_game_flag(3803)
+	off_jump EV_CHAR_DS
+NEXT:
+
+	// 4		インフェルノを倒したか？
+	check_game_flag(   4)
+	off_jump NEXT3
+	// 3617	EV B-9b インフェルノ倒した後、シャルと話した
+	check_game_flag(3617)
+	off_jump EV_CHAR_MOUNTAIN
+NEXT3:
+
+	// 3603	EV B-4 トレント戰後(ドヴォルザークとの會話)
+	check_game_flag(3603)
+	off_jump NEXT4
+	// 3623	TK B-4c トレント戰後、クラウンについてのシャルの會話
+	check_game_flag(3623)
+	off_jump EV_INN2
+NEXT4:
+
+	// EV 降靈の儀式後
+	check_game_flag(3531)
+	off_jump NEXT5
+	// 寺院から宿屋へ、 見た？
+	check_game_flag(3532)
+	off_jump EV_INN
+NEXT5:
+
+	// オープニングからきたのでなければ終了
+	check_game_flag(3500)
+	off_jump EXIT
+	// OP 見た？
+	check_game_flag(3501)
+	off_jump EV_OP
+
+EXIT:
+	end
+
+//-- Ｄ-０　シャルの心配 ---------------------------------------------
+EV_CHAR_DS:
+	call CHAR_EVENT_DS
+	end
+
+//-- Ｂ-９　インフェルノ戰後のハーレック -----------------------------
+EV_CHAR_MOUNTAIN:
+	// 地下道から來たときは、
+	CHECK_ENTRY_GATE("0097_0588")
+	OFF_JUMP EV_CHAR_MOUNTAIN_2
+	// 柵はすでに壞れてる？
+	CHECK_GAME_FLAG(3001)
+	OFF_JUMP EXIT
+
+EV_CHAR_MOUNTAIN_2:
+	call CHAR_EVENT_MOUNTAIN
+	end
+
+//-- Ｂ-４Ｂ トレント戰後のハーレック --------------------------------
+EV_INN2:
+	// 地下道から來たときは、
+	CHECK_ENTRY_GATE("0097_0588")
+	OFF_JUMP EV_INN2_2
+	// 柵はすでに壞れてる？
+	CHECK_GAME_FLAG(3001)
+	OFF_JUMP EXIT
+
+EV_INN2_2:
+	call CHAR_EVENT_BOSS1
+	end
+
+//-- 宿へのスクロール ------------------------------------------------
+EV_INN:
+	call INN_SCROLL_EVENT
+	end
+
+//-- オープニングイベント呼び出し ------------------------------------
+EV_OP:
+	call OPENING_EVENT
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// Ｄ-０　シャルの心配
+
+@CHAR_EVENT_DS
+{
+	//--------------------------------------------------------------------
+	CINEMA_ON(0)
+	HIDE_CHR("Rodney")
+
+	show_chr("Char")
+	set_pos("Char", -2.08,-0.00,-0.36)
+	set_deg("Char", 240)
+
+	SET_MOTION("Lew","ATTACK2",0)
+	SET_MOTION("Paty","ATTACK2",0)
+
+	permit_script_camera(1)
+	set_script_camera(-14,-0.00,-5.15,  -10.0,170.0,0.0, 15, 15.0)
+	set_skip_label("SKIP")
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC",  -14.91,-0.00,-5.72)
+	set_walk_dst("PC",  -13.39,-0.00,-5.89)
+	walk_pos("PC",0,0.03)
+
+	wait_walk("PC")
+
+//　　精靈堂でドラゴンスレイヤーを手に入れて、街へ出たところで
+//　　強制的にイベント開始。
+
+	MSG_EX("#S3#C0夏兒「#N0！」",-1,2)
+
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char",  -6.65,0.00,-3.04)
+	set_walk_dst("Char",  -10.39,-0.00,-5.76)
+	set_walk_dst("Char",  -12.24,-0.00,-6.13)
+	walk_pos("Char",1,0.05)
+	wait_walk("Char")
+
+//　　主人公に驅け寄ってくるシャル。
+
+	MSG_EX("#S3#C0夏兒「啊…………」",-1,2)
+	MSG_EX("#S3#C0夏兒「那把劍……難道是……」",-1,2)
+	look_chr("Char", "PC")
+	MSG_EX("#S3#C0夏兒「……那麼，你身體復原了？」",-1,2)
+
+//　　うなずく素振りを見せる主人公。
+	SET_MOTION("PC","EMPTY23",30)
+	WAIT(90)
+
+	look_chr("Char", "-")
+	MSG_EX("#S3#C0夏兒「嗚嗚……」",-1,2)
+	SET_MOTION("Char","ATTACK2",30)
+	MSG_EX("#S3#C0夏兒「……太好了……真的……」",-1,2)
+	WAIT(120)
+	MSG_EX("#S3#C0夏兒「我説……#N0……」",-1,2)
+	MSG_EX("#S3#C0夏兒「那個…………」",-1,2)
+	MSG_EX("#S3#C0夏兒「既然你身體復原了……|　　　是不是就不用再戰鬥了？」",-1,2)
+	look_chr("Char", "PC")	
+
+//　　少し間を置いて首を振る主人公
+	WAIT(120)
+	SET_MOTION("PC","EMPTY24",30)
+	WAIT(120)
+
+	look_chr("Char", "-")
+	MSG_EX("#S3#C0夏兒「是嗎…………」",-1,2)
+	SET_DEG("Char",170)
+	MSG_EX("#S3#C0夏兒「………………………………」",-1,2)
+	MSG_EX("#S3#C0夏兒「#N0太狡猾了……」",-1,2)
+	SET_DEG("PC",150)
+	WAIT(120)
+	MSG_EX("#S3#C0夏兒「……我總是什麼都沒機會説……」",-1,2)
+
+
+	CROSS_FADE(60)
+	SET_SCRIPT_CAMERA_EX( "Char", -2, 0,-30,0, 5, 15 )
+	MOVE_SCRIPT_LOOK_AT( -0.5,0.5,0,2000, 0)
+
+	SET_MOTION("Char","ATTACK1",30)
+	MSG_EX("#S3#C0夏兒「你剛成為騎士的時候也是這樣……」",-1,2)
+	MSG_EX("#S3#C0夏兒「重大的事情總是一個人擅自決定……」",-1,2)
+	MSG_EX("#S3#C0夏兒「我……明明那麼擔心你……」",-1,2)
+	WAIT(120)
+	look_chr("Char", "PC")
+	WAIT(90)
+	MSG_EX("#S3#C0夏兒「以後還要讓我擔多少心才可以呢？」",-1,2)
+	MSG_EX("#S3#C0夏兒「………………………………」",-1,2)
+
+
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+	permit_script_camera(0)
+
+	SET_MOTION("Lew","STAND",0)
+	SET_MOTION("Paty","STAND",0)
+	SET_DEG_EX("Char","PC")
+	SET_MOTION("Char","ATTACK1",30)
+	MSG_EX("#S3#C0夏兒「……對不起…………|　　　我明白了……」",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0夏兒「你一定要小心啊。|　　　我……會在鎮上等你的。」",-1,2)
+
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char",   -5,0,-2)
+	walk_pos("Char",1,0.05)
+	WAIT(60)
+	SET_DEG("PC",90)
+	WAIT(60)
+
+//　　畫面フェードアウト。
+	fade_out(60)
+	wait(120)
+
+SKIP:
+	// 3803	EV D-0 シャルの心配
+	game_flag_on(3803)
+
+	// 操作許可
+	stop_walk("PC")
+	stop_walk("Char")
+	hide_chr("Char")
+	look_chr("PC", "-")
+	set_pos("PC",  -13.39,-0.00,-5.89)
+	SET_DEG("PC",90)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	fade_in(60)
+	CINEMA_OFF(0)
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// Ｂ-９　インフェルノ戰後のハーレック
+@CHAR_EVENT_MOUNTAIN
+{
+	//--------------------------------------------------------------------
+	CINEMA_ON(0)
+
+	//カメラグリンッ現象防止のため一時的に入れ替える
+	CAMERA_OFF("遺跡入り口")
+	CAMERA_OFF("火山入り口")
+	CAMERA_OFF("全體")
+	CAMERA_ON("全體２")
+
+	set_pos("PC", 6.59,0.00,0.35)
+	set_deg("PC", 140)
+
+	permit_script_camera(1)
+	set_script_camera(11.05,0.00,-0.42,  -8.0,190.0,0.0, 18, 15.0)
+	set_skip_label("SKIP")
+
+//　　インフェルノを倒してハーレックに戻って來ると強制的にイベ
+//　　ント開始。街の中(宿屋手前あたりか)を步く主人公を背後から
+//　　シャルが呼び止める。
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC",  8.71,0.00,-0.98)
+	set_walk_dst("PC", 11.04,0.00,-1.24)
+	set_walk_dst("PC", 13.61,0.00,-0.97)
+	walk_pos("PC",0,0.03)
+
+	fade_in(80)
+	wait_walk("PC")
+
+	MSG_EX("#S3#C0夏兒「#N0！」",-1,2)
+
+//　　後ろから走ってくるシャル。
+	show_chr("Char")
+	set_pos("Char", 0.04,0.00,-0.26)
+	set_deg("Char", 56)
+
+	set_deg("PC", 140)
+	look_chr("PC", "Char")
+
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char",   5.83,0.00,-1.65)
+	set_walk_dst("Char",  10.30,0.00,-1.78)
+	walk_pos("Char",1,0.05)
+	wait_walk("Char")
+
+	MSG_EX("#S3#C0夏兒「你剛剛回到鎮上嗎？」",-1,2)
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0夏兒「嘿嘿，歡迎回來。」",-1,2)
+	MSG_EX("#S3#C0夏兒「身體沒問題吧？　沒有受傷吧？」",-1,2)
+	look_chr("Char", "PC")
+	MSG_EX("#S3#C0夏兒「剛才我去買茶葉了，|　　　一起回房間吧。」",-1,2)
+
+//　　畫面フェードアウト。
+	fade_out(80)
+	wait(120)
+
+SKIP:
+	//カメラ一應戻しとく
+	CAMERA_ON("遺跡入り口")
+	CAMERA_ON("火山入り口")
+	CAMERA_ON("全體")
+	CAMERA_OFF("全體２")
+	permit_script_camera(0)
+	ENTRY_MAP("009d_009c")
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Ｂ-４Ｂ トレント戰後のハーレック
+
+@CHAR_EVENT_BOSS1
+{
+	//--------------------------------------------------------------------
+	CINEMA_ON(0)
+	//カメラグリンッ現象防止のため一時的に入れ替える
+	CAMERA_OFF("遺跡入り口")
+	CAMERA_OFF("火山入り口")
+	CAMERA_OFF("全體")
+	CAMERA_ON("全體２")
+
+
+	permit_script_camera(1)
+	set_script_camera(11.05,0.00,-0.42,  -8.0,190.0,0.0, 18, 15.0)
+	set_skip_label("SKIP")
+
+//　　トレント戰後、ハーレックに戻ると強制的にイベント開始。
+//　　宿屋へ向かって步く主人公。浜邊からシャルがやってくる。
+
+	set_pos("PC", 10.72,0.00,-1.22)
+	set_deg("PC", 140)
+	set_motion("PC", "STAND", 0)
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 11.04,0.00,-1.24)
+	set_walk_dst("PC", 13.61,0.00,-0.97)
+	walk_pos("PC",0,0.03)
+
+	fade_in(80)
+	wait_walk("PC")
+
+	MSG_EX("#S3#C0夏兒「#N0！」",-1,2)
+
+//　　後ろから走ってくるシャル。
+	show_chr("Char")
+	set_pos("Char", 0.04,0.00,-0.26)
+	set_deg("Char", 56)
+
+	set_deg("PC", 140)
+	look_chr("PC", "Char")
+
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char",   5.83,0.00,-1.65)
+	set_walk_dst("Char",  10.30,0.00,-1.78)
+	walk_pos("Char",1,0.05)
+	wait_walk("Char")
+
+	MSG_EX("#S3#C0夏兒「嘿嘿，歡迎回來。」",-1,2)
+
+//　　畫面フェードアウト。
+	fade_out(80)
+	wait(120)
+
+SKIP:
+	//カメラ一應戻しとく
+	CAMERA_ON("遺跡入り口")
+	CAMERA_ON("火山入り口")
+	CAMERA_ON("全體")
+	CAMERA_OFF("全體２")
+	permit_script_camera(0)
+	ENTRY_MAP("009d_009c")
+}
+
+//////////////////////////////////////////////////////////////////////
+// 宿屋へのスクロール
+
+@INN_SCROLL_EVENT
+{
+	//--------------------------------------------------------------------
+	CINEMA_ON(0)
+
+	permit_script_camera(1)
+	set_script_camera(-13.36,0.00,-4.86,  -7.0,180.0,0.0, 20, 15.0)
+	move_script_look_at(25.0,2,0, 800, 1)
+	rotate_script_camera(0,24,0, 800, 1)
+	set_motion("PC", "STAND", -1)
+	refresh("PC")
+	HIDE_CHR("PC")
+	HIDE_CHR("Rodney")
+
+	set_skip_label("SKIP")
+
+	SE("SE_MORNING")
+
+	show_chr("Char")
+	set_pos("Char", -13.39,-0.00,-5.84)
+	set_deg("Char", 56)
+
+	wait(180)
+
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char", -10.04,0.00,-5.05)
+	set_walk_dst("Char",  -6.88,0.00,-2.05)
+	set_walk_dst("Char",  -2.68,-0.00,-1.04)
+	set_walk_dst("Char",   5.83,0.00,-1.65)
+	set_walk_dst("Char",  13.46,0.00,-1.36)
+	set_walk_dst("Char",  16.29,1.00,-0.48)
+	walk_pos("Char",1,0.05)
+
+	wait(20)
+
+	fade_in(80)
+//	wait(620)
+	wait_walk("Char")
+
+	scale_script_camera(0.6, 400, 1)
+	set_deg("Char", 102)
+	set_motion("Char", "ATTACK1", -1)
+	wait(90)
+	switch_on("myroom_door")
+	move_script_look_at(0.0,3,0, 400, 1)
+	wait(60)
+
+//	wait_camera(0)
+
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char", 16.63,1.25,-0.49)
+	walk_pos("Char",0,0.02)
+	wait(20)
+
+	fade_out(80)
+	wait(120)
+	SHOW_CHR("PC")
+	ENTRY_MAP("009d_009c")
+
+SKIP:
+	SHOW_CHR("PC")
+	ENTRY_MAP("009d_009c")
+
+//	CINEMA_OFF(0)
+//	permit_script_camera(0)
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// オープニングのイベント
+
+@OPENING_EVENT
+{
+	//--------------------------------------------------------------------
+	CINEMA_ON(0)
+
+	bgm(-1,0,-1)
+
+	show_chr("Char")
+	show_chr("Boatman")
+	hide_chr("Ned")
+
+	set_pos("PC", -9.48,-2.0, -13.19)
+	set_deg("PC", 200.0)
+	set_pos("Char", -10.49, -2.0, -14.88)
+	set_deg("Char", 319.0)
+	set_pos("Boatman", -12.53, -2.0, -14.11)
+	set_deg("Boatman",123.0)
+
+	set_motion("PC", "STAND",0)
+	set_motion("Char", "STAND",0)
+	set_motion("Boatman", "STAND",0)
+
+
+	look_chr("PC",  "Boatman")
+	look_chr("Char","Boatman")
+	look_chr("Boatman", "Char")
+
+	permit_script_camera(1)
+	set_script_camera(10.0,4.0,-5.0,  -8.-30,200.0,0.0, 20, 15.0)
+	move_script_look_at(-18,-2,-10, 700, 1)
+	rotate_script_camera(4,-40,0, 700, 1)
+
+	// エリアネーム表示
+	DISP_PLACE(0)
+	fade_in(120)
+
+	set_skip_label("SKIP")
+
+	wait(700)
+//	move_script_look_at(-14,-2,0, 600, 1)
+//	rotate_script_camera(10,-40,0, 600, 1)
+//	wait(600)
+	cross_fade(120)
+	set_script_camera(-9.6,-1.0,-16.0,  -11.0,160.0,0.0, 12, 15.0)
+
+	rotate_script_camera(0,20,0, 1000, 1)
+
+//▼ハーレックの街・船著場
+
+//　　オープニング終了後、フェードアウト拔けてハーレックの街。
+//　　「ハーレックの街」字幕表示しつつ、カメラは街の中央部から
+//　　船著場へ振る。主人公たちの乘ってきた船がつながれている。
+//　　主人公、シャル、船頭は船から降りて、棧橋で會話している狀
+//　　態。
+
+	MSG_EX("#S3#C0船伕「只要湖面上一起霧，|　　　那座城堡就會突然出現。」",-1,2)
+	MSG_EX("#S3#C0船伕「説起歐威魯的奇岩城，|　　　這附近的人都知道。」",-1,2)
+
+//	jump EXIT2
+
+	MSG_EX("#S3#C0夏兒「嗯嗯……」",-1,2)
+	MSG_EX("#S3#C0夏兒「就算這樣，城也總是會馬上消失啊。|　　　真想好好地觀察一下啊。」",-1,2)
+
+	MSG_EX("#S3#C0船伕「只要一靠近城堡，|　　　它就會像逃走似的消失掉。」",-1,2)
+	MSG_EX("#S3#C0船伕「所以，也有人説這是|　　　喜歡惡作劇的魔女製造的幻象。」",-1,2)
+	MSG_EX("#S3#C0船伕「不管怎麼説，要是暫時住在這裡的話，|　　　看到它的機會還有的是。」",-1,2)
+
+	MSG_EX("#S3#C0夏兒「嗯，是啊……」",-1,2)
+
+	MSG_EX("#S3#C0船伕「還有，説到奇岩城，|　　　就不得不提聖劍『屠龍劍』了。」",-1,2)
+
+	set_deg_ex("Char","Boatman")
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0夏兒「屠龍劍？」",-1,2)
+	MSG_EX("#S3#C0夏兒「是殺龍的意思吧……|　　　聽起來很厲害啊。」",-1,2)
+
+	MSG_EX("#S3#C0船伕「小姐連這個也不知道啊。」",-1,2)
+	MSG_EX("#S3#C0船伕「屠龍劍是傳説中|　　　沉睡在奇岩城裡的寶劍的名字。」",-1,2)
+	MSG_EX("#S3#C0船伕「不過這始終只是個傳説。」",-1,2)
+
+	MSG_EX("#S3#C0夏兒「哎……在迷霧籠罩的湖中出現的古城|　　　和城中沉睡的聖劍啊……」",-1,2)
+	MSG_EX("#S3#C0夏兒「光是聽起來就覺得|　　　心裡撲通撲通地跳個不停。」",-1,2)
+
+	MSG_EX("#S3#C0船伕「哈哈，要是想知道詳細的情況，|　　　還是問當地人比較好。」",-1,2)
+
+	MSG_EX("#S3#C0夏兒「我知道了。|　　　船伕先生，真是非常感謝你。」",-1,2)
+
+	MSG_EX("#S3#C0船伕「好的，路上小心啊。」",-1,2)
+
+//　　シャル、主人公のほうへ向く。
+	cross_fade(120)
+	look_chr("Boatman", "PC")
+	look_chr("Char", "PC")
+	set_deg_ex("Char","PC")
+	set_motion("Char","STAND",-1)
+	scale_script_camera(0.8, 1, 1)
+	wait(140)
+
+	MSG_EX("#S3#C0夏兒「喂，#N0。|　　　我們趕快找個地方住下吧？」",-1,2)
+
+//　　うなずく主人公
+	look_chr("PC", "Char")
+	wait(60)
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0夏兒「太好了！」",-1,2)
+	MSG_EX("#S3#C0夏兒「好，我要開始加油了～！」",-1,2)
+	MSG_EX("#S3#C0夏兒「解開那座城堡的謎團|　　　就是我們的使命啊！」",-1,2)
+
+//　　シャル、宿屋のほうへ走り去っていく。
+//　　主人公もシャルの後を追って步き出し畫面フェードアウト。
+	look_chr("Boatman", "Char")
+	set_motion("Char","STAND",-1)
+	look_chr("Char", "-")
+	INIT_WALK_DST("Char")
+	set_walk_dst("Char", -6.46, -1, -14.03)
+	set_walk_dst("Char", -5.74, -1,  -8.65)
+	set_walk_dst("Char", -7.60,  0,  -5.11)
+	set_walk_dst("Char", -6.21,  0,  -2.52)
+	look_chr("Boatman", "PC")
+	set_walk_dst("Char", -2.38,  0,  -0.47)
+	set_walk_dst("Char",  4.40,  0,  -1.64)
+	walk_pos("Char",1,0.05)
+
+	wait(60)
+	move_script_look_at(10,5,0, 800, 1)
+
+	wait(60)
+	look_chr("PC", "Boatman")
+	wait(20)
+	set_deg_ex("PC","Boatman")
+	wait(60)
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -6.46, -1, -14.03)
+	set_walk_dst("PC", -5.74, -1,  -8.65)
+	set_walk_dst("PC", -7.60,  0,  -5.11)
+	set_walk_dst("PC", -6.21,  0,  -2.52)
+	walk_pos("PC",0,0.022)
+	wait(180)
+	stop_env_se("SE_NAMI",4000)
+	fade_out(120)
+	wait(120)
+
+	//-----------------------------
+	ENTRY_IMG(0,"mono\MONO05_01",0)
+	ENTRY_IMG(1,"mono\MONO05_02",0)
+	ENTRY_IMG(2,"mono\MONO05_03",0)
+	ENTRY_IMG(3,"mono\MONO05_04",0)
+	ENTRY_IMG(4,"mono\MONO05_05",0)
+	ENTRY_IMG(5,"mono\MONO05_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+	FADE_IN(60)
+	WAIT(60)
+	//-----------------------------
+
+		SET_MSG_TIME(5,40,90,90)
+	MSG_EX("回想起來，那件事情是一切的開端。",-1,0X00000094)
+	MSG_EX("騎士戰爭後的第三年———",-1,0X00000094)
+	MSG_EX("在孤兒院裡曾被我當成兄長般敬仰的他|迷失了自己的方向。",-1,0X00000094)
+	MSG_EX("我不忍看他那樣消沉，|便邀請他一起旅行。",-1,0X00000094)
+		SET_MSG_TIME(-1,-1,-1,-1)
+
+	//-----------------------------
+	FADE_OUT(60)
+	WAIT(60)
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+
+	// EV 棧橋のイベントを見た
+	game_flag_on(3501)
+	ENTRY_MAP("009d_009c")
+
+EXIT2:
+	// 操作許可
+	stop_walk("PC")
+	stop_walk("Char")
+	permit_script_camera(0)
+	fade_in(10)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+
+SKIP:
+	//-----------------------------
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+	// EV 棧橋のイベントを見た
+	game_flag_on(3501)
+	ENTRY_MAP("009d_009c")
+}
+
+//--------------------------------------------------------------------
+
+}
+
+
+// ----------------------------------------------------------------------------
+// マップ移動
+// ----------------------------------------------------------------------------
+
+DEF("0097a1")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3302)
+	ON_JUMP NEXT
+	
+	ENTRY_MAP("0089_0097a1")
+	END
+
+NEXT:
+	ENTRY_MAP("008a_0097a")
+}
+
+DEF("0097a2")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3302)
+	ON_JUMP NEXT
+	
+	ENTRY_MAP("0089_0097a2")
+	END
+
+NEXT:
+	ENTRY_MAP("008a_0097b")
+}
+
+DEF("0097a3")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3302)
+	ON_JUMP NEXT
+	
+	ENTRY_MAP("0089_0097a3")
+	END
+
+NEXT:
+	ENTRY_MAP("008a_0097c")
+}
+
+DEF("0097b")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3302)
+	ON_JUMP NEXT
+	
+	ENTRY_MAP("0089_0097b")
+	END
+
+NEXT:
+	ENTRY_MAP("008a_0097")
+}
+
+
+// ----------------------------------------------------------------------------
+// チュートリアル入り口
+// ----------------------------------------------------------------------------
+
+DEF("t_door")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(3518)
+	OFF_SKIP(1)
+	ENABLE_EV_POP("t_door",0)
+}
+
+RES("CLICK")
+{
+	// 3518	EV 遺跡の扉を開けた
+	CHECK_GAME_FLAG(3518)
+	ON_JUMP EXIT
+
+	// 街外れの遺跡の鍵
+	CHECK_ITEM(200)
+	OFF_JUMP NO_OPEN
+
+OPEN:
+	STOP_PC(0)
+	SE("SE_KEY_OPEN")
+	SYS("使用了『鎮外遺跡的鑰匙』。")
+	PICK_ITEM(200)
+	SWITCH_ON("t_door")
+	GAME_FLAG_ON(3518)
+	ENABLE_EV_POP("t_door",0)
+	end
+
+NO_OPEN:
+	STOP_PC(0)
+	SYS("上著鎖。")
+	end
+
+EXIT:
+	end
+//
+//	STOP_PC(0)
+//	SYS("扉開け")
+//	SWITCH_ON("t_door")
+}
+
+
+
+
+
+//====================================================================
+// 柵を壞して入ってきたとき
+//====================================================================
+
+DEF("EV_Gate")
+
+RES("EVENT")
+{
+	// 4		インフェルノを倒したか？
+	check_game_flag(   4)
+	off_jump NEXT3
+	// 3617	EV B-9b インフェルノ倒した後、シャルと話した
+	check_game_flag(3617)
+	off_jump EV_CHAR_MOUNTAIN
+NEXT3:
+
+	// 3603	EV B-4 トレント戰後(ドヴォルザークとの會話)
+	check_game_flag(3603)
+	off_jump NEXT4
+	// 3623	TK B-4c トレント戰後、クラウンについてのシャルの會話
+	check_game_flag(3623)
+	off_jump EV_INN2
+NEXT4:
+
+
+EXIT:
+	end
+
+//-- Ｂ-９　インフェルノ戰後のハーレック -----------------------------
+EV_CHAR_MOUNTAIN:
+	stop_pc(0)
+	fade_out(60)
+	wait(60)
+	reset_camera(0)
+	wait(60)
+
+	call CHAR_EVENT_MOUNTAIN
+	end
+
+//-- Ｂ-４Ｂ トレント戰後のハーレック --------------------------------
+EV_INN2:
+	stop_pc(0)
+	fade_out(60)
+	wait(60)
+	reset_camera(0)
+	wait(60)
+
+	call CHAR_EVENT_BOSS1
+	end
+}
+
+
+//シャル背景--------------------------------------------------------------------------
+@BOOK_ON
+{
+	ENTRY_IMG(0,"mono\MONO05_01",0)
+	ENTRY_IMG(1,"mono\MONO05_02",0)
+	ENTRY_IMG(2,"mono\MONO05_03",0)
+	ENTRY_IMG(3,"mono\MONO05_04",0)
+	ENTRY_IMG(4,"mono\MONO05_05",0)
+	ENTRY_IMG(5,"mono\MONO05_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+	FADE_IN(120)
+	WAIT(180)
+RET
+}
+@BOOK_OFF
+{
+	FADE_OUT(120)
+	WAIT(120)
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+RET
+}
+//------------------------------------------------------------------------------------
+                    

@@ -1,0 +1,535 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+//ボスを倒したかどうか？
+	check_game_flag(566)
+	off_jump boss
+
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+	hide_chr("girl")
+	hide_chr("drasure")
+	hide_chr("turimomo")
+
+	// 一部のカメラを無效に
+	camera_off("ボス中央（改）")
+	camera_off("ボス中央")
+	camera_off("ボス右")
+	camera_off("ボス左")
+	camera_off("第二形態")
+	camera_off("ももイベント用？")
+
+	//壁を壞れた狀態に
+	set_motion("kabe1","HOOK",0)
+	set_motion("kabe2","HOOK",0)
+	set_motion("hand","HOOK",0)
+
+	end
+
+boss:
+	// 胴體
+	load_chr("M_0280\ARM_280a",0)
+	// 右腕１～３
+	load_chr("M_0280\ARM_280b",1)
+	load_chr("M_0280\ARM_280d",2)
+	load_chr("M_0280\ARM_280f",3)
+	// 左腕１～３
+	load_chr("M_0280\ARM_280c",4)
+	load_chr("M_0280\ARM_280e",5)
+	load_chr("M_0280\ARM_280g",6)
+	// 子ガニ
+	load_chr("O_0524\O_0524",7)
+	// 簡易コリジョンモデル
+	load_chr("M_0280\M_0280h",8)
+
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+
+	hide_chr("girl")
+	hide_chr("drasure")
+
+	// 一部のカメラを無效に
+	camera_off("ボス中央（改）")
+	camera_off("ボス中央")
+	camera_off("ボス右")
+	camera_off("ボス左")
+	camera_off("第二形態")
+	camera_off("ももイベント用？")
+	
+	// （通常の）死神の發生を抑止
+	PERMIT_DEATH(0)
+//	LOAD_MAP("MP_0560")
+//	LOAD_HITMAP("MP_0560h")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// もも                                                             
+// ----------------------------------------------------------------------------
+
+DEF("turimomo")
+
+RES("INIT")
+{
+//ボスを倒したかどうか？
+	check_game_flag(566)
+	off_jump momo
+	end
+
+momo:
+//モモを見ているかどうか？
+	check_game_flag(565)
+	off_jump turi
+	end
+
+turi:
+	game_flag_on(565)
+
+	// スキップ許可
+	skip_enable(1)
+
+	// シネマON
+	cinema_on(0)
+
+	// PCの動きを止める
+	stop_pc(0)
+
+	// ムービー用カメラ讀み込み
+	load_camera("C_MOMO_TURI")
+	set_camera_org(0,0,0)
+	play_camera(100,620)
+
+	wait(520)
+	// 座標を變更
+//	set_pos("PC",-22,0,6)
+	// 向きを變更
+	SET_DEG_EX("PC","girl")
+	// シネマＯＦＦ
+	cinema_off(0)
+
+	end
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ボス（コア）                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("kani_core")
+
+RES("KILL")
+{
+	// PCの動きを止める
+	stop_pc(0)
+
+	// シネマON
+	cinema_on(0)
+
+	// ブラー效果ON
+	blur(50)
+
+	// 甲羅脫ぎモーション再生
+	set_motion("kani_body","EMPTY3",0)
+//	wait(165)
+//	wait(200)
+	wait(280)
+
+
+	// 消した柱を戻す
+	show_chr("pillar1")
+	show_chr("pillar2")
+
+	// シネマOFF
+	cinema_off(0)
+	
+	// ブラー效果OFF
+	blur(0)
+	
+	// カメラ空間の固定を解除
+	unlock_camera("ボス中央（改）")
+//	unlock_camera("ボス中央")
+	
+	// 第一形態用カメラをOFF
+	camera_off("ボス中央（改）")
+//	camera_off("ボス中央")
+//	camera_off("ボス右")
+//	camera_off("ボス左")
+	// 第二形態用カメラをON
+	camera_on("第二形態")
+	lock_camera("第二形態")
+	// スクロール制限
+	set_scroll_rect(-24,-25, 24,27)
+	
+	end
+}
+
+
+// ----------------------------------------------------------------------------
+// ボス（本體）                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("kani_body")
+
+// タックル直前にプログラマから送信されるレス
+RES("PROG")
+{
+	show_chr("kani_ashi1")
+	show_chr("kani_ashi2")
+	show_chr("kani_ashi3")
+	show_chr("kani_ashi4")
+	show_chr("kani_ashi5")
+	show_chr("kani_ashi6")
+	show_chr("kani_ashi7")
+	show_chr("kani_ashi8")
+	link_hp_chr("kani_ashi1","kani_body")
+	link_hp_chr("kani_ashi2","kani_body")
+	link_hp_chr("kani_ashi3","kani_body")
+	link_hp_chr("kani_ashi4","kani_body")
+	link_hp_chr("kani_ashi5","kani_body")
+	link_hp_chr("kani_ashi6","kani_body")
+	link_hp_chr("kani_ashi7","kani_body")
+	link_hp_chr("kani_ashi8","kani_body")
+
+	// コアを復活させ本體とリンクさせる
+	refresh("kani_core")
+	link_hp_chr("kani_core","kani_body")
+
+	// ＨＰバー表示
+	disp_hp_bar("kani_body")
+}
+
+RES("KILL")
+{
+	// カメラ空間の固定を解除
+	unlock_camera("第二形態")
+	
+	// PCの動きを止める
+	stop_pc(0)
+
+	// 女の子をボスの位置に
+	set_pos_ex("drasure","kani_body")
+
+	// シネマON
+	cinema_on(0)
+
+	// ブラー效果ON
+	blur(50)
+
+	// 死亡モーション再生
+	set_motion("kani_body","EMPTY4",0)
+	wait(436)
+
+	fade_out(-1)
+	game_flag_on(566)
+	wait(128)
+	
+	blur(0)
+	
+	// カニたち退場
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+
+
+	// ドラスレ登場 ----------------------------------------------------------
+	
+	// 注視するターゲットをドラスレに變更←かなり變則的な使い方。オススメできない。
+	set_target_chr("drasure")
+
+	// けんをみる
+	SET_DEG_EX("PC","drasure")
+	
+	show_chr("drasure")
+	// 劍光る
+	attach_efc("EFC_05BOSSMUSUME","drasure","POS")
+
+	wait(60)
+
+	fade_in(-1)
+	wait(300)
+
+	fade_out(-1)
+	wait(120)
+
+	bgm(2,1,0,0,-1)
+
+
+	// 第二形態用のカメラ設定を全部切る -------------------------------------
+
+	// いない名前を指定してターゲッティングＯＦＦ
+	set_target_chr("xxxx")
+	// フリー回轉モードOFF
+	set_map_attr(16)
+	// オートターゲットモードOFF
+	set_map_attr(17)
+	// 回轉角度をゲーム時のものに戻す
+//	correct_rot_y(0)
+	// カメラ箱を變更
+	camera_off("第二形態")
+
+	// ももちゃんとの會話 ----------------------------------------------------
+	
+	hide_chr("turimomo")
+	show_chr("girl")
+	
+	// 座標を變更
+	set_pos("PC",1,0,-3)
+	// ももをみる
+	SET_DEG_EX("PC","girl")
+	// もももみる
+	SET_DEG_EX("girl","")
+
+	FADE_IN(-1)
+//	WAIT(180)
+//	WAIT(30)
+
+	blur(1)
+	// 注視點を"もも"に合わせたいがための回りくどい處理（新たに命令作る予定）
+	focus_chr("girl")
+	wait(120)
+	blur(0)
+	
+	// ももカメラオン
+	camera_off("全體")
+	camera_on("ももイベント用？")
+
+	active_chr("girl")
+
+	SET_NAME("GIRL","小桃")
+	MSG("……呼啊……")
+	WAIT(30)
+	set_motion("girl","ATTACK1",30)
+	MSG("？？　這是哪裡～？大哥哥你是誰？？")
+	WAIT(60)
+	MSG("…………那個，小桃我啊，|散步的時候總覺得在被什麼人呼喚。")
+	MSG("然後就什麼都不記得了……")
+	WAIT(60)
+	MSG("哎呀～頭還很疼呢……|嗚，真想早點見到爺爺啊……")
+	MSG("喂喂！大哥哥是「正義的朋友」對吧～☆|請送我回家吧～?")
+	WAIT(30)
+	SE("SE_EVENT_I")
+	SYS("得到「#C2屠龍劍#C*」！")
+	GET_ITEM(36)
+	WAIT(240)
+	LOAD_HITMAP("MP_0598h")
+	FADE_OUT(-1)
+	WAIT(128)
+
+	// クリアフラグ立ててジジイ部屋へ
+	GAME_FLAG_ON(1)
+	// お泊りフラグおろす
+	GAME_FLAG_OFF(3301)
+	ENTRY_MAP("kaniato")
+
+	END
+}
+
+// ----------------------------------------------------------------------------
+// 壞れ壁                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("kabe")
+
+RES("EVENT")
+{
+	check_game_flag(567)
+	off_jump boss
+	end
+
+boss:
+	game_flag_on(567)
+
+	// PCの動きを止める
+	stop_pc(0)
+	LOAD_HITMAP("MP_0598HB")
+
+	// フェードOUT
+	fade_out(-1)
+	wait(64)
+
+	// カメラをオン
+	camera_on("ボス中央（改）")
+//	camera_on("ボス中央")
+//	camera_on("ボス右")
+//	camera_on("ボス左")
+	// ↑のカメラに完全に推移するまでのウェイト
+	wait(30)
+
+	set_target_chr("kani_body")
+	// フリー回轉モードにする
+	set_map_attr(16)
+	// オートターゲットモードにする
+	set_map_attr(17)
+
+	// 座標を變更
+	set_pos("PC",0,0,-19)
+	// 向きを變更
+	SET_DEG_EX("PC","turimomo")
+
+	// ２本の柱が邪魔なんで一時的に消す
+	hide_chr("pillar1")
+	hide_chr("pillar2")
+	
+	// カメラ空間を固定
+	lock_camera("ボス中央（改）")
+//	lock_camera("ボス中央")
+//	set_scroll_rect(-7.5,16.5, 7.5,23.5)
+	set_scroll_rect(-6.5,17.5, 6.5,21.5)
+
+	// ムービー用カメラ讀み込み
+	load_camera("C_0598")
+	set_camera_org(0,1,26)
+	play_camera(410,1450)
+
+	// フェードIN
+	fade_in(-1)
+
+	// シネマON
+	cinema_on(0)
+
+	// 登場シーン ////////////////////////////////////////////////////////////
+
+	// スキップ許可
+	skip_enable(1)
+
+	// BGM變更
+	bgm(4,1,0,0,-1)
+	
+	// 吊りモモを上に移動
+	MOVE_VEC("turimomo",0,6,0,900)
+
+	// ボス表示（壁の裡で待機狀態を維持）
+	show_chr("kani_body")
+	show_chr("kani_core")
+	set_motion("kani_body","EMPTY1",0)
+
+	// 壁破壞①
+	wait(60)
+	SHAKE(25,25)
+	se("SE_WALL_HIT")
+
+	wait(10)
+	shake(0,15)
+
+	wait(60)
+	SHAKE(25,25)
+	se("SE_WALL_HIT")
+
+	wait(10)
+	shake(0,15)
+
+	wait(90)
+
+	set_motion("kabe1","DOWN",0)
+	set_motion("hand","DOWN",0)
+	shake(25,25)
+	se("SE_WALL_HIT")
+
+	wait(40)
+	shake(0,15)
+	wait(80)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	shake(0,15)
+	wait(140)
+
+	blur(50)
+	slow(1)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	// 目光る
+	attach_efc("EFC_SPI_EYE","kani_core","Frame1_O_0603_Layer1")
+
+	shake(0,15)
+	wait(20)
+
+	set_motion("kabe1","HOOK",0)
+
+	wait(0)
+
+	slow(0)
+	blur(0)
+
+	// 突進モーション再生
+	set_motion("kani_body","EMPTY2",0)
+	
+	// 壁の邊りまで迫ってきたら…
+	wait(263)
+
+	slow(1)
+	blur(50)
+
+	// 壁破壞②
+	set_motion("kabe2","DOWN",0)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	shake(0,15)
+	wait(20)
+
+	set_motion("kabe2","HOOK",0)
+//	wait(127)
+	wait(27)
+	wait(25)
+	shake(0,50)
+	wait(75)
+
+	blur(0)
+	slow(0)
+
+	// シネマＯＦＦ
+	cinema_off(0)
+
+	// マジ當たりON
+	set_collision_obj("kani_body",8)
+	
+	// ＨＰバー表示
+	disp_hp_bar("kani_core")
+
+//	bgm(5,0,0,0,-1)
+
+	end
+}
+

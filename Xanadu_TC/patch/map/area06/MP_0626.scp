@@ -1,0 +1,171 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	CHECK_GAME_FLAG(648)
+	ON_SKIP(2)
+	HIDE_CHR("tbox1")
+	HIDE_CHR("tbox2")
+
+	//マスターゴブリン
+	put_monster("m00",541,1,0,0,0)
+//	put_monster("m01",407,1,0,0,1)
+	// ゴブリンヒーラー
+	put_monster("m02",540,1,0,0,2)
+	put_monster("m03",540,1,0,0,3)
+//	put_monster("m04",407,1,0,0,4)
+	// ゴブリンウォーリアー
+	put_monster("m05",401,1,0,0,5)
+	put_monster("m06",401,1,0,0,6)
+	put_monster("m07",401,1,0,0,7)
+	put_monster("m08",401,1,0,0,8)
+//	put_monster("m09",407,1,0,0,9)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1631)
+	ON_SKIP(2)
+	KAGI("d1631",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1631")
+}
+
+// 倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(648)
+	ON_JUMP next
+
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",-2,4,10.5)
+	EFC("EFC_ADD_TREASURE",2,4,10.5)
+	SHOW_CHR("tbox1")
+	SHOW_CHR("tbox2")
+	WAIT(60)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(648)
+
+next:
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1631")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1631)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(637)
+	OFF_JUMP next
+	// 圓盤の鍵
+//	SET_TREASURE("tbox1",1,182,"ITEM")
+	INIT_SWITCH_ON("tbox1")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+// 圓盤の鍵
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 182, -2,4,10.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(637)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(649)
+	OFF_JUMP next
+	// タワーシールド
+//	SET_TREASURE("tbox2",1,65,"ITEM2")
+	INIT_SWITCH_ON("tbox2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+// タワーシールド
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 65, 2,4,10.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+
+	SYS_EX("得到【塔盾】！",-1,0X00000200)
+
+	GET_ITEM(65, 1)
+	GAME_FLAG_ON(649)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+

@@ -1,0 +1,94 @@
+
+// -----------------------------------------------------------
+// 初期狀態                                                                    
+// -----------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// SE再生
+	SE("SE_WIND2")
+
+	// スケルトンアーチャー
+	put_monster("m00",379,1,0,0,0)
+	put_monster("m01",379,1,0,0,1)
+	put_monster("m02",379,1,0,0,2)
+	put_monster("m03",379,1,0,0,3)
+	put_monster("m04",379,1,0,0,4)
+
+	set_rain_inf("EFC_HINOKO2",1, 45, 15,120)
+	rain(1)
+	SET_MOTION("switch","HOOK",0)
+	HIDE_CHR("gate")
+	HIDE_CHR("switch")
+	HIDE_CHR("wall2")
+
+	//エレベータを見せるかどうか
+	CHECK_GAME_FLAG(804)
+	OFF_JUMP NEXT2
+	SHOW_CHR("gate")
+	SHOW_CHR("switch")
+	SHOW_CHR("wall2")
+
+
+NEXT2:
+	CHECK_GAME_FLAG(3000)
+	OFF_JUMP NEXT3
+
+	CINEMA_OFF(0)
+
+	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+	END
+
+
+NEXT3:
+	END
+}
+// ==============================================================
+// 昇降機
+// ==============================================================
+
+DEF("switch")
+
+RES("CLICK")
+{
+	SEL("#C1升降機|#C2　拉動拉桿　|取消")
+	check_select(0)
+	on_jump SW_MOVE
+	END
+
+SW_MOVE:
+
+	GAME_FLAG_ON(3000)
+
+
+	SWITCH_OFF("switch")
+	WAIT(60)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(30)
+	SHAKE(0,5)
+
+	SE("SE_ELEV1")
+
+	WAIT(60)
+
+	SET_MOTION("gate","EMPTY2",0)
+
+	SE("SE_ELEV2")
+
+	MOVE_VEC("gate",0,10,0,360)
+	MOVE_VEC("switch",0,10,0,360)
+
+	QUAKE(1,1,120)
+	WAIT(60)
+	FADE_OUT(-1)
+	WAIT(60)
+//※エレベータに一度でも乘ったらどちらからでも乘れるようにしてみた。
+//	GAME_FLAG_OFF(804)
+	ENTRY_MAP("0870_0830t")
+
+END
+}

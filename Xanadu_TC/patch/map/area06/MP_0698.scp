@@ -1,0 +1,765 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// コア
+	load_chr("M_0322\ARM_322a",0)
+	// ＤＳ
+	load_chr("M_0322\ARM_322b",1)
+	// ヒットマップ
+	load_chr("M_0322\M_0322h",8)
+	
+//	set_target_chr("core")
+	// （通常の）死神の發生を抑止
+	permit_death(0)
+
+	// あさっての方向にダイブしない限り落ちないようなジャンプ效能
+	set_jump_info(0.12, 0.12, 0.25, 0, 4, 3, 60)
+	// スクロールロック矩形の角度を變える
+	set_scroll_rect_deg(-45)
+
+	set_motion("body","EMPTY2",0)
+	FADE_IN_EX( 60, 1, "0xffffffff",0)
+	
+	// ラスター設定（"ラスタっぷり"はてきとー）
+	set_raster_info( 0, 180, 180, 0.03, 0.03, 1,0, -1,-1, 1.0)
+	raster(0,1)
+}
+
+
+// コア //////////////////////////////////////////////////////////////////////
+DEF("core")
+
+RES("INIT")
+{
+	// ＰＣをa10の足場に置く
+	set_pos("PC",13.35,0,13.35)
+	set_deg_ex("PC","body")
+	// ＰＣの復活ポイントを同樣の座標に設定
+	set_recover_pos(13.35,0,13.35)
+
+	set_collision_obj("body",8)
+	disp_hp_bar("core")
+	QUAKE(3,2,400)
+//	bgm(6,0,-1)
+	bgm(18,0,-1)
+
+
+// 冒頭ムービーだわよ～ /////////////////////////////////////////////////////////
+	cinema_on(0)
+	
+	SET_POS("a1",4.8,-10.75,4.8)
+	SET_POS("a2",9.87,-10.5,3.335)
+	SET_POS("a3",3.335,-10.5,9.87)
+	SET_POS("a4",15.14,-10.8,4.04)
+	SET_POS("a5",11.78,-10.8,8.16)
+	SET_POS("a6",8.16,-10.8,11.78)
+	SET_POS("a7",4.04,-10.8,15.14)
+	SET_POS("a8",20.33,-11,5.26)
+	SET_POS("a9",16.86,-11,9.31)
+	SET_POS("a11",9.31,-11,16.86)
+	SET_POS("a12",5.26,-11,20.33)
+	SET_POS("a13",22.09,-11.25,10.31)
+	SET_POS("a14",18.54,-11.25,14.6)
+	SET_POS("a15",14.6,-11.25,18.54)
+	SET_POS("a16",10.31,-11.25,22.09)
+
+	// スキップ許可
+
+	permit_script_camera(1)
+	set_script_camera(7,7,6.5, 40,60,0, 8, 0)
+	set_motion("body","EMPTY1",0)
+
+	blur(30)
+	SLOW(4)
+	wait(60)
+	SLOW(0)
+	wait(50)
+
+
+
+
+	rotate_script_camera(-60,-15,0, 10, 1)
+	move_script_look_at(0,-3.5,0, 10, 1)
+	blur(50)
+	SLOW(4)
+	wait(10)
+	SLOW(0)
+	blur(0)
+	scale_script_camera(1.1, 60, 1)
+	wait(30)
+
+	//引いて、ゴールで足場
+	SYS("囎")
+	scale_script_camera(3.1, 120, 1)
+	move_script_look_at(0,-3,0, 120, 1)
+	blur(2)
+	wait(65)
+
+	set_motion("kowareasi","EMPTY1",0)
+	MOVE_VEC("kowareasi", 0,-10,0, 200)
+	wait(5)
+	SLOW(4)
+	wait(10)
+	SLOW(0)
+	wait(40)
+
+	scale_script_camera(3.2, 160, 1)
+	wait(30)
+	set_motion("body","EMPTY3",30)
+	wait(130)
+	HIDE_CHR("kowareasi")
+
+
+	blur(0)
+	cross_fade(60)S
+	permit_script_camera(0)
+	cinema_off(0)
+	camera_on("戰熹")
+
+}
+
+
+
+RES("KILL")
+{
+	stop_pc(0)
+	blur(50)
+	FADE_OUT_EX( 16, 0, "0xffffff7d", 4)	
+	set_motion("body","DYING",0)
+
+// 04/03/16:昔は-1を入れる事で何かをRESETしていた氣がするのでそれの名殘だと思われ。
+//	set_collision_obj("body",-1)
+	
+	// 本熕から發射されたあらゆるエフェクツを消去
+	delete_efc("body")
+
+	//間
+	SLOW(6)
+	wait(20)
+	SLOW(0)
+	cinema_on(0)
+
+	//カメラ位置決定
+	permit_script_camera(1)
+	cross_fade(60)
+	set_script_camera(2,10,2, -30,100,0, 10, 0)
+
+	//PCの位置補正
+	PICK_ITEM(36)
+	set_pos("PC",4.7,0,4.7)
+	set_deg_ex("PC","body")
+
+	//ぶっさしモーションをループ再生開始
+	set_motion("PC","EMPTY2",0)
+
+	//こっからカメラ移動
+	//燉なめ
+	rotate_script_camera(10,10,0, 250, 1)
+	wait(60)
+	SLOW(2)
+	wait(60)
+	SLOW(0)
+	wait(130)
+
+	//下へ
+	cross_fade(60)
+	move_script_look_at(0,-9,0, 50, 0)
+	rotate_script_camera(0,-15,0, 50, 0)
+	scale_script_camera(0.7, 50, 0)
+	stop_bgm(0,3000)
+	wait(20)
+	set_motion("PC","EMPTY3",50)
+	wait(30)
+	rotate_script_camera(0,-3,0, 50, 1)
+	wait(50)
+	SLOW(4)
+	scale_script_camera(1.5, 20, 0)
+	wait(20)
+	SLOW(0)
+	wait(0)
+
+	//中央から旋迴
+	rotate_script_camera(-5,-10,0,280, 1)
+	blur(40)
+	wait(20)
+	set_motion("PC","EMPTY4",20)
+	wait(170)
+	SLOW(2)
+	wait(30)
+	SLOW(0)
+	wait(75)
+
+	//引く
+	blur(100)
+	scale_script_camera(3, 5, 0)
+	FADE_IN_EX(5, 0, "0xffffff7d", 0)
+	wait(2)
+	SLOW(3)
+	wait(3)
+	SLOW(0)
+	blur(0)
+
+	//ゆっくり旋迴しつつフェードアウト
+	blur(60)
+	rotate_script_camera(-10,-60,0,660, 1)
+	QUAKE(5,5,660)
+	wait(20)
+	FADE_OUT_EX(590, 0, "0xffffffff", 0)
+//	wait(640)
+	wait(190)
+	kill_chr("body",0,1,400)
+	wait(400)
+	wait(50)
+
+	permit_script_camera(0)
+	blur(0)
+	cinema_off(0)
+		hide_sys_dlg(0)
+	stop_bgm(1,2000)
+	wait(120)
+	
+	// エンディング用MAPへ（ホントは違うケド…）
+//	entry_map("0080_0061")
+	
+	end
+}
+
+// 足場 //////////////////////////////////////////////////////////////////////
+
+// 崩壞 ----------------------------------------------------------------------
+@tobi_koware
+{
+	switch_on("CUR")
+	move_vec_ex("CUR",0,-10,0,60, 1)
+	ret
+}
+
+// 復活 ----------------------------------------------------------------------
+@tobi_modori
+{
+	init_switch_off("CUR")
+	move_vec_ex("CUR",0, 10,0,60, 2)
+	ret
+}
+
+// 乘る ----------------------------------------------------------------------
+@tobi_nori
+{
+	set_motion("CUR","EMPTY1",0)
+	ret
+}
+// 降りる --------------------------------------------------------------------
+@tobi_ori
+{
+	set_motion("CUR","STAND",0)
+	ret
+}
+
+// １～１６番の足場處理
+
+//1---------------------------------------------------------------------------
+DEF("a1")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(1)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(1)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(1)
+skip:
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI03")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//2---------------------------------------------------------------------------
+DEF("a2")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(2)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(2)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(2)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI02")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//3---------------------------------------------------------------------------
+DEF("a3")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(3)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(3)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(3)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI02")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//4---------------------------------------------------------------------------
+DEF("a4")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(4)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(4)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(4)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI01")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//5---------------------------------------------------------------------------
+DEF("a5")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(5)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(5)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(5)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI01")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//6---------------------------------------------------------------------------
+DEF("a6")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(6)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(6)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(6)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI01")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//7---------------------------------------------------------------------------
+DEF("a7")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(7)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(7)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(7)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI01")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//8---------------------------------------------------------------------------
+DEF("a8")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(8)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(8)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(8)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI00")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//9---------------------------------------------------------------------------
+DEF("a9")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(9)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(9)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(9)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI00")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//10---------------------------------------------------------------------------
+DEF("a10")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(10)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("PROG_R")
+{
+	// 復活ポイント用の足場を強制的に初期位置に戻す
+	init_pos("CUR")
+	show_chr("CUR")
+	room_flag_off(10)
+}
+RES("GOAL")
+{
+	check_room_flag(10)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(10)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI00")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//11---------------------------------------------------------------------------
+DEF("a11")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(11)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(11)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(11)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI00")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//12---------------------------------------------------------------------------
+DEF("a12")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(12)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(12)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(12)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI00")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//13---------------------------------------------------------------------------
+DEF("a13")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(13)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(13)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(13)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI05")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//14---------------------------------------------------------------------------
+DEF("a14")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(14)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(14)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(14)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI05")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//15---------------------------------------------------------------------------
+DEF("a15")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(15)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(15)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(15)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI05")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}
+
+//16---------------------------------------------------------------------------
+DEF("a16")
+RES("PROG_D")
+{
+	call tobi_koware
+	room_flag_on(16)
+}
+RES("PROG_U")
+{
+	show_chr("CUR")
+	call tobi_modori
+}
+RES("GOAL")
+{
+	check_room_flag(16)
+	off_jump skip
+	hide_chr("CUR")
+	room_flag_off(16)
+skip:
+	end
+}
+RES("STEP_ON")
+{
+	se("SE_TOBI05")
+	call tobi_nori
+}
+RES("STEP_OFF")
+{
+	call tobi_ori
+}

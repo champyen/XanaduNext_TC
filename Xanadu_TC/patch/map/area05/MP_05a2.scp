@@ -1,0 +1,138 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// バット
+	put_monster("m00",381,7,0,0,0)
+	put_monster("m01",381,7,0,0,1)
+	// スケルトンウォーリアー
+	put_monster("m02",378,7,0,0,2)
+	put_monster("m03",378,7,0,0,3)
+	put_monster("m04",378,7,0,0,4)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1523)
+	ON_SKIP(2)
+	KAGI("d1523",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1523")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1524)
+	ON_SKIP(2)
+	KAGI("d1524",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1524")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1525)
+	ON_SKIP(2)
+	KAGI("d1525",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1525")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1523")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1523)
+}
+
+DEF("d1524")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1524)
+}
+
+DEF("d1525")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1525)
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(505)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,87,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(505)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, -0.75,0,2.25, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【100Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(100)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//手記９      散華の古文書 1216年 半神の月15日
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 298, -0.75,0,2.25, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【散花之古文書】！",-1,0X00000200)
+
+	GET_ITEM(298, 1)
+	GAME_FLAG_ON(505)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

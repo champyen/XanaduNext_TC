@@ -1,0 +1,261 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+//// マップ出るときに呼ばれる ---------------------------------------------------
+//RES("EXIT")
+//{
+//	// "地名錶示"が終わっていない可能性があるので強制消去
+//	IMG_OFF(0)
+//	IMG_OFF(1)
+//	IMG_OFF(2)
+//	IMG_OFF(3)
+//	CINEMA_OFF(0)
+//}
+
+// マップ入るときに呼ばれる ---------------------------------------------------
+RES("INIT")
+{
+	// SE再生
+	SE("SE_WIND")
+
+//	// EV C-6 ドヴォルザーク
+//	check_game_flag(3705)
+//	on_jump NEXT2
+//
+//	// EV C-3 奇岩城出現
+//	check_game_flag(3702)
+//	off_jump NEXT2
+//
+//	ENTRY_CHR( 0, 040)
+//	ENTRY_CHR( 1, 036)
+//	ENTRY_CHR( 2, 041)
+//
+//	PUT_CHR( 0, "Dvorak",        0.31,0.00,5.42, 205)
+//	PUT_CHR( 1, "Avatarlaha",   -2.33,0.00,3.77, 30)
+//	PUT_CHR( 2, "Beatrice",     -0.07,0.00,1.87, 355)
+//
+//	fade_out(0)
+//	jump EXIT
+
+NEXT2:
+	// フェード處理
+//	CHECK_ENTRY_GATE("0710_0097")
+	CHECK_GAME_FLAG(3000)
+	OFF_JUMP NEXT
+
+//	CINEMA_ON(0)
+	CINEMA_OFF(0)
+
+	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+
+	// エリアネーム表示
+	DISP_PLACE(2)
+//	ENTRY_IMG(0,"AREANAME02",0)
+//
+//		// αが'1'の時は'加算モード'なので「透明」にする時は、
+//		// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+//		//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+//		SET_IMG( 0, 192,166, 0,  0,  0,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 2, 192,166, 0,  0, 48,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 1, 224,206, 0,  0,224,255, 16, 1, 0xff000000, 0xff000000, 0,1, 0, 0,1)
+//		SET_IMG( 3, 192,206, 0,  0,240,255, 16, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		IMG_ON(0)
+//		IMG_ON(1)
+//		IMG_ON(2)
+//		IMG_ON(3)
+//
+//		// 發生までに'間'が欲しい場合はこんな風にします。
+//		SUSPEND_IMG(0,60)
+//		SUSPEND_IMG(1,30)
+//		SUSPEND_IMG(2,180)
+//		SUSPEND_IMG(3,180)
+//
+//		// フェードイン
+//		COLOR_IMG    (0, 0xffffffff, 0xff000000, 60, 1)
+//		COLOR_IMG_EX (2, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//		COLOR_IMG    (1, 0xffffffff, 0xff000000, 10, 1)
+//		SCALE_IMG    (1, 0.75,1,                 30, 1)
+//		COLOR_IMG_EX (3, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//
+//		// 120フレ後に指定したRESに飛ばし、そこで煮るなり燒くなり好きに出來ます。
+//		TIMER_IMG(0,120,"kesu")
+
+NEXT:
+
+	// NPCのうろつきっぷり設定
+	SET_WALK_RANGE("fish", 5,100, 30)
+
+EXIT:
+
+	END
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+//		DEF("kesu")
+//		RES("IMG")
+//		{
+//			COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+//			COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+//
+//			CINEMA_OFF(0)
+//			END
+//		}
+
+// ============================================================================
+// 門(exit)
+// ============================================================================
+
+DEF("gate")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("　要出去嗎？　|#C2出去|不要")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL1
+	JUMP SEL2
+
+SEL1:
+	WAIT(30)
+	SWITCH_ON("gate")
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0097_out")
+
+SEL2:
+	CINEMA_OFF(0)
+	END
+}
+
+
+// ----------------------------------------------------------------------------
+// 看板
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("哈萊克鎮")
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//// ドヴォルザークイベント
+//
+//
+//DEF("Dvorak")
+//
+//RES("INIT")
+//{
+//	// EV C-6 ドヴォルザーク
+//	check_game_flag(3705)
+//	on_jump EXIT
+//
+//	// EV C-3 奇岩城出現
+//	check_game_flag(3702)
+//	off_jump EXIT
+//
+////--------------------------------------------------------------------
+//
+//	STOP_PC(0)
+//	SET_MOTION("PC","STAND",-1)
+//	HIDE_CHR("PC")
+//
+//	CINEMA_ON(0)
+//	permit_script_camera(1)
+//	set_script_camera(0.55,0.00,4.77,  -30.0,180.0,0.0, 10, 15.0)
+//	rotate_script_camera(0,10,0, 300, 1)
+//	fade_in(80)
+//
+//	set_skip_label("SKIP")
+//
+//	MSG_EX("#S3#C0ドヴォルザーク「そうか、祠を守っていた|　　　　　　　　ガンダルチュアの封印も解けたか。」",-1,2)
+//
+//	MSG_EX("#S3#C0ベアトリーチェ「ええ、これで《狹間》へ入れるわ。」",-1,2)
+//
+//	MSG_EX("#S3#C0ドヴォルザーク「奇岩城が現れた今、|　　　　　　　　もはや一刻の猶予もない……」",-1,2)
+//	MSG_EX("#S3#C0ドヴォルザーク「早急に乘り込んで|　　　　　　　　あの方をお救い申し上げねば。」",-1,2)
+//
+//	wait_camera(0)
+//
+////　　ドヴォルザーク、北側の出口から退場。
+////　　見送るアバターラハとベアトリーチェ。
+//
+//	INIT_WALK_DST("Dvorak")
+//	set_walk_dst("Dvorak",0.19,0.00,6.09)
+//	set_walk_dst("Dvorak",-0.05,0.00,7.39)
+//	set_walk_dst("Dvorak",-0.05,0.00,11.39)
+//	walk_pos("Dvorak",0,0.035)
+//
+//	wait(120)
+//
+//	move_script_look_at(-2,0,-1, 300, 1)
+//
+//	wait_walk("Dvorak")
+//	HIDE_CHR("Dvorak")
+//
+//	MSG_EX("#S3#C0アバターラハ「ふむ、相變わらずせっかちですね……」",-1,2)
+//
+//	set_deg_EX("Beatrice", "Avatarlaha")
+//	MSG_EX("#S3#C0ベアトリーチェ「大丈夫かしら？」",-1,2)
+//
+//	set_deg_EX("Avatarlaha", "Beatrice")
+//
+//	MSG_EX("#S3#C0アバターラハ「今回ばかりはいくら彼でも|　　　　　　　狀況が惡いと言わざるを得ません……」",-1,2)
+//	MSG_EX("#S3#C0アバターラハ「どうしたものでしょうか……」",-1,2)
+//
+//	fade_out(120)
+//	wait(200)
+//
+//	HIDE_CHR("Avatarlaha")
+//	HIDE_CHR("Beatrice")
+//	SHOW_CHR("PC")
+//
+//	permit_script_camera(0)
+//	CINEMA_OFF(0)
+//
+//	game_flag_on(3705)
+//	GAME_FLAG_OFF(3000)
+//
+//	fade_in(60)
+//
+////--------------------------------------------------------------------
+//
+//EXIT:
+//	END
+//
+//SKIP:
+//
+//	STOP_CAMERA(0)
+//
+//	focus_chr("PC")
+//
+//	HIDE_CHR("Dvorak")
+//	HIDE_CHR("Avatarlaha")
+//	HIDE_CHR("Beatrice")
+//	SHOW_CHR("PC")
+//
+//	permit_script_camera(0)
+//	CINEMA_OFF(0)
+//
+//	game_flag_on(3705)
+//	GAME_FLAG_OFF(3000)
+//	fade_in(60)
+//	END
+//
+//}
+//
+//

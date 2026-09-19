@@ -1,0 +1,190 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	BGM(4,0,0)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1814)
+	ON_SKIP(2)
+	KAGI("d1814",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1814")
+
+	SET_MOTION("switch","HOOK",0)
+	HIDE_CHR("gate")
+	HIDE_CHR("switch")
+	HIDE_CHR("wall2")
+
+	//エレベータを見せるかどうか
+	CHECK_GAME_FLAG(805)
+	OFF_JUMP NEXT2
+	SHOW_CHR("gate")
+	SHOW_CHR("switch")
+	SHOW_CHR("wall2")
+
+
+NEXT2:
+	CHECK_ENTRY_GATE("0861_0097")
+	OFF_JUMP NEXT3
+
+	CINEMA_OFF(0)
+
+//	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+
+	CHECK_GAME_FLAG(812)
+	ON_JUMP NEXT4
+	// エリアネーム表示
+//	DISP_PLACE(3)
+//	ENTRY_IMG(0,"AREANAME02",0)
+//		// αが'1'の時は'加算モード'なので「透明」にする時は、
+//		// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+//		//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+//		SET_IMG( 0, 192,166, 0,  0, 96,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 2, 192,166, 0,  0,144,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 1, 224,206, 0,  0,224,255, 16, 1, 0xff000000, 0xff000000, 0,1, 0, 0,1)
+//		SET_IMG( 3, 192,206, 0,  0,240,255, 16, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		IMG_ON(0)
+//		IMG_ON(1)
+//		IMG_ON(2)
+//		IMG_ON(3)
+//
+//		// 發生までに'間'が欲しい場合はこんな風にします。
+//		SUSPEND_IMG(0,60)
+//		SUSPEND_IMG(1,30)
+//		SUSPEND_IMG(2,180)
+//		SUSPEND_IMG(3,180)
+//
+//		// フェードイン
+//		COLOR_IMG    (0, 0xffffffff, 0xff000000, 60, 1)
+//		COLOR_IMG_EX (2, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//		COLOR_IMG    (1, 0xffffffff, 0xff000000, 10, 1)
+//		SCALE_IMG    (1, 0.75,1,                 30, 1)
+//		COLOR_IMG_EX (3, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//
+//		// 120フレ後に指定したRESに飛ばし、そこで煮るなり燒くなり好きに出來ます。
+//		TIMER_IMG(0,120,"kesu")
+
+	END
+NEXT3:
+	FADE_IN(-1)
+	CINEMA_OFF(0)
+	END
+NEXT4:
+	GAME_FLAG_OFF(812)
+	END
+
+}
+
+// マップ名消すぞ-----------------------------------------------
+//		DEF("kesu")
+//		RES("IMG")
+//		{
+//			COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+//			COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+//
+//			CINEMA_OFF(0)
+//			END
+//		}
+
+
+// -------------------------------------------------------------
+// カギ開け
+
+DEF("d1814")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1814)
+}
+
+
+// -------------------------------------------------------------
+// 昇降機
+
+DEF("switch")
+
+RES("CLICK")
+{
+	SEL("#C1升降機|#C2　拉動拉桿　|取消")
+	check_select(0)
+	on_jump SW_MOVE
+	END
+
+SW_MOVE:
+
+	GAME_FLAG_ON(3000)
+
+
+	SWITCH_OFF("switch")
+	WAIT(60)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(30)
+	SHAKE(0,5)
+
+	SE("SE_ELEV1")
+
+	WAIT(60)
+
+	SET_MOTION("gate","EMPTY2",0)
+
+	SE("SE_ELEV2")
+
+	MOVE_VEC("gate",0,10,0,360)
+	MOVE_VEC("switch",0,10,0,360)
+
+	QUAKE(1,1,120)
+	WAIT(60)
+	FADE_OUT(-1)
+	WAIT(60)
+//※エレベータに一度でも乘ったらどちらからでも乘れるようにしてみた。
+//	GAME_FLAG_OFF(805)
+	ENTRY_MAP("0855_0861t")
+
+END
+}
+
+
+// ------------------------------------------------------------
+// 門(exit)
+
+DEF("gate")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("　要返回鎮上嗎？　|#C2返回|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL1
+	JUMP SEL2
+
+SEL1:
+	WAIT(30)
+	SWITCH_ON("gate")
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0097_0861")
+
+SEL2:
+	CINEMA_OFF(0)
+	END
+}
+
+RES("INIT")
+{
+	// マップの回轉角度を強制變更（所要時間 1 フレームで方向 6 に回轉）
+	RESET_MAP_ROT_Y(7,1)
+}
+

@@ -1,0 +1,74 @@
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+}
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09a6_09a5")
+RES("EVENT")
+{
+	ENTRY_MAP("09a5_09a6")
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(911)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,182,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(911)
+	OFF_JUMP ITEM
+
+ITEM:
+// 圓盤の鍵
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 182, 0,0.375,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(911)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+

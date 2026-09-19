@@ -1,0 +1,446 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// MP_0655のフェードアウトを解除
+	fade_IN(1)
+	
+	// コア
+	load_chr("M_0320\ARM_320a",0)
+	// ヒットマップ
+	load_chr("M_0320\M_0320h",8)
+	
+	// 注視ターゲット設定
+	set_target_chr("body")
+	// オートターゲットモードON
+	set_map_attr(17)
+
+	HIDE_CHR("core")
+	HIDE_CHR("body")
+	HIDE_CHR("yuka")
+	camera_off("空中戰")
+	camera_off("空中戰（舊）")
+	camera_off("地上戰（舊）")
+	
+	// （通常の）死神の發生を抑止
+	permit_death(0)
+	
+	// 雨降らす
+	set_rain_inf("EFC_RAIN",3, 45, 0,25)
+	rain(1)
+}
+
+
+// ----------------------------------------------------------------------------
+// スタート                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("start")
+
+RES("EVENT")
+{
+}
+
+// ----------------------------------------------------------------------------
+// ＰＣの初期位置を強制設定するためのキャラ（マップ據え置きなオブジェなら何でも良い）
+// ----------------------------------------------------------------------------
+
+DEF("wall1a")
+
+RES("INIT")
+{
+	// PCの動きを止める
+	stop_pc(0)
+	// 座標を變更
+	set_pos("PC",0,0,0)
+	// 向きを變更
+	set_deg_ex("PC","")
+	// ＰＣの復活ポイントを同樣の座標に設定
+	set_recover_pos(0,0,0)
+
+
+//---
+	// ボス表示
+//	show_chr("body")
+//	show_chr("core")
+//	set_collision_obj("body",8)
+	// ＨＰバー表示
+//	disp_hp_bar("core")
+//	end
+//---
+
+
+
+
+show_chr("body")
+show_chr("core")
+set_motion("body","STAND",0)
+set_collision_obj("body",8)
+
+set_pos("body",0,0,0)
+set_pos("PC",0,0,-10)
+
+end
+
+
+
+
+
+
+
+
+	check_room_flag(0)
+	off_jump boss
+	end
+
+boss:
+	room_flag_on(0)
+
+	// スキップ許可
+	skip_enable(1)
+
+	// ムービー用カメラ
+	permit_script_camera(1)
+	set_script_camera_ex("PC",1, -5,190, 0, 4, 0)
+	rotate_script_camera(0,15,0, 250, 0)
+	scale_script_camera(1.1, 250, 0)
+
+	// 登場シーン
+	// BGM變更
+//	bgm(4,0,-1)
+	bgm(18,0,-1)
+	QUAKE(0,3,200)
+	EFC("EFC_06MAP0699",0,0,0)
+
+	// シネマON
+	cinema_on(0)
+	
+	// ボス表示
+	show_chr("body")
+	show_chr("core")
+	set_motion("body","EMPTY1",0)
+	set_collision_obj("body",8)
+
+	// 光柱演出①
+	wait(249)
+	set_script_camera_ex("PC",1, -40,-10,0, 120, 0)
+	rotate_script_camera(-10,30,0, 150, 0)
+	scale_script_camera(1.2, 150, 0)
+	wait(149)
+	
+	// 光柱演出②
+	set_script_camera_ex("PC",1, -5,205,0, 4, 0)
+	rotate_script_camera(0,20,0, 155, 0)
+	scale_script_camera(1.2, 155, 0)
+	wait(155)
+	cross_fade(45)
+	rotate_script_camera(-5,135,0, 25, 1)
+	scale_script_camera(1.4, 25, 1)
+	wait(25)
+
+	// 武器を構える
+	pc_weapon(1)
+
+	blur(1)
+	slow(4)
+	wait(20)
+	slow(0)
+
+	//回轉
+	rotate_script_camera(0,90,0, 60, 0)
+	wait(60)
+	rotate_script_camera(-5,220,0,110, 0)
+	scale_script_camera(1.8, 110, 0)
+	wait(110)
+	rotate_script_camera(0,2,0,100, 0)
+	wait(100)
+
+	//ガルシスへ
+	cross_fade(30)
+	set_script_camera_ex("core",0, 60,210,0, 12, 0)
+	rotate_script_camera(0,-5,0, 30, 0)
+	wait(30)
+
+	rotate_script_camera(0,-40,0, 285, 0)
+	scale_script_camera(1.5, 285, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,-3,0, 285, 1)
+	slow(5)
+	wait(20)
+	slow(0)
+	wait(265)
+
+	blur(50)
+	MOVE_SCRIPT_LOOK_AT( 0,-25,0, 20, 1)
+	rotate_script_camera(-60,15,0, 20, 1)
+	scale_script_camera(0.9, 20, 1)
+	wait(20)
+	scale_script_camera(1.6, 230, 1)
+	rotate_script_camera(-5,0,0, 230, 1)
+	wait(230)	
+	blur(0)
+
+
+	cross_fade(60)
+	permit_script_camera(0)
+	cinema_off(0)
+	
+	// ＨＰバー表示
+	disp_hp_bar("core")
+//	bgm(5,0,-1)
+
+	end
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ボス（コア）                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("core")
+
+RES("KILL")
+{
+
+	stop_pc(0)
+	cinema_on(0)
+	blur(50)
+	
+	// 爆發EFCはスクリプト側で呼ぶことにした。ボーンの位置は適當（ひ）
+	attach_efc("EFC_SPI_DEAD","body","_koshi")
+	
+	set_motion("body","DYING",0)
+	wait(500)
+
+	fade_out(100)
+	wait(200)
+	blur(0)
+
+// ----------------------------------------------------------------------------
+// こっから繋ぎイベントよんーー                                                                    
+// ----------------------------------------------------------------------------
+
+	//一部のサーフェスを見えなくして、崩れ床表示。
+	hide_surface(0)
+	hide_surface(1)
+	hide_surface(2)
+	hide_surface(3)
+	hide_surface(7)
+	hide_surface(12)
+	show_chr("yuka")
+	SET_NAME("CORE","加爾西斯")
+
+	//ガルシスとPCの位置を移動
+	SET_POS("body",0,0,0)
+	SET_POS("PC",0,0,-12.5)
+	SET_DEG("body",180)
+	SET_DEG_EX("PC","core")
+	wait(100)
+	set_motion("body","CROUCH",0)
+	QUAKE(2,2,8000)
+	fade_IN(100)
+	skip_enable(1)
+
+	
+	//カメラ位置決定
+	permit_script_camera(1)
+	set_script_camera_ex("core",0, 190,-45, 0, 30, 0)
+
+	//遠景s
+	rotate_script_camera(0,60,0, 1650, 1)
+	scale_script_camera(0.5, 1650, 1)
+	wait(150)
+	MSG_EX("#S3#C0……再次",150,2)
+	wait(150)
+	MSG_EX("#S3#C0再次屈服在這可憎的劍的面前了啊……",200,2)
+	wait(250)
+	QUAKE(3,3,750)
+	set_motion("yuka","EMPTY1",0)
+	MSG_EX("#S3#C0數千年……神的詛咒持續著，漆黑的地獄之火不斷燃燒，",250,2)
+	wait(200)
+	MSG_EX("#S3#C0讓我不得不三次回到那暗黑的宇宙……",200,2)
+	wait(100)
+
+
+	//顏アップ
+	QUAKE(4,4,730)
+	cross_fade(30)
+	blur(30)
+	set_motion("body","EMPTY4",30)
+	scale_script_camera(0.25, 30, 1)
+	MOVE_SCRIPT_LOOK_AT( -1,1,0, 30, 1)
+	wait(30)
+	rotate_script_camera(-20,10,0, 700, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,-0.5,0, 700, 1)
+	MSG_EX("#S3#C0……饒不了你，絕對饒不了你！！",150,2)
+	wait(150)
+	MSG_EX("#S3#C0我也會帶上你的",150,2)
+	MSG_EX("#S3#C0把你和那劍一同……拖進永遠的黑暗之中！！",250,2)
+
+
+	blur(50)
+	QUAKE(5,5,360)
+	set_motion("body","EMPTY3",30)
+	slow(4)
+	wait(13)
+	ATTACH_EFC("EFC_GAL_EXPR","core","CTR")
+	MOVE_SCRIPT_LOOK_AT( 0,3.5,0, 30, 1)
+	rotate_script_camera(-30,-10,0, 30, 1)
+	scale_script_camera(0.3, 30, 1)
+	wait(112)
+	slow(0)
+	MOVE_SCRIPT_LOOK_AT( 0.3,-1.0,0, 50, 1)
+	wait(40)
+	slow(3)
+	
+	stop_bgm(0,3000)
+	FADE_OUT_EX( 60, 1, "0xffffffff",0)
+	wait(80)
+	blur(0)
+	slow(0)
+	permit_script_camera(0)
+	ENTRY_MAP("last")
+	end
+}
+
+// 地上①→空中移行イベント //////////////////////////////////////////////////
+// -> 飛び上がり處理そのものはプログラム內で處理。カメラワークのみ。
+RES("PROG_A")
+{
+	// PCの動きを止める
+	stop_pc(0)
+	
+	// カメラ變更
+	camera_off("地上戰")
+	camera_on("空中戰")
+	set_map_attr(17)
+
+	// シネマON
+	cinema_on(0)
+
+	cross_fade(60)
+	
+	permit_script_camera(1)
+//	set_script_camera_ex("body",-1, -30,300,0, 25, 0)
+	set_script_camera_ex("body",-1, -30,-30,0, 25, 0)
+
+//	rotate_script_camera(20,200,0, 212, 1)
+	rotate_script_camera(20,150,0, 212, 1)
+	move_script_look_at(0,-1,0, 212, 1)
+	scale_script_camera(0.8, 212, 1)
+	wait(212)
+	
+	blur(1)
+	rotate_script_camera(25,0,0, 115, 1)
+	move_script_look_at(0,12,0, 115, 1)
+	scale_script_camera(1.1, 115, 1)
+	wait(115)
+//	wait(100)
+//	blur(0)
+//	wait(15)
+	blur(0)
+
+	cross_fade(60)
+	permit_script_camera(0)
+	cinema_off(0)
+	
+	end
+}
+
+// 空中→地上②移行イベント //////////////////////////////////////////////////
+// -> カメラワークのみ。
+RES("PROG_B")
+{
+	// PCの動きを止める
+	stop_pc(0)
+
+	// シネマON
+	cinema_on(0)
+
+	cross_fade(60)
+	
+	permit_script_camera(1)
+	set_script_camera(0,0,0, -30,30,0, 30, 0)
+
+	rotate_script_camera(-30,60,0, 300, 1)
+	move_script_look_at(0,-1,0, 300, 1)
+	scale_script_camera(3.0, 300, 1)
+	wait(300)
+	
+	blur(1)
+
+	hide_chr("rope1")
+	hide_chr("wall1a")
+	hide_chr("wall1b")
+
+	hide_chr("rope2")
+	hide_chr("wall2a")
+	hide_chr("wall2b")
+
+	hide_chr("rope3")
+	hide_chr("wall3a")
+	hide_chr("wall3b")
+
+	hide_chr("rope4")
+	hide_chr("wall4a")
+	hide_chr("wall4b")
+
+	KILL_CHR("post1",0,0,-1)
+	KILL_CHR("post2",0,0,-1)
+	KILL_CHR("post3",0,0,-1)
+	KILL_CHR("post4",0,0,-1)
+
+	wait(60)
+
+	blur(0)
+	cross_fade(60)
+	permit_script_camera(0)
+
+	cinema_off(0)
+
+	camera_on("地上戰")
+	camera_off("空中戰")
+	set_map_attr(17)
+
+	end
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ボス（本體）                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("body")
+
+// メガブレスイベント ////////////////////////////////////////////////////////
+RES("PROG_C")
+{
+	// PCの動きを止める
+	stop_pc(0)
+
+	// シネマON
+	cinema_on(0)
+	
+	cross_fade(60)
+	
+	permit_script_camera(1)
+	set_script_camera_ex("core",-1, -30,300,0, 14, 0)
+
+	rotate_script_camera(20,30,0, 240, 1)
+	move_script_look_at(0,-1,0, 240, 1)
+	scale_script_camera(0.8, 240, 1)
+	wait(240)
+	
+	cross_fade(60)
+	permit_script_camera(0)
+
+	cinema_off(0)
+	
+	end
+}

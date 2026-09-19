@@ -1,0 +1,362 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期狀態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// スペクタクルズ通常動作
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1701)
+	ON_SKIP(2)
+	KAGI("d1701",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1701")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1703)
+	ON_SKIP(2)
+	KAGI("d1703",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1703")
+
+	// 水マップ
+	SE("SE_MIZU")
+
+//	CHECK_GAME_FLAG(704)
+//	OFF_JUMP NEXT
+//	CHECK_GAME_FLAG(706)
+//	OFF_JUMP NEXT
+
+	CHECK_GAME_FLAG(701)
+	OFF_JUMP NEXT
+
+	// ストッパーチェック
+	MOVE_VEC("box1",-1.5,-3,-3,1)
+	MOVE_VEC("box2",1.5,-3,-3,1)
+	INIT_SWITCH_ON("sw1")
+	INIT_SWITCH_ON("sw2")
+	ROOM_FLAG_ON(1)
+	ROOM_FLAG_ON(10)
+	GAME_FLAG_ON(704)
+	GAME_FLAG_ON(706)
+
+	SHOW_CHR("tbox1")
+
+	END
+
+NEXT:
+	HIDE_CHR("tbox1")
+	GAME_FLAG_OFF(704)
+	GAME_FLAG_OFF(706)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1701")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1701)
+}
+
+DEF("d1703")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1703)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(701)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box")
+	INIT_SWITCH_ON("tbox1")
+
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god01",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+	CHECK_GAME_FLAG(701)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 225, 0,0.5,-1.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【20Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(20)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 101, 0,0.5,-1.5, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99CARD_GET","tbox1","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(1)
+	GAME_FLAG_ON(701)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【妖貓】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【妖貓】",-1,0X00000200)
+	SYS_EX("這是可以增加技能使用次數的守護精靈。|裝備此守護精靈可以提高各技能的最大ＳＰ。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+//RES("CLICK")
+//{
+//	CINEMA_ON(0)
+//	STOP_PC(0)
+//	FOCUS_CHR("tbox1")
+//
+//// 300ゴールド
+//	SWITCH_ON("tbox1")
+//	POP_ITEM_ICON("tbox1", 225, 0,0.5,-1.5, 1,80,0)
+//	WAIT(140)
+//
+////	CHECK_MAX_ITEM(0)
+////	ON_JUMP EXIT
+//
+//	DEL_ITEM_ICON("tbox1")
+//	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+//
+//	sys_ex("【300ゴールド】を手に入れた！",-1,0x00000200)
+//
+//	GET_GOLD(300)
+////	GET_ITEM(241, 1)
+//	GAME_FLAG_ON(701)
+//	FOCUS_CHR("PC")
+//	CINEMA_OFF(0)
+//	END
+//
+//EXIT:
+//	SE("SE_ERROR")
+//	DEL_ITEM_ICON("tbox1")
+//	sys_ex("これ以上荷物を持てない。",-1,0x00000200)
+//	SWITCH_OFF("tbox1")
+//	FOCUS_CHR("PC")
+//	CINEMA_OFF(0)
+//}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(701)
+	ON_JUMP NEXT
+
+	CHECK_SWITCH("sw1")
+	ON_JUMP L_B2
+
+	// 乘ってすぐ降りたときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(704)
+	CHECK_ROOM_FLAG(14)
+	OFF_JUMP NEXT
+
+//		GAME_FLAG_OFF(704)
+		ROOM_FLAG_OFF(14)
+
+	// 既に消えていたらスルー
+	CHECK_ROOM_FLAG(10)
+	OFF_JUMP NEXT
+
+		// あらわれる
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("null")
+		ROOM_FLAG_OFF(10)
+		EFC("EFC_ADD_TREASURE",0,0.5,-1.5)
+		HIDE_CHR("tbox1")
+		WAIT(60)
+		CINEMA_OFF(0)
+		ROOM_FLAG_OFF(10)
+
+	END
+
+L_B2:
+	// 降りてすぐ乘ったときの「きえる」發生迴避よう
+//	CHECK_GAME_FLAG(704)
+	CHECK_ROOM_FLAG(14)
+	ON_JUMP NEXT
+
+//		GAME_FLAG_ON(704)
+		ROOM_FLAG_ON(14)
+
+	// もう片方のスイッチも押されているか
+	CHECK_SWITCH("sw2")
+	OFF_JUMP NEXT
+
+		// きえる
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("null")
+		EFC("EFC_ADD_TREASURE",0,0.5,-1.5)
+	CHECK_GAME_FLAG(701)
+	ON_SKIP(1)
+		SHOW_CHR("tbox1")
+		WAIT(60)
+		CINEMA_OFF(0)
+		ROOM_FLAG_ON(10)
+
+NEXT:
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw2")
+
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(701)
+	ON_JUMP NEXT
+
+	CHECK_SWITCH("sw2")
+	ON_JUMP L_B2
+
+	// 乘ってすぐ降りたときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(706)
+	CHECK_ROOM_FLAG(16)
+	OFF_JUMP NEXT
+
+//		GAME_FLAG_OFF(706)
+		ROOM_FLAG_OFF(16)
+
+	// 既に消えていたらスルー
+	CHECK_ROOM_FLAG(10)
+	OFF_JUMP NEXT
+
+		// あらわれる
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("null")
+		ROOM_FLAG_OFF(10)
+		EFC("EFC_ADD_TREASURE",0,0.5,-1.5)
+		HIDE_CHR("tbox1")
+		WAIT(60)
+		CINEMA_OFF(0)
+		ROOM_FLAG_OFF(10)
+
+	END
+
+L_B2:
+	// 降りてすぐ乘ったときの「きえる」發生迴避よう
+//	CHECK_GAME_FLAG(706)
+	CHECK_ROOM_FLAG(16)
+	ON_JUMP NEXT
+
+//		GAME_FLAG_ON(706)
+		ROOM_FLAG_ON(16)
+
+	// もう片方のスイッチも押されているか
+	CHECK_SWITCH("sw1")
+	OFF_JUMP NEXT
+
+		// きえる
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("null")
+		EFC("EFC_ADD_TREASURE",0,0.5,-1.5)
+	CHECK_GAME_FLAG(701)
+	ON_SKIP(1)
+		SHOW_CHR("tbox1")
+		WAIT(90)
+		CINEMA_OFF(0)
+		ROOM_FLAG_ON(10)
+
+NEXT:
+}
+

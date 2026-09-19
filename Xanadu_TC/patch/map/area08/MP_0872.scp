@@ -1,0 +1,112 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_WIND2")
+
+	CHECK_GAME_FLAG(826)
+	ON_SKIP(1)
+	HIDE_CHR("tbox")
+
+	// フローズンサラマンダー
+	put_monster("m00",320,13,0,0,0)
+	put_monster("m01",320,13,0,0,1)
+	// グリフォン
+	put_monster("m02",326,13,0,0,2)
+	put_monster("m03",326,13,0,0,3)
+	put_monster("m04",326,13,0,0,4)
+	// フローズンサラマンダー
+	put_monster("m05",320,13,0,0,5)
+	put_monster("m06",320,13,0,0,6)
+
+
+set_rain_inf("EFC_HINOKO3",1, 45, 15,30)
+rain(1)
+set_raster_info( 1, 5,5, 0.0005,0.0005, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+}
+
+// 倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(826)
+	ON_JUMP next
+	
+	// ↓05/09/15:ＰＣ止めなきゃダメじゃん！（ひ）
+	stop_pc(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",26.3125,1.1,-32)
+	SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(826)
+
+next:
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(821)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,24,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(821)
+	OFF_JUMP ITEM
+
+ITEM:
+// ドレークスクロウ
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 24, 26.3125,1.1,-32, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【龍獸之爪】！",-1,0X00000200)
+
+	GET_ITEM(24, 1)
+	GAME_FLAG_ON(821)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

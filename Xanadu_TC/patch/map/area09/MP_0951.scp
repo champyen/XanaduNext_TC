@@ -1,0 +1,248 @@
+
+// ----------------------------------------------------------------------------
+// マップ                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	// 寶箱取ってたら消す
+	CHECK_AREA_FLAG(51)
+	OFF_SKIP(1)
+	INIT_SWITCH_ON("tbox")
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	// 階層チェック
+	CHECK_RNDMAP_HELL(0)
+	ON_JUMP HELL_0
+	CHECK_RNDMAP_FLOOR(0)
+	ON_JUMP 0
+	CHECK_RNDMAP_FLOOR(1)
+	ON_JUMP 1
+	CHECK_RNDMAP_FLOOR(2)
+	ON_JUMP 2
+	CHECK_RNDMAP_FLOOR(3)
+	ON_JUMP 3
+
+	0:
+	// 第１部
+	// ★１層目にはこの方角のお寶部屋は登場しないのでナシよ★
+	JUMP PASS
+
+	1:
+	// 第２部
+	check_game_flag(930)
+	on_jump 1a
+		// シャドウアクス
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 13, 0,1,0, 1,80,0)
+		WAIT(140)
+		CHECK_MAX_ITEM(0)
+		ON_JUMP EXIT
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【暗影之斧】！",-1,0X00000200)
+		GET_ITEM(13, 1)
+		GAME_FLAG_ON(930)
+
+		JUMP PASS
+	1a:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 225, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【2000Ｇ】！",-1,0X00000200)
+		GET_GOLD(2000)
+		GAME_FLAG_ON(930)
+		JUMP PASS
+
+	2:
+	// 第３部
+	check_game_flag(931)
+	on_jump 2a
+		// 石板12
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 281, 0,1,0, 1,80,0)
+		WAIT(140)
+		CHECK_MAX_ITEM(0)
+		ON_JUMP EXIT
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【寶瓶之石板】！",-1,0X00000200)
+		GET_ITEM(280, 1)
+		GAME_FLAG_ON(931)
+		JUMP PASS
+	2a:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 225, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【3000Ｇ】！",-1,0X00000200)
+		GET_GOLD(3000)
+		GAME_FLAG_ON(931)
+		JUMP PASS
+
+	3:
+	// 第４部
+	check_game_flag(932)
+	on_jump 3a
+		// イグニシオン　　　ＬＶ２
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 242, 0,1,0, 1,80,0)
+		WAIT(140)
+		CHECK_MAX_ITEM(0)
+		ON_JUMP EXIT
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+		GET_ITEM(242, 1)
+		GAME_FLAG_ON(932)
+		JUMP PASS
+	3a:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 225, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到【4000Ｇ】！",-1,0X00000200)
+		GET_GOLD(4000)
+		GAME_FLAG_ON(932)
+		JUMP PASS
+
+	HELL_0:
+		check_game_flag(981)
+		on_jump HELL_0A
+		CHECK_RNDMAP_FLOOR(4)
+		ON_JUMP HELL_05
+	HELL_0A:
+		check_game_flag(982)
+		on_jump HELL_0B
+		CHECK_RNDMAP_FLOOR(9)
+		ON_JUMP HELL_10
+	HELL_0B:
+		check_game_flag(983)
+		on_jump HELL_0C
+		CHECK_RNDMAP_FLOOR(14)
+		ON_JUMP HELL_15
+	HELL_0C:
+		check_game_flag(984)
+		on_jump HELL_0D
+		CHECK_RNDMAP_FLOOR(19)
+		ON_JUMP HELL_20
+	HELL_0D:
+		check_game_flag(985)
+		on_jump HELL_0E
+		CHECK_RNDMAP_FLOOR(24)
+		ON_JUMP HELL_25
+	HELL_0E:
+		check_game_flag(972)
+		ON_JUMP HELL_MPOT
+
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 212, 0,1,0, 1,80,0)
+		WAIT(140)
+		CHECK_STACK_ITEM(212, 1)
+		OFF_JUMP EXIT
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【回復藥水Ｌ】！",-1,0X00000200)
+		GET_ITEM(212, 1)
+		JUMP PASS
+	HELL_MPOT:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 215, 0,1,0, 1,80,0)
+		WAIT(140)
+		CHECK_STACK_ITEM(215, 1)
+		OFF_JUMP EXIT
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【魔法藥水】！",-1,0X00000200)
+		GET_ITEM(215, 1)
+		JUMP PASS
+	HELL_05:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 38, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【木刀】！",-1,0X00000200)
+		GET_ITEM(38, 1)
+		GAME_FLAG_ON(981)
+		JUMP PASS
+	HELL_10:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 384, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【騎士頭橿】！",-1,0X00000200)
+		GET_ITEM(384, 1)
+		GAME_FLAG_ON(982)
+		JUMP PASS
+	HELL_15:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 221, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【聖靈藥】！",-1,0X00000200)
+		GET_ITEM(221, 1)
+		GAME_FLAG_ON(983)
+		JUMP PASS
+	HELL_20:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 98, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【學生服】！",-1,0X00000200)
+		GET_ITEM(98, 1)
+		GAME_FLAG_ON(984)
+		JUMP PASS
+	HELL_25:
+		SWITCH_ON("tbox")
+		POP_ITEM_ICON("tbox", 181, 0,1,0, 1,80,0)
+		WAIT(140)
+		DEL_ITEM_ICON("tbox")
+		ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+	SYS_EX("得到了【披風】！",-1,0X00000200)
+		GET_ITEM(181, 1)
+		GAME_FLAG_ON(985)
+		JUMP PASS
+
+PASS:
+	AREA_FLAG_ON(51)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

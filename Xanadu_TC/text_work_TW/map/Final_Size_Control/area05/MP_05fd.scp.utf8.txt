@@ -1,0 +1,153 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// スケルトンアーチャー
+	put_monster("m00",379,1,0,0,0)
+	put_monster("m01",379,1,0,0,1)
+	put_monster("m02",379,1,0,0,2)
+	put_monster("m03",379,1,0,0,3)
+	put_monster("m04",379,1,0,0,4)
+	put_monster("m05",379,1,0,0,5)
+
+	CHECK_GAME_FLAG(4011)
+	OFF_JUMP NEXT
+	SWITCH_ON("portal")
+
+NEXT:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1537)
+	ON_SKIP(2)
+	KAGI("d1537",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1537")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1537")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1537)
+}
+
+
+// ============================================================================
+// ポータル
+// ============================================================================
+DEF("portal")
+
+RES("EVENT")
+{
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4011)
+	ON_JUMP NEXT
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	WAIT(60)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+	SWITCH_ON("portal")
+	WAIT(120)
+
+	GAME_FLAG_ON(4011)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(515)
+	OFF_JUMP next
+
+	// エリクサー
+//	SET_TREASURE("tbox",1,221,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(515)
+	OFF_JUMP ITEM
+
+ITEM:
+// エリクサー
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 221, 7,4.75,-1, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【聖靈藥】！",-1,0X00000200)
+
+	GET_ITEM(221, 1)
+	GAME_FLAG_ON(515)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+

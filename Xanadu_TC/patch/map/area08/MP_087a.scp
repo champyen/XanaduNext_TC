@@ -1,0 +1,85 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_WIND2")
+
+	// フローズンサラマンダー
+	put_monster("m00",320,13,0,0,0)
+	put_monster("m01",320,13,0,0,1)
+	put_monster("m02",320,13,0,0,2)
+	put_monster("m03",320,13,0,0,3)
+
+set_rain_inf("EFC_HINOKO3",1, 45, 15,30)
+rain(1)
+set_raster_info( 1, 5,5, 0.0005,0.0005, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(837)
+	OFF_JUMP next
+
+	// エリクサー
+//	SET_TREASURE("tbox",1,221,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(837)
+	OFF_JUMP ITEM
+
+ITEM:
+// エリクサー
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 221, 0.5,20.5,10, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【聖靈藥】！",-1,0X00000200)
+
+	GET_ITEM(221, 1)
+	GAME_FLAG_ON(837)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+

@@ -1,0 +1,125 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// カギ設定
+	CHECK_GAME_FLAG(1926)
+	ON_SKIP(2)
+	KAGI("d1926",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1926")
+
+}
+
+
+// -------------------------------------------------------------------
+// カギ開け
+// -------------------------------------------------------------------
+
+DEF("d1926")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1926)
+}
+
+
+// ------------------------------------------------------------------
+// マップ移動                                                                  
+// ------------------------------------------------------------------
+
+DEF("09b2_09a7")
+RES("EVENT")
+{
+	ENTRY_MAP("09a7_09b2")
+}
+
+DEF("09b2_09b0")
+RES("EVENT")
+{
+	ENTRY_MAP("09b0_09b2")
+}
+
+// ------------------------------------------------------------------
+// 寶箱                                                                        
+// ------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(937)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(937)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 8,0,0, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【500Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(500)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板⑤　獅子の石板
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 274, 8,0,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【獅子之石板】！",-1,0X00000200)
+
+	GET_ITEM(274, 1)
+	GAME_FLAG_ON(937)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

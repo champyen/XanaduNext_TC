@@ -1,0 +1,386 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+//
+// ROOM_FLAG
+//	0 アニエス
+//
+
+DEF("MAP")
+
+RES("INIT")
+{
+	set_rain_inf("EFC_06KAZE",1, 45, 15,240)
+	rain(1)
+
+	// SE再生
+	SE("SE_WIND2")
+	SE("SE_NAMI2")
+
+	//3709	EV C-10 結界裝置
+	CHECK_GAME_FLAG(3709)
+	OFF_JUMP NEXT4
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	CHECK_GAME_FLAG(3727)
+	OFF_JUMP NEXT3
+
+NEXT4:
+	// エリアネーム表示
+	CHECK_ENTRY_GATE("0602_0089")
+	OFF_SKIP(1)
+	DISP_PLACE(4)
+
+NEXT3:
+
+	HIDE_CHR("Aniece")
+	HIDE_CHR("Fleurette")
+
+	// EV C-11 燹き花嫁
+	CHECK_GAME_FLAG(3710)
+	on_jump NEXT
+
+	//3709	EV C-10 結界裝置
+	CHECK_GAME_FLAG(3709)
+	on_jump NEXT2
+
+	// EV C-3 奇岩城出現
+	check_game_flag(3702)
+	off_jump NEXT
+
+	SHOW_CHR("Aniece")
+	// グラディウス、バックラー、ローブ
+	load_npc_eqp(00,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+	set_pos("Aniece", -0.94,0.00,14.40, 0)
+
+	SHOW_CHR("Fleurette")
+	set_pos("Fleurette", -0.00,0.00,40.15, 180)
+
+NEXT2:
+	// バリアありマップを讀み込む
+	load_map("MP_06a0")
+
+NEXT:
+//--------------------------------------------------------------------
+
+	// ラスター設定（"ラスタっぷり"はてきとー）
+//	set_raster_info( 0, 180, 180, 0.03, 0.03, 1,0, -1,-1, 1.0)
+//	raster(0,1)
+
+//	set_raster_info( 1, 120, 120, 0.0025,0.0025, 1,0, -1,-1, 0.5)
+//	raster(1,1)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1600)
+	ON_SKIP(2)
+	KAGI("d1600",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1600")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1600")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1600)
+}
+
+
+// ============================================================================
+// 異界へ
+// ============================================================================
+
+DEF("0602_0998")
+RES("EVENT")
+{
+	STOP_PC(0)
+	SYS("#C2因為仮定事件飛往異界")
+	ENTRY_MAP("0998_0602")
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 障壁ストッパー
+
+DEF("EV_Barrier")
+
+RES("EVENT")
+{
+	// EV C-11 燹き花嫁
+	CHECK_GAME_FLAG(3710)
+	on_jump NEXT
+
+	FADE_OUT_EX( 2, 1, "0xFFffffff", 0)
+	//ATTACH_EFC("EFC_09BARRIER_SHOCK","Fleurette","POS")
+	SE(SE_EVENT_30)
+	EFC("EFC_09BARRIER_SHOCK",0,0,18.5)
+	QUAKE(5,5,5)
+	SET_MOTION("PC","DAMAGE_F",0)
+	WAIT(3)
+	set_pos("PC", 0,0,16, 0)
+	set_deg("PC", 0)
+	FADE_IN_EX( 5, 1, "0xFFffffff", 0)
+
+	WAIT(60)
+	SYS("被不可思議的障壁封住，|不能前進。")
+	FOCUS_CHR("PC")
+
+NEXT:
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// アニエスイベント
+
+DEF("EV_Aniece")
+
+RES("EVENT")
+{
+
+	//3709	EV C-10 結界裝置
+	CHECK_GAME_FLAG(3709)
+	on_jump EXIT
+
+	// EV C-4 相似の二人
+	check_game_flag(3703)
+	on_jump EXIT
+
+//--------------------------------------------------------------------
+
+	// 05/06/03：補間中のゲームカメラを瞬時に補間終了させる。
+	reset_camera(0)
+
+	STOP_PC(0)
+	CINEMA_ON(0)
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(0.37,0.00,13.26,  -10.5,205.0,0.0, 12, 15.0)
+	rotate_script_camera(0,-10,0, 600, 1)
+
+	//初期位置
+	set_pos("PC", 0.37,0.00,13.26, 330)
+	PC_WEAPON( 0 , 1 )
+	set_motion("PC", "STAND",-1)
+	set_deg("PC", 0)
+
+	//スキップ
+	set_skip_label("SKIP")
+	wait(120)
+
+	set_deg("Aniece", 0)
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG_EX("#S3#C0阿尼艾絲「這威容……沒錯…………」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「歐威魯的奇岩城……|　　　　沒想到竟然汢睡在湖底……」",-1,2)
+
+//　　アニエス、主人公のほうを向く。
+	SET_DEG_EX("Aniece","PC")
+
+	MSG_EX("#S3#C0阿尼艾絲「是祢把湖水引走的叺？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「不愧是|　　　　　　我看中的搭漾姶。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「但是，現在可不是高興的時候姶。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「看。」",-1,2)
+
+//　　アニエスが前に出て障壁に觸れると大きな波紋が走り、
+//　　熕が弾かれる。現行のエフェクトを使用してください。
+
+	cross_fade(60)
+	set_script_camera(0.0,5.00,0.0,   10.5,180.0,0.0, 12, 60.0)
+	wait(60)
+
+	INIT_WALK_DST("Aniece")
+	set_walk_dst("Aniece", -0.99,-0.00,17.11)
+	walk_pos("Aniece",0,0.03)
+	wait_walk("Aniece")
+
+	FADE_OUT_EX( 2, 1, "0xFFffffff", 0)
+	//ATTACH_EFC("EFC_09BARRIER_SHOCK","Fleurette","POS")
+
+	SE(SE_EVENT_30)
+	EFC("EFC_09BARRIER_SHOCK",0,0,18.5)
+	QUAKE(5,5,5)
+	WAIT(3)
+	set_pos("Aniece", -0.99,0,16, 0)
+	set_deg("Aniece", 0)
+	FADE_IN_EX( 5, 1, "0xFFffffff", 0)
+
+	MSG_EX("#S3#C0阿尼艾絲「嗚…………」",-1,2)
+
+	set_deg_ex("Aniece", "PC")
+
+	MSG_EX("#S3#C0阿尼艾絲「就像祢看到的一樣，因為這個不可思議的障壁，|　　　　我們無法到裡邊去。」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「不只是這樣哦。」",-1,2)
+	set_turn_spd("Aniece", 16)
+	set_deg("Aniece", 0)
+
+	MSG_EX("#S3#C0阿尼艾絲「祢看……看到障壁的那一邊了乕？」",-1,2)
+
+	//畫面、結界の向こう側にある石像を映し出す。
+	move_script_look_at(0,-1,8, 150, 1)
+	scale_script_camera(0.6, 150, 1)
+//	rotate_script_camera(0,-10,0, 150, 1)
+	wait(100)
+	cross_fade(30)
+	set_script_camera(0,1.5,30,  -5,180,0,  3,15)
+	scale_script_camera(0.65, 800, 1)
+	wait(100)
+
+	MSG_EX("#S3#C0阿尼艾絲「對，是石像。|　　　　和至今為止在遺跡裡看到的東西一樣……」",-1,2)
+	wait(100)
+	MSG_EX("#S3#C0阿尼艾絲「但是，那個石像…………」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「祢不覺得和精靈堂的莉絲大人長得很像乕？」",-1,2)
+	MSG_EX("#S3#C0阿尼艾絲「到底是怎麼回事咾……」",-1,2)
+	wait(60)
+
+	game_flag_on(3703)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	cross_fade(80)
+	CINEMA_OFF(0)
+	END
+
+SKIP:
+
+	STOP_WALK("PC")
+	STOP_WALK("Aniece")
+	set_pos("Aniece", -0.99,-0.00,17.11)
+	set_deg("Aniece", 0)
+	set_motion("Aniece", "STAND",0)
+	set_deg("PC", 0)
+	set_motion("PC", "STAND",-1)
+
+	game_flag_on(3703)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	FADE_IN(60)
+	END
+
+
+//--------------------------------------------------------------------
+EXIT:
+	end
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// 城の障壁前のアニエス
+
+//　　奇岩城の障壁前にアニエスがたたずんでいる。
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+
+TALK:
+
+//	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE", "阿尼艾絲")
+	set_motion("Aniece", "EMPTY20",-1)
+
+	CHECK_ROOM_FLAG(0)
+	ON_JUMP TALK2
+
+	MSG("憑我的直覺，|消除障壁的方法應該在別的什麼地方。")
+	MSG("……對了！")
+	MSG("祢去問問夏兒叺。")
+	MSG("説不定扈會知道|消除這個障壁的提示。")
+	ROOM_FLAG_ON(0)
+	jump EXIT
+
+TALK2:
+	MSG("祢去問問夏兒叺。")
+	MSG("説不定扈會知道|消除這個障壁的提示。")
+
+EXIT:
+	SET_MOTION("Aniece","STAND",-1)
+	END
+}
+
+
+//-- バリアが消えるイベント ------------------------------------------
+
+RES("INIT")
+{
+	//3709	EV C-10 結界裝置
+	CHECK_GAME_FLAG(3709)
+	OFF_JUMP EXIT
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	CHECK_GAME_FLAG(3727)
+	ON_JUMP EXIT
+
+	//スキップ
+	set_skip_label("SKIP")
+
+//	SLOW(2)
+	BLUR(20)
+//	QUAKE(2,2,300)
+	HIDE_CHR("PC")
+
+	reset_camera(0)
+	permit_script_camera(1)
+	set_script_camera(0.0,7.0,0.0,  0.75,205.0,0.0, 60, 60.0)
+	rotate_script_camera(0,-10,0, 400, 1)
+
+	SE(SE_EVENT_34)
+	EFC("EFC_06BARIAKAMINARI",0,0,30)
+	QUAKE(10,10,120)
+
+	FADE_IN_EX( 20, 1, 0xffffffff, 1)
+	wait(20)
+
+	// 破壞エフェクト出しながらホワイトアウト
+	WAIT(100)
+	SE(SE_EVENT_35)
+	WAIT(80)
+	QUAKE(50,50,400)
+	FADE_OUT_EX( 400, 1, 0xffffffff, 1)
+	wait(40)
+	SE(SE_EVENT_09)
+	WAIT(320)
+	WAIT(180)
+
+	SLOW(0)
+	BLUR(0)
+	QUAKE(0,0,1)
+	load_map("MP_0602")
+
+	FADE_IN_EX( 120, 1, 0xffffffff, 1)
+	wait(300)
+
+	fade_out(60)
+	wait(60)
+
+	SHOW_CHR("PC")
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	GAME_FLAG_ON(3727)
+	ENTRY_MAP("0610_0682s")
+
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+
+
+SKIP:
+	SLOW(0)
+	BLUR(0)
+	QUAKE(0,0,1)
+
+	SHOW_CHR("PC")
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	GAME_FLAG_ON(3727)
+	ENTRY_MAP("0610_0682s")
+}

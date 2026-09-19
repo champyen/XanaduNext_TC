@@ -1,0 +1,5 @@
+DEF("mato")
+RES("HIT")
+{
+	MSG("有了")
+}

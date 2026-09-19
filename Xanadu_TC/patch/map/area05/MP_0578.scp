@@ -1,0 +1,77 @@
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1511)
+	ON_SKIP(2)
+	KAGI("d1511",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1511")
+
+	CHECK_GAME_FLAG(544)
+	OFF_JUMP next
+
+	INIT_SWITCH_ON("box")
+//	SET_TREASURE("box",1,182,"ITEM")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box")
+
+	CHECK_GAME_FLAG(544)
+	OFF_JUMP ITEM
+
+ITEM:
+// 圓盤の鍵
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 182, 0,0,-1, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99ITEM_GET","box","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(544)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1511")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1511)
+}
+

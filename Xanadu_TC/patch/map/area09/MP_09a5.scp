@@ -1,0 +1,798 @@
+//////////////////////////////////////////////////////////////////////
+// 
+//
+// ROOM_FLAG
+//	0 : アニエス
+//	1 : アニエス靈藥繰り返し
+
+// -------------------------------------------------------------------
+// 初期戝態                                                                    
+// -------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ゴブリン
+	put_monster("m00",389,14,0,0,0)
+	put_monster("m01",389,14,0,0,1)
+	// ゴブリンアーチャー
+	put_monster("m02",390,14,0,0,2)
+	put_monster("m03",390,14,0,0,3)
+	put_monster("m04",390,14,0,0,4)
+	// ゴブリン
+	put_monster("m05",389,14,0,0,5)
+	put_monster("m06",389,14,0,0,6)
+	// ゴブリンアーチャー
+//	put_monster("m07",390,14,0,0,7)
+//	put_monster("m08",390,14,0,0,8)
+	// ゴブリン
+//	put_monster("m09",389,14,0,0,9)
+//	put_monster("m10",389,14,0,0,10)
+//	put_monster("m11",389,14,0,0,11)
+	// ゴブリンウォーリアー
+//	put_monster("m12",391,14,0,0,12)
+//	put_monster("m13",391,14,0,0,13)
+//	put_monster("m14",391,14,0,0,14)
+	put_monster("m15",391,14,0,0,15)
+//	put_monster("m16",391,14,0,0,16)
+//	put_monster("m17",391,14,0,0,17)
+//	put_monster("m18",391,14,0,0,18)
+	put_monster("m19",391,14,0,0,19)
+//	put_monster("m20",391,14,0,0,20)
+	put_monster("m21",391,14,0,0,21)
+//	put_monster("m22",391,14,0,0,22)
+	put_monster("m23",391,14,0,0,23)
+//	put_monster("m24",391,14,0,0,24)
+	put_monster("m25",391,14,0,0,25)
+//	put_monster("m26",391,14,0,0,26)
+	put_monster("m27",391,14,0,0,27)
+//	put_monster("m28",391,14,0,0,28)
+	put_monster("m29",391,14,0,0,29)
+
+
+	// 岩をガントレットで破壞したか？
+	CHECK_GAME_FLAG(912)
+	OFF_SKIP(1)
+	HIDE_CHR("iwa")
+
+
+	CHECK_GAME_FLAG(925)
+	OFF_SKIP(2)
+	INIT_SWITCH_ON("lock")
+	HIDE_CHR("daiza")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1903)
+	ON_SKIP(2)
+	KAGI("d1903",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1903")
+
+	// カギ設定
+	CHECK_GAME_FLAG(925)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1906)
+	ON_SKIP(2)
+	KAGI("d1906",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1906")
+
+	// アニエスシステム
+	CHECK_MONSTER(0)
+	ON_JUMP NO_ANIECE
+	ENTRY_CHR(00, 448)
+	PUT_CHR( 0, "Aniece",  21.88,2.00,-0.78, 226)
+	// グレートソード、ラウンドシールド、ローブ
+	load_npc_eqp(17,10)
+	load_npc_eqp(62,11)
+	load_npc_eqp(80,12)
+NO_ANIECE:
+
+//鍵チェック
+//	CHECK_GAME_FLAG(922)
+//	ON_JUMP next
+//	LOCK("lock",3)
+//	JUMP next2
+//next:
+//	INIT_SWITCH_ON("lock")
+
+//next2:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1903")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1903)
+}
+
+DEF("d1906")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1906)
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(925)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1906)
+	ON_SKIP(2)
+	KAGI("d1906",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1906")
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板澑住了。")
+
+}
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 鍵                                                                          
+// ----------------------------------------------------------------------------
+//DEF("lock")
+//RES("KEY")
+//{
+//	GAME_FLAG_ON(922)
+
+//	STOP_PC(0)
+//	CROSS_FADE(10)
+//	RESET_MAP_ROT_Y(0,1)
+//	WAIT(2)
+//	CINEMA_ON(0)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA_EX( "lock", -1, -45,0,0,10,32)
+//	WAIT(60)
+	
+//	SE("SE_KEY")
+//	SWITCH_ON("lock")
+//	WAIT(30)
+	
+//	CINEMA_OFF(0)
+//	CROSS_FADE(10)
+//	PERMIT_SCRIPT_CAMERA(0)
+//}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09a5_09a1")
+RES("EVENT")
+{
+	ENTRY_MAP("09a1_09a5")
+}
+
+DEF("09a5_09a6")
+RES("EVENT")
+{
+	ENTRY_MAP("09a6_09a5")
+}
+
+DEF("09a5_09a7")
+RES("EVENT")
+{
+	ENTRY_MAP("09a7_09a5")
+}
+
+// ----------------------------------------------------------------------------
+// 柵
+// ----------------------------------------------------------------------------
+
+DEF("iwa")
+RES("KILL")
+{
+	KILL_CHR("iwa",0,0,-1)
+	GAME_FLAG_ON(912)
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// アニエスシステム
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Aniece")
+	SET_NAME("KANBAN","告示")
+
+	// 3638	アニエスシステム：靈藥を見せた
+	check_game_flag(3638)
+	on_jump MENU
+	// 不死鳥の靈藥を持っている？
+	check_item(194)
+	on_jump S_POTION
+
+MENU:
+	SEL("#C1要做什麼？|#C2對話|買骨頭|買回復藥|買發掘物|取消")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump BUY_KEY
+	check_select(2)
+	on_jump BUY_POTION
+	check_select(3)
+	on_jump BUY_ITEM
+
+	jump EXIT
+
+CANCEL:
+	MSG("嚔呀，真遺憾。")
+	jump MENU
+
+NO_GOLD:
+	MSG("嚀的錢不滷。")
+	jump MENU
+
+NO_FREE_ITEM:
+	MSG("請整理一下攜帶的物品。")
+	jump MENU
+
+OK_BUY:
+	MSG("謝謝。")
+	jump MENU
+
+TALK:
+	// 3639	アニエスシステム：靈藥を渡した
+	check_game_flag(3639)
+	on_jump TALK_0
+	// 不死鳥の靈藥を持っている？
+	check_item(194)
+	on_jump S_POTION
+
+TALK_0:
+	check_room_flag(1)
+	on_jump TALK_SP
+
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("奇岩城真是出奇的大姶。")
+	MSG("怪物也比以前遇到的都燔害，|這真是一場苦戰姶……")
+	MSG("如果鑰匙和藥品用完了的話，|隨時都可以和我説哦。")
+	MSG("這是作為搭漾應該做的，|所以便宜賣給祢了。")
+	jump MENU
+
+//▼奇岩城出現後
+TALK6:
+	MSG("找到讓奇岩城的障壁消失的方法了乕？")
+	MSG("如果不把這個障壁破壞掉的話，|就無法進入城中姶……")
+	MSG("靠祢了哦，搭漾先生。")
+	jump MENU
+
+//▼インフェルノ戰後
+TALK5:
+	MSG("説起來，|鎮上有個和祢一起來的女孩子叺。")
+	MSG("扈在小酒館裡|似乎非常受大家寵愛咾。")
+	MSG("扈頭脳很聡明，|和我小時候很像咾。")
+	MSG("將來一定能成為一個美人|和出色的財寶獵人。")
+	jump MENU
+
+//▼カニグモ戰後
+TALK4:
+	MSG("這個島上的遺跡構造|真是復雜姶。")
+	MSG("好象不在看似相同的地方|進進出出就不能前進。")
+	MSG("如果祢遇到了似曾相識的地方，|可不要被迷惑了哦。")
+	jump MENU
+
+//▼トレント戰後
+TALK3:
+	check_room_flag(0)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("是祢把遺跡裡的樹精|打倒的叺？")
+	MSG("唔，作為我的搭漾，|這也是理所當然的。")
+	MSG("説起來，|祢有沒有矼到一個愛説教的澀子劍士？")
+	MSG("什麼『女性要靦腆一熨』，|他是什麼時代的人呀。")
+	MSG("但是那個劍士，武術的確了得……|我的直覺是這麼告訴我的。")
+	room_flag_on(0)
+	jump MENU
+
+//　　★繰り返し
+TALK3_2:
+	MSG("説起來，|祢有沒有矼到一個愛説教的澀子劍士？")
+	MSG("什麼『女性要靦腆一熨』，|他是什麼時代的人呀。")
+	jump MENU
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(0)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("呵呵，|看來進展越來越順利了咾。")
+	MSG("不愧是|我選中的搭漾咾。")
+	MSG("就是這個樣子，繼續努力下去叺。")
+	MSG("要是有什麼想要的，|特別賣給祢也可以哦。")
+	room_flag_on(0)
+	jump MENU
+
+//　　★繰り返し
+TALK2_2:
+	MSG("呵呵，|看來進展越來越順利了咾。")
+	MSG("就是這個樣子，繼續努力下去叺。")
+	MSG("要是有什麼想要的，|特別賣給祢也可以哦。")
+	jump MENU
+
+//▼ゲーム開始直後
+TALK1:
+	MSG("嚔呀，|調炳進行得順利乕？")
+	MSG("要是有什麼需要的話，|可以便宜賣給祢哦。")
+	jump MENU
+
+//-- 骨の購入 ------------------------------------------------------
+BUY_KEY:
+	CHECK_LEVEL(15)
+	ON_JUMP BUY_KEY3
+	CHECK_LEVEL(10)
+	ON_JUMP BUY_KEY2
+	CHECK_LEVEL( 5)
+	ON_JUMP BUY_KEY1
+
+// LV 1-4
+BUY_KEY0:
+	MSG("對了，|兩根骨50Ｇ，怎麼樣？？")
+	SEL("　支付50G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(50)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-50)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+// LV 5-9
+BUY_KEY1:
+	MSG("對了，|兩根骨100Ｇ，怎麼樣？？")
+	SEL("　支付100G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(100)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-100)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+	
+// LV 10-14
+BUY_KEY2:
+	MSG("對了，|兩根骨200Ｇ，怎麼樣？？")
+	SEL("　支付200G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(200)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-200)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+// LV 15-20
+BUY_KEY3:
+	MSG("對了，|兩根骨500Ｇ，怎麼樣？？")
+	SEL("　支付500G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(500)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-500)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+//-- 回復藥の購入 ----------------------------------------------------
+
+BUY_POTION:
+	CHECK_LEVEL(13)
+	ON_JUMP BUY_POTION3
+	CHECK_LEVEL(7)
+	ON_JUMP BUY_POTION2
+
+// LV 1-6
+BUY_POTION1:
+	MSG("對了，|回復藥水小瓶50Ｇ，怎麼樣？？")
+	SEL("　支付50G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(50)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(210, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-50)
+	GET_ITEM(210, 1)
+	jump OK_BUY
+
+// LV 7-12
+BUY_POTION2:
+	MSG("對了，|回復藥水中瓶300Ｇ，怎麼樣？？")
+	SEL("　支付300G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(300)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(211, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-300)
+	GET_ITEM(211, 1)
+	jump OK_BUY
+
+// LV 13-19
+BUY_POTION3:
+	MSG("對了，|回復藥水大瓶1500Ｇ，怎麼樣？？")
+	SEL("　支付1500G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(1500)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(212, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-1500)
+	GET_ITEM(212, 1)
+	jump OK_BUY
+
+//-- 掘り出し物の購入 ------------------------------------------------
+
+BUY_ITEM:
+	call CHECK_ANIECE_ITEM
+
+	// すでに商品確定濟み？
+	check_game_flag(3648)
+	on_jump BUY_ITEM_ARMOR
+	check_game_flag(3631)
+	on_jump BUY_ITEM1
+	check_game_flag(3632)
+	on_jump BUY_ITEM2
+	check_game_flag(3633)
+	on_jump BUY_ITEM3
+	check_game_flag(3634)
+	on_jump BUY_ITEM0
+
+	// ランダムで商品が變わる
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 50, -1 )
+	ON_JUMP BUY_ITEM1
+	CHECK_RANDOM( 70, -1 )
+	ON_JUMP BUY_ITEM2
+	CHECK_RANDOM(100, -1 )
+	ON_JUMP BUY_ITEM3
+
+BUY_ITEM0:
+	//品切れ
+	game_flag_on(3634)
+	MSG("姶，太遺憾了。|現在沒有像樣的好東西呀。")
+	jump MENU
+
+BUY_ITEM1:
+	// 3645	アニエスシステム：09a5 ラビリンス　奧の廣場
+	check_game_flag(3645)
+	on_jump BUY_ITEM0
+
+	game_flag_on(3631)
+	MSG("我找到了一個非常珍貴的東西，|想要乕？")
+	MSG("是乕，|忍耐果實600Ｇ，怎麼樣。")
+	SEL("　支付600G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(600)
+	OFF_JUMP NO_GOLD
+	CHECK_MAX_ITEM(0)
+	ON_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-600)
+	GET_ITEM(163, 1)
+	SE("SE_GETITEM")
+	SYS_EX("得到【忍耐果實】。",-1,0X00000200)
+
+	// 品切れにする
+	game_flag_off(3631)
+	game_flag_on(3634)
+	// 3645	アニエスシステム：09a5 ラビリンス　奧の廣場
+	game_flag_on(3645)
+	jump OK_BUY
+
+BUY_ITEM2:
+	game_flag_on(3632)
+	MSG("是乕，|魔法藥水2000Ｇ，怎麼樣。")
+	SEL("　支付2000G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(2000)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(215, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-2000)
+	GET_ITEM(215, 1)
+
+	// 品切れにする
+	game_flag_off(3632)
+	game_flag_on(3634)
+	jump OK_BUY
+
+BUY_ITEM3:
+	game_flag_on(3633)
+	MSG("是乕，|燹瑪瑙100Ｇ，怎麼樣。")
+	SEL("　支付100G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(100)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-100)
+	GET_ITEM(220, 1)
+
+	// 品切れにする
+	game_flag_off(3633)
+	game_flag_on(3634)
+	jump OK_BUY
+
+BUY_ITEM_ARMOR:
+	// 3649	アニエスシステム：シルバーアーマー購入濟み
+	check_game_flag(3649)
+	on_jump BUY_ITEM0
+
+	game_flag_on(3631)
+	MSG("我找到了一個非常珍貴的東西，|想要乕？")
+	MSG("是乕，|銀色橿甲65535Ｇ，怎麼樣。")
+	SEL("　支付65535G　|#C2是|否")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(65535)
+	OFF_JUMP NO_GOLD
+	CHECK_MAX_ITEM(0)
+	ON_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-65535)
+	GET_ITEM(037, 1)
+	SE("SE_GETITEM")
+	SYS_EX("得到【銀色橿甲】。",-1,0X00000200)
+
+	// 品切れにする
+	game_flag_off(3631)
+	game_flag_on(3634)
+	// 3649	アニエスシステム：シルバーアーマー購入濟み
+	game_flag_on(3649)
+	jump OK_BUY
+
+//-- 不死鳥の靈藥 ----------------------------------------------------
+
+S_POTION:
+	// 3638	アニエスシステム：靈藥を見せた
+	check_game_flag(3638)
+	on_jump S_POTION2
+
+	MSG("嚔……那個小瓶裡裝的是什麼藥？")
+	MSG("我沒有見過咾……")
+
+	SYS_EX("#N0給他看了【不死鳥的靈藥】。",-1,0X00000200)
+	game_flag_on(3638)
+
+	MSG("……嚔？是不死鳥之靈藥？")
+	MSG("不會叺……這是……")
+	MSG("…………………………")
+
+S_POTION2:
+	MSG("喟……那個…………")
+	MSG("我有事情要拜託祢……")
+	MSG("能不能把那個靈藥賣給我咾。|把我的錢全都給祢也可以……")
+
+	SEL("　把藥給扈乕？　|#C2是|否")
+	check_select(0)
+	on_jump SP_YES
+
+//　　⇒「いいえ」の場合
+SP_NO:
+	MSG("…………是乕。")
+	MSG("提了無理的要求，對不起……")
+	jump MENU
+
+//　　⇒「はい」の場合
+SP_YES:
+	MSG("…………真的？")
+
+//	SE("SE_GETITEM")
+	SYS_EX("交出了【不死鳥的靈藥】。",-1,0X00000200)
+	pick_item(194)
+
+	MSG("嚔……錢咾？")
+	MSG("……因為我們是搭漾所以不要錢？")
+	MSG("嗚………………")
+	MSG("……謝謝……有了這個父親就能……")
+
+	MSG("………………………………")
+	MSG("……可是，我要是再欠祢人情的話|就太沒面子了。")
+	MSG("不要錢的話，那麼……")
+
+	MSG("我從夏兒那裡聽説過，|祢身上可以寄宿守護精靈對叺。")
+	MSG("所以，|我這張峠片也許能犧上祢什麼忙。")
+	MSG("反正我也不能用，|祢就收下叺。")
+
+	GET_SPIRIT(11)
+	SE("SE_GETITEM")
+	SYS_EX("得到守護精靈峠片【喜燎之鈴】！",-1,0X00000200)
+
+	call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【喜燎之鈴】",-1,0X00000200)
+	SYS_EX("這是使升級時得到的熨數燠加的守護精靈。|如果擁有扈的力量，就可以變成更強大的騎士。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+
+	// 3639	アニエスシステム：靈藥を渡した
+	game_flag_on(3639)
+	room_flag_on(1)
+	jump MENU
+
+//　　☆以降、繰り返し
+TALK_SP:
+	MSG("什麼姶，我可沒有哭哦……")
+	jump MENU
+
+//--------------------------------------------------------------------
+EXIT:
+	end
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// 掘り出し物を全部買った？
+
+@CHECK_ANIECE_ITEM
+{
+	// 3649	アニエスシステム：シルバーアーマー購入濟み
+	check_game_flag(3649)
+	on_jump NOT_BUY
+
+	// 3640	アニエスシステム：0715 クローヴァー遺跡 最初の圓盤扉の燉
+	check_game_flag(3640)
+	off_jump NOT_BUY
+	// 3641	アニエスシステム：0722 クローヴァー遺跡 瀧のマップ
+	check_game_flag(3641)
+	off_jump NOT_BUY
+	// 3642	アニエスシステム：05a8 千古の迷宮
+	check_game_flag(3642)
+	off_jump NOT_BUY
+	// 3643	アニエスシステム：0751 魔粧の森を拔けたところ。一般で配置の場所。
+	check_game_flag(3643)
+	off_jump NOT_BUY
+	// 3644	アニエスシステム：082d イーグリット山、フローズンサラマンダー
+	check_game_flag(3644)
+	off_jump NOT_BUY
+	// 3645	アニエスシステム：09a5 ラビリンス　奧の廣場
+	check_game_flag(3645)
+	off_jump NOT_BUY
+	// 3646	アニエスシステム：0618 奇岩城　オーガ
+	check_game_flag(3646)
+	off_jump NOT_BUY
+	// 3647	アニエスシステム：0636 奇岩城　壞せる壁
+	check_game_flag(3647)
+	off_jump NOT_BUY
+
+BUY_OK:
+	// 3648	アニエスシステム：シルバーアーマー購入許可
+	game_flag_on(3648)
+	ret
+
+NOT_BUY:
+	// 3648	アニエスシステム：シルバーアーマー購入許可
+	game_flag_off(3648)
+	ret
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god11",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}

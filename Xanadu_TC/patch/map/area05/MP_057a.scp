@@ -1,0 +1,90 @@
+
+// ----------------------------------------------------------------------------
+// 水門１讀み替え                                                                 
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// スペクタクルズ通常動作
+	ROOM_FLAG_ON(254)
+
+// 水門３讀み替え
+	CHECK_GAME_FLAG(538)
+	OFF_JUMP MIZU
+
+	LOAD_MAP("MP_057b")
+	LOAD_HITMAP("MP_057bh")
+	JUMP NEXT
+
+MIZU:
+	// 水マップ
+	SE("SE_MIZU")
+
+NEXT:
+
+	// ★05/05/24：ユイナルを配置する事になりました（ひ）
+	put_monster("m00",419,7,0,0,0)
+	put_monster("m01",419,7,0,0,1)
+	put_monster("m02",419,7,0,0,2)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(514)
+	OFF_JUMP next
+
+	// ファイア３
+//	SET_TREASURE("tbox",1,237,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(514)
+	OFF_JUMP ITEM
+
+ITEM:
+// ファイア
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 237, 1,0,9, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(237, 1)
+	GAME_FLAG_ON(514)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+

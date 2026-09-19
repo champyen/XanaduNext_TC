@@ -16,7 +16,7 @@
 
 ##### 度盘链接：
 
-https://pan.baidu.com/s/1UZguqK8B6bZNhs76QqkGow 提取码: 5v86 
+https://pan.baidu.com/s/1UZguqK8B6bZNhs76QqkGow 提取码: 5v86
 
 ##### MEGA盘链接：
 
@@ -47,20 +47,20 @@ ZenHax论坛的[Ekey](https://www.zenhax.com/viewtopic.php?f=9&t=3347&hilit=xana
 - [TiledGlyph](https://github.com/wmltogether/TiledGlyph)（字模制作）
 - CrystalTile2（字模替换）
 - Steamless（脱壳工具）
-  
+
 
 ## 其他说明
 
-1. 
+1.
    有任何汉化方面的问题请直接回复反馈，将会尽量修正
 
 2. 有一处拿精灵卡片的跳跳乐，和60帧黑魂类似会有跳跃判定上的变化，游戏内刷新率设置改为粗糙后有奇效
-   
+
 3. 死者的异界没有经过比较完整的测试，同样有问题可以尽快反馈
 
 4. GOG版请额外下载对应exe文件替换
 
-    
+
 
 ## TODO LIST
 
@@ -75,3 +75,27 @@ ZenHax论坛的[Ekey](https://www.zenhax.com/viewtopic.php?f=9&t=3347&hilit=xana
 ![Progress](http://progressed.io/bar/85)测试
 
 -AND MORE
+
+
+## 繁體中文版（Traditional Chinese）
+
+本目錄另有繁體中文（台灣用語）移植，見工作區 `Xanadu_TC/`（完整工具鏈
+與流程記錄 `xanadu_tc.md`）與成品 `MainData.TW/`（安裝方式同上，直接
+覆蓋至遊戲根目錄；exe 以 GOG 版為底）：
+
+- 文本：簡體文本經 OpenCC `s2twp` 轉換＋台灣用語修正（滑鼠/軟體/記憶體/
+  影片/網路/遊標/預設/存檔/解析度/視窗/更新率，系統菜單→系統選單）＋
+  日文漢字正規化（霊剣亜図徳→靈劍亞圖德等，`Xanadu_TC/tools/jpnorm.py`
+  共 184 組），仍以 Shift-JIS 編碼保存（缺字重映射表 164 項）。
+- 字庫：沿用 Shift-JIS 槽位方案，以 Noto Sans TC（缺字 fallback SC）
+  重繪字模（襯線體已換為黑體，更接近原版字形），
+  `font_scn/font_sys` 各重繪 165 槽（含説槽說字）。
+  字模索引公式以反匯編遊戲主程序字形查找函數為準（見 `xanadu_tc.md`）。
+- 圖片：11 張 AREANAME/BOSS 卡以標楷體重製（標題下為同向模糊光暈，
+  已驗證非鏡像倒影）。
+- 範圍與簡體版相同（area00、05–10＋系統）；area01–04、12、14、20、
+  51、52、60 未漢化。
+- 注意：繁體 exe 以 GOG 版為底，Steam 版需另行移植。
+- 成品 `MainData.TW/`（23 個文件，與實測版本哈希一致）附 `BUILD_INFO.txt`
+  可核對構建日期；遊戲內實測＋全量校驗（`verify_1_3.py`、
+  `verify_build.py`）皆通過。

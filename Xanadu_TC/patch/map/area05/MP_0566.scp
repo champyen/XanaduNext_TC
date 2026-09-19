@@ -1,0 +1,278 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// スケルトンウォーリアー
+	put_monster("m00",319,4,0,0,0)
+	put_monster("m01",319,4,0,0,1)
+	put_monster("m02",319,4,0,0,2)
+	put_monster("m03",319,4,0,0,3)
+	put_monster("m04",319,4,0,0,4)
+
+//鍵チェック
+	CHECK_GAME_FLAG(592)
+	OFF_SKIP(2)
+	INIT_SWITCH_ON("lock")
+	HIDE_CHR("daiza")
+
+//水門讀み替え
+	CHECK_GAME_FLAG(536)
+	OFF_JUMP NEXT
+
+	LOAD_MAP("MP_0585")
+	LOAD_HITMAP("MP_0585h")
+
+NEXT:
+
+	// 水マップ
+	SE("SE_MIZU")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1509)
+	ON_SKIP(2)
+	KAGI("d1509",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1509")
+
+	// カギ設定
+	CHECK_GAME_FLAG(592)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1510)
+	ON_SKIP(2)
+	KAGI("d1510",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1510")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1509")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1509)
+}
+
+DEF("d1510")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1510)
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(592)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1510)
+	ON_SKIP(2)
+	KAGI("d1510",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1510")
+
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板澑住了。")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 鍵                                                                          
+// ----------------------------------------------------------------------------
+DEF("lock")
+RES("KEY")
+{
+	GAME_FLAG_ON(539)
+
+	STOP_PC(0)
+	CROSS_FADE(10)
+	RESET_MAP_ROT_Y(2,1)
+	WAIT(2)
+	CINEMA_ON(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "lock", -1, -45,0,0,10,32)
+	WAIT(60)
+	
+	SE("SE_KEY")
+	SWITCH_ON("lock")
+	WAIT(30)
+	
+	CINEMA_OFF(0)
+	CROSS_FADE(10)
+	PERMIT_SCRIPT_CAMERA(0)
+	end
+}
+
+
+//DEF("lock")
+//RES("KEY")
+//{
+//	GAME_FLAG_ON(539)
+//	SE("SE_EQUIP")
+//	SWITCH_ON("lock")
+//	WAIT(30)
+//	HIDE_CHR("lock")
+//	end
+//}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("第一水閘")
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(595)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god04",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(595)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 1,-5,-5.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【50Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(50)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 104, 1,-5,-5.5, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99CARD_GET","tbox","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(4)
+	GAME_FLAG_ON(595)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【杜蘭雙劍】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【杜蘭雙劍】",-1,0X00000200)
+	SYS_EX("這是能燠加武器熟練度獲得量的守護精靈。|可以提高武器熟練度上升速度，|從而更容易學會技能。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}

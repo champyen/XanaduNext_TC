@@ -1,0 +1,244 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期狀態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+set_rain_inf("EFC_HINOKO",1, 45, 15,45)
+rain(1)
+set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+
+	//バリアを解いたかどうか
+	CHECK_GAME_FLAG(816)
+	OFF_JUMP NEXT2
+
+//	//寶箱を開けたかどうか
+//	CHECK_GAME_FLAG(815)
+//	OFF_JUMP NEXT
+
+	//バリアを解いて箱もあけた
+	MOVE_VEC("box1",-1.5,0,0,1)
+	MOVE_VEC("box2",1.5,0,0,1)
+	HIDE_CHR("b1")
+	HIDE_CHR("b2")
+	HIDE_CHR("b3")
+	HIDE_CHR("b4")
+	HIDE_CHR("b5")
+	HIDE_CHR("b6")
+	HIDE_CHR("b7")
+	HIDE_CHR("ki")
+//	HIDE_CHR("tbox")
+//	END
+
+//NEXT:
+//	//バリアを解いて箱はまだ
+//	MOVE_VEC("box1",-1.5,0,0,1)
+//	MOVE_VEC("box2",1.5,0,0,1)
+//	HIDE_CHR("b1")
+//	HIDE_CHR("b2")
+//	HIDE_CHR("b3")
+//	HIDE_CHR("b4")
+//	HIDE_CHR("b5")
+//	HIDE_CHR("b6")
+//	HIDE_CHR("b7")
+//	HIDE_CHR("ki")
+//	SHOW_CHR("tbox")
+//	END
+	END
+
+NEXT2:	
+	//寶箱を開けたかどうか
+//	CHECK_GAME_FLAG(815)
+//	OFF_JUMP NEXT3
+
+	//バリアを解いないけど箱はあけた
+//	SHOW_CHR("tbox")
+//	END
+
+//NEXT3:	
+
+	HIDE_CHR("tbox")
+
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(815)
+	ON_JUMP NEXT3
+	
+	CHECK_SWITCH("sw1")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(4,0,"box2")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,3.8,1.5875)
+	HIDE_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(816)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(816)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(4,0,"box2")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,3.8,1.5875)
+		CHECK_GAME_FLAG(815)
+		ON_SKIP(1)
+	SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,0,"box1")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(816)
+NEXT3:
+END
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(815)
+	ON_JUMP NEXT3
+
+	CHECK_SWITCH("sw2")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,0,"box1")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,3.8,1.5875)
+	HIDE_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(816)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(816)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,0,"box1")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,3.8,1.5875)
+		CHECK_GAME_FLAG(815)
+		ON_SKIP(1)
+	SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(4,0,"box2")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(816)
+NEXT3:
+END
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(815)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,182,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(815)
+	OFF_JUMP ITEM
+
+ITEM:
+// 圓盤の鍵
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 182, 0,3.8,1.5875, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(815)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

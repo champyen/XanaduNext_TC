@@ -1,0 +1,751 @@
+//////////////////////////////////////////////////////////////////////
+// 
+// ROOM_FLAG
+//	0 : ƒAƒjƒGƒX
+//	1 : ƒAƒjƒGƒXèËåZŒJ‚è•Ô‚µ
+//
+
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv‰Šú‰»                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// ƒVƒlƒXƒRŽžƒXƒyƒNƒ^ƒNƒ‹ƒYON
+	ROOM_FLAG_ON(254)
+
+	CHECK_GAME_FLAG(652)
+	OFF_SKIP(1)
+	HIDE_CHR("daiza")
+
+	// –¢Š®¬ƒ}ƒbƒv‚Ö‚Ì”à‚ÖƒJƒM
+	LOCK("no_open",0)
+
+	// ƒƒCƒo[ƒ“
+	put_monster("m00",336,17,0,0,0)
+	put_monster("m01",336,17,0,0,1)
+	put_monster("m02",336,17,0,0,2)
+	put_monster("m03",336,17,0,0,3)
+	put_monster("m04",336,17,0,0,4)
+	// ƒn[ƒs[
+	put_monster("m05",016,17,0,0,5)
+	put_monster("m06",016,17,0,0,6)
+	put_monster("m07",016,17,0,0,7)
+	put_monster("m08",016,17,0,0,8)
+	put_monster("m09",016,17,0,0,9)
+	put_monster("m10",016,17,0,0,10)
+	put_monster("m11",016,17,0,0,11)
+	put_monster("m12",016,17,0,0,12)
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1643)
+	ON_SKIP(2)
+	KAGI("d1643",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1643")
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1646)
+	ON_SKIP(2)
+	KAGI("d1646",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1646")
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1647)
+	ON_SKIP(2)
+	KAGI("d1647",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1647")
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1648)
+	ON_SKIP(2)
+	KAGI("d1648",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1648")
+
+	// •ÇšÓ‚µ‚ÍH
+	CHECK_GAME_FLAG(659)
+	OFF_SKIP(1)
+	HIDE_CHR("kabe")
+
+	// ƒAƒjƒGƒXƒVƒXƒeƒ€
+	CHECK_MONSTER(0)
+	ON_JUMP NO_ANIECE
+	ENTRY_CHR(00, 448)
+	PUT_CHR( 0, "Aniece",  -0.91,14.00,4.20, 148)
+	// ƒGƒOƒ[ƒLƒ…[ƒVƒ‡ƒi[AƒoƒbƒNƒ‰[Aƒ[ƒu
+	load_npc_eqp(32,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+NO_ANIECE:
+}
+
+
+// ----------------------------------------------------------------------------
+// ƒJƒMŠJ‚¯
+// ----------------------------------------------------------------------------
+
+DEF("d1643")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1643)
+}
+
+DEF("d1646")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1646)
+}
+
+DEF("d1647")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1647)
+}
+
+DEF("d1648")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1648)
+}
+
+
+// ----------------------------------------------------------------------------
+// äiÀ
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+RES("CLICK")
+
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+
+	// ƒJƒM—L‚èƒCƒxƒ“ƒg
+	STOP_PC(0)
+	SYS("#C2Žg—pš¢”Õèoú")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(652)
+
+	END
+
+NOKEY:
+
+	// ƒJƒM–³‚µƒCƒxƒ“ƒg
+	SYS("#C2“¹˜H”í—L“´“IÎ”ÂàPZ—¹B")
+
+}
+
+
+// ============================================================================
+// ò
+// ============================================================================
+
+DEF("kabe")
+RES("KILL")
+{
+	KILL_CHR("kabe",0,0,-1)
+	GAME_FLAG_ON(659)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒAƒjƒGƒXƒVƒXƒeƒ€
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE", "ˆ¢“òäˆãN")
+
+	// 3638	ƒAƒjƒGƒXƒVƒXƒeƒ€FèËåZ‚ðŒ©‚¹‚½
+	check_game_flag(3638)
+	on_jump MENU
+	// •sŽ€’¹‚ÌèËåZ‚ðŽ‚Á‚Ä‚¢‚éH
+	check_item(194)
+	on_jump S_POTION
+
+MENU:
+	SEL("#C1—v˜ôY›õH|#C2›”˜b|”ƒœ“ª|”ƒ‰ñ•œåZ|”ƒá¢Œ@•¨|ŽæÁ")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump BUY_KEY
+	check_select(2)
+	on_jump BUY_POTION
+	check_select(3)
+	on_jump BUY_ITEM
+
+	jump EXIT
+
+CANCEL:
+	MSG("š‰™ÞC^ˆâŠ¶B")
+	jump MENU
+
+NO_GOLD:
+	MSG("š†“IèA•sàBB")
+	jump MENU
+
+NO_FREE_ITEM:
+	MSG("¿®—ˆê‰º¶›æ“I•¨•iB")
+	jump MENU
+
+OK_BUY:
+	MSG("ŽÓŽÓB")
+	jump MENU
+
+TALK:
+	// 3639	ƒAƒjƒGƒXƒVƒXƒeƒ€FèËåZ‚ð“n‚µ‚½
+	check_game_flag(3639)
+	on_jump TALK_0
+	// •sŽ€’¹‚ÌèËåZ‚ðŽ‚Á‚Ä‚¢‚éH
+	check_item(194)
+	on_jump S_POTION
+
+TALK_0:
+	check_room_flag(1)
+	on_jump TALK_SP
+
+
+	//¥á•ÇÁ–ÅŒã
+	check_game_flag(3710)
+	on_jump TALK7
+	//¥ŠïŠâéoŒ»Œã
+	check_game_flag(3702)
+	on_jump TALK6
+	//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+	check_game_flag(4)
+	on_jump TALK5
+	//¥ƒJƒjƒOƒ‚DŒã
+	check_game_flag(1)
+	on_jump TALK4
+	//¥ƒgƒŒƒ“ƒgDŒã
+	check_game_flag(3)
+	on_jump TALK3
+	//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+	check_game_flag(3532)
+	on_jump TALK2
+	//¥ƒQ[ƒ€ŠJŽn’¼Œã
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//¥á•ÇÁ–ÅŒã
+TALK7:
+	MSG("ŠïŠâé^¥oŠï“I‘åˆ¦B")
+	MSG("‰ö•¨–ç”äˆÈ‘O‹ö“ž“I“sà˜ŠQC|”‡^¥ˆêê‹êDˆ¦cc")
+	MSG("”@‰Êèoú˜aåZ•i—pŠ®—¹“I˜bC|ç¬Žž“s‰ÂˆÈ˜a‰äàšGB")
+	MSG("”‡¥ìˆ×“‹à@œäŠY˜ô“IC|ŠˆÈ•Ö‹XæÌ‹‹”I—¹B")
+	jump MENU
+
+//¥ŠïŠâéoŒ»Œã
+TALK6:
+	MSG("Q“žæ¨ŠïŠâé“Iá•ÇÁŽ¸“I•û–@—¹åhH")
+	MSG("”@‰Ê•s”c”‡ŒÂá•Ç”jšÓ{“I˜bC|A–³–@i“üé’†ˆ¦cc")
+	MSG("èÏ”I—¹šGC“‹à@æ¶B")
+	jump MENU
+
+//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+TALK5:
+	check_room_flag(0)
+	on_jump TALK5_2
+
+	MSG("‰äÝ¬ŽðŠÙ—¡ããà—¹C|‹RŽmDÛ¥”íÉ‘ŠÁ–Å“IB")
+	MSG("”‡œk‘œ¥“ßŒÂ”–î“I|—˜ŒÈŽå‹`ŽÒŠ£“IŽ–îšCB")
+	MSG("cc”I–â‰ä˜ì”FŽ¯åhH")
+	MSG("ˆÈ‘Occ|‘ü¥—L‰ßˆê–Ê”VíQŽ§›ßcc")
+	room_flag_on(0)
+	jump MENU
+
+//@@šŒJ‚è•Ô‚µ
+TALK5_2:
+	MSG("‰äÝ¬ŽðŠÙ—¡ããà—¹C|‹RŽmDÛ¥”íÉ‘ŠÁ–Å“IB")
+	MSG("”‡œk‘œ¥“ßŒÂ”–î“I|—˜ŒÈŽå‹`ŽÒŠ£“IŽ–îšCB")
+	jump MENU
+
+//¥ƒJƒjƒOƒ‚DŒã
+TALK4:
+	check_room_flag(0)
+	on_jump TALK4_2
+
+	MSG("à‹N˜ÒC|‰äŒ©‰ß”I“I“¯”º—¹B")
+	MSG("cc¥‹©‰Ä™Z™ÛH")
+	MSG("ç»Ý¬ŽðŠÙ—¡|Ž—ŒÁ”ñíŽó‘å‰Æ’žˆ¤šCB")
+	MSG("ç»“ª”]œk‘–¾C|˜a‰ä¬ŽžŒóœk‘œšCB")
+	MSG("›’˜Òˆê’è”\¬ˆ×ˆêŒÂ”ül|˜aoF“Ià›àØlB")
+	room_flag_on(0)
+	jump MENU
+
+//@@šŒJ‚è•Ô‚µ
+TALK4_2:
+	MSG("”‡ŒÂ“‡ã“IˆâÕ\‘¢|^¥•œè¶ˆ¦B")
+	MSG("DÛ•sÝŠÅŽ—‘Š“¯“I’n•û|iiooA•s”\‘OiB")
+	MSG("”@‰Ê”I‹ö“ž—¹Ž—‘\‘ŠŽ¯“I’n•ûC|‰Â•s—v”í–À˜f—¹šGB")
+	jump MENU
+
+//¥ƒgƒŒƒ“ƒgDŒã
+TALK3:
+	check_room_flag(0)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("¥”I”cˆâÕ—¡“IŽ÷¸|‘Å“|“I™ÛH")
+	MSG("šICìˆ×‰ä“I“‹à@C|”‡–ç¥—Šác‘R“IB")
+	MSG("à‹N˜ÒC|”I—LŸ“—Láã“žˆêŒÂˆ¤à‹³“IàGŽq™˜ŽmH")
+	MSG("Y›õw—«—vèÑäAˆêà‘xC|‘¼¥Y›õŽž‘ã“Il™ÞB")
+	MSG("’A¥“ßŒÂ™˜ŽmC•p“IŠm—¹“¾cc|‰ä“I’¼æS¥”‡›õ‘i‰ä“IB")
+	room_flag_on(0)
+	jump MENU
+
+//@@šŒJ‚è•Ô‚µ
+TALK3_2:
+	MSG("à‹N˜ÒC|”I—LŸ“—Láã“žˆêŒÂˆ¤à‹³“IàGŽq™˜ŽmH")
+	MSG("Y›õw—«—vèÑäAˆêà‘xC|‘¼¥Y›õŽž‘ã“Il™ÞB")
+	jump MENU
+
+//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+TALK2:
+	check_room_flag(0)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("™è™èC|ŠÅ˜Òi“W‰z˜Ò‰z‡—˜—¹šCB")
+	MSG("•sœÁ¥‰ä‘I’†“I“‹à@šCB")
+	MSG("A¥”‡ŒÂžéŽqCã‹ã”“w—Í‰º‹Ž™ÛB")
+	MSG("—v¥—LY›õ‘z—v“IC|“Á•ÊæÌ‹‹”I–ç‰ÂˆÈšGB")
+	room_flag_on(0)
+	jump MENU
+
+//@@šŒJ‚è•Ô‚µ
+TALK2_2:
+	MSG("™è™èC|ŠÅ˜Òi“W‰z˜Ò‰z‡—˜—¹šCB")
+	MSG("A¥”‡ŒÂžéŽqCã‹ã”“w—Í‰º‹Ž™ÛB")
+	MSG("—v¥—LY›õ‘z—v“IC|“Á•ÊæÌ‹‹”I–ç‰ÂˆÈšGB")
+	jump MENU
+
+//¥ƒQ[ƒ€ŠJŽn’¼Œã
+TALK1:
+	MSG("š‰™ÞC|’²àzis“¾‡—˜åhH")
+	MSG("—v¥—LY›õŽù—v“I˜bC|‰ÂˆÈ•Ö‹XæÌ‹‹”IšGB")
+	jump MENU
+
+//-- œ‚Ìw“ü ------------------------------------------------------
+BUY_KEY:
+	CHECK_LEVEL(15)
+	ON_JUMP BUY_KEY3
+	CHECK_LEVEL(10)
+	ON_JUMP BUY_KEY2
+	CHECK_LEVEL( 5)
+	ON_JUMP BUY_KEY1
+
+// LV 1-4
+BUY_KEY0:
+	MSG("›”—¹C|™_ªœ50‚fCœƒ›õžéHH")
+	SEL("@Žx•t50G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(50)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-50)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+// LV 5-9
+BUY_KEY1:
+	MSG("›”—¹C|™_ªœ100‚fCœƒ›õžéHH")
+	SEL("@Žx•t100G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(100)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-100)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+	
+// LV 10-14
+BUY_KEY2:
+	MSG("›”—¹C|™_ªœ200‚fCœƒ›õžéHH")
+	SEL("@Žx•t200G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(200)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-200)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+// LV 15-20
+BUY_KEY3:
+	MSG("›”—¹C|™_ªœ500‚fCœƒ›õžéHH")
+	SEL("@Žx•t500G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(500)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(226,2)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-500)
+	GET_ITEM(226, 2)
+	jump OK_BUY
+
+//-- ‰ñ•œåZ‚Ìw“ü ----------------------------------------------------
+
+BUY_POTION:
+	CHECK_LEVEL(13)
+	ON_JUMP BUY_POTION3
+	CHECK_LEVEL(7)
+	ON_JUMP BUY_POTION2
+
+// LV 1-6
+BUY_POTION1:
+	MSG("›”—¹C|‰ñ•œåZ…¬•r50‚fCœƒ›õžéHH")
+	SEL("@Žx•t50G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(50)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(210, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-50)
+	GET_ITEM(210, 1)
+	jump OK_BUY
+
+// LV 7-12
+BUY_POTION2:
+	MSG("›”—¹C|‰ñ•œåZ…’†•r300‚fCœƒ›õžéHH")
+	SEL("@Žx•t300G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(300)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(211, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-300)
+	GET_ITEM(211, 1)
+	jump OK_BUY
+
+// LV 13-19
+BUY_POTION3:
+	MSG("›”—¹C|‰ñ•œåZ…‘å•r1500‚fCœƒ›õžéHH")
+	SEL("@Žx•t1500G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(1500)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(212, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-1500)
+	GET_ITEM(212, 1)
+	jump OK_BUY
+
+//-- Œ@‚èo‚µ•¨‚Ìw“ü ------------------------------------------------
+
+BUY_ITEM:
+	call CHECK_ANIECE_ITEM
+
+	// ‚·‚Å‚É¤•iŠm’èàZ‚ÝH
+	check_game_flag(3648)
+	on_jump BUY_ITEM_ARMOR
+	check_game_flag(3631)
+	on_jump BUY_ITEM1
+	check_game_flag(3632)
+	on_jump BUY_ITEM2
+	check_game_flag(3633)
+	on_jump BUY_ITEM3
+	check_game_flag(3634)
+	on_jump BUY_ITEM0
+
+	// ƒ‰ƒ“ƒ_ƒ€‚Å¤•i‚ªÌ‚í‚é
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 50, -1 )
+	ON_JUMP BUY_ITEM1
+	CHECK_RANDOM( 70, -1 )
+	ON_JUMP BUY_ITEM2
+	CHECK_RANDOM(100, -1 )
+	ON_JUMP BUY_ITEM3
+
+BUY_ITEM0:
+	//•iØ‚ê
+	game_flag_on(3634)
+	MSG("ˆ¦C‘¾ˆâŠ¶—¹B|Œ»ÝŸ“—L‘œžé“ID“Œ¼™ÞB")
+	jump MENU
+
+BUY_ITEM1:
+	// 3647	ƒAƒjƒGƒXƒVƒXƒeƒ€F0636 ŠïŠâé@šÓ‚¹‚é•Ç
+	check_game_flag(3647)
+	on_jump BUY_ITEM0
+
+	game_flag_on(3631)
+	MSG("‰äQ“ž—¹ˆêŒÂ”ñí’¿‹M“I“Œ¼C|‘z—våhH")
+	MSG("¥åhC|‹ÖŠõ‰Ê›‰1000‚fCœƒ›õžéB")
+	SEL("@Žx•t1000G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(1000)
+	OFF_JUMP NO_GOLD
+	CHECK_MAX_ITEM(0)
+	ON_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-1000)
+	GET_ITEM(165, 1)
+	SE("SE_GETITEM")
+	SYS_EX("“¾“žy‹ÖŠõ‰Ê›‰zB",-1,0X00000200)
+
+	// •iØ‚ê‚É‚·‚é
+	game_flag_off(3631)
+	game_flag_on(3634)
+	// 3647	ƒAƒjƒGƒXƒVƒXƒeƒ€F0636 ŠïŠâé@šÓ‚¹‚é•Ç
+	game_flag_on(3647)
+	jump OK_BUY
+
+BUY_ITEM2:
+	game_flag_on(3632)
+	MSG("¥åhC|–‚–@åZ…2000‚fCœƒ›õžéB")
+	SEL("@Žx•t2000G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(2000)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(215, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-2000)
+	GET_ITEM(215, 1)
+
+	// •iØ‚ê‚É‚·‚é
+	game_flag_off(3632)
+	game_flag_on(3634)
+	jump OK_BUY
+
+BUY_ITEM3:
+	game_flag_on(3633)
+	MSG("¥åhC|àŸàóàí100‚fCœƒ›õžéB")
+	SEL("@Žx•t100G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(100)
+	OFF_JUMP NO_GOLD
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-100)
+	GET_ITEM(220, 1)
+
+	// •iØ‚ê‚É‚·‚é
+	game_flag_off(3633)
+	game_flag_on(3634)
+	jump OK_BUY
+
+BUY_ITEM_ARMOR:
+	// 3649	ƒAƒjƒGƒXƒVƒXƒeƒ€FƒVƒ‹ƒo[ƒA[ƒ}[w“üàZ‚Ý
+	check_game_flag(3649)
+	on_jump BUY_ITEM0
+
+	game_flag_on(3631)
+	MSG("‰äQ“ž—¹ˆêŒÂ”ñí’¿‹M“I“Œ¼C|‘z—våhH")
+	MSG("¥åhC|‹âFŠ€b65535‚fCœƒ›õžéB")
+	SEL("@Žx•t65535G@|#C2¥|”Û")
+	check_select(0)
+	off_jump CANCEL
+	CHECK_GOLD(65535)
+	OFF_JUMP NO_GOLD
+	CHECK_MAX_ITEM(0)
+	ON_JUMP NO_FREE_ITEM
+
+	GET_GOLD(-65535)
+	GET_ITEM(037, 1)
+	SE("SE_GETITEM")
+	SYS_EX("“¾“žy‹âFŠ€bzB",-1,0X00000200)
+
+	// •iØ‚ê‚É‚·‚é
+	game_flag_off(3631)
+	game_flag_on(3634)
+	// 3649	ƒAƒjƒGƒXƒVƒXƒeƒ€FƒVƒ‹ƒo[ƒA[ƒ}[w“üàZ‚Ý
+	game_flag_on(3649)
+	jump OK_BUY
+
+//-- •sŽ€’¹‚ÌèËåZ ----------------------------------------------------
+
+S_POTION:
+	// 3638	ƒAƒjƒGƒXƒVƒXƒeƒ€FèËåZ‚ðŒ©‚¹‚½
+	check_game_flag(3638)
+	on_jump S_POTION2
+
+	MSG("š‰cc“ßŒÂ¬•r—¡åä“I¥Y›õåZH")
+	MSG("‰äŸ“—LŒ©‰ßšCcc")
+
+	SYS_EX("#N0‹‹ç»ŠÅ—¹y•sŽ€’¹“IèËåZzB",-1,0X00000200)
+	game_flag_on(3638)
+
+	MSG("ccš‰H¥•sŽ€’¹”VèËåZH")
+	MSG("•s˜ð™Ûcc”‡¥cc")
+	MSG("cccccccccc")
+
+S_POTION2:
+	MSG("š_cc“ßŒÂcccc")
+	MSG("‰ä—LŽ–î—v`‘õ”Icc")
+	MSG("”\•s”\”c“ßŒÂèËåZæÌ‹‹‰äšCB|”c‰ä“IèA‘S“s‹‹”I–ç‰ÂˆÈcc")
+
+	SEL("@”cåZ‹‹ç»åhH@|#C2¥|”Û")
+	check_select(0)
+	on_jump SP_YES
+
+//@@Ëu‚¢‚¢‚¦v‚Ìê‡
+SP_NO:
+	MSG("cccc¥åhB")
+	MSG("’ñ—¹–³—“I—v‹C›”•s‹Ncc")
+	jump MENU
+
+//@@Ëu‚Í‚¢v‚Ìê‡
+SP_YES:
+	MSG("cccc^“IH")
+
+//	SE("SE_GETITEM")
+	SYS_EX("Œðo—¹y•sŽ€’¹“IèËåZzB",-1,0X00000200)
+	pick_item(194)
+
+	MSG("š‰ccèAšCH")
+	MSG("ccˆöˆ×‰ä˜ì¥“‹à@ŠˆÈ•s—vèAH")
+	MSG("šjcccccc")
+	MSG("ccŽÓŽÓcc—L—¹”‡ŒÂ•ƒeA”\cc")
+
+	MSG("cccccccccccc")
+	MSG("cc‰Â¥C‰ä—v¥ÄŒ‡”Ilî“I˜b|A‘¾Ÿ“–ÊŽq—¹B")
+	MSG("•s—vèA“I˜bC“ß›õcc")
+
+	MSG("‰äœn‰Ä™Z“ß—¡ããà‰ßC|”Igã‰ÂˆÈŠñhŽçŒì¸èË›”™ÛB")
+	MSG("ŠˆÈC|‰ä”‡’£“»•Ð–ç‹–”\à¸ã”IY›õ–ZB")
+	MSG("”½³‰ä–ç•s”\—pC|”IA¾‰º™ÛB")
+
+	GET_SPIRIT(11)
+	SE("SE_GETITEM")
+	SYS_EX("“¾“žŽçŒì¸èË“»•ÐyŠìà™”V—ézI",-1,0X00000200)
+
+	call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("è‰—ŽçŒì¸èËyŠìà™”V—éz",-1,0X00000200)
+	SYS_EX("”‡¥Žg¡‹‰Žž“¾“ž“Ià‘Éàš‰Á“IŽçŒì¸èËB|”@‰Ê—i—Lç»“I—Í—ÊCA‰ÂˆÈÌ¬X‹­‘å“I‹RŽmB",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+
+	// 3639	ƒAƒjƒGƒXƒVƒXƒeƒ€FèËåZ‚ð“n‚µ‚½
+	game_flag_on(3639)
+	room_flag_on(1)
+	jump MENU
+
+//@@™ˆÈ~AŒJ‚è•Ô‚µ
+TALK_SP:
+	MSG("Y›õˆ¦C‰ä‰ÂŸ“—LšLšGcc")
+	jump MENU
+
+//--------------------------------------------------------------------
+EXIT:
+	end
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// Œ@‚èo‚µ•¨‚ð‘S•””ƒ‚Á‚½H
+
+@CHECK_ANIECE_ITEM
+{
+	// 3649	ƒAƒjƒGƒXƒVƒXƒeƒ€FƒVƒ‹ƒo[ƒA[ƒ}[w“üàZ‚Ý
+	check_game_flag(3649)
+	on_jump NOT_BUY
+
+	// 3640	ƒAƒjƒGƒXƒVƒXƒeƒ€F0715 ƒNƒ[ƒ”ƒ@[ˆâÕ Å‰‚Ìš¢”Õ”à‚Ìà—
+	check_game_flag(3640)
+	off_jump NOT_BUY
+	// 3641	ƒAƒjƒGƒXƒVƒXƒeƒ€F0722 ƒNƒ[ƒ”ƒ@[ˆâÕ ‘ë‚Ìƒ}ƒbƒv
+	check_game_flag(3641)
+	off_jump NOT_BUY
+	// 3642	ƒAƒjƒGƒXƒVƒXƒeƒ€F05a8 çŒÃ‚Ì–À‹{
+	check_game_flag(3642)
+	off_jump NOT_BUY
+	// 3643	ƒAƒjƒGƒXƒVƒXƒeƒ€F0751 –‚Ï‚ÌX‚ðU‚¯‚½‚Æ‚±‚ëBˆê”Ê‚Å”z’u‚ÌêŠB
+	check_game_flag(3643)
+	off_jump NOT_BUY
+	// 3644	ƒAƒjƒGƒXƒVƒXƒeƒ€F082d ƒC[ƒOƒŠƒbƒgŽRAƒtƒ[ƒYƒ“ƒTƒ‰ƒ}ƒ“ƒ_[
+	check_game_flag(3644)
+	off_jump NOT_BUY
+	// 3645	ƒAƒjƒGƒXƒVƒXƒeƒ€F09a5 ƒ‰ƒrƒŠƒ“ƒX@šú‚ÌœAê
+	check_game_flag(3645)
+	off_jump NOT_BUY
+	// 3646	ƒAƒjƒGƒXƒVƒXƒeƒ€F0618 ŠïŠâé@ƒI[ƒK
+	check_game_flag(3646)
+	off_jump NOT_BUY
+	// 3647	ƒAƒjƒGƒXƒVƒXƒeƒ€F0636 ŠïŠâé@šÓ‚¹‚é•Ç
+	check_game_flag(3647)
+	off_jump NOT_BUY
+
+BUY_OK:
+	// 3648	ƒAƒjƒGƒXƒVƒXƒeƒ€FƒVƒ‹ƒo[ƒA[ƒ}[w“ü‹–‰Â
+	game_flag_on(3648)
+	ret
+
+NOT_BUY:
+	// 3648	ƒAƒjƒGƒXƒVƒXƒeƒ€FƒVƒ‹ƒo[ƒA[ƒ}[w“ü‹–‰Â
+	game_flag_off(3648)
+	ret
+}
+
+// ----------------------------------------------------------------------------
+// ƒJ[ƒh“üŽè‰‰o
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god11",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}

@@ -1,0 +1,242 @@
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("box1")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1543)
+	ON_SKIP(2)
+	KAGI("d1543",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1543")
+
+
+	CHECK_GAME_FLAG(547)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box1")
+	INIT_SWITCH_ON("box1")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box1")
+
+	CHECK_GAME_FLAG(547)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("box1")
+	POP_ITEM_ICON("box1", 225, -6.6,0,5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("box1")
+	ATTACH_EFC("EFC_99ITEM_GET","box1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【100Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(100)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板②　金牛の石板
+	SWITCH_ON("box1")
+	POP_ITEM_ICON("box1", 271, -6.6,0,5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box1")
+	ATTACH_EFC("EFC_99ITEM_GET","box1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【金牛之石板】！",-1,0X00000200)
+
+	GET_ITEM(271, 1)
+	GAME_FLAG_ON(547)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+DEF("ITEM1")
+RES("CATCH")
+{
+	GAME_FLAG_ON(547)
+}
+
+
+
+
+DEF("box2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(548)
+	OFF_JUMP next
+
+//	SET_TREASURE("box2",1,151,"ITEM2")
+	INIT_SWITCH_ON("box2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box2")
+
+	CHECK_GAME_FLAG(548)
+	OFF_JUMP ITEM
+
+ITEM:
+// 怨念の腕輪
+	SWITCH_ON("box2")
+	POP_ITEM_ICON("box2", 151, 8.6,0,5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box2")
+	ATTACH_EFC("EFC_99ITEM_GET","box2","POS")
+
+	SYS_EX("得到【怨念之手澳】！",-1,0X00000200)
+
+	GET_ITEM(151, 1)
+	GAME_FLAG_ON(548)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+
+
+DEF("box3")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(550)
+	OFF_JUMP next
+
+//	SET_TREASURE("box3",1,182,"ITEM3")
+	INIT_SWITCH_ON("box3")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box3")
+
+	CHECK_GAME_FLAG(550)
+	OFF_JUMP ITEM
+
+ITEM:
+// 圓盤の鍵
+	SWITCH_ON("box3")
+	POP_ITEM_ICON("box3", 182, -5,-5,-1, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box3")
+	ATTACH_EFC("EFC_99ITEM_GET","box3","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(550)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box3")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box3")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1543")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1543)
+}
+
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+// 水門３讀み替え
+	CHECK_GAME_FLAG(538)
+	OFF_JUMP SUIEND
+
+	LOAD_MAP("MP_05c1")
+	LOAD_HITMAP("MP_05c1h")
+	SET_MOTION("ita","HOOK",-1)
+	SET_POS("ita",-5,-5,-1)
+	SET_POS("box3",-5,-4.875,-1)
+
+	END
+
+:SUIEND
+
+	// 水マップ
+	SE("SE_MIZU")
+
+}
+

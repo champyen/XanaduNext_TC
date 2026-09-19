@@ -1,0 +1,169 @@
+//////////////////////////////////////////////////////////////////////
+// 追加ダンジョンボス
+//
+// ROOM_FLAG
+//  0: 寶箱をとった
+//
+//////////////////////////////////////////////////////////////////////////////
+// 初期化
+//////////////////////////////////////////////////////////////////////////////
+
+DEF("MAP")
+RES("INIT")
+{
+	// 寶箱を消す
+	HIDE_CHR("trs")
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	BLUR(0)
+	SLOW(0)
+
+// ランダムマップから來た時のフェードを戻す處理 ----------------
+	CHECK_GAME_FLAG(3000)
+	OFF_JUMP SKIP_FADE
+
+	CINEMA_ON(0)
+	FADE_IN(-1)
+	CINEMA_OFF(0)
+	// フラグ戻して
+	GAME_FLAG_OFF(3000)
+SKIP_FADE:
+// ---------------------------------------------------------------------------
+
+START:
+	// うにゃーん空間
+	set_raster_info( 0, 200,200, 0.010,0.010, 1,1, -1,-1, 0.5)
+	raster(0,1)	
+
+	// BGM
+	BGM( 15, 0, 0)
+
+	// ブラックナイト(ドヴォルザーク)
+	put_monster("m00",500,7,0,0,0)
+
+	wait(45);
+
+}
+
+RES("WARP")
+{
+	game_flag_on(971)
+
+	EFC("EFC_WARP_TX", 0,0,0)
+	warp_chr("PC", 0)
+	wait(60)
+	ENTRY_MAP("rndmap_0603")
+	END
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// ボス
+//////////////////////////////////////////////////////////////////////////////
+DEF("m00")
+
+//////////////////////////////////////////////////////////////////////////////
+// 死亡
+//////////////////////////////////////////////////////////////////////////////
+RES("KILL")
+{
+	SE("SE_MINO_07")
+	GAME_FLAG_ON(970)
+
+	BLUR(30)
+	STOP_PC(0)
+	set_target_chr("-")
+
+	kill_chr("m00");
+
+	REFRESH("PC")
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	wait(30)
+	BLUR(0)
+
+	// 寶箱移動
+	SHOW_CHR("trs")
+	EFC("EFC_ADD_TREASURE", 0.0325,0,2.623)
+
+//-- 後處理 ------------------------------------------------
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+
+	SET_SPOT_ORG( 0, 0,0,0 )
+	CINEMA_OFF(0)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	INIT_SWITCH_ON("clearbonus")
+
+	ret
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// 寶箱
+DEF("trs")
+RES("INIT")
+{
+	// 寶箱を消す
+//	HIDE_CHR("trs")
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("trs")
+	stop_bgm(0, 2000)
+
+	// ソードオブソーサリーを持っているか
+	CHECK_GAME_FLAG(986)
+	OFF_JUMP NEXT
+
+	SWITCH_ON("trs")
+	POP_ITEM_ICON("trs", 225, 0.0325,0,2.623, 1,80,0)
+	WAIT(140)
+	DEL_ITEM_ICON("trs")
+	ATTACH_EFC("EFC_99ITEM_GET","trs","POS")
+	GET_GOLD(10000)
+	SYS_EX("得到了【10000 GOLD】！",-1,0X00000200)
+	JUMP PASS
+
+NEXT:
+	SWITCH_ON("trs")
+	POP_ITEM_ICON("trs", 18, 0.0325,0,2.623, 1,80,0)
+	WAIT(140)
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+	DEL_ITEM_ICON("trs")
+	ATTACH_EFC("EFC_99ITEM_GET","trs","POS")
+	GET_ITEM(18, 1)
+	GAME_FLAG_ON(986)
+	SYS_EX("得到了【魔法之劍】！",-1,0X00000200)
+PASS:
+	wait(120);
+
+	EFC("EFC_ADD_TREASURE", 0,0,0)
+	wait(30)
+	EFC("EFC_WARP_MX", 0,0,0)
+
+	// BGM
+	wait(60);
+	BGM( 12, 0, -1)
+
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	ROOM_FLAG_ON(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("trs")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("trs")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

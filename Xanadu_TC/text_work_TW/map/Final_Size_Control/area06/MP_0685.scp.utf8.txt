@@ -1,0 +1,663 @@
+//////////////////////////////////////////////////////////////////////
+// 奇岩城、塔の頂上。ラスボスマップ　第一形態用
+//
+//
+//
+//
+//
+
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	BGM( 20, 0, -1)
+
+	// SE再生
+	SE("SE_WIND2")
+	SE("SE_NAMI2")
+	SE("SE_THUNDER")
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+	// MP_0655のフェードアウトを解除
+	fade_IN(1)
+
+	ENTRY_CHR( 0, 072)
+	PUT_CHR( 0, "Liese",        0.00,0.00, 0.00,  180)
+
+	// コア
+	load_chr("M_0320\ARM_320a",0)
+	// ヒットマップ
+	load_chr("M_0320\M_0320h",8)
+	
+//	// 注視ターゲット設定
+//	set_target_chr("body")
+//	// オートターゲットモードON
+//	set_map_attr(17)
+
+	HIDE_CHR("core")
+	HIDE_CHR("body")
+	HIDE_CHR("ashi_l")
+	HIDE_CHR("ashi_r")
+	HIDE_CHR("yuka")
+	camera_off("空中戰")
+//	camera_off("空中戰（舊）")
+//	camera_off("地上戰（舊）")
+
+	// ビットは地上戰まで隱す
+//	HIDE_CHR("bit00")
+//	HIDE_CHR("bit01")
+//	HIDE_CHR("bit02")
+//	HIDE_CHR("bit03")
+//	HIDE_CHR("bit04")
+//	HIDE_CHR("bit05")
+//	HIDE_CHR("bit06")
+//	HIDE_CHR("bit07")
+	
+}
+
+
+// ----------------------------------------------------------------------------
+// スタート                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("EVENT")
+
+RES("EVENT")
+{
+	// 3801	EV ボス戰鬥前イベント
+	check_game_flag(3801)
+	off_jump start_event
+	end
+
+start_event:
+
+	// 3801	EV ボス戰鬥前イベント
+	game_flag_on(3801)
+
+	// PCの動きを止める
+	stop_pc(0)
+	set_deg("PC", 0)
+
+	CINEMA_ON(0)
+	reset_camera(0)
+
+//    ▼奇岩城・塔屋上
+//　　塔の螺旋階段を登り、屋上へ上がるとイベント開始。
+//　　ガルシスの姿はどこにもなく、リーゼロットのみが待っている。
+//　　周圍を訝しげに見回す主人公。
+
+	CROSS_FADE(60)
+	permit_script_camera(1)
+	set_script_camera(0.00,0.00,-10,  -18.0,180.0,0.0, 10, 28.0)
+	move_script_look_at( 0,1,8, 400, 1)
+	rotate_script_camera(5,0,0, 400, 1)
+
+	set_skip_label("SKIP")
+
+	MSG_EX("#S3#C0莉絲洛特「請稍等，騎士大人。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我的丈夫|　　　　　　不久就會在此再度降臨。」",-1,2)
+
+	wait_camera(0)
+
+//　　ここでリーゼロットが後ろへ振り向く。
+//　　主人公に背中を向けた狀態。
+
+	CROSS_FADE(60)
+	set_script_camera(0.00,2.00,-2,  -10,10,0, 25, 30)
+	rotate_script_camera(0,10,0, 600, 1)
+	scale_script_camera( 1.3,    600, 1)
+	WAIT(60)
+	set_deg("Liese", 0)
+	MSG_EX("#S3#C0莉絲洛特「請看吧。|　　　　　　富有森林和水源的美麗大地……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「這雷蘭德是個不遜色於仙那度的|　　　　　　美麗富饒的國家。」",-1,2)
+	wait_camera(0)
+
+
+	CROSS_FADE(30)
+	set_script_camera(0.00,1.30,0.00,  -30,180,0,  10, 30)
+	rotate_script_camera(20,0,0,  400, 1)
+	MSG_EX("#S3#C0莉絲洛特「但是，因為不久前的內亂使人心大亂，|　　　　　　國家還處在混亂之中……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「嘆息、悲傷、恐懼、憎恨……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「這些對我丈夫來説|　　　　　　正是覺醒的報答。」",-1,2)
+	wait_camera(0)
+
+
+//　　リーゼロット、主人公のほうへ振り返る。
+
+	set_deg_EX("Liese", "PC")
+	scale_script_camera( 0.9,     500, 1)
+	MSG_EX("#S3#C0莉絲洛特「時間到了。|　　　　　　不久大地就要被黑暗籠罩。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「被凌駕於曾經的桃源鄉之上|　　　　　　名為『虛無』的巨大的黑暗……」",-1,2)
+	WAIT(60)
+	
+//　　リーゼロット、祈りのモーション。
+
+	CROSS_FADE(20)
+	set_script_camera(0.00,1.30,0.00,  5,220,0,  4, 30)
+	set_motion("Liese","EMPTY5",5)
+	SE("SE_EVENT_53")
+	WAIT(45)
+	QUAKE(1,1,-1)
+	set_motion("Liese","EMPTY6",0)
+	MSG_EX("#S3#C0莉絲洛特「……太祖忽必烈可汗的後裔，|　　　　　　我，莉絲洛特奉上願望……」",-1,2)
+	WAIT(60)
+
+	fade_out(60)
+//	stop_env_SE("SE_EVENT_53", 2000)
+	wait(80)
+	QUAKE(1,1,0)
+	ENTRY_MAP("0684_0675")
+	END
+
+
+SKIP:
+	set_deg("Liese", 180)
+	QUAKE(1,1,0)
+	ENTRY_MAP("0684_0675")
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 戰鬥前イベント續き
+
+DEF("Liese")
+
+RES("INIT")
+{
+	// 3801	EV ボス戰鬥前イベント
+	check_game_flag(3801)
+	off_jump EXIT
+
+//--------------------------------------------------------------------
+
+	// PCの動きを止める
+	
+	stop_pc(0)
+	set_motion("Liese","EMPTY6",0)
+
+	CINEMA_ON(0)
+	reset_camera(0)
+	QUAKE(1,1,-1)
+
+	permit_script_camera(1)
+	set_script_camera(0.00,1.80,-0.85,  -5,180,0, 10, 30)
+	scale_script_camera(1.5, 500, 1)
+
+	SE("SE_EVENT_53")
+	FADE_IN(60)
+	WAIT(60)
+	set_skip_label("SKIP")
+
+//▼奇岩城・塔屋上
+//　　フェード拔けて、塔屋上。依然と續く地震と地響き。
+//　　黑い光をまといつつ封印解除の術を續けているリーゼロット。
+
+	MSG_EX("#S3#C0莉絲洛特「出來吧，我的丈夫、我的守護精靈……」",-1,2)
+	WAIT(100)
+	MSG_EX("#S3#C0莉絲洛特「……魔王加爾西斯。」",-1,2)
+	set_motion("Liese","EMPTY2",10)
+	WAIT(80)
+	move_script_look_at(0,10,0,  100, 1)	
+	SE("SE_EVENT_09")
+	stop_env_SE("SE_EVENT_53", 2000)
+	FADE_OUT_EX( 30, 1, "0xffffffff", 0)
+	WAIT(100)
+
+//　　リーゼロットから悽まじい黑い光がほとばしった後、ホワイト
+//　　アウト。
+
+	//ガルシス表示
+	show_chr("body")
+	show_chr("core")
+	show_chr("ashi_l")
+	show_chr("ashi_r")
+	set_collision_obj("body",8)
+	set_pos("body",0,0,0)
+	set_motion("body","EMPTY5",0)
+	HIDE_CHR("Liese")
+
+	// ＨＰリンク設定
+	link_hp_chr("core","body")
+	link_hp_chr("ashi_l","body")
+	link_hp_chr("ashi_r","body")
+
+	//カメラがじゃむるバグがあるのでここでやっちまう。
+	set_pos("PC",0,0,-17)
+	SET_DEG_EX("PC","body")
+	QUAKE(2,2,1)
+	WAIT(240)
+	set_script_camera(0.00,0.5,-17,  -5,180,0, 5, 30)
+	rotate_script_camera(5,0,0, 170, 1)
+	move_script_look_at(0,1.0,0,   170, 1)
+	FADE_IN_EX( 60, 1, "0xffffffff", 0)
+
+	//武器もってなければ拔刀しない。
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(1)
+
+	SE("SE_B1_61000")
+	WAIT(140)
+
+//    魔王ガルシスの巨體が主人公の前に立ちはだかっている。
+//　　以降、ガルシスのセリフが長いのでカメラ引いたり切り替えたりで
+//　　間を持たせて下さい。
+
+	//ガルシス登場（お名前紹介）
+	cross_fade(30)
+	set_script_camera_ex("core",0, 60,210,0, 12, 0)
+	rotate_script_camera(0,-45,0, 286, 0)
+	scale_script_camera(1.5, 285, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,-3,0, 256, 1)
+	set_motion("body","EMPTY1",5)
+	blur(50)
+	slow(2)
+	FADE_OUT_EX( 16, 0, "0xffaaffff", 4)
+	wait(50)
+
+	SE("SE_B3_66004")
+	CALL NAME
+	wait(150)
+	CALL NAME_ERASE
+//	wait(86)
+	wait(69)
+
+	SE("SE_B6_78002")
+	wait(17)
+//	blur(0)
+	slow(0)
+
+	//下へ
+	blur(70)
+	MOVE_SCRIPT_LOOK_AT( 0,-22,0, 20, 1)
+	rotate_script_camera(-70,15,0, 20, 1)
+	scale_script_camera(0.9, 20, 1)
+	wait(20)
+	scale_script_camera(2, 200, 1)
+	rotate_script_camera(10,0,0, 200, 1)
+//	SE("SE_B6_78002")
+	wait(185)
+	blur(0)
+	FADE_IN_EX( 16, 0, "0xffaaffff", 4)
+
+	CROSS_FADE(60)
+	set_script_camera_ex("core",0, -10,150,0, 20, 15)
+	rotate_script_camera(0,20,0, 1000, 0)
+
+	wait(100)
+	MSG_EX("#S3#C0魔王加爾西斯「……呵呵……呵呵呵…………」",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0魔王加爾西斯「沒想到，得到黑暗力量的巫女的巫術|　　　　　　能強大到如此程度……」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「你騙了我啊……我的妻子莉絲洛特。」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「欺騙了我，|　　　　　　這五百年來把我封印在自己體內……」",-1,2)
+
+//　　ガルシス、主人公を見據える。
+	cross_fade(60)
+	set_script_camera(0.00,0.00,-17.00,  -28.0,0.0,0.0, 30, 30.0)
+	rotate_script_camera(0,60,0, 1000, 1)
+
+	MSG_EX("#S3#C0魔王加爾西斯「被時代選擇的勇士啊……|　　　　　　你也不知道吧。」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「我和你都被那個女人欺騙了。」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「……呵呵呵……」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「莉絲洛特……|　　　　　　這份才智、這份膽識……令人佩服。」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「能夠稱得上魔王新娘的人類……|　　　　　　除了你之外就沒有別人了。」",-1,2)
+
+//　　魔王ガルシス、天を仰いで咆哮。
+
+	cross_fade(60)
+	set_script_camera(0.09,4.00,-0.85,  0,180.0,0.0, 25, 30.0)
+	rotate_script_camera(10,0,0, 1000, 1)
+
+	WAIT(60)
+	MSG_EX("#S3#C0魔王加爾西斯「請看好吧，|　　　　　　我會把你準備給我的聖劍騎士捏個粉碎。」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「然後，|　　　　　　我們將一同君臨這黑暗的時代！」",-1,2)
+
+	scale_script_camera(0.75, 500, 1)
+	BLUR(100)
+
+	SE("SE_B6_78003")
+	WAIT(60)
+	FADE_OUT_EX( 60, 1, "0xffffffff", 0)
+	WAIT(60)
+
+	// 逃げられないようにアタリ讀み込み
+	LOAD_HITMAP("MP_0685bh")
+
+//　　⇒最終戰鬥開始(第一形態・第二形態)
+
+//--------------------------------------------------------------------
+
+	// ＰＣの復活ポイントを同樣の座標に設定
+	set_recover_pos(0,0,-17)
+
+//-- ガルシスの設定 --------------------------------------------------
+//---
+	// ボス表示
+//	show_chr("body")
+//	show_chr("core")
+//	set_collision_obj("body",8)
+	// ＨＰバー表示
+//	disp_hp_bar("core")
+//	end
+//---
+
+	// 注視ターゲット設定
+	set_target_chr("body")
+	// オートターゲットモードON
+	set_map_attr(17)
+	// 05/06/16
+	bgm(16,0,-1)
+	blur(0)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	FADE_IN_EX( 60, 1, "0xffffffff", 0)
+	CINEMA_OFF(0)
+	end
+
+
+SKIP:
+	set_pos("PC",0,0,-17)
+	SET_DEG("PC",0)
+
+	CALL NAME_ERASE
+
+	//ガルシス出してリーゼ消す
+	show_chr("body")
+	show_chr("core")
+	show_chr("ashi_l")
+	show_chr("ashi_r")
+	set_collision_obj("body",8)
+	set_pos("body",0,0,0)
+	HIDE_CHR("Liese")
+	DELETE_EFC("Liese")
+
+	// ＨＰリンク設定
+	link_hp_chr("core","body")
+	link_hp_chr("ashi_l","body")
+	link_hp_chr("ashi_r","body")
+
+	// ＰＣの復活ポイントを同樣の座標に設定
+	set_recover_pos(0,0,-17)
+
+	// 注視ターゲット設定
+	set_target_chr("body")
+	// オートターゲットモードON
+	set_map_attr(17)
+
+	// 逃げられないようにアタリ讀み込み
+	LOAD_HITMAP("MP_0685bh")
+
+	bgm(16,0,-1)
+	blur(0)
+	slow(0)
+	QUAKE(1,1,0)
+
+	stop_env_SE("SE_EVENT_53", 2000)
+	stop_env_SE("SE_EVENT_09", 2000)
+	stop_env_SE("SE_B1_61000", 2000)
+	stop_env_SE("SE_B3_66004", 2000)
+	stop_env_SE("SE_B6_78002", 2000)
+	stop_env_SE("SE_B6_78003", 2000)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	FADE_IN(60)
+	CINEMA_OFF(0)
+EXIT:
+	end
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ボス（コア）                                                                      
+// ----------------------------------------------------------------------------
+//DEF("core")
+//RES("KILL")
+//{
+//	stop_pc(0)
+//	cinema_on(0)
+//	blur(50)	
+// 爆發EFCはスクリプト側で呼ぶことにした。ボーンの位置は適當（ひ）
+//	attach_efc("EFC_SPI_DEAD","body","_koshi")
+//	
+//	SE("SE_B6_78700")
+//	set_motion("body","DYING",0)
+//	wait(500)
+
+//	fade_out(100)
+//	wait(200)
+//	blur(0)
+//
+//	end
+//}
+// ----------------------------------------------------------------------------
+// ボス（本體）                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("body")
+
+// 05/03/16追記
+RES("KILL")
+{
+	DELETE_EFC("body")
+
+	stop_pc(0)
+	cinema_on(0)
+	set_target_chr("-")
+	blur(50)
+	
+	// 爆發EFCはスクリプト側で呼ぶことにした。ボーンの位置は適當（ひ）
+	attach_efc("EFC_SPI_DEAD","body","_koshi")
+	
+	SE("SE_B6_78700")
+	set_motion("body","DYING",0)
+	wait(500)
+
+	fade_out(100)
+	wait(200)
+	blur(0)
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// こっから繋ぎイベントよんーー                                                                    
+// ----------------------------------------------------------------------------
+
+	//ガルシスとPCの位置を移動(*ガルシスの旋廻制御ができないので一度消して新たに置いてる)
+	HIDE_CHR("body")
+	HIDE_CHR("bit00")
+	HIDE_CHR("bit01")
+	HIDE_CHR("bit02")
+	HIDE_CHR("bit03")
+	HIDE_CHR("bit04")
+	HIDE_CHR("bit05")
+	HIDE_CHR("bit06")
+	HIDE_CHR("bit07")
+	ENTRY_CHR( 8, 034)
+	PUT_CHR( 8, "body2",        0.00,0.00, 0.00,  180)
+	SET_POS("PC",0,0,-12.5)
+	SET_DEG_EX("PC","core")
+	wait(100)
+	set_motion("body2","CROUCH",0)
+
+	//カメラ位置決定
+	permit_script_camera(1)
+	set_script_camera(0,2,-10,  -5,135, 0, 30, 30)
+	rotate_script_camera(0,60,0, 800, 1)
+	scale_script_camera(0.5, 800, 1)
+	fade_IN(100)
+	set_skip_label("SKIP")
+	wait(150)
+
+	//間がもたないので適當に臺詞たしてみました。
+	MSG_EX("#S3#C0魔王加爾西斯「……你、你…………」",-1,2)
+	wait(150)
+	MSG_EX("#S3#C0魔王加爾西斯「不愧是我的宿敵……」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「不過……不要以為這就是我全部的力量了……」",-1,2)
+	WAIT(100)
+	wait_camera(0)
+
+	//顏アップ
+	set_motion("body2","EMPTY4",10)
+	WAIT(10)
+	cross_fade(30)
+	blur(50)
+	scale_script_camera(0.3, 30, 1)
+	MOVE_SCRIPT_LOOK_AT( -1,1,0, 30, 1)
+	wait(30)
+	SE("SE_B6_79001")
+	MSG_EX("#S3#C0魔王加爾西斯「哦哦哦哦哦哦哦哦哦哦哦哦哦哦！！」",-1,2)
+	rotate_script_camera(-20,10,0, 500, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,-0.5,0, 500, 1)
+	wait(150)
+	MSG_EX("#S3#C0魔王加爾西斯「騎士啊，給你見識一下虛無之王的真正力量……」",-1,2)
+	MSG_EX("#S3#C0魔王加爾西斯「然後再將這不祥的聖劍一同消滅掉就好了。」",-1,2)
+	wait(60)
+	wait_camera(0)
+
+	SE("SE_B6_79000")
+	set_motion("body2","EMPTY3",10)
+	blur(50)
+	slow(4)
+		// 地面割れエフェクト
+		EFC("EFC_06BOSSMAP1",0,0,0)
+	QUAKE(6,6,400)
+	ATTACH_EFC("EFC_GAL_EXPR","core","CTR")
+	MOVE_SCRIPT_LOOK_AT( 0,8,3, 30, 1)
+	rotate_script_camera(-30,-10,0, 130, 1)
+	scale_script_camera(0.3, 130, 1)
+		wait(30)
+		// 地面割れエフェクト
+		EFC("EFC_06BOSSMAP2",0,0,0)
+		wait(20)
+		// 地面割れエフェクト
+		EFC("EFC_06BOSSMAP3",0,0,0)
+		wait(60)
+	//wait(110)
+	slow(0)
+	MOVE_SCRIPT_LOOK_AT( 0.3,-2,-2, 100, 1)
+	wait(30)
+	slow(3)
+
+	STOP_ENV_SE("SE_B6_79001",1500)
+
+	FADE_OUT_EX( 60, 1, "0xffffffff",0)
+	wait(80)
+	blur(0)
+	slow(0)
+
+	permit_script_camera(0)
+
+	// 第二形態へ
+
+	entry_map("last_boss")
+	end
+
+SKIP:
+//	FADE_OUT_EX( 60, 1, "0xffffffff",0)
+	wait(60)
+	blur(0)
+	slow(0)
+	QUAKE(1,1,0)
+	entry_map("last_boss")
+	end
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@NAME
+{
+	ENTRY_IMG(0,"BOSS05",0)
+
+	// αが'1'の時は'加算モード'なので「透明」にする時は、
+	// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+	//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+	SET_IMG( 0, 192,346, 0,  0, 64,255, 64, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//	SET_IMG( 2, 192,346, 0,  0, 48,255, 48, 1, 0xff000000, 0xff000000, 1.5,1.5, 0, 1,1)
+	IMG_ON(0)
+//	IMG_ON(2)
+
+	// 發生までに'間'が欲しい場合はこんな風にします。
+	SUSPEND_IMG(0,45)
+//	SUSPEND_IMG(2,30)
+
+	// フェードイン
+	COLOR_IMG    (0, 0xffffffff, 0xff000000, 30, 1)
+//	SCALE_IMG    (2, 1, 1,                   30, 1)
+//	COLOR_IMG_EX (2, 0xffdfffaf, 0xff000000, 30, 1, 0, 1, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 45, 1)
+	RET
+}
+
+
+
+
+
+
+
+
+
+
+// メガブレスイベント ////////////////////////////////////////////////////////
+RES("PROG_C")
+{
+	// PCの動きを止める
+	stop_pc(0)
+
+	// シネマON
+	cinema_on(0)
+	
+	cross_fade(60)
+	
+	permit_script_camera(1)
+	set_script_camera_ex("core",-1, -30,300,0, 14, 0)
+
+	rotate_script_camera(20,30,0, 240, 1)
+	move_script_look_at(0,-1,0, 240, 1)
+	scale_script_camera(0.8, 240, 1)
+	wait(240)
+	
+	cross_fade(60)
+	permit_script_camera(0)
+
+	cinema_off(0)
+	
+	end
+}

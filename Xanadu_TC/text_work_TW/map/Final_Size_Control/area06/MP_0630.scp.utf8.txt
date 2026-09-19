@@ -1,0 +1,109 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	set_rain_inf("EFC_06KAZE",1, 45, 15,240)
+	rain(1)
+
+	// SE再生
+	SE("SE_WIND2")
+	SE("SE_NAMI2")
+
+	// 縮小マップ（赤）
+	GAME_FLAG_ON(204)
+
+	// スケルトンウォリアー
+	put_monster("m00",408,17,0,0,0)
+//	put_monster("m01",408,17,0,0,1)
+	put_monster("m02",408,17,0,0,2)
+//	put_monster("m03",408,17,0,0,3)
+//	put_monster("m04",408,17,0,0,4)
+//	put_monster("m05",408,17,0,0,5)
+	put_monster("m06",408,17,0,0,6)
+//	put_monster("m07",408,17,0,0,7)
+	// スケルトンアーチャー
+//	put_monster("m03",409,17,0,0,3)
+	put_monster("m05",409,17,0,0,5)
+//	put_monster("m08",409,17,0,0,8)
+//	put_monster("m09",409,17,0,0,9)
+//	put_monster("m10",409,17,0,0,10)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1634)
+	ON_SKIP(2)
+	KAGI("d1634",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1634")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1634")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1634)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(634)
+	OFF_JUMP next
+
+	// 不死鳥の羽 外壁
+//	SET_TREASURE("box",1,193,"ITEM")
+	INIT_SWITCH_ON("box")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box")
+
+// 不死鳥の羽
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 193, 16,-2.125,-27, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99ITEM_GET","box","POS")
+
+	SYS_EX("得到【不死鳥的羽毛】！",-1,0X00000200)
+
+	GET_ITEM(193, 1)
+	GAME_FLAG_ON(634)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

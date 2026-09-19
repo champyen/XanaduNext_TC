@@ -1,0 +1,214 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// カギ設定
+	CHECK_GAME_FLAG(2003)
+	ON_SKIP(2)
+	KAGI("d2003",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d2003")
+
+	// カギ設定
+	CHECK_GAME_FLAG(2004)
+	ON_SKIP(2)
+	KAGI("d2004",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d2004")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d2003")
+RES("KAGI")
+{
+	GAME_FLAG_ON(2003)
+}
+
+DEF("d2004")
+RES("KAGI")
+{
+	GAME_FLAG_ON(2004)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1022)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox1",1,080,"ITEM1")
+	INIT_SWITCH_ON("tbox1")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+// ローブ
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 080, -2,-0.125,7, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+
+	SYS_EX("得到【長袍】！",-1,0X00000200)
+
+	GET_ITEM(080, 1)
+	GAME_FLAG_ON(1022)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1023)
+	OFF_JUMP NEXT
+
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+//ルビー
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 226, 8,1.375,7, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+	WAIT(45)
+
+	GET_ITEM(226, 1)
+	GAME_FLAG_ON(1023)
+
+	SYS_EX("得到【骨】！",-1,0X00000200)
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於【骨】",-1,0X00000200)
+	SYS_EX("在道具店賣掉的話……？",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 木箱
+
+DEF("woodbox")
+RES("INIT")
+{
+	// 3524	EV チュートリアル、木箱について
+	check_game_flag(3524)
+	on_jump EXIT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("woodbox")
+
+	GAME_FLAG_ON(3524)
+
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於【木箱】",-1,0X00000200)
+	SYS_EX("【木箱】可以推動，|也可以把它打壞。",-1,0X00000200)
+	SYS_EX("受到一次攻撃會變成半損壞狀態，|可以踩在上面，但是不能推動。",-1,0X00000200)
+	SYS_EX("受到兩次攻撃會完全損壞，|可以透過切換地圖使其復原。",-1,0X00000200)
+	SYS_EX("還有，就算地面稍有起伏，|也可以繼續將箱子向前推動。",-1,0X00000200)
+
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+}
+

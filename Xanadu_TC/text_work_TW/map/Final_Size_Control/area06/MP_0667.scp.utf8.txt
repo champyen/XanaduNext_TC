@@ -1,0 +1,270 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// 縮小マップ（赤）
+	GAME_FLAG_ON(205)
+
+	// 縮小マップ（赤）
+	GAME_FLAG_ON(206)
+
+	GAME_FLAG_ON(209)
+	GAME_FLAG_ON(210)
+	GAME_FLAG_ON(211)
+
+	// 箱の移動
+	CHECK_GAME_FLAG(675)
+	OFF_SKIP(1)
+	MOVE_VEC("hako1",0,-1.5,-1.5,1)
+
+	CHECK_GAME_FLAG(676)
+	OFF_SKIP(1)
+	MOVE_VEC("hako2",0,-1.5,-1.5,1)
+
+	// スイッチ１オンオフチェック
+	CHECK_GAME_FLAG(642)
+	OFF_JUMP NEXT
+
+	MOVE_VEC("bar1",0,-3.75,0,1)
+//	MOVE_VEC("bar2",0,-3.75,0,1)
+	HIDE_CHR("h1")
+	HIDE_CHR("h2")
+	HIDE_CHR("h3")
+	HIDE_CHR("h4")
+	HIDE_CHR("h5")
+	HIDE_CHR("h6")
+	HIDE_CHR("h7")
+	HIDE_CHR("h8")
+	MOVE_VEC("box",0,0,-3,1)
+
+NEXT:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1679)
+	ON_SKIP(2)
+	KAGI("d1679",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1679")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1681)
+	ON_SKIP(2)
+	KAGI("d1681",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1681")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1679")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1679)
+}
+
+DEF("d1681")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1681)
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 箱押し
+// ----------------------------------------------------------------------------
+
+DEF("hako1")
+RES("PUSH")
+
+{
+	GAME_FLAG_ON(675)
+}
+
+DEF("hako2")
+RES("PUSH")
+
+{
+	GAME_FLAG_ON(676)
+}
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// スイッチ                                                                  
+// ----------------------------------------------------------------------------
+
+
+DEF("sw")
+
+RES("FOOT")
+{
+	//フラグ狀態チェック
+	CHECK_GRID(1,2,"box")
+	OFF_JUMP L_B2
+
+	CALL DOWN
+	END
+
+L_B2:
+	CALL UP
+
+}
+
+
+// ----------------------------------------------------------------------------
+@UP
+{
+		CHECK_GAME_FLAG(642)
+		OFF_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("atari")
+			QUAKE(0,5,150)
+//			MOVE_VEC("bar2",0,3.75,0,150)
+			MOVE_VEC("bar1",0,3.75,0,150)
+			WAIT(150)
+	GAME_FLAG_OFF(642)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+		NEXT:
+RET
+}
+
+
+// ----------------------------------------------------------------------------
+@DOWN
+{
+		CHECK_GAME_FLAG(642)
+		ON_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("atari")
+			QUAKE(0,5,150)
+			MOVE_VEC("bar1",0,-3.75,0,150)
+//			MOVE_VEC("bar2",0,-3.75,0,150)
+			WAIT(150)
+	GAME_FLAG_ON(642)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+		NEXT:
+RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(662)
+	OFF_JUMP next
+	// ボーパルウェポン
+//	SET_TREASURE("tbox1",1,35,"ITEM1")
+	INIT_SWITCH_ON("tbox1")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+// ボーパルウェポン
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 35, -7,17.375,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+
+	SYS_EX("得到【沃爾珀之劍】！",-1,0X00000200)
+
+	GET_ITEM(35, 1)
+	GAME_FLAG_ON(662)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+// ----------------------------------------------------------------------------
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(663)
+	OFF_JUMP next
+	// デス
+//	SET_TREASURE("tbox2",1,235,"ITEM2")
+	INIT_SWITCH_ON("tbox2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+// デス
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 235, 7,17.375,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(235, 1)
+	GAME_FLAG_ON(663)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

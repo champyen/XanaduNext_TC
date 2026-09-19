@@ -1,0 +1,253 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+//	CHECK_GAME_FLAG(4015)
+//	OFF_JUMP NEXT
+//	SWITCH_ON("portal")
+
+NEXT:
+
+	CHECK_GAME_FLAG(924)
+	OFF_SKIP(2)
+	INIT_SWITCH_ON("lock")
+	HIDE_CHR("daiza")
+
+//鍵チェック
+//	CHECK_GAME_FLAG(921)
+//	ON_JUMP next
+//	LOCK("lock",3)
+//	JUMP next2
+//next:
+//	INIT_SWITCH_ON("lock")
+//
+//next2:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1901)
+	ON_SKIP(2)
+	KAGI("d1901",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1901")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1902)
+	ON_SKIP(2)
+	KAGI("d1902",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1902")
+
+	// カギ設定
+	CHECK_GAME_FLAG(924)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1903)
+	ON_SKIP(2)
+	KAGI("d1903",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1903")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1904)
+	ON_SKIP(2)
+	KAGI("d1904",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1904")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1901")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1901)
+}
+
+DEF("d1902")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1902)
+}
+
+DEF("d1903")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1903)
+}
+
+DEF("d1904")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1904)
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(924)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1903)
+	ON_SKIP(2)
+	KAGI("d1903",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1903")
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板澑住了。")
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 鍵                                                                          
+// ----------------------------------------------------------------------------
+//DEF("lock")
+//RES("KEY")
+//{
+//	GAME_FLAG_ON(921)
+
+//	STOP_PC(0)
+//	CROSS_FADE(10)
+//	RESET_MAP_ROT_Y(2,1)
+//	WAIT(2)
+//	CINEMA_ON(0)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA_EX( "lock", -1, -45,0,0,10,32)
+//	WAIT(60)
+	
+//	SE("SE_KEY")
+//	SWITCH_ON("lock")
+//	WAIT(30)
+	
+//	CINEMA_OFF(0)
+//	CROSS_FADE(10)
+//	PERMIT_SCRIPT_CAMERA(0)
+//}
+
+
+
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09a1_09a0")
+RES("EVENT")
+{
+	ENTRY_MAP("09a0_09a1")
+}
+
+DEF("09a1_09a2")
+RES("EVENT")
+{
+	ENTRY_MAP("09a2_09a1")
+}
+
+DEF("09a1_09a3")
+RES("EVENT")
+{
+	ENTRY_MAP("09a3_09a1")
+}
+
+DEF("09a1_09a5")
+RES("EVENT")
+{
+	ENTRY_MAP("09a5_09a1")
+}
+
+
+// ============================================================================
+// ポータル
+// ============================================================================
+DEF("portal")
+
+RES("EVENT")
+{
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4015)
+	ON_JUMP NEXT
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	WAIT(60)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+	SWITCH_ON("portal")
+	WAIT(120)
+
+	GAME_FLAG_ON(4015)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+

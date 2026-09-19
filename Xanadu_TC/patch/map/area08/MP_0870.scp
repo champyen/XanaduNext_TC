@@ -1,0 +1,364 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_WIND2")
+
+	set_rain_inf("EFC_HINOKO2",1, 45, 15,15)
+	rain(1)
+	HIDE_CHR("wall")
+
+	//冰を壞していれば消す
+	CHECK_GAME_FLAG(803)
+	OFF_JUMP NEXT2
+	HIDE_CHR("ice")
+
+	//エレベータを消すかどうか
+//	CHECK_GAME_FLAG(804)
+//	OFF_JUMP NEXT2
+//	HIDE_CHR("gate")
+//	HIDE_CHR("switch")
+//	SHOW_CHR("wall")
+
+
+NEXT2:
+	CHECK_GAME_FLAG(3000)
+	OFF_JUMP NEXT3
+
+	CINEMA_OFF(0)
+
+	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+	END
+
+
+NEXT3:
+	END
+}
+
+// =============================================================
+// 昇降機
+// =============================================================
+
+DEF("switch")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(803)
+	ON_SKIP(1)
+	ENABLE_EV_POP("switch",0)
+}
+
+RES("CLICK")
+{
+	SEL("#C1升降機|#C2　拉動拉桿　|取消")
+	check_select(0)
+	on_jump SW_MOVE
+	END
+
+SW_MOVE:
+
+	GAME_FLAG_ON(3000)
+
+	SWITCH_ON("switch")
+	WAIT(60)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(30)
+	SHAKE(0,5)
+
+	SE("SE_ELEV1")
+
+	WAIT(60)
+
+	SET_MOTION("gate","EMPTY1",0)
+
+	SE("SE_ELEV2")
+
+	MOVE_VEC("gate",0,-10,0,360)
+	MOVE_VEC("switch",0,-10,0,360)
+
+	QUAKE(1,1,120)
+	WAIT(60)
+	FADE_OUT(-1)
+	WAIT(60)
+	GAME_FLAG_ON(804)
+	ENTRY_MAP("0854_0870t")
+
+END
+
+}
+
+
+// ==============================================================
+// 冰
+// ==============================================================
+DEF("ice")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_08ICE2","ice","CTR")
+	CINEMA_ON(0)
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	FOCUS_CHR("ice")
+
+	KILL_CHR("ice",0,0,150)
+
+	// 05/07/27:スイッチ操作可能にする
+	ENABLE_EV_POP("switch",1)
+
+	GAME_FLAG_ON(803)
+	WAIT(150)
+	WAIT(30)
+	CINEMA_OFF(0)
+
+NEXT:
+END
+}
+
+
+// --------------------------------------------------------------
+// 寶箱                                                                        
+// --------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(822)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+// --------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god08",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(822)
+	OFF_JUMP ITEM
+
+// もしかしたらブラックオニキス
+BLACK_ONYX:
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 80, -1 )
+	OFF_JUMP GOLD
+
+	// バランス調整のため、ブラオニ禁止
+	JUMP GOLD
+
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 220, 3,0,11, 1,80,0)
+	WAIT(140)
+
+//	CHECK_MAX_ITEM(0)
+//	ON_JUMP ITEM_FULL
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP ITEM_FULL
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【燹瑪瑙】！",-1,0X00000200)
+
+	GET_ITEM(220,1)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM_FULL:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	end
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 3,0,11, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【150Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(150)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 108, 3,0,11, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99CARD_GET","tbox","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(8)
+	GAME_FLAG_ON(822)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【巨象】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【巨象】",-1,0X00000200)
+	// ★05/09/28:效果説明修正
+//	sys_ex("戝態異常の耐性を上げてくれるガーディアンです。|宿すと毒や麻痺等の戝態異常に陷る確率が低くなります。",-1,0x00000200)
+	SYS_EX("這是能提高對戝態異常耐性的守護精靈。|裝備了此守護精靈可以從中毒或麻痺等異常戝態中快速恢復。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+//DEF("ITEM")
+//RES("CATCH")
+//{
+//	SE("SE_GETITEM")
+//	KILL_CHR("htbox",0,0,0)
+//	GAME_FLAG_ON(822)
+//}
+
+
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(831)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox2")
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+	CHECK_GAME_FLAG(831)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 225, 3,0,-11, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【150Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(150)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板⑩　魔羯の石板
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 279, 3,0,-11, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【魔羯之石板】！",-1,0X00000200)
+
+	GET_ITEM(279, 1)
+	GAME_FLAG_ON(831)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

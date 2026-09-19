@@ -1,0 +1,181 @@
+//--------------------------------------------------------------------
+// チュートリアル遺跡　一番奧の寶箱部屋
+//--------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+	HIDE_CHR("Dvorak")
+
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザーク
+
+DEF("EV_Dvorak")
+
+RES("EVENT")
+{
+
+	// EV 宿酒場のイベント(調查開始)
+	check_game_flag(3502)
+	off_jump EXIT
+	// EV ドヴォルザークとの對決イベント
+	check_game_flag(3520)
+	on_jump EXIT
+
+	check_game_flag(1024)
+	off_jump EXIT
+	check_game_flag(1025)
+	off_jump EXIT
+
+EVENT:
+	STOP_PC(0)
+	CINEMA_ON(0)
+
+	set_skip_label("SKIP")
+
+//　　地下遺跡の最奧まで來ると、古びた臺座の上に寶箱が２つ並ん
+//　　でいる。中に入っていた「クラウン」と「いにしえの石板」を
+//　　入手して引き返そうとすると、不意に入り口から聲をかけられ
+//　　る。
+
+	cross_fade(120)
+	reset_map_rot_y(1,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(17.30,-10.00,-0.13,  -25.5,225.0,0.0, 12, 15.0)
+	move_script_look_at(-10,0,0, 300, 1)
+	rotate_script_camera(0,40,0, 600, 1)
+
+	set_pos("PC", 16.75,-10.00, 0.0)
+	set_deg("PC", 270)
+	set_motion("PC", "STAND",-1)
+	show_chr("Dvorak")
+	set_pos("Dvorak", 4.86,-10.00, 0.00)
+	set_deg("Dvorak", 90)
+
+	wait(160)
+
+	MSG_EX("#S3#C0謎之劍士「……哦，閣下是騎士？」",-1,2)
+
+	set_motion("Dvorak","STAND",-1)
+	look_chr("Dvorak", "-")
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 10.35,-10.00,0.0)
+	walk_pos("Dvorak",0,0.025)
+
+	MSG_EX("#S3#C0謎之劍士「在這樣的地方做些像盜賊一樣的勾當，|　　　　　騎士也墮落了。」",-1,2)
+	wait_walk("Dvorak")
+	wait_camera(0)
+
+	cross_fade(100)
+	permit_script_camera(0)
+	reset_map_rot_y(7,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(10.35,-9.00,0.0,  -25.5,155.0,0.0, 12, 15.0)
+	move_script_look_at(5,0,0, 300, 1)
+	rotate_script_camera(0,-10,0, 500, 1)
+	wait(100)
+
+	MSG_EX("#S3#C0謎之劍士「算了……|　　　　　我想要你手中的王冠。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「在它落入那個人手中之前。」",-1,2)
+
+//　　ドヴォルザークが主人公の前まで悠然と步いて移動。
+//　　主人公はやや後退。
+
+	MSG_EX("#S3#C0謎之劍士「我不想浪費口舌。|　　　　　那不是不知緣由的你應該拿的東西。」",-1,2)
+
+//　　劍を拔き、身構える主人公。
+
+	MSG_EX("#S3#C0謎之劍士「騎士不能做無謂的後退嗎……|　　　　　我並不討厭這種驕傲的精神。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「也許你也有自己的理由，|　　　　　不過如果不給我的話，那就沒辦法了。」",-1,2)
+
+//　　ドヴォルザーク、劍の鞘を払う。
+
+	MSG_EX("#S3#C0謎之劍士「接招吧。」",-1,2)
+
+//　　主人公とドヴォルザークが數合斬り合ったあと、距離を取る。
+
+	MSG_EX("#S3#C0謎之劍士「哈，相當不錯嘛……」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「害怕了嗎……|　　　　　不，應該説是迷惑了吧。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「用這樣遲鈍的劍，|　　　　　是比不過我德沃夏克的。」",-1,2)
+
+//　　ドヴォルザークが體にオーラをまとい、劍を構えなおす。
+
+	MSG_EX("#S3#C0德沃夏克「至少能勇敢戰死，|　　　　　堅持騎士的尊嚴也不錯。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「喝啊——！！」",-1,2)
+
+//　　次の瞬間、スキル技を繰り出すドヴォルザーク。
+//　　技を受けて膝から崩れ落ちる主人公。その周りは花が咲くよう
+//　　に血だまりが廣がっていく。ドヴォルザーク、主人公の懐から
+//　　クラウンを取り出す。
+
+	MSG_EX("#S3#C0德沃夏克「如果不快一點的話……」",-1,2)
+	game_flag_on(3520)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+
+EXIT:
+	END
+
+SKIP:
+	game_flag_on(3520)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	END
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1024)
+	ON_JUMP next
+//石版
+	SET_TREASURE("tbox1",1,270,"ITEM1")
+	END
+
+next:
+	HIDE_CHR("tbox1")
+	END
+}
+
+DEF("ITEM1")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+	GAME_FLAG_ON(1024)
+}
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1025)
+	ON_JUMP next
+//クラウン
+	SET_TREASURE("tbox2",1,187,"ITEM2")
+	END
+
+next:
+	HIDE_CHR("tbox2")
+	END
+}
+
+DEF("ITEM2")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+	GAME_FLAG_ON(1025)
+}
+
+

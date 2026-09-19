@@ -1,0 +1,1574 @@
+// ===============================================================
+// 寺院（初期化）
+// ===============================================================
+
+
+//-- ROOM_FLAG ---------------------------------------------------
+// 0 エリック會話
+// 1 アイラ會話
+// 2 リーゼ會話
+// 3 アプサラスを選んだ
+// 4 メルクリウスを選んだ
+// 5 リーフェルトを選んだ
+// 6
+// 7
+// 8
+
+///////////////
+DEF("MAP")
+RES("INIT")
+{
+
+	// 店員とカウンターの關連付け
+	link_ev_pop("Liese2","Liese")
+
+
+//	// 寶箱にカードを詰める
+//	SET_TREASURE("box1",1,100,"card1")
+
+	// シャルは基本的にいない
+	HIDE_CHR("Char")
+
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	OFF_JUMP NEXT2
+
+	// リーゼいない
+	HIDE_CHR("Liese")
+
+	// フローレットにかわる
+	ENTRY_CHR(0, 398)
+	PUT_CHR( 0, "Fleurette",    0.00,0.50,3.23, 180)
+	jump EXIT
+
+NEXT2:
+	// EV C-11 黑き花嫁
+	CHECK_GAME_FLAG(3710)
+	OFF_JUMP NEXT
+
+	ENTRY_CHR(0, 398)
+	ENTRY_CHR(1,  36)
+	ENTRY_CHR(2,  37)
+	ENTRY_CHR(3,  38)
+	ENTRY_CHR(4,  39)
+	ENTRY_CHR(5,  40)
+	ENTRY_CHR(6,  41)
+	PUT_CHR( 0, "Fleurette",    0.00,0.70, 8.50, 180)
+	PUT_CHR( 1, "Avatarlaha",  -1.35,0.25, 0.75, 120)
+	PUT_CHR( 6, "Beatrice",    -2.10,0.00,-0.70,  95)
+	PUT_CHR( 5, "Dvorak",      -2.20,0.00,-2.40,  90)
+	PUT_CHR( 2, "Tiowald",      1.35,0.25, 0.75, 240)
+	PUT_CHR( 3, "Sturm",        2.10,0.00,-0.70, 265)
+	PUT_CHR( 4, "Gandaltua",    2.20,0.00,-2.40, 270)
+	load_npc_eqp(7,00)
+	DVORAK(0)
+
+	// リーゼいない
+	HIDE_CHR("Liese")
+	//HIDE_CHR("Liese2")
+	jump EXIT
+
+NEXT:
+	// 宿酒場のイベント(調查開始)見てない
+	check_game_flag(3502)
+	off_jump EXIT
+//	// 宿酒場の朝のシーン
+//	check_game_flag(3522)
+//	on_jump EXIT
+//
+//	// リーゼいない
+//	HIDE_CHR("Liese")
+//	HIDE_CHR("Liese2")
+
+EXIT:
+	END
+
+}
+
+
+////////////////////////////////////////////////////////////////
+// リーゼロットイベント
+
+DEF("Liese")
+
+RES("INIT")
+{
+
+	// EV 赤子を抱いた母親
+	check_game_flag(3514)
+	on_jump NEXT
+
+	jump EVENT1
+
+//--------------------------------------------------------------
+
+NEXT:
+	// EV リーゼロットの手當て
+	check_game_flag(3521)
+	on_jump NEXT2
+
+//	// EV ドヴォルザークとの對決イベント
+//	check_game_flag(3520)
+//	on_jump EVENT2
+
+NEXT2:
+	jump EXIT
+
+
+//-- 赤子を抱いた母親の降靈の儀式 ------------------------------
+
+EVENT1:
+
+	ENTRY_CHR(7, 534)
+	PUT_CHR( 7, "Mother1",    0.00,0.50, 2, 00)
+	set_pos("Mother1",0,0.5,2)
+	set_deg_ex("Mother1","Liese")
+	set_deg_ex("Liese","Mother")
+
+	STOP_PC(0)
+	set_motion("PC", "STAND",-1)
+
+//　　神殿に入ると、神官リーゼが降靈の儀式を行っているムービー。
+//　　イベント專用ＮＰＣ(赤子を抱いた母親)が祭壇の前にかがんで
+//　　いて、光に包まれている。
+//　　以降、降靈の儀式イベント畫面へ。
+//　　以前あったイベントを流用します。
+
+
+	set_skip_label("SKIP3")
+
+	CINEMA_ON(0)
+	permit_script_camera(1)
+	set_script_camera(0.12,0.50,-4.56,  -45.5,225.0,0.0, 12, 15.0)
+	move_script_look_at(0.0,0.00,5.0, 200, 1)
+	wait(200)
+
+	fade_out(60)
+	wait(100)
+
+	fade_in(60)
+
+	set_motion("Liese","EMPTY1",0)
+	permit_script_camera(1)
+	set_script_camera_ex("Liese",1, -5,200,0, 5, 40)
+	scale_script_camera( 1.2, 380, 0 )
+	wait(60)
+	set_motion("Liese","EMPTY5",0)
+	wait(160)
+
+	cross_fade(40)
+	SET_SCRIPT_CAMERA( 0,1.8,3.3, -5,170,0, 5, 30 )
+	ROTATE_SCRIPT_CAMERA( -10,-10,0, 120,0)
+	wait(120)
+	set_motion("Liese2","EMPTY1",0)
+
+	cross_fade(40)
+	set_script_camera_ex("Mother1",1, -20,180,0, 7.2, 40)
+	scale_script_camera( 0.9, 600, 0 )
+
+	set_motion("Liese","EMPTY3",0)
+	wait(240)
+	fade_out(60)
+	wait(120)
+
+//　　儀式が終わると、基本畫面に戻して
+//　　以下のメッセージを表示。
+
+	set_pos("PC",1.24,0.50,-4.52)
+	set_motion("Liese2","STAND",0)
+	DELETE_EFC("Liese2")
+	DELETE_EFC("Liese")
+	set_motion("Liese","STAND",0)
+
+	//座り老婆と插げ替え
+	HIDE_CHR("Mother1")
+	ENTRY_CHR(8, 58)
+	PUT_CHR( 8, "Mother2",    0.00,0.50, 2, 00)
+	set_pos("Mother2",0,0.5,2)
+	set_deg_ex("Mother2","Liese")
+	LOOK_CHR("Mother2","Liese")
+	LOOK_CHR("PC","Mother2")
+
+	set_script_camera_EX("Mother2",1,-45,225.0,0.0, 12, 15.0)
+	fade_in(60)
+	wait(60)
+
+		MSG_EX("#S3#C0リーゼ「……これにて降靈の儀は終わりです。」",-1,2)
+		MSG_EX("#S3#C0リーゼ「カードのガーディアンは|　　　　無事お子樣の體に宿りました。」",-1,2)
+
+	LOOK_CHR("Mother2","-")
+		MSG_EX("#S3#C0母親「おお、坊や……よかったわね。」",-1,2)
+		MSG_EX("#S3#C0母親「リーゼ殿、どうも|　　　ありがとうございました。」",-1,2)
+	set_motion("Mother2","ATTACK1",30)
+	WAIT(60)
+
+		MSG_EX("#S3#C0リーゼ「いえ……お子樣が心身ともに|　　　　健やかに成長することを願っています。」",-1,2)
+		MSG_EX("#S3#C0リーゼ「新しき命の燈火に|　　　　ガーディアンの加護があらんことを。」",-1,2)
+	WAIT(30)
+
+//　　イベント後、親子が退場してプレイヤーに操作許可。
+
+	INIT_WALK_DST("Mother2")
+	set_walk_dst("Mother2", 0.07,0.50,-4.40)
+	walk_pos("Mother2",0,0.02)
+	move_script_look_at(0.0,0.00,-5.0, 200, 1)
+
+	wait_walk("Mother2")
+
+	se("SE_DOOR")
+	switch_on("Door1")
+	wait(60)
+
+	INIT_WALK_DST("Mother2")
+	set_walk_dst("Mother2", 0.07,0.50,-7.40)
+	walk_pos("Mother2",0,0.02)
+
+	fade_out(60)
+	wait(60)
+
+//	set_script_camera_EX("PC",1,-33,225.0,0.0, 12, 15.0)
+//	set_motion("PC","EMPTY6",-1)
+
+SKIP3:
+	HIDE_CHR("Mother1")
+	HIDE_CHR("Mother2")
+	LOOK_CHR("PC","-")
+
+	// EV 赤子を抱いた母親
+	game_flag_on(3514)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	end
+
+//-- ドヴォルザークに倒されたイベント續き -----------------------
+
+EVENT2:
+
+	fade_out(120)
+	wait(120)
+
+	game_flag_on(3521)
+//	ENTRY_MAP("009d_009c")
+	ENTRY_MAP("game_start")
+
+EXIT:
+	END
+
+SKIP1:
+	fade_out(120)
+	wait(120)
+SKIP2:
+	game_flag_on(3521)
+//	ENTRY_MAP("009d_009c")
+	ENTRY_MAP("game_start")
+	END
+}
+
+RES("CLICK")
+{
+//	MSG_EX("#S3#C0リーゼ「あの……、その……、」",-1,2)
+		MSG_EX("#S3#C0リーゼ「こちらに入られては困ります、騎士殿。」",-1,2)
+	end
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "ガーディアンの變更" //////////////////////////////////
+@change_card
+{
+//	call_shop(7)
+	call_shop(5)
+	ret
+}
+
+// "ボーナス割り振り" ///////////////////////////////////
+@division_bonus
+{
+	call_shop(6)
+	ret
+}
+
+// "レベルダウン" //////////////////////////////////////
+@leveldown
+{
+	CHECK_LEVEL(2)
+	OFF_JUMP NOT_LEVEL
+
+		MSG("再び修練を積みなおしたいと望むなら、|經驗の開放を受け入れなさい。")
+		SEL("【レベルダウン】|#c2受け入れる|やめる")
+	check_select(0)
+	on_jump LEVEL
+
+	ret
+
+LEVEL:
+	LEVEL_DOWN(0)
+		sys("#c2レベルが下がりました。")
+	ret
+
+NOT_LEVEL:
+		sys("これ以上、經驗の開放はできません。")
+	ret
+}
+
+
+
+
+// "カードの鑑定" ///////////////////////////////////////
+@analyze_card
+{
+	check_card(0)
+	on_jump analyze
+	
+		sys("カードが一枚も無い。")
+	ret
+	
+analyze:
+	call_shop(9)
+	ret
+}
+
+// "ガーディアンの閲覧" /////////////////////////////////
+@card_library
+{
+	call_shop(8)
+	ret
+}
+
+///////////////
+//-- リーゼロットの祭壇 ---------------------------------
+DEF("Liese2")
+RES("CLICK")
+{
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	OFF_JUMP NEXT2
+
+//-- フローレバージョン ---------------------------------
+
+	set_deg_ex("Fleurette","")
+	active_chr("Fleurette")
+	focus_chr("Fleurette")
+		set_name("Fleurette","フローレット")
+
+SelMenuF:
+		SEL("【寺院メニュー】|#c2話す|ガーディアンの降靈|パラメータ割り振り|レベルダウン|やめる")
+
+	check_select(0)
+	on_jump TALK2
+	check_select(1)
+	on_jump GURDIAN2
+	check_select(2)
+	on_jump BONUS2
+	check_select(2)
+	on_jump LEVEL2
+
+	jump EXIT
+
+// 會話
+TALK2:
+	call TALK_Fleurette
+	jump SelMenuF
+
+// "ガーディアンの變更"
+GURDIAN2:
+	call change_card
+	jump SelMenuF
+
+// "ボーナス"
+BONUS2:
+	call division_bonus
+	jump SelMenuF
+
+// "レベル"
+LEVEL2:
+	call leveldown
+	jump SelMenuF
+
+//-- リーゼバージョン -----------------------------------
+NEXT2:
+
+	set_deg_ex("Liese","")
+	active_chr("Liese")
+	focus_chr("Liese")
+		set_name("Liese","リーゼロット")
+//	set_motion("Liese","ATTACK1",-1)
+
+SelMenu:
+
+	// EV C-4 相似の二人
+	check_game_flag(3703)
+	on_jump SelMenu3
+
+	// EV C-2 リーゼが倒れる
+	check_game_flag(3701)
+	on_jump SelMenu2
+
+	// EV インフェルノを倒した
+	check_game_flag(4)
+	on_jump TALK
+
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump SelMenu2
+
+	// EV カニグモを倒した
+	check_game_flag(1)
+	on_jump TALK
+
+	// EV 降靈の儀式開始
+	check_game_flag(3530)
+	on_jump SelMenu2
+
+SelMenu1:
+//	SEL("【寺院メニュー】|#c2體のことを相談する|やめる")
+//	check_select(0)
+//	on_jump TALK
+
+		SEL("【寺院メニュー】|#c2話す|パラメータ割り振り|レベルダウン|やめる")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump BONUS
+	check_select(2)
+	on_jump LEVEL
+	jump EXIT
+
+SelMenu2:
+		SEL("【寺院メニュー】|#c2話す|ガーディアンの降靈|パラメータ割り振り|レベルダウン|やめる")
+	jump SelMenuCheck
+
+SelMenu3:
+		SEL("【寺院メニュー】|#c2奇岩城の石像について聞く|ガーディアンの降靈|パラメータ割り振り|レベルダウン|やめる")
+	jump SelMenuCheck
+
+SelMenuCheck:
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump GURDIAN
+	check_select(2)
+	on_jump BONUS
+	check_select(3)
+	on_jump LEVEL
+
+	jump EXIT
+
+
+// 會話
+TALK:
+	call TALK_Liese
+	jump SelMenu
+
+// "ガーディアンの變更"
+GURDIAN:
+	call change_card
+	jump SelMenu
+
+// "ボーナス"
+BONUS:
+	call division_bonus
+	jump SelMenu
+
+// "レベル"
+LEVEL:
+	call leveldown
+	jump SelMenu
+
+EXIT:
+	end
+}
+
+RES("INIT")
+{
+	// マップの回轉角度を強制變更（所要時間 1 フレームで方向 6 に回轉）
+	RESET_MAP_ROT_Y(1,1)
+}
+
+//////////////////////////////////////////////////////////////////////
+// フローレット會話
+
+@TALK_Fleurette
+{
+		MSG("ドラゴンスレイヤーイベント後。せりふなし")
+	ret
+}
+
+// リーゼ會話
+
+@TALK_Liese
+{
+
+	// EV C-4 相似の二人
+	check_game_flag(3703)
+	on_jump TALK7
+
+	// EV C-2 リーゼが倒れる
+	check_game_flag(3701)
+	on_jump TALK6
+
+	// EV インフェルノを倒した
+	check_game_flag(4)
+	on_jump TALK5
+
+	// EV B-11 リーゼの破魔矢イベント
+	check_game_flag(3610)
+	on_jump TALK4
+
+	// EV カニグモを倒した
+	check_game_flag(1)
+	on_jump TALK3
+
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump TALK2
+
+	jump TALK1
+
+
+//--------------------------------------------------------------------
+
+TALK7:
+		MSG("………………………………")
+		MSG("騎士殿になら…………")
+		MSG("いえ、何でもありません……")
+
+	ret
+
+//--------------------------------------------------------------------
+
+TALK6:
+		MSG("リーゼが倒れるイベント後。せりふなし")
+
+	ret
+
+//--------------------------------------------------------------------
+
+TALK5:
+
+//　　イーグリット山のインフェルノを倒した後、神殿でリーゼに話
+//　　しかけると強制的に發動。
+
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera_EX("Liese",1,-33,225.0,0.0, 12, 15.0)
+	CINEMA_ON(0)
+
+	set_skip_label("SKIP5")
+	wait(100)
+
+		MSG_EX("#S3#C0リーゼ「騎士殿……今日はどうされました……」",-1,2)
+		MSG_EX("#S3#C0リーゼ「奇岩城のことは……|　　　　……何か分かりましたか…………、」",-1,2)
+
+//　　リーゼ、言いかけて倒れてしまう。イベントが面倒な場合は畫
+//　　面ブラックアウトでもいいかも。
+
+	fade_in(40)
+	wait(80)
+	set_motion("Liese","EMPTY20",10)
+	fade_in(40)
+	wait(110)
+	set_motion("Liese","EMPTY19",0)
+
+//　　驅け寄るエリックとアイラ。
+
+	set_deg_EX("Erick", "Liese")
+	set_deg_EX("Ira", "Liese")
+
+		MSG_EX("#S3#C0アイラ「リーゼ樣っ！！」",-1,2)
+
+	fade_out(120)
+
+	wait(10)
+
+	INIT_WALK_DST("Erick")
+	set_walk_dst("Erick", 3.35,0.00,2.74)
+	set_walk_dst("Erick", 3.26,0.00,4.04)
+	set_walk_dst("Erick", 1.94,0.50,4.78)
+	set_walk_dst("Erick", 0.06,0.50,4.69)
+	walk_pos("Erick",1,0.06)
+
+	wait(10)
+
+	INIT_WALK_DST("Ira")
+	set_walk_dst("Ira", -3.75,0.0,1.00)
+	set_walk_dst("Ira", -3.75,0.0,4.75)
+	walk_pos("Ira",1,0.05)
+
+	wait(60)
+
+		MSG_EX("#S3#C0エリック「大丈夫ですか？」",-1,2)
+
+		MSG_EX("#S3#C0リーゼ「…………………………………………」",-1,2)
+		MSG_EX("#S3#C0リーゼ「すみません、大丈夫……|　　　　少し眩暈がしただけです……」",-1,2)
+
+		MSG_EX("#S3#C0エリック「いかん、お顏の色が……」",-1,2)
+		MSG_EX("#S3#C0エリック「……騎士殿、申し譯ありませんが|　　　　　しばらく席を外していただきましょう。」",-1,2)
+
+SKIP5:
+
+	game_flag_on(3701)
+
+	ENTRY_MAP("0097_0093")
+	ret
+
+//--------------------------------------------------------------------
+
+TALK4:
+		MSG("リーゼの破魔矢イベント後。せりふなし")
+
+	ret
+
+//--------------------------------------------------------------------
+
+TALK3:
+	// TK 持ち物がいっぱいで破魔矢をもらえなかった
+	CHECK_GAME_FLAG(3612)
+	OFF_JUMP TALK3_1
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP TALK3_4
+		MSG("どうぞ、これを受け取って下さい。")
+	JUMP TALK3_3
+
+TALK3_1:
+		MSG("騎士殿……どうです？|ガーディアンには慣れましたか？")
+		MSG("シャルさんにお聞きしました。|遺跡の調查は順調のようですね。")
+
+	CHECK_MAX_ITEM(0)
+	OFF_JUMP TALK3_2
+
+		MSG("そうですね……。")
+
+TALK3_4:
+		MSG("お渡ししたいものがありますので|荷物を整理してきてください。")
+
+	// TK 持ち物がいっぱいで破魔矢をもらえなかった
+	GAME_FLAG_ON(3612)
+	ret
+
+TALK3_2:
+		MSG("そうそう、これを受け取って下さい。")
+
+TALK3_3:
+	SE("SE_GETITEM")
+		SYS("#C2リーゼは『破魔矢』を差し出した。")
+	GET_ITEM(191, 1)
+
+		MSG("大した效果はありませんが、|私が作った御守りのようなものです。")
+		MSG("騎士殿を手傳うわけにはいきませんが、|せめてこれくらいなら……")
+		MSG("どうかご武運を。")
+
+	game_flag_on(3610)
+
+	ret
+
+//--------------------------------------------------------------------
+
+TALK2:
+		MSG("騎士殿のように奇岩城を|調べに來る方は後を絕ちません。")
+		MSG("中には遺跡に足を踏み入れたまま、|戻ってこない方もいらっしゃいます。")
+		MSG("くれぐれもお氣をつけて。")
+
+	ret
+
+//--------------------------------------------------------------------
+
+TALK1:
+	// GF[街外れの遺跡の話を聞いた]
+	CHECK_GAME_FLAG(3512)
+	ON_JUMP TALK1_3
+
+TALK1_1:
+	// TK リーゼと初めて話した
+	CHECK_GAME_FLAG(3515)
+	ON_JUMP TALK1_2
+
+	GAME_FLAG_ON(3515)
+		MSG("あなたは……")
+		MSG("騎士殿とお見受けしますが、|當神殿にどのような御用でしょう？")
+		MSG("…………奇岩城の手がかりを？")
+		MSG("申し譯ありませんが、|北の遺跡は事件があったばかりで|調查が濟むまで出入りは禁止です。")
+		MSG("もう少し待って頂かないと……")
+	ret
+//　　※以降、繰り返し
+
+TALK1_2:
+		MSG("申し譯ありませんが、|北の遺跡は事件があったばかりで|調查が濟むまで出入りは禁止です。")
+		MSG("もう少し待って頂かないと……")
+	ret
+
+TALK1_3:
+	CHECK_GAME_FLAG(3515)
+	ON_JUMP TALK1_4
+
+		MSG("あなたは……")
+		MSG("奇岩城を調べに來た騎士と|研究者がいると伺いましたが|どうやら、あなたのことのようですね。")
+		MSG("私はこの神殿を預かる神官です。|リーゼとお呼び下さい。")
+		MSG("あいにく北の遺跡は|不幸な事件があったばかりで|調查が濟むまで出入り禁止ですが……")
+	GAME_FLAG_ON(3515)
+
+TALK1_4:
+	CHECK_GAME_FLAG(3516)
+	ON_JUMP TALK1_5
+
+		MSG("え……街外れの遺跡に入りたい？|どうして、あの場所のことを……")
+		MSG("………………………………")
+		MSG("……スペンスさんですね……|あの人にも困ったものです……")
+		MSG("…………仕方ありません。")
+		MSG("入っても構いませんが、|中にはモンスターが巢くっています。")
+		MSG("十分に準備を整えてから|調查するようにお願いします。")
+
+TALK1_5:
+	CHECK_MAX_ITEM(0)
+	ON_JUMP TALK1_6
+
+		MSG("それでは遺跡の扉を開く|鍵をお渡ししておきましょう。")
+
+	SE("SE_GETITEM")
+		SYS("#C2リーゼは『街外れの遺跡の鍵』を差し出した。")
+	GET_ITEM(200, 1)
+	GAME_FLAG_ON(3517)
+
+	jump TALK2
+
+TALK1_6:
+	GAME_FLAG_ON(3516)
+		MSG("遺跡の扉を開く鍵をお渡しするので、|荷物を整理してきてください。")
+	ret
+
+
+//TALK1:
+//	check_room_flag(2)
+//	on_jump TALK1_2
+//
+//TALK1_1:
+//	MSG("……………………………………")
+//	MSG("再び劍を振るいたいと……|そう申されますか……")
+//	MSG("……何となくではありますが、|こうなるのではと予想していました。")
+//	MSG("たった一つですが、|實は道は殘されているのです。")
+//	MSG("しかし、それは騎士殿にとって|今以上に苦難の道のりとなるでしょう。")
+//	MSG("それでも敢えてお聞きになりますか？")
+//	room_flag_on(2)
+//	jump SelMenu1
+//
+////　　再度話しかけて[體のことを相談する]を選擇すると以下の
+//
+//TALK1_2:
+//	MSG("やはり話をお聞きになりますか？")
+//	jump SelMenu1
+//
+//SelMenu1:
+//	SEL("【聞きますか？】|#c2はい|いいえ")
+//
+//	check_select(0)
+//	on_jump YES1
+//
+////　　▼「いいえ」の場合
+//NO1:
+//	MSG("そうですか……")
+//	MSG("無理はなさらないほうが、|良いかもしれませんね。")
+//	jump EXIT
+//
+////　　▼「はい」の場合
+//YES1:
+//	MSG("分かりました……|それではお話しましょう。")
+//	MSG("まずは騎士殿の體に|《ガーディアン》を宿します。")
+//	MSG("ガーディアンとはこの地の人間が|自らに宿している精靈たちのこと……　|もちろん、この私にも宿っています。")
+//	MSG("本來でしたら、彼らを宿すには|この世に生を受けて間もない時期に|洗禮を受けなければなりません。")
+//	MSG("しかし、生と死は表裡一體……|二つは最も近い關係にあります。")
+//	MSG("死の深淵を垣間見た騎士殿は限りなく|誕生に近い體驗をしたと言えるでしょう。")
+//	MSG("その今なら、あるいは……")
+//	MSG("ガーディアンを宿すことが出來れば、|その加護により再び劍を握れるはずです。")
+//	MSG("しかし、本當に重要なのはここからです。")
+//	MSG("彼らの加護はこの地においてのみ……|この地方から離れると、たちまち元の|傷ついた體へ戻ってしまうのです。")
+//	MSG("そこで騎士殿は《ドラゴンスレイヤー》を|手に入れなければなりません。")
+//	MSG("……聞いたことがおありのようですね。")
+//	MSG("オーウェルの奇岩城に|眠ると言われている傳説の聖劍です。")
+//	MSG("聖劍の力は必ずや騎士殿に|真の祝福をもたらし、忌まわしき|咒縛から解き放ってくれるはずです。")
+//	MSG("しかし、聖劍を手にすることなく|ガーディアンの加護を失えば、今度は|確實に冥府へ墮ちることとなります。")
+//	MSG("一度足を踏み入れてしまえば|もはや後へ退くことは葉いません。")
+//	MSG("いかがいたします？|ガーディアンの加護を望まれますか？")
+//
+//SelMenu2:
+//	SEL("【加護を望みますか？】|#c2はい|いいえ")
+//
+//	check_select(0)
+//	on_jump YES2
+//
+////　　▼「いいえ」の場合
+//NO2:
+//	MSG("加護を得た上でこの地で|生きていくという道もあるでしょう。")
+//	MSG("しかし、騎士殿がそのような生き方を|望んでいるとは私には思えないのです。")
+//	MSG("洗禮が行える時間は限られています。|早めのご決斷を。")
+//	MSG("ガーディアンの加護を望まれますか？")
+//	jump SelMenu2
+//
+////　　▼「はい」の場合
+//YES2:
+//	MSG("分かりました。|それでは騎士殿、こちらへ……")
+//	MSG("これより神官リーゼの名の下に|洗禮、及び降靈の儀を執り行います。")
+//
+//// カード選擇(キャンセル不可)
+//SelMenu3:
+//	SEL_EX("【ガーディアンを選んでください】|#c2アプサラス|メルクリウス|リーフェルト",-1,0x10000000)
+//
+//	check_select(0)
+//	ON_JUMP CARD_1
+//	check_select(1)
+//	ON_JUMP CARD_2
+//	check_select(2)
+//	ON_JUMP CARD_3
+//	JUMP SelMenu3
+//
+//// アプサラス
+//CARD_1:
+//	MSG("片手劍に對して習熟速度が上がります。|レベルアップ時には|ＳＴＲに對してボーナスが付加されます。")
+//	SEL("【加護を望みますか？】|#c2はい|いいえ")
+//	check_select(0)
+//	off_jump SelMenu3
+//
+//	room_flag_on(3)
+//	JUMP GOD
+//
+//// メルクリウス
+//CARD_2:
+//	MSG("片手槌に對して習熟速度が上がります。|レベルアップ時には|ＩＮＴに對してボーナスが付加されます。")
+//	SEL("【加護を望みますか？】|#c2はい|いいえ")
+//	check_select(0)
+//	off_jump SelMenu3
+//
+//	room_flag_on(4)
+//	JUMP GOD
+//
+//// リーフェルト
+//CARD_3:
+//	MSG("片手斧に對して習熟速度が上がります。|レベルアップ時には|ＲＥＦに對してボーナスが付加されます。")
+//	SEL("【加護を望みますか？】|#c2はい|いいえ")
+//	check_select(0)
+//	off_jump SelMenu3
+//
+//	room_flag_on(5)
+//	JUMP GOD
+//
+//GOD:
+//	fade_out(60)
+//	wait(60)
+//
+////　　以降、降靈の儀式イベント畫面へ。
+////　　以前あったイベントを流用します。
+//
+//	permit_script_camera(1)
+//	set_motion("PC","EMPTY5",-1)
+//	set_pos("PC",0,0.5,2)
+//	set_deg_ex("PC","Liese")
+//	set_deg_ex("Liese","PC")
+//
+//	CINEMA_ON(0)
+//	wait(60)
+////	CINEMA_ON(0)
+//	fade_in(60)
+//	set_skip_label("SKIP")
+//
+//	set_motion("Liese","EMPTY1",0)
+//	permit_script_camera(1)
+//	set_script_camera_ex("Liese",1, -5,200,0, 5, 40)
+//	scale_script_camera( 1.2, 380, 0 )
+//	//wait(220)
+//	wait(60)
+//	set_motion("Liese","EMPTY5",0)
+//	wait(160)
+//
+//
+//	cross_fade(40)
+//	SET_SCRIPT_CAMERA( 0,1.8,3.3, -5,170,0, 5, 30 )
+//	ROTATE_SCRIPT_CAMERA( -10,-10,0, 120,0)
+//	wait(120)
+//	set_motion("Liese2","EMPTY1",0)
+//
+//	cross_fade(40)
+//	set_script_camera_ex("PC",1, -20,180,0, 7.2, 40)
+//	scale_script_camera( 0.9, 600, 0 )
+//
+//	set_motion("Liese","EMPTY3",0)
+//	wait(240)
+//	fade_out(60)
+//	wait(120)
+////	call_shop(6)
+//
+//SKIP:
+//	set_motion("Liese2","STAND",0)
+//	DELETE_EFC("Liese2")
+//	DELETE_EFC("Liese")
+//	set_motion("PC","EMPTY6",-1)
+//	set_motion("Liese","STAND",0)
+//	set_script_camera_EX("PC",1,-33,225.0,0.0, 12, 15.0)
+//	fade_in(60)
+//	wait(120)
+//
+//	MSG_EX("#S3#C0リーゼ「終わりました……」",-1,2)
+//	check_room_flag(3)
+//	on_jump GOD_1
+//	check_room_flag(4)
+//	on_jump GOD_2
+//	check_room_flag(5)
+//	on_jump GOD_3
+//
+//GOD_1:
+//	set_spirit(0)
+//	MSG_EX("#S3#C0リーゼ「騎士殿に宿した|　　　　ガーディアンはアプサラス。」",-1,2)
+//	MSG_EX("#S3#C0リーゼ「成長に従ってＳＴＲの力を|　　　　引き伸ばしてくれることでしょう。」",-1,2)
+//	JUMP GOD_4
+//GOD_2:
+//	set_spirit(1)
+//	MSG_EX("#S3#C0リーゼ「騎士殿に宿した|　　　　ガーディアンはメルクリウス。」",-1,2)
+//	MSG_EX("#S3#C0リーゼ「成長に従ってＩＮＴの力を|　　　　引き伸ばしてくれることでしょう。」",-1,2)
+//	JUMP GOD_4
+//GOD_3:
+//	set_spirit(2)
+//	MSG_EX("#S3#C0リーゼ「騎士殿に宿した|　　　　ガーディアンはリーフェルト。」",-1,2)
+//	MSG_EX("#S3#C0リーゼ「成長に従ってＲＥＦの力を|　　　　引き伸ばしてくれることでしょう。」",-1,2)
+//	JUMP GOD_4
+//
+//GOD_4:
+//	MSG_EX("#S3#C0リーゼ「お望みであれば、他のガーディアンを|　　　　降靈することもできます。」",-1,2)
+//	MSG_EX("#S3#C0リーゼ「目的に合わせて色々と|　　　　試してみると良いかもしれません。」",-1,2)
+//	MSG_EX("#S3#C0リーゼ「それでは騎士殿、|　　　　くれぐれもお氣をつけて……」",-1,2)
+//
+////　　畫面、フェードアウト
+//
+//	fade_out(60)
+//	wait(60)
+//
+//	// EV 降靈の儀式開始
+//	game_flag_on(3530)
+//	game_flag_on(3531)
+//
+//	// 裝備許可
+//	pc_flag(0,0)
+//
+//	ENTRY_MAP("009d_009c")
+//
+//	end
+}
+
+
+
+
+/*
+RES("CLICK2")
+{
+	cinema_on(0)
+	
+	set_deg_ex("mag","")
+	active_chr("mag")
+	focus_chr("mag")
+		set_name("mag","リーゼロット")
+	set_motion("mag","ATTACK1",-1)
+	
+sel_menu:
+		SEL("【寺院復舊チェック】|#c2◆ガーディアンの變更|◆カードの鑑定|◆ガーディアンの閲覧|◆やめる")
+	check_select(0)
+	off_jump sel1
+
+	// "ガーディアンの變更"
+	call change_card
+		sys("變更完了")
+	jump sel_menu
+
+sel1:
+	check_select(1)
+	off_jump sel2
+
+	// "カードの鑑定"
+	call analyze_card
+	jump sel_menu
+
+sel2:
+	check_select(2)
+	off_jump sel3
+
+	// "ガーディアンの閲覧"
+	call card_library
+	jump sel_menu
+
+sel3:
+	set_motion("mag","ATTACK1",-1)
+
+	cinema_off(0)
+
+	end
+}
+*/
+
+//////////////////////////////////////////////////////////////////////
+// エリック
+
+//神殿內の邪魔にならない場所へ配置|
+
+DEF("Erick")
+RES("CLICK")
+{
+
+
+//▼シャルが調查を始めた
+	CHECK_ROOM_FLAG(0)
+	ON_JUMP TALK1_2
+//會話１
+	JUMP TALK1_1
+
+
+
+
+
+
+//會話１
+:TALK1_1
+	FOCUS_CHR("Erick")
+		SET_NAME("Erick", "エリック")
+	SET_MOTION("Erick","ATTACK1",-1)
+		MSG("ここは《洗禮》や|《降靈の儀》を執り行う神殿です。")
+		MSG("ただ今、神官が留守なのですが……|何かお困りの事でもおありですか？")
+		MSG("……ほう、オーウェルの|奇岩城を調べに來たのですか？")
+		MSG("申し譯ありませんが、|當神殿では分かりかねますね。")
+		MSG("他を當たってみて下さい。")
+	SET_MOTION("Erick","STAND",-1)
+	ROOM_FLAG_ON(0)
+	END
+//　　※繰り返し
+:TALK1_2
+	FOCUS_CHR("Erick")
+		SET_NAME("Erick", "エリック")
+	SET_MOTION("Erick","ATTACK1",-1)
+		MSG("奇岩城のことは分かりかねます。|他を當たってみて下さい。")
+	SET_MOTION("Erick","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// アイラ
+
+// 神殿內の邪魔にならない場所へ配置|
+DEF("Ira")
+RES("CLICK")
+{
+
+//▼シャルが調查を始めた
+	CHECK_ROOM_FLAG(1)
+	ON_JUMP TALK1_2
+//會話１
+	JUMP TALK1_1
+
+
+//會話１
+:TALK1_1
+	FOCUS_CHR("Ira")
+		SET_NAME("Ira", "アイラ")
+	SET_MOTION("Ira","ATTACK1",-1)
+		MSG("この地方に生まれた|人間は神殿で《ガーディアン》を|授かるのが習わしです。")
+		MSG("ガーディアンって何かですって？|そうですね……")
+		MSG("いわば一人一人に宿っている|守護精靈のようなものです。")
+		MSG("もちろん、この私にも|ガーディアンが宿っているんですよ。")
+	SET_MOTION("Ira","STAND",-1)
+	ROOM_FLAG_ON(1)
+	END
+//　　※繰り返し
+:TALK1_2
+	FOCUS_CHR("Ira")
+		SET_NAME("Ira", "アイラ")
+	SET_MOTION("Ira","ATTACK1",-1)
+		MSG("ガーディアンとは一人一人に宿って|守護してくれる精靈のようなものです。")
+		MSG("この地方に生まれた|人間は神殿で《ガーディアン》を|授かるのが習わしです。")
+	SET_MOTION("Ira","STAND",-1)
+	END
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// フローレットイベント
+
+DEF("Fleurette")
+RES("INIT")
+{
+
+	// EV C-12 聖劍の巫女姬
+	CHECK_GAME_FLAG(3711)
+	ON_JUMP EXIT
+
+	// EV C-11 黑き花嫁
+	CHECK_GAME_FLAG(3710)
+	OFF_JUMP EXIT
+
+//--------------------------------------------------------------------
+
+//　　奇岩城內でリーゼロットとのイベントを終えて、神殿に入ると
+//　　イベント開始。神殿の中にはフローレットと六人の導師たちが
+//　　全員控えている。以下のような並び順。
+//　　　 祭壇
+//　　　　■
+//　　　　○フ
+//　　ア○　○テ
+//　　ベ○　○シュ
+//　　ド○　○ガ
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PC_WEAPON( 0 , 1 )
+	INIT_SWITCH_ON("Door1")
+	SET_DEG("PC", "0")
+
+//初期カメラ設定
+	permit_script_camera(1)
+	set_script_camera(0.0,0.25,-0.2,  -50,225.0,0.0, 10, 15.0)
+	fade_in(120)
+	wait(120)
+	move_script_look_at(0,0,-3.0, 200, 1)
+	set_skip_label("SKIP")
+	wait(200)
+
+//各司祭臺詞
+	cross_fade(60)
+	set_script_camera_EX("Dvorak",1,  -40,160.0,0.0, 10, 15.0)
+	wait(60)
+	SET_DEG_EX("Dvorak", "PC")
+		MSG_EX("#S3#C0ドヴォルザーク「來たか……」",-1,2)
+	LOOK_CHR("PC", "Dvorak")
+	wait(20)
+
+	cross_fade(60)
+	set_script_camera_EX("Sturm",0,  -40,200.0,0.0, 10, 15.0)
+	wait(60)
+	SET_DEG_EX("Sturm", "PC")
+		MSG_EX("#S3#C0シュトゥルム「ご苦労だったな、#N0殿……」",-1,2)
+	LOOK_CHR("PC", "Sturm")
+	wait(20)
+
+	cross_fade(60)
+	set_script_camera_EX("Avatarlaha",0,  -40,160.0,0.0, 10, 15.0)
+	wait(60)
+	SET_DEG_EX("Avatarlaha", "PC")
+		MSG_EX("#S3#C0アバターラハ「ローレライを退けた力、お見事でした。」",-1,2)
+	LOOK_CHR("PC", "Avatarlaha")
+	wait(20)
+
+	cross_fade(60)
+	set_script_camera_EX("Gandaltua",0,  -40,200.0,0.0, 10, 15.0)
+	wait(60)
+	SET_DEG_EX("Gandaltua", "PC")
+		MSG_EX("#S3#C0ガンダルチュア「ここで待ってたのは他でもない。|　　　　　　　　ある御方があんたと話がしたいそうだ。」",-1,2)
+	LOOK_CHR("PC", "Gandaltua")
+	wait(20)
+
+	cross_fade(60)
+	set_script_camera_EX("Beatrice",0,  -40,160.0,0.0, 10, 15.0)
+	wait(60)
+	SET_DEG_EX("Beatrice", "PC")
+		MSG_EX("#S3#C0ベアトリーチェ「どうぞ、こちらへいらして下さい。」",-1,2)
+	LOOK_CHR("PC", "Beatrice")
+	wait(20)
+
+	LOOK_CHR("PC", "")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0.00,0.00,-2.19)
+	walk_pos("PC",0,0.03)
+	wait(60)
+
+
+//フローレット步いてくる
+	cross_fade(30)
+	set_script_camera(0.0,0.25,6,  -40,200,0,  10, 15.0)
+	wait(30)
+	wait_walk("PC")
+
+		MSG_EX("#S3#C0？？？「お初にお目にかかります、騎士殿。」",-1,2)
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", 0, 0.5, 3.23)
+	walk_pos("Fleurette",0,0.022)
+	move_script_look_at(0,0,-0.5, 80, 1)
+
+	SET_DEG_EX("Dvorak", "PC")
+	SET_DEG_EX("Sturm", "PC")
+	SET_DEG_EX("Avatarlaha", "PC")
+	SET_DEG_EX("Gandaltua", "PC")
+	SET_DEG_EX("Beatrice", "PC")
+	SET_DEG_EX("Tiowald", "PC")
+	wait(80)
+
+	cross_fade(30)
+	set_script_camera(0,1.4,5.3,  0,265,0,  2.5, 15.0)
+	move_script_look_at(0,0.1,-0.3, 190, 1)
+	blur(1)
+	wait(190)
+
+
+//フローレット自己紹介
+	cross_fade(30)
+	set_script_camera(0,1.8,3.23,  3,180,0, 3.5, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.9, 1000, 1)
+	set_pos("Fleurette",  0.00,0.50,3.23)
+	look_chr("Fleurette", "PC")
+	blur(0)
+	wait(120)
+	
+		MSG_EX("#S3#C0？？？「私の顏には見覺えがおありのはず……」",-1,2)
+		MSG_EX("#S3#C0？？？「驚くかも知れませんが、リーゼ……|　　　　いえ、黑き花嫁は私の雙子の姉なのです。」",-1,2)
+		MSG_EX("#S3#C0？？？「私はザナドゥ十四王朝期の第二王女|　　　　名をフローレットと申します。」",-1,2)
+	wait(30)
+		MSG_EX("#S3#C0フローレット「以後、お見知りおきを……。」",-1,2)
+	stop_camera(0)
+
+
+//わいわいがやがや
+	cross_fade(60)
+	set_script_camera(2,-1,0.25,  -50,225.0,0.0, 12.5, 15.0)
+	wait(60)
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+		MSG_EX("#S3#C0ガンダルチュア「はは、さすがにびっくりしているな。」",-1,2)
+		MSG_EX("#S3#C0ガンダルチュア「英雄とされる巫女姬が生きていて、|　　　　　　　　しかも黑き花嫁と血を分けた姉妹ってワケだ。」",-1,2)
+
+	look_chr("Fleurette", "Gandaltua")
+		MSG_EX("#S3#C0フローレット「え、英雄？　私がか？」",-1,2)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+		MSG_EX("#S3#C0ドヴォルザーク「茶化すな、話がややこしくなる。」",-1,2)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+		MSG_EX("#S3#C0ガンダルチュア「はいはい、おおコワ……」",-1,2)
+
+
+//謎明かし。
+	cross_fade(60)
+	set_script_camera_EX("Fleurette",1,  -20,180.0,0.0, 8, 15.0)
+	rotate_script_camera(10,0,0, 800, 1)
+	look_chr("Fleurette", "PC")
+	wait(90)
+
+		MSG_EX("#S3#C0フローレット「コホン、ええと……」",-1,2)
+		MSG_EX("#S3#C0フローレット「そう、まずは騎士殿が|　　　　　　　疑問に思っていることをお話しましょう。」",-1,2)
+		MSG_EX("#S3#C0フローレット「すでに察しはついているでしょうが、|　　　　　　　我々は古代ザナドゥ王國の人間……」",-1,2)
+		MSG_EX("#S3#C0フローレット「ここに控えているのは私とともに|　　　　　　　魔王や黑き花嫁と戰った者たちです。」",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+		MSG_EX("#S3#C0ティオバルト「わしらはザナドゥに仕え、|　　　　　　　七導師と呼ばれておった……」",-1,2)
+		MSG_EX("#S3#C0ティオバルト「元々は代々の巫女姬とともに|　　　　　　　魔王を結界に封じるのが役目じゃ。」",-1,2)
+
+	SET_MOTION("Sturm", "ATTACK1",-1)
+		MSG_EX("#S3#C0シュトゥルム「時はおよそ９００年前に溯る……」",-1,2)
+		MSG_EX("#S3#C0シュトゥルム「あれはフローレット樣が|　　　　　　　巫女に選ばれる前日のことだった……」",-1,2)
+		MSG_EX("#S3#C0シュトゥルム「突如、リーゼロット姬が魔王を解き放ち、|　　　　　　　その花嫁となることを宣言したのだ……」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+		MSG_EX("#S3#C0フローレット「七導師の一人、ローレライ……」",-1,2)
+		MSG_EX("#S3#C0フローレット「姉君はおそらく彼女にそそのかされて、|　　　　　　　魔王の力に魅入られたのでしょう。」",-1,2)
+
+	SET_MOTION("Beatrice", "ATTACK1",-1)
+		MSG_EX("#S3#C0ベアトリーチェ「當然、リーゼロット姬の身分は剝奪。|　　　　　　　　ただちに國王から追討令が下ったわ。」",-1,2)
+		MSG_EX("#S3#C0ベアトリーチェ「私たちは魔王と國賊である黑き花嫁を|　　　　　　　　討つべく奇岩城に攻め入った……」",-1,2)
+
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+		MSG_EX("#S3#C0アバターラハ「しかし、フローレット樣が聖劍で|　　　　　　　まさに魔王を追い詰めた瞬間……」",-1,2)
+		MSG_EX("#S3#C0アバターラハ「不覺にも黑き花嫁の術に虛を衝かれ、|　　　　　　　我々は《時》を奪われてしまいました。」",-1,2)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+		MSG_EX("#S3#C0ガンダルチュア「俺たちがあちこちで石化してたのは|　　　　　　　　戰ってた最中に術をかけられたからだ。」",-1,2)
+//	MSG_EX("#S3#C0ガンダルチュア「……ああ、あんなポーズで|　　　　　　　　カッコ惡いったら、ありゃしねぇ。」",-1,2)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+		MSG_EX("#S3#C0ドヴォルザーク「……だが、その術が今になって解けた。|　　　　　　　　術の效果が弱まったのか、それとも……」",-1,2)
+		MSG_EX("#S3#C0ドヴォルザーク「あの戰いの後、何があったのかは|　　　　　　　　私たちにも分からぬのだ。」",-1,2)
+		MSG_EX("#S3#C0ドヴォルザーク「何百年もの間、黑き花嫁が何をしていたのか、|　　　　　　　　魔王ガルシスが今どういう狀態なのかもな。」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+		MSG_EX("#S3#C0フローレット「いずれにしても、これだけは言えます……」",-1,2)
+		MSG_EX("#S3#C0フローレット「姉君は……黑き花嫁はこの世に再び|　　　　　　　暗黑の時代を呼び寄せようとしている。」",-1,2)
+		MSG_EX("#S3#C0フローレット「そのような行為、例え姉君であっても……」",-1,2)
+		MSG_EX("#S3#C0フローレット「いえ、姉君だからこそ|　　　　　　　許すわけにはいかない……絕對に……！」",-1,2)
+
+	look_chr("Tiowald", "Fleurette")
+		MSG_EX("#S3#C0ティオバルト「………………………………」",-1,2)
+
+		MSG_EX("#S3#C0フローレット「ザナドゥはすでに滅びましたが|　　　　　　　私は黑き花嫁と魔王を討ちます。」",-1,2)
+		MSG_EX("#S3#C0フローレット「それこそが、この時代に|　　　　　　　目覺めた我々の使命なのでしょう。」",-1,2)
+		MSG_EX("#S3#C0フローレット「どうか私たちに力を|　　　　　　　貸していただけませんか？」",-1,2)
+	look_chr("Tiowald", "-")
+
+SEL_MENU:
+		SEL("力を貸す？|はい|いいえ")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL_YES
+	JUMP SEL_NO
+
+//　　⇒「いいえ」の場合
+SEL_NO:
+		MSG_EX("#S3#C0フローレット「……魔王ガルシスが蘇れば人々は|　　　　　　　暗黑の時代を生きることになります。」",-1,2)
+		MSG_EX("#S3#C0フローレット「騎士殿、力をお貸し下さい。」",-1,2)
+	//以降は選擇肢へ回歸
+	jump SEL_MENU
+
+//　　⇒「はい」の場合
+SEL_YES:
+	look_chr("Fleurette", "PC")
+	wait(40)
+	look_chr("Fleurette", "-")
+		MSG_EX("#S3#C0フローレット「ありがとうございます。|　　　　　　　そう言って下さると思いました。」",-1,2)
+
+	set_deg_EX("Tiowald", "Fleurette")
+		MSG_EX("#S3#C0ティオバルト「フローレット樣、それでは……」",-1,2)
+
+		MSG_EX("#S3#C0フローレット「ええ……」",-1,2)
+		MSG_EX("#S3#C0フローレット「騎士殿、今より私は貴方と|　　　　　　　契約を交わして、ある力を授けます。」",-1,2)
+		MSG_EX("#S3#C0フローレット「持っている四つのクラウンをこちらへ……|　　　　　　　恐れることはありません。」",-1,2)
+
+	fade_out(120)
+	wait(180)
+
+
+//クラウン→ドラスレイベント。エフェクトとか動きとか諸々決めうちで======================================================
+//作ってるので、修正要望ある時は井上まで================================================================================
+//======================================================================================================================
+
+	//邪魔なので位置變え
+	set_pos("PC",  0,0.25,-2.5)
+
+	set_pos("Avatarlaha",  -2.2,0, 0.75)
+	SET_DEG_EX("Avatarlaha", "Fleurette")
+	set_pos("Tiowald",      2.2,0, 0.75)
+	SET_DEG_EX("Tiowald", "Fleurette")
+	set_pos("Beatrice",    -2.2,0,-0.70)
+	SET_DEG_EX("Beatrice", "Fleurette")
+	set_pos("Sturm",        2.2,0,-0.70)
+	SET_DEG_EX("Sturm", "Fleurette")
+	set_pos("Dvorak",      -2.2,0,-2.40)
+	SET_DEG_EX("Dvorak", "Fleurette")
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG_EX("Gandaltua", "Fleurette")
+
+//カメラ
+	set_script_camera(0,1.5,2,  -20,180,0, 10, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.8, 1000, 1)
+	fade_in(120)
+	SET_MOTION("Fleurette", "EMPTY4",0)
+	SET_MOTION("Ds", "EMPTY1",0)
+		MSG_EX("#S3#C0フローレット「……古の盟約により、我、フローレットと|　　　　　　　開祖クーブラ・カーンの名のもとに願い奉る……」",-1,2)
+		MSG_EX("#S3#C0フローレット「汝、姿成し、シリューガの|　　　　　　　光に導かれし使徒の干戈とならん……」",-1,2)
+
+//ここで暗轉しつつクラウンに光收束、空中で合體
+	SET_MOTION("Ds", "EMPTY2",0)
+	wait(120)
+	SET_MOTION("Ds", "EMPTY3",0)
+	wait(60)
+	SET_MOTION("Ds", "EMPTY4",0)
+	wait(170)
+	SET_MOTION("Ds", "EMPTY5",0)
+		MSG_EX("#S3#C0フローレット「お出でなさい、我がガーディアン……」",-1,2)
+		MSG_EX("#S3#C0フローレット「……ドラゴンスレイヤー。」",-1,2)
+
+//クラウン、ドラスレへ
+	cross_fade(30)
+	set_script_camera(0,2.3,1.5,  -10,182,0, 3.5, 15.0)
+	rotate_script_camera(0,-4,0, 500, 1)
+	DELETE_EFC("Ds")
+	SET_MOTION("Ds", "EMPTY6",0)
+	wait(250)
+	FADE_OUT_EX( 120, 1,"0xffffffff",0)
+	wait(240)
+
+//ＰＣ劍を取る。
+	set_script_camera(0,1.5,-0.25,  -30,180,0, 8, 15.0)
+	SCALE_SCRIPT_CAMERA( 0.8, 1000, 1)
+	SET_MOTION("Fleurette", "STAND",0)
+	SET_MOTION("Ds", "EMPTY7",0)
+	DELETE_EFC("Ds")
+	DELETE_EFC("Fleurette")
+	SET_DEG("Avatarlaha",90)
+	SET_DEG("Tiowald", -90)
+	SET_DEG("Beatrice", 90)
+	SET_DEG("Sturm", -90)
+	SET_DEG("Dvorak", 90)
+	SET_DEG("Gandaltua", -90)
+	FADE_IN_EX( 60, 1,"0xffffffff",0)
+	wait(150)
+
+		MSG_EX("#S3#C0フローレット「これこそが、ガルシスと|　　　　　　　黑き花嫁に打ち勝つ唯一無二の聖劍……」",-1,2)
+		MSG_EX("#S3#C0フローレット「騎士殿、どうぞお持ち下さい。」",-1,2)
+	wait(100)
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0,0,-0.6)
+	walk_pos("PC",0,0.03)
+	wait(120)
+	SET_MOTION("PC", "EMPTY7",40)
+	wait(30)
+	FADE_OUT_EX( 20, 1,"0xffffffff",0)
+	SCALE_SCRIPT_CAMERA( 0.3, 20, 1)
+	blur(10)
+	wait(40)
+	blur(0)
+
+	FADE_IN_EX( 20, 1,"0xffffffff",0)
+	set_script_camera(0,1.5,-3.4,  2,-10,0,  2.6, 15)
+	rotate_script_camera(-20,30,0, 1000, 0)
+	DELETE_EFC("Ds")
+	set_pos("Ds",  0,0.25,-0.495)
+	set_pos("PC",  0,0.25,-2.85)
+
+	SET_MOTION("Ds", "EMPTY8",0)
+	SET_MOTION("PC", "EMPTY9",0)
+	wait(600)
+	fade_out(120)
+	wait(150)
+
+
+//=====================================================================================================
+//=====================================================================================================
+//=====================================================================================================
+//=====================================================================================================
+
+
+//ドラスレ入手後會話
+	PICK_ITEM(187)
+	PICK_ITEM(188)
+	PICK_ITEM(189)
+	PICK_ITEM(190)
+	GET_ITEM(36, 1)
+	//いろいろ元に戻す
+	SET_MOTION("Ds", "STAND",0)
+	SET_MOTION("PC", "STAND",0)
+	DELETE_EFC("Ds")
+	set_pos("PC",  0,0,-0.5)
+	set_pos("Avatarlaha",  -1.35,0.25, 0.75)
+	SET_DEG_EX("Avatarlaha", "PC")
+	set_pos("Tiowald",      1.35,0.25, 0.75)
+	SET_DEG_EX("Tiowald", "PC")
+	set_pos("Beatrice",    -2.1,0,-0.70)
+	SET_DEG_EX("Beatrice", "PC")
+	set_pos("Sturm",        2.1,0,-0.70)
+	SET_DEG_EX("Sturm", "PC")
+	set_pos("Dvorak",      -2.2,0,-2.40)
+	SET_DEG_EX("Dvorak", "PC")
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG_EX("Gandaltua", "PC")
+	set_script_camera(0.0,0.25,1.5,  -40,180.0,0.0, 13, 15.0)
+	fade_in(120)
+	wait(150)
+
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+		MSG_EX("#S3#C0ガンダルチュア「これで、お前さんの體も元通り、|　　　　　　　　めでたしめでたしってワケだ。」",-1,2)
+
+	SET_MOTION("Beatrice", "ATTACK1",-1)
+		MSG_EX("#S3#C0ベアトリーチェ「先の戰いでは繼承者が現れず、|　　　　　　　　フローレット樣が自ら聖劍を手にしました……」",-1,2)
+		MSG_EX("#S3#C0ベアトリーチェ「しかし姬巫女とは本來、危機が迫った時、|　　　　　　　　資格ある者に聖劍を託す選定者なのです。」",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+		MSG_EX("#S3#C0ティオバルト「先だって、空に輝く三つの|　　　　　　　シリューガの星が一つに合わさった……」",-1,2)
+		MSG_EX("#S3#C0ティオバルト「古來より、それこそが聖劍の|　　　　　　　繼承者が現れた證とされておる。」",-1,2)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+		MSG_EX("#S3#C0ドヴォルザーク「貴公は選ばれたのだ……」",-1,2)
+		MSG_EX("#S3#C0ドヴォルザーク「先に黑き花嫁の導きに従い、|　　　　　　　　聖劍を求めたのは體を元に戻さんがため……」",-1,2)
+		MSG_EX("#S3#C0ドヴォルザーク「だが今にして思えば、こうなることは|　　　　　　　　予め定められていたのかも知れぬ。」",-1,2)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+		MSG_EX("#S3#C0ガンダルチュア「ドヴォルザークの短氣で|　　　　　　　　斬りつけられたのも運命だったワケだ。」",-1,2)
+		MSG_EX("#S3#C0ドヴォルザーク「…………………………」",-1,2)
+
+	SET_MOTION("Fleurette", "ATTACK2",-1)
+		MSG_EX("#S3#C0フローレット「黑き花嫁は魔王を出迎えるために|　　　　　　　奇岩城の奧へ向かったと思われます。」",-1,2)
+		MSG_EX("#S3#C0フローレット「騎士殿も今から後を追って下さい。」",-1,2)
+		MSG_EX("#S3#C0フローレット「姉君が行っていた神殿の儀式は|　　　　　　　今後は全て私が引き繼ぎましょう。」",-1,2)
+
+		MSG_EX("#S3#C0フローレット「それでは皆の者、これより黑き魔女と|　　　　　　　魔王ガルシスの追討を再開する。」",-1,2)
+		MSG_EX("#S3#C0フローレット「必ずや彼らを討ち果たし、|　　　　　　　９００年前の戰いに決著をつけましょう。」",-1,2)
+		MSG_EX("#S3#C0フローレット「騎士殿、ご武運を。」",-1,2)
+
+	CINEMA_OFF(0)
+	cross_fade(80)
+	permit_script_camera(0)
+	FOCUS_CHR("PC")
+	game_flag_on(3711)
+	wait(60)
+END
+
+
+SKIP:
+	//後處理
+	blur(0)
+	PICK_ITEM(187)
+	PICK_ITEM(188)
+	PICK_ITEM(189)
+	PICK_ITEM(190)
+	GET_ITEM(36, 1)
+	DELETE_EFC("Ds")
+	DELETE_EFC("Fleurette")
+	SET_MOTION("Ds", "STAND",0)
+	SET_MOTION("Fleurette", "STAND",0)
+	SET_MOTION("PC", "STAND",0)
+	SET_MOTION("Avatarlaha", "STAND",0)
+	SET_MOTION("Tiowald", "STAND",0)
+	SET_MOTION("Beatrice", "STAND",0)
+	SET_MOTION("Sturm", "STAND",0)
+	SET_MOTION("Dvorak", "STAND",0)
+	SET_MOTION("Gandaltua", "STAND",0)
+	set_pos("Fleurette",  0.00,0.50,3.23)
+	SET_DEG("Avatarlaha",180)
+	set_pos("PC",  0,0,-0.5)
+	SET_DEG("PC", 0)
+	set_pos("Avatarlaha",  -1.35,0.25, 0.75)
+	SET_DEG("Avatarlaha",90)
+	set_pos("Tiowald",      1.35,0.25, 0.75)
+	SET_DEG("Tiowald", -90)
+	set_pos("Beatrice",    -2.1,0,-0.70)
+	SET_DEG("Beatrice", 90)
+	set_pos("Sturm",        2.1,0,-0.70)
+	SET_DEG("Sturm", -90)
+	set_pos("Dvorak",      -2.2,0,-2.40)
+	SET_DEG("Dvorak", 90)
+	set_pos("Gandaltua",    2.2,0,-2.40)
+	SET_DEG("Gandaltua", -90)
+
+
+	CINEMA_OFF(0)
+	cross_fade(80)
+	permit_script_camera(0)
+	FOCUS_CHR("PC")
+	game_flag_on(3711)
+	fade_in(60)
+	wait(60)
+
+EXIT:
+END
+}
+
+RES("CLICK")
+{
+		MSG_EX("#S3#C0フローレット「御用でしたら正面へおまわり下さい。」",-1,2)
+end
+}
+
+
+

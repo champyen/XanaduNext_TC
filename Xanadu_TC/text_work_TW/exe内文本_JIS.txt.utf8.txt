@@ -1,0 +1,1038 @@
+Time Crevice
+時之狹間
+Netherworld
+死者的異界
+Unknow
+不明
+Talos
+塔羅斯
+Body Slam
+身體相撞
+
+SYS_EX(There`are`many`types`of`stats|you`can`increase`at`the`Spirit`Sanctum.,-1,0x20000200)
+SYS_EX(在精靈堂可以進行屬性點的分配|自由強化角色。,-1,0x20000200)
+
+SYS_EX(When`you`level`up_`you`gain`HP`and`also|obtain`#C2Bonus`Points#C0.,-1,0x20000200)
+SYS_EX(等級提升時、最大HP將會增加|同時會取得#C2屬性點數#C0。,-1,0x20000200)
+
+SYS_EX([Leveling`Up],-1,0x20000200)
+SYS_EX(有關［等級提升］,-1,0x20000200)
+SYS_EX(有關 等級提升,-1,0x20000200)
+
+Leveled up by %d!
+等級提升到了 %d !
+Leveled down to %d!
+等級下降到了 %d !
+
+Current Guardian level increased by %d!
+精靈的等級提升為 %d 級!
+Learned the skill [%s]!
+技能［%s］習得!
+Mystic Card
+米斯提峠峠片/神秘峠片
+
+Log History to TXT
+儲存歷史記錄到TXT
+Reflections
+反射
+Anti-aliasing
+抗鋸齒
+Refresh Rate
+更新率
+Smooth
+平滑
+Standard
+標準
+Rough
+粗糙
+Off
+關
+On
+開
+Low
+低
+Medium
+中
+High
+高
+Max
+Min
+
+Contrast
+對比度
+Brightness
+亮度
+SE Volume
+音效音量
+BGM Volume
+BGM音量
+Config
+環境設定
+
+Standing monster
+怪物開始行動
+Unaware monster
+怪物沒察覺
+Check head behavior
+點頭的檢查
+Character details
+顯示角色詳細
+Display attack range
+顯示攻撃有效距離
+Display MAP
+顯示MAP
+Display EFC
+顯示EFC
+Display CHR
+顯示CHR
+Mipmapping
+
+Wireframe
+線框
+Texture Display
+顯示貼圖
+Texture Resolution
+貼圖解析度
+Test Menu
+DEBUG選單
+
+Save
+存檔
+Screen Test
+評價測試
+Change Parameters
+改變屬性點
+Change Guardian
+精靈變更
+Bonus Points
+分配屬性點數
+Purchase Items
+道具購買
+Flag Settings
+FLAG管理
+Map Movement
+地圖移動
+
+Castle Strangerock (Hall/Sanctum/Tower)
+奇岩城（饗宴之館/本殿/天守閣）
+Xanadu Labyrinth/Time Crevice
+仙那度·魔幻迷宮/時之狹間
+Eaglet Mountain (Mountainside/Lava Caves)
+伊格利特山（山腰/溶岩窟）
+Eternal Maze
+千古迷道
+Clover Ruins/Trechier Woods
+三葉草遺跡/魔粧森林
+Back-Alley Ruins
+鎮外的遺跡
+Harlech Village/Lake Orwell
+哈萊克鎮／歐威魯湖底
+
+Please select a memoir to read.
+請選擇要讀的筆記
+Please select a tabula to read.
+請選擇要讀的石板
+...I haven't translated that yet.|Please wait a little longer.
+…還無法讀取.|請稍等一下.
+Translating...
+解讀中…
+Translated
+解讀完畢
+
+NEW
+Cancel
+取消
+
+
+Please enter your name.
+請輸入你的姓名
+Please select your destination.
+請選擇傳送點
+Do you wish to access this data? |#c2OK|#c2CANCEL
+要讀取這個記錄嗎? |#c2確定|#c2取消
+This is data from an old version. Convert? |#c2OK|#c2CANCEL
+是舊版本的資料,要轉換嗎? |#c2確定|#c2取消
+Do you wish to overwrite this data? |#c2OK|#c2CANCEL
+要覆蓋這個記錄嗎? |#c2確定|#c2取消
+
+
+The game was not shut down properly. Do you want to load the last autosave.
+發現異常結束遊戲的跡象,要使用最後的自動存檔嗎?|#c2確定|#c2取消
+Please choose which save data you wish to use
+請選擇要使用的存檔
+Please select the file you wish to load.
+請選擇要讀取的存檔
+
+請選擇要儲存的記錄
+Please choose a save file for this data
+
+You haven't finished allocating everything. Proceed? |#c2OK|#c2CANCEL
+點數還沒有全部分配,這樣就可以嗎? |#c2確定|#c2取消
+%d Gold
+金錢 %d
+
+Quit Game
+結束遊戲
+Title Screen
+返回標題畫面
+Settings
+環境設定
+Log History
+歷史記錄
+#c2Do you want to quit the game? |#c2Yes|#c2No
+要結束遊戲嗎？     |#c2是|#c2否
+Return to the title screen? |#c2OK|#c2CANCEL
+要返回標題畫面嗎？     |#c2確定|#c2取消
+Credits
+履歷表
+System Menu
+系統選單
+
+
+Ogre
+食人魔
+Dvo&b9&a6k
+德沃夏克
+Galsis (Second Form)
+加爾西斯(第二形態)
+Galsis (First Form)
+加爾西斯(第一形態)
+Lorelei
+羅蕾萊
+Ascomoid
+阿斯克摩德
+Evilwurm
+艾比爾布魯姆
+艾維烏姆
+Sc&b3lltula
+斯冦爾奇拉
+Berilard
+貝利亞德
+
+Return to Title Screen
+回到標題畫面
+Start from Last Save Point
+從存檔處重新開始
+Return to Town (Lose 50% Money)
+在街道重新開始(金錢減半)
+Thdr
+Ice
+Fire
+Gold
+Unknown Swordsman
+謎之劍士
+
+Use an [Elixir]? |#c2YES|#c2NO
+使用[聖靈藥]復活嗎?|#c2是|#c2否
+
+
+%d gold acquired!
+獲得金錢 %d !
+Paid %d gold.
+支付金錢 %d .
+%s obtained!
+取得了 %s !
+%s was discarded.
+扔了 %s .
+%s: %s → %s takes %d damage.
+%s的%s→%s受到了%d點的傷害.
+Attack
+攻撃
+Trap! → %s took %d damage.
+命中!→%s受到了%d點的傷害
+was defeated.
+被打倒了.
+has fainted...
+體力耗盡了.
+%s %s → %s dodges!attacks
+%s的%s→%sＭＩＳＳ!
+attacks
+攻撃
+
+%s split into %d!
+%s分離為%d個!
+%s has summoned %s!
+%s召喚%s!
+
+
+通關評價（分割線前涉及特殊字型暫不修改）
+Save Object Count - %5d
+存檔回復次數
+Dead Count        - %5d
+死亡次數
+Damage Count      - %5d
+被敵人傷害次數
+Potion Use Count  - %5d
+回復藥使用次數
+Skill             - %5d
+技能收集
+Level             - %5d
+人物等級
+Total Time        - %02d:%02d:%02d
+========================================
+Save Object Count(Times Saved)
+Save Object Count(存檔回復次數)
+Save Object Count              %3d
+Dead Count(Deaths)
+Dead Count(死亡次數)
+Dead Count                     %3d
+Damage Count(Damage Taken)
+Damage Count(被敵人傷害次數)
+Damage Count(受傷次數)
+Damage Count                  %4d
+Potion Use Count(Potions Used)
+Potion Use Count(回復藥使用次數)
+Potion Use Count(用回復藥次數)
+Potion Use Count              %4d
+Treasure Box(Treasures Recovered)
+Treasure Box(寶箱收集率)
+Treasure Box              %3d(%3d%%)
+Treasure Box                   %3d%%
+Skill(Skills)
+Skill(技能收集)
+Skill                           %2d
+Level(Level)
+Level(人物等級)
+Level(等級)
+Level                           %2d
+Total Time(Total Time)
+Total Time(總用時)
+Total Time                %02d:%02d:%02
+
+
+%s lost %d in all...
+%s 失去了 %d 個…
+%d gold was lost...
+失去了金錢 %d …
+Lost all your gold...
+失去了全部金錢…
+There was no effect.
+沒有效果。
+The spell [%s] was learned!
+學得魔法[%s!]
+
+
+1 [Key] was made.
+做出了1把鑰匙.
+2 [Keys] were made!
+做出了2把鑰匙!
+You can't hold any more [Keys].
+不能再攜帶更多的鑰匙了.
+You don't have a [Bone]
+沒有足夠的『骨』.
+Make a [Key] by carving a [Bone]? |#c2OK|#c2CANCEL
+要加工『骨』製作鑰匙嗎? |#c2確定|#c2取消
+Return to town? |#c2OK|#c2CANCEL
+要回街上嗎? |#c2確定|#c2取消
+Return to town? (*You cannot return to where you were) |#c2OK|#c2CANCEL
+要回街上嗎?(用%s無法回到原來的場所) |#c2確定|#c2取消
+Unable to carry any more equipment.Your bags are full!
+道具箱已滿，不能再攜帶更多的裝備了.
+
+
+None 
+無
+PROFIC - %d.%d%%
+熟練度 - %d.%d%%
+SKILL - %s
+技能 - %s
+None
+無
+ATTACK - %d
+攻撃力 - %d
+ATTACK - %d + %d
+攻撃力 - %d + %d
+ATTACK - ATTACK
+攻撃力 - 攻撃力
+One-handed weapon
+單手武器
+Two-handed weapon
+雙手武器
+EFFECT - %s
+追加效果 - %s
+效果 - %s
+EFFECT - EFFECT
+追加效果 - 追加效果
+效果 - 效果
+DEFENSE - %d
+防禦力 - %d
+DEFENSE - %d + %d
+防禦力 - %d + %d
+DEFENSE - DEFENSE
+防禦力 - 防禦力
+SP %2d/%2d
+Active Skill
+發動系技能
+Passive Skill
+狀態系技能
+
+%s|#c1-Retry this map|-Return to Title Screen|-Cancel
+%s|#c1·在這個地圖繼續|·回到標題畫面|·取消
+%s|#c%d-To the previous map
+%s|#c%d·到上個地圖
+%s|#c%d-To the next map
+%s|#c%d·到下個地圖
+#s3#c2<Hint!> #c1%s#c1#s2
+
+
+puzzle-不翻譯
+Enigma Eye
+死亡之眼
+Apocalypse
+殭屍奇美拉
+Crystal Griffin
+獅鷲
+Sphinx
+鳥身女妖
+斯芬克斯
+Golem Sentinel
+泥魔像
+Doom Bat
+吸血蝙蝠
+Specter
+幽靈
+Nosferatu
+屍妖
+Black Death
+骷髏兵
+Black Death Archer
+骷髏射手
+Black Death Warrior
+骷髏武士
+Dark Lizard Mage
+蜥蜴人薩滿
+Dark Lizardman
+蜥蜴人
+Dragon
+雙足飛龍
+Baby Dragon
+海德拉
+Quantum Ghost
+電鬼火
+Evil Soul
+鬼火
+Ocher Jelly
+黑色史萊姆
+Meat Jelly
+病毒史萊姆
+Arch Lich
+巫妖
+Death Mastermind
+石魔像
+Golem Siege Ram
+黑暗蜥蜴
+Tesla Salamander
+石像鬼
+Invisible Fiend
+守衛者
+Nightgaunt
+
+Black Death Priest
+骷髏祭司
+Ogre Lord
+食人魔
+Venom Berserker
+狂暴牛頭怪
+
+
+A key was used, and then removed.
+使用了鑰匙.鎖開啟了.
+
+
+Poison Def.
+毒防禦
+Paral. Def.
+麻痺防禦
+Lightn. Res.
+耐雷性
+Curse Def.
+詛咒防禦
+Ice Resist
+耐冰性
+Fire Resist
+耐火性
+Silence Def.
+沉默防禦
+
+
+Level Up
+等級提升
+Set Simulated Level
+仮想等級設定
+Level Down
+等級下降
+Show Growth Log
+成長履歷LOG表示
+Gain 10% EXP
+經驗值增加（＋１０％）
+Gain 10% Prof.
+熟練度增加（＋１０％）
+Max Gold
+最大金錢
+Max Keys
+最大鑰匙數
+All Skills
+全部技能習得
+All Guardians
+全部精靈取得
+Guardian LV Up
+精靈等級上升
+Guardian LV Down
+精靈等級下降
+Guardian Release
+精靈解除
+Invincible
+無敵
+Max Power
+最強
+Full Recovery
+生命恢復
+Half Power
+體力減半
+Poison
+中毒
+Blunt Hit
+沉睡
+All Negative Status
+全異常狀態
+
+[To the Inheritors of History]
+『繼承歷史的人啊』
+[The Chosen Ones]
+『被選中的人們』
+[When the Rain Falls]
+『如果驟雨來臨』
+[The Unblessed Bride]
+『不被祝福的新娘』
+[Where the Star Shines]
+『星光閃耀的場所』
+[The Princess Ne'er Returning]
+『沒有回來的公主』
+[Of History and Spirits]
+『精靈和歷史』
+[The Four Royal Crowns]
+『四個王冠』
+[Sacred Sword and Maiden]
+『聖劍和巫女』
+[The Seven Wise Sages]
+『七人導師』
+[The Black Bride]
+『黑衣的新娘』
+[The Architect of Disaster]
+『悲劇的名匠』
+
+Herdsman's Moon 23rd, 1210
+1210年 牛飼之月23日
+Silverwolf's Moon 27th, 1210
+1210年 銀狼之月27日
+Firehen's Moon 30th, 1211
+1211年 鳳凰之月30日
+Pegasus Moon 11th, 1211
+1211年 天馬之月11日
+Unicorn's Moon 7th, 1212
+1212年 獨角之月 7日
+Wild Rabbit's Moon 10th, 1212
+1212年 野兎之月10日
+Filial Crow's Moon 3rd, 1215
+1215年 孝鴉之月 3日
+Demigod's Moon 14th, 1216
+1216年 半神之月14日
+Demigod's Moon 15th, 1216
+1216年 半神之月15日
+Demigod's Moon 17th, 1216
+1216年 半神之月17日
+Demigod's Moon 19th, 1216
+1216年 半神之月19日
+Hydra's Moon 16th, 1217
+1217年 水蛇之月16日
+
+Clover Ruins - Entrance
+三葉草遺跡　入口
+Eternal Maze - Deepest Depths
+千古迷道　最深處
+Trechier Woods - Entrance
+魔粧森林　入口
+Eaglet Mountain - Entrance
+伊格利特山　入口
+Eaglet Mountain - Central
+伊格利特山　中央處
+Xanadu Labyrinth - Central
+仙那度·魔幻迷宮　中央處
+Time Crevice - Deepest Depths
+時之狹間　最深處
+Castle Strangerock - Central
+奇岩城　中央處
+
+Strength attribute.Affects physical attack power.
+表示肌宍力量。
+主要影響物理攻撃力。
+Intelligence attribute.Affects magic power.
+表示知識。
+主要影響魔法攻撃力。
+Reflex attribute.Affects hit accuracy and evasion rate.
+表示反射神經。
+主要影響命中率和迴避率。
+Constitution attribute.Affects physical defense and vitality.
+表示耐久力。
+主要影響物理防禦力。
+Mind attribute. Affects magic resistance.
+表示精神力。
+主要影響魔法防禦力。
+
+STR
+INT
+REF
+CON
+MND
+Level
+等級
+Class
+稱號
+Experience
+經驗值
+Next-Experience
+下一級所需經驗
+Hit Points
+生命力
+Skill Points
+技能點數
+Strength
+Intelligence
+Reflex
+Constitution
+Mind
+Attack
+Magic
+Defense
+Resistance
+Accuracy
+Evasion
+Guardian Level
+精靈等級
+Guardian Exp.
+精靈經驗值
+Guardian Ability
+精靈能力
+Weapon Slot
+武器欄
+Shield Slot
+盾欄
+Armor Slot
+鎧甲欄
+Helmet Slot
+頭盔欄
+Item Slot
+道具欄
+Skill Slot
+技能欄
+Overall strength of the character
+角色綜合強度
+
+Current title. Will change according to your level
+現在的稱號。會根據等級而改變。
+Current experience earned from monsters slain.
+角色的經驗值,會在戰鬥中累積。
+Indicates total amount of experience required to level up.
+升到下個等級所需的經驗值。
+This is your vitality.If you run out of HP,your life will be forfeit.
+角色的生命力,減為0時就會GAMEOVER。
+These are spent to use a selected skill or spell.
+選擇中技能/魔法的使用次數,各技能上限不同。
+
+Strength attribute.Affects physical attack power.
+表示肌宍力量。主要影響物理攻撃力。
+Intelligence attribute.Affects magic power.
+表示知識。主要影響魔法攻撃力。
+Reflex attribute.Affects hit accuracy and evasion rate.
+表示反射神經。主要影響命中率和迴避率。
+Constitution attribute.Affects physical defense and vitality.
+表示耐久力。主要影響物理防禦力。
+Mind attribute. Affects magic resistance.
+表示精神力。主要影響魔法防禦力。
+
+Physical attack strength.
+表示綜合物理攻撃力。
+Magical attack power.
+表示魔法的威力。
+Physical attack resistance
+表示綜合物理防禦力。
+Magical attack resistance.
+表示對魔法的抗性。
+Accuracy of physical attacks.
+表示武器攻撃的命中機率。
+Ability to evade physical attacks.
+表示對物理攻撃的迴避機率。
+Current level of the Guardian dwelling within.
+表示現在附身的精靈的等級。
+Amount of experience shared with the Guardian dwelling within.
+表示現在附身的精靈的經驗值。
+The passive ability of the Guardian dwelling within
+表示現在附身的精靈的特殊能力。
+Slot to place your weapon.
+裝備武器欄。
+Slot to place your shield.
+裝備盾欄。
+Slot to place your armor.
+裝備鎧甲欄。
+Slot to place your helmet.
+裝備頭盔欄。
+Slot to place consumable and special items.
+使用消費道具和裝備特殊道具欄。
+A slot for skills or spells.
+使用技能魔法欄。
+
+
+Not only can you #c4break#c1 wooden crates, but you can also #c4push#c1 them!
+木箱不但可以#c4毀壞#c1,也可以#c4推動#c1!
+Be careful when carrying wooden crates!
+注意木箱的推動順序!
+Start by pushing from the left or right!
+先向左右推動!
+You can also stand on top of a crate.
+也可以跳到箱子上.
+When a crate is broken, you can push another crate on top of it.
+可以把木箱推到半壞的木箱上。
+It's a neat trick to get even higher.
+好好利用上面的木箱吧。
+Make use of these two on the left.
+2個好像是從左邊通來的。
+Start by putting the first crate in the center...
+先把左邊的箱子推到中央….
+Keep pushing it until it hits an obstacle.
+滑動的箱子在碰到障礙物前都會滑動。
+You can make use of unbreakable boxes.
+好好利用沒壞的箱子吧。
+You'll need three boxes of the same color to break them.
+同顏色的3個箱子放在一起就會毀壞哦。
+They'll remove obstacles whose color matches the boxes.
+有顏色的障礙物碰到有顏色的箱子就會消失。
+Now if we partially destroy the box in the back on the right...
+把右邊最裡面的箱子打到半壞…
+There is a switch on the left side.
+左邊有開關哦。
+You'll need three boxes of the same color to break them.
+同顏色的3個箱子放在一起就會毀壞哦。
+To use the switch you'll need to place a box of the same color on it.
+有顏色的開關和同顏色的箱子是對應的。
+To clear the puzzle on the left, place a matching color box on it.
+有顏色的障礙物碰到有顏色的箱子就會消失。
+
+
+Weapon Shop
+武器店
+Welcome, welcome!|Lookin' for anythin' in particular?
+喲,歡迎光臨。|來買什麼呢?
+Leavin' so soon? | Hope ta see you again!
+要回去了嗎? |以後再來啊!
+We've got weapons, breastplates, shields,|and helmets of all kinds! So what'll it be?
+這裡有各種武器,鎧甲,盾牌和頭盔哦!|想買點什麼?
+Got somethin' ta sell me?|I'll be happy ta take a look.
+要賣些什麼嗎?|非常歡迎!
+Ah, good choice. 
+啊，不錯的選擇。
+An excellent item!|Sure you can handle it, though?
+那個可以嗎?| 好好確認一下自己的能力啊!
+This is in pretty good shape.|You sure you wanna sell it?
+要賣這個好東西嗎?|賣之前要想好了哦!
+Not so fast, there, Sir Knight!|You don't have enough gold!
+喂喂,騎士先生……|你的錢不夠啊!
+I don't think I'll be buyin' that...
+我不收購那種東西啊…
+You don't have enough room for this.|You need ta sell or stow somethin'!
+已經沒辦法再帶更多了啊!|買還是留著,快點決定吧。
+Many thanks, Sir Knight!
+謝謝啦,騎士先生。
+Pleasure doin' business with you!
+好,那我買下了。
+Sorry, not in the market for that stuff.|You should take that ta the Curio Shop
+不好意思,那個我不買。|道具店的史密斯也許會對它有興趣吧。
+
+Curio Shop
+道具店
+Welcome, welcome!|Have a look 'round!
+歡迎歡迎!|請隨便挑選吧。
+That all for today?|Well, come back soon!
+要回去了嗎?有空再來啊!
+We have a variety of medicines, keys, tomes,|and other oddities here. See anything ya like?
+這裡有各種道具,藥品,鑰匙,咒文書。|請隨便看看吧。
+Lookin' ta sell? Sure thing!|Just show me what you've got.
+要賣這個嗎?|真是多謝惠顧了。
+This what ya were lookin' for?
+這個可以嗎?
+I can buy this? You certain?
+賣掉這個可以嗎?你確定?
+I'm really sorry, but it doesn't seem like ya have the funds...
+不好意思|錢好像不夠啊……
+...I just don't think I can buy somethin' that valuable.
+…那樣貴重的物品這裡不收購。
+Seems your bags are full, sir.|Don't believe I can sell ya this.
+已經不能再帶更多的東西了哦……
+Thanks for your patronage!
+多謝惠顧啦。
+Yes, truly....|I am ever so grateful.
+好的……|非常感謝。
+...Dependin' on the amount of bones I have in stock,|the price of keys may fluctuate from time to time.
+……鑰匙的製作材料(骨)的價格|會根據交易情況而不斷浮動的。
+Ah, this'll make a fine key, and should|help keep costs low. Many thanks!
+啊啊,多謝!|這樣鑰匙的價格就降下來了。
+
+Storehouse
+倉庫
+
+Need me to hold any of your items for you?|I'll keep a close eye on them!
+要整理道具嗎?|不用的東西可以先交給我保管。
+Is...that all you needed, then?
+哦,已經好了嗎?
+Something you need to take with you?
+有必須要帶著的東西嗎?
+Something I can hold for you?
+想寄存什麼呢?
+I can hold some of your money, as well.|Just make sure you keep enough with you!
+錢也可以寄存哦。|身上的錢夠嗎?
+
+
+Card Selection
+峠片選擇
+Brave Sir Knight...|Do you wish to exchange your Guardian?
+騎士先生……|要進行降靈嗎?
+Is everything in order, then?
+要中止降靈嗎?
+Please choose a Guardian for the binding.
+請選擇新的寄宿精靈。
+★2 normal lines
+通常臺詞2
+Are you satisfied with this infusion?
+這個精靈可以嗎?
+May the blessings of this new|Guardian serve you well.
+願新的精靈能守護好騎士先生……
+Lines ④ (Time of purchase)
+臺詞4(購買時)
+
+Etc ①
+其他1
+Etc ②
+其他2
+Temple
+寺院
+
+I shall commence the ritual of allocation,|through which your powers may be enhanced.
+那麼將要進行屬性點的分配。
+Is everything in order, then?
+要中止嗎?
+Please distribute your points, and remember that|you may decrease attributes to replenish points.
+請進行分配吧。|也可以將能力點數還原。
+Is everything allocated to your liking?
+這樣分配可以嗎?
+May your new power grant you|many blessings on your journey.
+祝福騎士先生你獲得新的力量……
+Lines ④ (Time of purchase)
+臺詞4(購買時)
+
+
+技能魔法説明 英文含換行
+Thrust（以下均保留第一個英文） 
+Thrust
+刺撃.
+A piercing strike that knocks enemies down. 
+使用尖鋭的刺撃，可以使敵人倒地。
+Bash
+吹飛
+A powerful blow that knocks enemies off balance.
+用力一撃將對手吹飛。
+Sweep Attack
+Knockback
+橫斬
+A flashing strike that mows down foes in front of you.
+使用一閃，對前方的敵人進行橫向的斬撃。
+Cyclone Attack
+Cyclone
+迴旋攻撃
+An intense whirlwind that sends nearby enemies flying.
+卷起激烈的旋風，將周圍的敵人弾飛。
+Battle Cry
+戰歌
+A powerful shout that raises attack power for a set time.
+發出雄壯的呼喊，在一定時間內提高攻撃力。
+Charge
+突進
+A rushing move that propels you forward,hitting anything along the way.
+能使用可以連鎖攻撃的衝撞。
+Power Thrust
+強突
+A stronger version of the [Thrust] skill. Hits repeatedly.
+突刺的強化版，連續多段攻撃。
+Force Blast
+劍氣
+A radiating blast of energy that sends nearby enemies flying.
+放射大範圍劍氣，攻撃周圍全部敵人。
+Dragon slayer
+屠龍斬
+A mighty blow that strikes down evil.
+發出可以斬殺邪龍的強力攻撃。
+Fire Weapon
+Searing Blade
+火焰之劍
+Imbues the weapon with flame.
+給武器附加火屬性。
+Cold Weapon
+Chilling Blade
+冷氣之劍
+Imbues the weapon with ice.
+給武器附加冰結屬性。
+Lightning Weapon
+Jolting Blade
+雷撃之劍
+Imbues the weapon with electricity.
+給武器附加雷屬性。
+Concentration
+Focus
+集中
+Increases the damage of critical hits.
+會心一撃的威力上升。
+Great Strength
+Strong Arm
+豪腕
+Grants a bonus to the [STR] parameter.
+額外增加屬性“STR”的點數。
+Expansive Spirit
+Clear Mind
+睿智
+Grants a bonus to the [INT] parameter.
+額外增加屬性“INT”的點數。
+Hardiness
+Hearty Bones
+強健
+Grants a bonus to the [CON] parameter.
+額外增加屬性“CON”的點數。
+Harmonious Mind
+Serenity
+寂靜
+Grants a bonus to the [MND] parameter.
+額外增加屬性“MND”的點數。
+Quickness
+機敏
+Grants a bonus to the [REF] parameter.
+額外增加屬性“REF”的點數。
+Greed
+Plunder
+洗劫
+Drastically increases the gold obtained from enemies.
+將敵人身上的金錢一次偷光。
+Sneak Attack
+背刺
+Deals even greater damage when attacking an enemy from behind.
+從敵人背後攻撃的時候傷害更高。
+Interception
+Intercept
+迎撃
+A fixed chance to counter an enemy's attack.
+將敵人的物理攻撃以一定機率反弾回去。
+Shield Mastery
+熟練之盾
+Increases the chance for an enemy attack to be blocked with a shield.
+用盾成功防禦敵人攻撃的機率上升。
+One-Hand Wield
+One-Handed
+單手裝備
+Allows you to wield two-handed weapons in only one hand.
+可以單手使用雙手專用的武器。
+Endurance
+Force of Will
+根性
+A fixed chance to survive a mortal blow with some HP.
+受到致命傷害的時候也會以一定的機率保留某一程度的HP。
+Berserk
+兇暴化
+Increases attack power at the cost of defense.
+以減少防禦力為代價提高攻撃力。
+Defensive Stance
+Providence
+防禦之勢
+Increases defense at the cost of attack power.
+以降低攻撃力為代價提高防禦力。
+Blood Rage
+Blood Fury
+血之激憤
+As HP decreases, attack power increases.
+HP越低，攻撃力越高。
+Fast Move
+Veda's Gift
+疾跑
+Increases movement speed.
+移動速度上升。
+Rapid Attack
+Rapidfire
+高速攻撃
+Increases attack speed.
+攻撃速度上升。
+Insight
+看破
+View enemy stats.
+可以看見敵人的狀態。
+Magic Rance
+Needle
+魔針術
+Shoots forth a magic blade。
+向前方放出魔法的針。
+Titan Blow
+Rock
+落石術
+Drops a giant rock on an enemy.
+將巨大的岩石從敵人頭上砸下。
+Death
+死靈術
+Summons forth a wave of death, directed as you wish.
+召喚並隨意操縱死亡的波動。
+Fire
+火球術
+Shoots forth a scorching ball of fire.
+向前方發射火球。
+Fire Wall
+Blaze
+火牆術
+Creates a blazing wall that spreads like a fan.
+產生灼熱的牆壁，向前方呈扇形放射。
+Ignition
+炎爆術
+Creates a huge explosion that burns nearby enemies.
+引發大爆炸,將周圍的敵人燒成灰燼。
+Freezing
+Ice
+冰箭術
+Fires a shard of ice.
+向前方放出冰的碎片。
+Frost Bell
+Frost
+霜凍術
+Shoots a massive chunk of ice that shatters into frozen shards on impact.
+放出冷氣塊，在撃中點產生冰柱。
+Avalanche
+Freezing
+強凍術
+Calls down a chilly rain that freezes nearby enemies.
+降下冰凍的雨，將周圍的敵人凍結。
+Blitz Arrow
+Thunder
+雷箭術
+Fires a bolt of thunder.
+向前方施放電撃。
+Lightning
+Blitz
+雷鳴術
+Surrounds your body for a set time with an electric barrier.
+一定時間內用雷電做成防護罩環繞在身體周圍。
+Toal Hammer
+Lightning
+閃電術
+Calls forth a storm cloud that strikes nearby enemies.
+召喚閃電，打撃周圍的敵人。
+Heal
+回復術(敵)
+Recover magic expressly for the Goblin Healer.
+哥布林法師專用的回復魔法。
+Low Fire Wall
+Blaze
+火牆術(敵)
+A modified version of Blaze expressly for the Master Goblin.
+哥布林領袖專用的火牆術,威力經過了調整。
+

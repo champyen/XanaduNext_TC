@@ -1,0 +1,321 @@
+//--------------------------------------------------------------------
+// チュートリアル遺跡　一番奧の寶箱部屋
+//--------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+	HIDE_CHR("Dvorak")
+
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザーク
+
+DEF("EV_Dvorak")
+
+RES("EVENT")
+{
+
+	// EV 宿酒場のイベント(調查開始)
+	check_game_flag(3502)
+	off_jump EXIT
+	// EV ドヴォルザークとの對決イベント
+	check_game_flag(3520)
+	on_jump EXIT
+
+	check_game_flag(1024)
+	off_jump EXIT
+	check_game_flag(1025)
+	off_jump EXIT
+
+EVENT:
+	STOP_PC(0)
+	CINEMA_ON(0)
+
+	set_skip_label("SKIP")
+
+//　　地下遺跡の最奧まで來ると、古びた臺座の上に寶箱が２つ並ん
+//　　でいる。中に入っていた「クラウン」と「いにしえの石板」を
+//　　入手して引き返そうとすると、不意に入り口から聲をかけられ
+//　　る。
+
+	cross_fade(120)
+	reset_map_rot_y(1,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(17.30,-8.00,-0.13,  -25.5,225.0,0.0, 12, 15.0)
+	move_script_look_at(-7,0,0, 600, 1)
+	rotate_script_camera(0,30,0, 600, 1)
+
+	set_pos("PC", 16.75,-10.00, 0.0)
+	set_deg("PC", 270)
+	PC_WEAPON(0)
+	set_motion("PC", "STAND",-1)
+	show_chr("Dvorak")
+	load_npc_eqp(7,00)
+	dvorak(0)
+	set_pos("Dvorak", 4.86,-10.00, 0.00)
+	set_deg("Dvorak", 90)
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 15.35,-10.00,0.0)
+	walk_pos("PC",0,0.025)
+
+	wait(60)
+
+	MSG_EX("#S3#C0謎之劍士「……哦，閣下是騎士？」",-1,2)
+
+	set_motion("Dvorak","STAND",-1)
+	look_chr("Dvorak", "-")
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 10.35,-10.00,0.0)
+	walk_pos("Dvorak",0,0.025)
+
+	MSG_EX("#S3#C0謎之劍士「在這樣的地方做些像盜賊一樣的勾當，|　　　　　騎士也墮落了。」",-1,2)
+	wait_walk("Dvorak")
+	wait_camera(0)
+
+	cross_fade(100)
+	SET_SPOT_ORG(1, 13.25,-9,0 )
+	permit_script_camera(0)
+	reset_map_rot_y(7,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(10.35,-9.00,0.0,  -25.5,155.0,0.0, 12, 15.0)
+	move_script_look_at(2.5,0,0, 500, 1)
+	rotate_script_camera(0,-40,0, 500, 1)
+	wait(100)
+
+	MSG_EX("#S3#C0謎之劍士「算了……|　　　　　我想要你手中的王冠。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「在它落入那個人手中之前。」",-1,2)
+
+
+//　　ドヴォルザークが主人公の前まで悠然と步いて移動。
+//　　主人公はやや後退。
+
+	MSG_EX("#S3#C0謎之劍士「我不想浪費口舌。|　　　　　那不是不知緣由的你應該拿的東西。」",-1,2)
+	wait(40)
+	stop_camera(0)
+
+
+//　　劍を拔き、身構える主人公。
+	wait(20)
+	cross_fade(10)
+	set_script_camera_EX("PC",2,  -25.5,105.0,0.0, 10, 15.0)
+	PC_WEAPON(1)
+	wait(25)
+	move_script_look_at(-0.75,0,0, 150, 1)
+	wait_camera(0)
+
+	MSG_EX("#S3#C0謎之劍士「騎士不能做無謂的後退嗎……|　　　　　我並不討厭這種驕傲的精神。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「也許你也有自己的理由，|　　　　　不過如果不給我的話，那就沒辦法了。」",-1,2)
+	wait(20)
+
+
+//　　ドヴォルザーク、劍を拔く。
+	set_motion("Dvorak","WEAPON_O")
+	wait(34)
+	se("SE_WEAPON_O")
+	wait(20)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+	MSG_EX("#S3#C0謎之劍士「接招吧。」",-1,2)
+
+
+//　　主人公とドヴォルザーク模擬戰鬥
+	fade_out(30)
+	SYS("這是模擬戰鬥。ＰＣ變成瀕死狀態或一定時間後繼續。")
+	//se("SE_GUARD")
+	//wait(30)
+	//se("SE_GUARD")
+	//wait(4)
+	//se("SE_GUARD")
+	//wait(10)
+	//se("SE_GUARD")
+	//wait(50)
+	//se("SE_DAMAGE_P")
+	//wait(30)
+	//se("SE_GUARD")
+	wait(60)
+
+
+//模擬戰鬥終わって一言どうぞ
+	set_script_camera(11.5,-9,0,  -25.5,225.0,0.0, 10, 15.0)
+	rotate_script_camera(0,15,0, 1000, 1)
+	set_pos("Dvorak" , 8.5,-10.00,0.0)
+	set_deg("Dvorak", 90)
+	set_pos("PC", 15,-10.00, 0.0)
+	set_deg("PC", 270)
+	fade_in(60)
+	wait(120)
+	MSG_EX("#S3#C0謎之劍士「哈，相當不錯嘛……」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「害怕了嗎……|　　　　　不，應該説是迷惑了吧。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「用這樣遲鈍的劍，|　　　　　是比不過我德沃夏克的。」",-1,2)
+
+
+//劍構える
+	cross_fade(30)
+	set_script_camera(9.8,-8.5,0, 5,180,0, 4.5, 15)
+	move_script_look_at( -0.5,0,0, 1000, 0)
+	MSG_EX("#S3#C0德沃夏克「至少能勇敢戰死，|　　　　　堅持騎士的尊嚴也不錯。」",-1,2)
+	SET_MOTION("Dvorak","EMPTY18",10)
+	wait(70)
+	se("SE_WEAPON_I")
+	SET_MOTION("Dvorak","EMPTY19",0)
+	wait(60)
+	MSG_EX("#S3#C0德沃夏克「喝啊——！！」（＊在這裡出現發光、技能效果）",-1,2)
+	wait(80)
+
+
+//技撃つ
+	SET_MOTION("Dvorak","EMPTY20",5)
+	wait(35)
+	FADE_OUT_EX(10, 0, "0xffffffff",0)
+	wait(10)
+	se("SE_DAMAGE_P")
+	wait(5)
+	se("SE_DAMAGE_P")
+	wait(5)
+	se("SE_DAMAGE_P")
+	wait(5)
+	se("SE_DAMAGE_P")
+	wait(20)
+	se("SE_DAMAGE_P")
+	wait(60)
+
+
+//　　技を受けて膝から崩れ落ちる主人公。その周りは花が咲くよう
+//　　に血だまりが廣がっていく。
+	set_script_camera(14.5,-9.7,0, -25,90,0, 7, 30)
+	rotate_script_camera(-20,0,0, 500, 1)
+	scale_script_camera( 1.4, 500, 1)
+	set_script_fov( 15, 500, 1)
+	fade_in_ex(15, 0, "0xffffffff",0)
+	se("SE_DEAD_P")
+	set_motion("PC", "DOWN",0)
+	wait(136)
+	set_motion("PC", "DEAD",0)
+	wait(200)
+	fade_out(30)
+	wait(30)
+
+
+//ドヴォルザーク、主人公の懐からクラウンを取り出す。
+	set_pos("Dvorak", 13,-10,0,)
+	set_deg("Dvorak", 90)
+	dvorak(0)
+	set_motion("Dvorak","STAND")
+	set_script_camera_EX("Dvorak",0,  -25.5,225.0,0.0, 10, 15.0)
+	fade_in(60)
+	move_script_look_at(-2,0,0, 400, 1)
+	wait(160)
+
+	set_turn_spd("Dvorak", 16)
+	set_deg("Dvorak", 270)
+
+	MSG_EX("#S3#C0德沃夏克「如果不快一點的話……」",-1,2)
+
+	fade_out(120)
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 2,-10.,0.0)
+	walk_pos("Dvorak",0,0.035)
+	wait(200)
+
+	// クラウンと石版を消す。その他後處理。
+//	PICK_ITEM(270)
+	PICK_ITEM(187)
+	pick_text_item(0)
+
+	SET_SPOT_ORG(0, 0,0,0 )
+	PC_WEAPON(0)
+	wait(100)
+	game_flag_on(3520)
+	entry_map("0091_1009")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+
+EXIT:
+	END
+
+SKIP:
+	fade_out(0)
+	wait(1)
+
+	// クラウンと石版を消す
+//	PICK_ITEM(270)
+	PICK_ITEM(187)
+	pick_text_item(0)
+
+	SET_SPOT_ORG(0, 0,0,0 )
+	PC_WEAPON(0)
+	wait(60)
+	game_flag_on(3520)
+	entry_map("0091_1009")
+
+	END
+}
+
+
+//DEF("battle")
+//RES("EVENT")
+//{
+	//CHECK_GAME_FLAG()
+	//ON_JUMP EXIT
+	//MSG("#S3#C0ドヴォルザーク「騎士が背を向けて逃げ出すのか！！」",-1,2)
+//EXIT:
+//end
+//}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1024)
+	ON_JUMP next
+//石版
+	SET_TREASURE("tbox1",1,270,"ITEM1")
+	END
+
+next:
+	HIDE_CHR("tbox1")
+	END
+}
+
+DEF("ITEM1")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+	GAME_FLAG_ON(1024)
+}
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1025)
+	ON_JUMP next
+//クラウン
+	SET_TREASURE("tbox2",1,187,"ITEM2")
+	END
+
+next:
+	HIDE_CHR("tbox2")
+	END
+}
+
+DEF("ITEM2")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+	GAME_FLAG_ON(1025)
+}
+
+

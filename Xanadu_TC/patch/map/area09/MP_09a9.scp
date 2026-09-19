@@ -1,0 +1,226 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期戝態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	CHECK_GAME_FLAG(909)
+	OFF_SKIP(1)
+	SHOW_CHR("tbox")
+
+	HIDE_CHR("tbox")
+
+	// ストッパーチェック
+	CHECK_GAME_FLAG(908)
+	OFF_SKIP(5)
+	MOVE_VEC("box1",-1.5,-1.5,-1.5,1)
+	MOVE_VEC("box2",-1.5,-1.5,1.5,1)
+	ROOM_FLAG_ON(1)
+	ROOM_FLAG_ON(2)
+	SHOW_CHR("tbox")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1909)
+	ON_SKIP(2)
+	KAGI("d1909",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1909")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1909")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1909)
+}
+
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09a9_09a8")
+RES("EVENT")
+{
+	ENTRY_MAP("09a8_09a9")
+}
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+DEF("sw1")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(909)
+	ON_JUMP next
+
+	// INITイベント避け
+	CHECK_ROOM_FLAG(1)
+	ON_SKIP(1)
+
+	CALL BOXCHECK
+
+	ROOM_FLAG_OFF(1)
+
+next:
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(909)
+	ON_JUMP next
+
+	// INITイベント避け
+	CHECK_ROOM_FLAG(2)
+	ON_SKIP(1)
+
+	CALL BOXCHECK
+
+	ROOM_FLAG_OFF(2)
+
+next:
+}
+
+@BOXCHECK
+{
+	// 箱置きチェック
+	CHECK_GRID(0,5,"box1")
+	OFF_JUMP REV
+	CHECK_GRID(0,0,"box2")
+	OFF_JUMP REV
+
+	// きえる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,0.25,0)
+		CHECK_GAME_FLAG(909)
+		ON_SKIP(1)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(908)
+
+	RET
+
+REV:
+
+	// 箱置きチェック（逆パターンも）
+	CHECK_GRID(0,5,"box2")
+	OFF_JUMP NEXT
+	CHECK_GRID(0,0,"box1")
+	OFF_JUMP NEXT
+
+	// きえる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,0.25,0)
+		CHECK_GAME_FLAG(909)
+		ON_SKIP(1)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(908)
+
+	RET
+
+NEXT:
+
+	// 消えているなら、あらわれるにジャンプ
+	CHECK_GAME_FLAG(908)
+	ON_JUMP NEXT2
+
+	// あらわれているなら、リターン
+	RET
+
+NEXT2:
+
+	// あらわれる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,0.25,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_OFF(908)
+
+	RET
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(909)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,12,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(909)
+	OFF_JUMP ITEM
+
+ITEM:
+// フロストブランド
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 12, 0,0.25,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【霜之烙印】！",-1,0X00000200)
+
+	GET_ITEM(12, 1)
+	GAME_FLAG_ON(909)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

@@ -1,0 +1,1191 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// SE再生
+	SE("SE_THUNDER")
+	SE("SE_WIND2")
+	SE("SE_NAMI2")
+
+	// リーゼ戰用カメラOFF
+	CAMERA_OFF("リーゼ戰")
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+	// コア
+	load_chr("M_0322\ARM_322a",0)
+	// ＤＳ
+	load_chr("M_0322\ARM_322b",1)
+	// ヒットマップ
+	load_chr("M_0322\M_0322h",8)
+	set_collision_obj("body",8)
+
+	lock_camera("ボス戰")
+	set_scroll_rect(-0,-2.5, 0,15)
+
+
+// ＨＰリンク設定
+	link_hp_chr("core","body")
+	
+	// ビット隱す（呼び出しはプログラム側でやる）
+	hide_chr("bit1")
+	hide_chr("bit2")
+	hide_chr("bit3")
+	hide_chr("bit4")
+
+	set_target_chr("body")
+	bgm(17,0,-1)
+
+	ENTRY_CHR( 0,  72)
+	ENTRY_CHR( 1, 535)
+	ENTRY_CHR( 2,  36)
+	ENTRY_CHR( 3,  37)
+	ENTRY_CHR( 4,  38)
+	ENTRY_CHR( 5,  39)
+	ENTRY_CHR( 6,  40)
+	ENTRY_CHR( 7,  41)
+	ENTRY_CHR( 8, 538)
+	ENTRY_CHR( 9, 543)
+
+	BGM(19, 0, -1)
+
+// 3808	EV リーゼ攻撃モード
+	CHECK_GAME_FLAG(3808)
+	OFF_JUMP NEXT
+
+	//PCの處理
+	set_pos("PC", 0.0,-0.63,7.00)
+	set_deg("PC", 0)
+	PC_WEAPON(1, 0)
+	// 移動禁止
+	PC_FLAG(1, 1)
+	// スキル禁止
+	PC_FLAG(2, 1)
+	FOCUS_CHR("PC")
+
+	PUT_CHR( 1, "Fleurette",   0.00,-0.88, 3.24, 6)
+	PUT_CHR( 2, "Avatarlaha",  2.14,-0.88,-2.25, 0)
+	PUT_CHR( 3, "Tiowald",    -1.85,-0.88,-2.43, 0)
+	PUT_CHR( 4, "Sturm",      -3.96,-0.88,-1.12, 0)
+	PUT_CHR( 5, "Gandaltua",  -0.02,-0.63,-4.66, 0)
+	PUT_CHR( 6, "Dvorak",     -1.64,-0.88, 0.68, 126)
+	PUT_CHR( 7, "Beatrice",    0.97,-0.88,-3.22, 0)
+
+	PUT_CHR( 9, "Liese",       -0.00,-0.13, 8.42, 180)
+	set_motion("Liese", EMPTY3, 0)
+	set_motion("Fleurette", EMPTY8, 0)
+	load_npc_eqp(7,00)
+	DVORAK( 0)
+
+	hide_chr("core",0,1,120)
+	hide_chr("body",0,1,400)
+	end
+
+NEXT:
+	// 3809	EV ボス戰鬥後イベントを呼び出し用(DEBUG)
+	CHECK_GAME_FLAG(3809)
+	OFF_JUMP NEXT2
+
+	hide_chr("core",0,1,120)
+	hide_chr("body",0,1,400)
+	stop_bgm(0,1)
+
+NEXT2:
+
+	end
+}
+
+
+// コア //////////////////////////////////////////////////////////////////////
+DEF("core")
+
+RES("INIT")
+{
+//	ＰＣをa10の足場に置く
+//	set_pos("PC",13.35,0,13.35)
+//	set_deg_ex("PC","body")
+//	set_collision_obj("body",8)
+//	disp_hp_bar("core")
+//	QUAKE(3,2,400)
+//	bgm(18,0,-1)
+}
+RES("KILL")
+{
+	SYS("勝利！")
+}
+
+
+
+
+
+
+
+// 胴體 //////////////////////////////////////////////////////////////////////
+
+DEF("body")
+RES("INIT")
+{
+	// 3809	EV ボス戰鬥後イベントを呼び出し用(DEBUG)
+	CHECK_GAME_FLAG(3809)
+	OFF_JUMP NEXT
+
+	// 3808	EV リーゼ攻撃モード
+	CHECK_GAME_FLAG(3808)
+	ON_JUMP LISE_HIT
+
+	stop_bgm(0)
+
+	CINEMA_ON(0)
+	call EVENT_LISE
+	jump EXIT
+
+
+//-- リーゼ攻撃モード ------------------------------------------------
+
+LISE_HIT:
+	set_pos("PC", 0.0,-0.63,7.00)
+	set_deg("PC", 0)
+
+	// 移動禁止
+	PC_FLAG(1, 1)
+	// スキル禁止
+	PC_FLAG(2, 1)
+
+	// リーゼ戰用カメラ
+	CAMERA_ON("リーゼ戰")
+
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+	end
+
+
+NEXT:
+	//0685から著た場合の處理、匯入ムービー
+	permit_script_camera(1)
+	set_script_camera(-0.7,8.5,7, -55,195,0, 9, 15)
+	set_motion("body","EMPTY1",0)
+	STOP_PC(0)
+	set_pos("PC",0.00,-0.00,0.00)
+	set_deg_ex("PC","body")
+	FADE_IN_EX( 60, 1, "0xffffffff",0)
+
+	blur(30)
+	SLOW(4)
+	wait(60)
+	SLOW(0)
+	wait(50)
+
+	rotate_script_camera(40,-15,0, 10, 1)
+	move_script_look_at(0,-3.5,0, 10, 1)
+	blur(50)
+	SLOW(4)
+	wait(10)
+	SLOW(0)
+	blur(0)
+	scale_script_camera(1.1, 60, 1)
+	wait(30)
+
+	//引く
+	scale_script_camera(2.5, 120, 1)
+	move_script_look_at(0,-3,0, 120, 1)
+	blur(2)
+	wait(100)
+
+	CROSS_FADE(60)
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+
+
+RES("KILL")
+{
+	refresh("PC")
+	
+	stop_pc(0)
+	set_motion("body","DYING",0)
+	delete_efc("body")
+	delete_efc("core")
+	delete_efc("bit1")
+	delete_efc("bit2")
+	delete_efc("bit3")
+	delete_efc("bit4")
+
+	kill_chr("core",0,1,120)
+	kill_chr("bit1",0,1,120)
+	kill_chr("bit2",0,1,120)
+	kill_chr("bit3",0,1,120)
+	kill_chr("bit4",0,1,120)
+	kill_chr("kao1",0,1,120)
+	kill_chr("kao2",0,1,120)
+	kill_chr("kao3",0,1,120)
+
+	set_target_chr("-")
+
+//ここから死亡デモ-------------------------------------------
+
+	stop_bgm(0)
+
+	blur(50)
+	SLOW(6)
+	FADE_OUT_EX( 16, 0, "0xffffff7d", 4)
+	wait(20)
+	SLOW(0)
+	cinema_on(0)
+
+	//カメラ位置決定
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(0,10,12, -30,-145,0, 10, 0)
+
+	//PCの位置補正
+	set_pos("PC",0.00,-0.12,9.0)
+	set_deg_ex("PC","body")
+	set_motion("PC","EMPTY2",0)
+
+	//ガル顏アップ橫なめ
+	rotate_script_camera(10,10,0, 250, 1)
+	wait(60)
+	SLOW(2)
+	wait(60)
+	SLOW(0)
+	wait(130)
+
+	//コア周邊下へパーン
+	cross_fade(60)
+	move_script_look_at(0,-9,0, 50, 0)
+	rotate_script_camera(0,-15,0, 50, 0)
+	scale_script_camera(0.7, 50, 0)
+	wait(50)
+	rotate_script_camera(0,-3,0, 50, 1)
+	set_motion("PC","EMPTY3",50)
+	wait(50)
+	SLOW(4)
+	scale_script_camera(1.5, 20, 0)
+	wait(20)
+	SLOW(0)
+
+	//中央から旋迴
+	rotate_script_camera(-5.0,-10,0,280, 1)
+	blur(40)
+	wait(40)
+	set_motion("PC","STAND",0)
+	wait(150)
+	SLOW(2)
+	wait(30)
+	SLOW(0)
+	wait(75)
+
+	//一氣に引く
+	blur(100)
+	scale_script_camera(3, 5, 0)
+	FADE_IN_EX(5, 0, "0xffffff7d", 0)
+	wait(2)
+	SLOW(3)
+	wait(3)
+	SLOW(0)
+	blur(0)
+
+	//ゆっくり旋迴しつつホワイトアウト
+	blur(60)
+	rotate_script_camera(-10,-60,0,660, 1)
+	QUAKE(5,5,660)
+	wait(20)
+	kill_chr("body",0,1,500)
+	FADE_OUT_EX(590, 0, "0xffffffff", 0)
+	wait(650)
+
+	//いろいろ終了
+	blur(0)
+//	permit_script_camera(0)
+//	cinema_off(0)
+
+//--------------------------------------------------------------------
+
+	call EVENT_LISE
+
+	end
+}
+
+
+@EVENT_LISE
+{
+//	KILL_CHR("KAMINARI",0,0,1)
+//	// SE再生
+//	STOP_ENV_SE("SE_THUNDER")
+//
+	// リーゼ戰用カメラON
+	CAMERA_ON("リーゼ戰")
+
+	stop_pc(0)
+	set_motion("PC","STAND",-1)
+	set_pos("PC",0.25,-0.88,0)
+	set_deg("PC", 10)
+
+	permit_script_camera(1)
+	set_script_camera(-0.0,-0.63,6.11,  -25.0,130.0,0.0, 12, 30.0)
+	move_script_look_at( 0,1,-6, 400, 1)
+	rotate_script_camera(5,5,0, 400, 1)
+	FADE_IN_EX(300, 0, "0xffffffff", 0)
+//	↓作業的にスキップできないと辛いのでとりあえず入れました
+	set_skip_label("SKIP")
+	wait(300)
+
+
+//▼奇岩城・崩壞した塔屋上
+//　　フェードアウト拔けて、崩壞した塔の屋上にひざまずいている主人公。
+
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人！！」",-1,2)
+
+//　　フローレットと導師たちが驅けつけてくる。
+	PUT_CHR( 1, "Fleurette",    -0.76,-0.63,-5.91, 6)
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.59,-0.88,-1.61)
+	walk_pos("Fleurette",1,0.05)
+
+	wait(20)
+	set_deg("PC", 245)
+	look_chr("PC", "Fleurette")
+	wait(40)
+
+	// 劍を持ったまま走れなかったっけ?
+	PUT_CHR( 6, "Dvorak",      -1.72,-0.63,-6.58, 126)
+	load_npc_eqp(7,00)
+	dvorak(0)
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", -1.64,-0.88,0.68)
+	walk_pos("Dvorak",1,0.06)
+	wait_walk("Dvorak")
+	set_Deg("Dvorak", 42)
+	look_chr("Dvorak", "-")
+
+	MSG_EX("#S3#C0芙羅蕾特「您還好嗎？」",-1,2)
+
+	move_script_look_at( 0,0,-1, 500, 1)
+	rotate_script_camera(0,-20,0, 500, 1)
+
+	PUT_CHR( 2, "Avatarlaha",    2.41,-0.63,-7.00, 0)
+	INIT_WALK_DST("Avatarlaha")
+	set_walk_dst("Avatarlaha", 2.14,-0.88,-2.25)
+	walk_pos("Avatarlaha",0,0.03)
+	wait(60)
+
+	PUT_CHR( 7, "Beatrice",   -1.82,-0.63,-6.69, 0)
+	INIT_WALK_DST("Beatrice")
+	set_walk_dst("Beatrice", -1.85,-0.88,-2.43)
+	walk_pos("Beatrice",0,0.03)
+	wait_walk("Beatrice")
+	look_chr("Beatrice", "PC")
+
+	set_Deg("Avatarlaha", 328)
+	look_chr("Avatarlaha", "PC")
+
+	PUT_CHR( 3, "Tiowald",    1.44,-0.63,-6.76, 0)
+	INIT_WALK_DST("Tiowald")
+	set_walk_dst("Tiowald", 0.97,-0.88,-3.22)
+	set_walk_dst("Tiowald", 0.92,-0.88,-1.78)
+	walk_pos("Tiowald",0,0.02)
+	wait(60)
+
+	PUT_CHR( 4, "Sturm",    -4.05,-0.63,-6.32, 0)
+	INIT_WALK_DST("Sturm")
+	set_walk_dst("Sturm", -3.96,-0.88,-1.12)
+	walk_pos("Sturm",0,0.03)
+	wait_walk("Sturm")
+	set_Deg("Sturm", 50)
+	look_chr("Sturm", "PC")
+	look_chr("Tiowald", "PC")
+
+	PUT_CHR( 5, "Gandaltua",    -0.05,-0.63,-6.25, 0)
+	INIT_WALK_DST("Gandaltua")
+	set_walk_dst("Gandaltua", -0.02,-0.63,-4.66)
+	walk_pos("Gandaltua",0,0.03)
+	wait_walk("Gandaltua")
+
+
+//　　主人公に寄り添うフローレット。
+//　　ドヴォルザーク、まわりを見渡す仕草。
+
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.38,-0.88,-1.00)
+	walk_pos("Fleurette",0,0.02)
+	set_deg_EX("Fleurette", "PC")
+
+	set_deg("Dvorak", 350)
+	wait(60)
+	set_deg("Dvorak", 10)
+	wait(60)
+
+	MSG_EX("#S3#C0剛達爾奇「加爾西斯……被幹掉了嗎？」",-1,2)
+
+	set_motion("Sturm", ATTACK1, -1)
+	MSG_EX("#S3#C0修特威爾姆「應該吧……」",-1,2)
+
+//　　ドヴォルザークが主人公に語りかける。
+
+//	dvorak(0, 0)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(0.25,0.88,-1.00,  -12.0,70.0,0.0, 7, 30.0)
+	set_deg_EX("Dvorak", "PC")
+	wait(60)
+
+	set_motion("Dvorak", ATTACK1, -1)
+	look_chr("PC", "Dvorak")
+	MSG_EX("#S3#C0德沃夏克「騎士啊，戰鬥之前魔王説的話……|　　　　　到底是怎麼回事？」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「聽那傢伙的口氣，|　　　　　好像被黑色新娘欺騙了一樣……」",-1,2)
+
+	look_chr("Tiowald", "Fleurette")
+	MSG_EX("#S3#C0提歐巴特「…………………………」",-1,2)
+
+//　　次の瞬間、光の柱が立ち上り(オニキスエフェクト)、力盡きて
+//　　膝をついたリーゼロットが現れる。全員、驚いて身構える。
+//　　並んで劍を構えて、フローレットを守る主人公とドヴォルザーク。
+
+	PUT_CHR( 0, "Liese",    -0.00,-0.13,8.42, 180)
+	
+	ATTACH_EFC("EFC_WARP_E","Liese","POS")
+	SE("SE_WARP3")
+	cross_fade(60)
+	set_script_camera(-0.00,-0.13,8.53,  -12.0,180.0,0.0, 8, 30.0)
+
+	wait(20)
+	ATTACH_EFC("EFC_WARP_T","Liese","POS")
+	wait(120)
+
+	set_deg_EX("PC", "Liese")
+	look_chr("PC", "Liese")
+//	set_deg_EX("Dvorak", "Liese")
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐…………」",-1,2)
+
+	MSG_EX("#S3#C0莉絲洛特「……還沒有結束……騎士大人…………」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「……還沒有……只要作為魔王妻子的我還存在…………」",-1,2)
+
+//	move_script_look_at( 0,4,-12, 500, 1)
+//	rotate_script_camera(-20,0,0, 500, 1)
+
+	MSG_EX("#S3#C0提歐巴特「……莉絲洛特公主，已經可以了。」",-1,2)
+
+	cross_fade(60)
+	set_script_camera(-0.35,0.00,-1.17,  -12.0,45.0,0.0, 10, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0德沃夏克「提歐巴特大人？」",-1,2)
+
+	look_chr("Tiowald", "Liese")
+	set_motion("Tiowald", ATTACK1, -1)
+	MSG_EX("#S3#C0提歐巴特「莉絲洛特公主似乎也有自己的原因……」",-1,2)
+	wait(30)
+	set_deg("Dvorak", 32)
+	look_chr("Dvorak", "Liese")
+
+	MSG_EX("#S3#C0莉絲洛特「………………………………」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0提歐巴特「能不能告訴我們……你的本意。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「……我………………」",-1,2)
+	wait(30)
+
+	// フローレを前まで步かせる
+	move_script_look_at( 0,0.5,7, 500, 1)
+
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.69,-0.88,0.31)
+	set_walk_dst("Fleurette", -0.56,-0.88,2.04)
+	set_walk_dst("Fleurette",  0.01,-0.63,4.61)
+	walk_pos("Fleurette",0,0.02)
+
+//	move_script_look_at( 0,0,4, 200, 1)
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐…………」",-1,2)
+
+	wait_walk("Fleurette")
+	set_deg_EX("Fleurette", "Liese")
+	wait(60)
+	wait_camera(0)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(-0.00,1.00,6.42,  -25.0,100.0,0.0, 9, 30.0)
+	rotate_script_camera(0,20,0, 2000, 1)
+
+	MSG_EX("#S3#C0芙羅蕾特「五百年前……|　　　　　封印了我們之後又發生了什麼事？」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「我們一直以為|　　　　　　加爾西斯在奇岩城中沉睡著。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「而姐姐在哈萊克島|　　　　　　繼續守護著他……」",-1,2)
+	cross_fade(60)
+	set_script_camera(-0.67,1.03,7.24,  -8.0,150.0,0.0, 6, 30.0)
+	rotate_script_camera(5,0,0, 1000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「但是魔王為什麼|　　　　　　會封印在姐姐的身體裡呢？」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「剛才加爾西斯説的話……|　　　　　我一定要問個明白！」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0莉絲洛特「芙羅蕾特…………」",-1,2)
+	wait(20)
+	fade_out(60)
+	stop_bgm(0, 1000)
+	wait(120)
+
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+
+	BGM(19, 0, -1)
+	MSG_EX("#S3#C0莉絲洛特「我到底……|　　　　　該怎麼做才好呢？」",-1,2)
+	wait(60)
+
+	// ステージの下のほうを、真っ黑背景代わりに使う。
+	// もっといいのがあれば、ほかの演出を
+
+//	ENTRY_CHR(10, 071)
+//	ENTRY_CHR(11, 398)
+//	PUT_CHR(10, "Liese2",       -0.50,-170.0, 0, 180)
+//	PUT_CHR(11, "Fleurette2",    0.50,-170.0, 0, 180)
+//	HIDE_CHR("KAMINARI")
+//	set_script_camera(0.00,-169.0, 0,  -1.0,180.0,0.0, 5, 30.0)
+//	rotate_script_camera(0,-360,0, 4000, 1)
+
+	set_script_camera(-0.00,1.20,8.53,  -2.0,160.0,0.0, 4, 30.0)
+
+	fade_in(60)
+	MSG_EX("#S3#C0莉絲洛特「……我們作為雙胞胎誕生在王室，|　　　　　一同接受巫女的訓練。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「同時也像普通的姐妹一樣，|　　　　　度過了寶貴的時光。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「不……也許正因為一起經受了嚴格的訓練，|　　　　　所以之間的羈絆更深。」",-1,2)
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐……」",-1,2)
+
+	cross_fade(60)
+	set_script_camera(-0.06,0.8,4.34,  -1.0,300.0,0.0, 4, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「總是開朗奔放的芙羅蕾特……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「身體虛弱的我有些嫉妬你，|　　　　　所以經常有這樣的想法。」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0莉絲洛特「希望你不要做什麼封印巫女，|　　　　　而是作為一個普通人幸福地生活……」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0莉絲洛特「巫女就像是釘在被封印的加爾西斯|　　　　　身上的橛子一樣的存在。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「不要説結婚了，|　　　　　連過普通的生活都不被允許。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是在１６歲生日的前夜……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我聽到了你被選為巫女的訊息……」",-1,2)
+
+//	fade_out(60)
+//	wait(60)
+//	SHOW_CHR("KAMINARI")
+//	set_script_camera(-0.04,1.03,5.41,  -25.0,80.0,0.0, 9, 30.0)
+//	rotate_script_camera(0,-20,0, 2000, 1)
+//
+//	HIDE_CHR("Liese2")
+//	HIDE_CHR("Fleurette2")
+//
+//	fade_in(60)
+//	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「啊……」",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(-0.06,1.0,4.34,  -2.0,355.0,0.0, 5, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「其實，想想自己病弱的身體，|　　　　　也就知道會有這樣的結果。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是，因為事實突然擺在眼前，|　　　　　我的心也就產生了裂痕。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「妹妹被迫接受了沉重的命運，|　　　　　最後我卻什麼也不能為她做……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我詛咒我病弱的身體……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「……不會的…………」",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-1.20,-0.88,-1.89,  -55.0,30.0,0.0, 14, 30.0)
+	set_deg_EX("Dvorak", "Liese")
+	wait(60)
+
+	set_motion("Dvorak", ATTACK1, -1)
+	MSG_EX("#S3#C0德沃夏克「選定巫女的事情|　　　　　直到宣佈的時候都應該是機密。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「到底是誰……」",-1,2)
+	wait(30)
+
+	set_motion("Gandaltua", ATTACK1, -1)
+	MSG_EX("#S3#C0剛達爾奇「對了……是洛蕾萊吧。」",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(0.01,-0.13,8.50,  -25.0,180.0,0.0, 9, 30.0)
+	rotate_script_camera(5,0,0, 2000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「……沒錯。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「她提出讓我嫁給魔王，|　　　　　得到強大的力量……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「然後用那力量和巫女的巫術欺騙魔王，|　　　　　將他封印在我的身體裡的提案。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「如果魔王能夠從仙那度消失，|　　　　　芙羅蕾特就不用去當巫女了。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0修特威爾姆「洛蕾萊……|　　　　　真是卑鄙啊……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「在她看來，|　　　　　　我不過是為瞭解放魔王而存在的道具罷了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是對我來説，|　　　　　這個訊息就像是一線光明那樣的希望。」",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.84,1.03,4.01,  5.0,90.0,0.0, 4, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「……我…………」",-1,2)
+	wait(60)
+
+	move_script_look_at( 0,0,0.5, 500, 1)
+
+	MSG_EX("#S3#C0芙羅蕾特「我也希望姐姐能夠得到幸福……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「所以巫女這種無聊的工作|　　　　　還是由我來做比較好……",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「……我是這麼想的啊…………」",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.67,1.53,7.24,  3.0,150.0,0.0, 3, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「我知道……謝謝你……|　　　　　我善良的芙羅蕾特……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「正因為如此，|　　　　　我才祈求你能夠幸福……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐……」",-1,2)
+	wait(30)
+
+	fade_out(60)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「病弱的我沒有其它的辦法。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「所以我才接受了洛蕾萊的建議。」",-1,2)
+
+// ■一枚繪　大廣間を進む黑き花嫁
+	MSG_EX("#S3#C0莉絲洛特「然後，在那一天，|　　　　　我去了位於王城中樞的封印之間。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0貝亞特里奇「那就是黑色新娘事件……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「是的……」",-1,2)
+// ■一枚繪　ドラスレを構えるフローレット
+	MSG_EX("#S3#C0莉絲洛特「不久魔王和仙那度的戰爭便開始了，|　　　　　芙羅蕾特他們立刻攻打了奇岩城。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「戰鬥本是有利於仙那度一方的，|　　　　　不過你們卻犯了一個錯誤。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「……錯誤？」",-1,2)
+	wait(30)
+
+// ■一枚繪　劍のアップ
+	MSG_EX("#S3#C0莉絲洛特「聖劍的勇士並沒有出現。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「只有自己選中的勇士，|　　　　　聖劍才會賜予他真正的力量。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「即使芙羅蕾特手握聖劍，|　　　　　也不能給魔王致命的打撃。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0提歐巴特「果然是這樣啊……」",-1,2)
+	wait(30)
+
+// ■一枚繪　城の真上に現れるガルシス
+	MSG_EX("#S3#C0芙羅蕾特「那麼，|　　　　　如果就那樣繼續戰鬥下去……」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0莉絲洛特「是的，|　　　　　恐怕會全軍覆沒……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「所以我一直在尋找空當，|　　　　　為了封印魔王而注視著戰況。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是，我一直都沒有找到機會，|　　　　　直到你與魔王對決。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「於是我……」",-1,2)
+
+	set_script_camera(0.25,-0.88,0.00,  -25.0,330.0,0.0, 10, 30.0)
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「在對魔王施了封印時間的法術同時……|　　　　　也將你們也一同封印了起來。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「哎……那……那個石化是……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「為了幫助……我們……？」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「對不起，為了幫助你們，|　　　　　那時只能那樣做了……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0德沃夏克「……怎麼會這樣…………」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「在那之後，|　　　　　我將魔王作為守護精靈封印在自己體內。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是，隨著時間的流逝，|　　　　　體內的魔王恢復了力量。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「連我的力量也已經不能控制他了……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「因為那個的影響，|　　　　　我們的石化狀態也被解開了是嗎。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「是的……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「正好在那個時候，|　　　　　瀕死的騎士被帶到我的身邊。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「難道是聖劍勇士出現了……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我決定把這一線希望|　　　　　寄託在騎士大人身上。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0貝亞特里奇「我們……至今為止什麼都不知道……」",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(0.14, 0.7,8.23,  -5.0,90.0,0.0, 5, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「這全都是我的意志。|　　　　　不是你們的錯。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「如果不解放魔王，|　　　　　這樣的事情就……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「真的給大家添了很多麻煩。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是……|　　　　　事情還沒有完全結束。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0剛達爾奇「怎麼回事？」",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(0.14, 0.7,8.23,  -5.0,100.0,0.0, 5, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「……經過這麼多年一直持續著封印，|　　　　　我的身體已經開始和魔王同化了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「現在的我既是莉絲洛特，|　　　　　同時也是魔王加爾西斯。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「你騙人……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「有一種封印魔王的方法。」",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「騎士大人，|　　　　　請用屠龍劍穿透我的身體。」",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0莉絲洛特「然後芙羅蕾特，|　　　　　你用聖劍當媒介將我封印。」",-1,2)
+	wait(30)
+
+	set_script_camera(-0.10,0.88,2.85,  -20.0,0.0,0.0, 8, 30.0)
+	rotate_script_camera(0,20,0, 4000, 1)
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「那種事情……我做不到！！」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「……最後還讓你|　　　　　做這種會給你帶來痛苦的事情。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「請原諒我這個不稱職的姐姐吧。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「……為什麼……|　　　　　其它的……沒有其他的方法了嗎！？」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「很遺憾，沒有……|　　　　　而且我們已經沒有時間了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「這樣下去的話，|　　　　　等加爾西斯的傷勢痊癒之後會再度出現的。」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「這…………」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0莉絲洛特「我為了這一時刻的到來，|　　　　　已經活了快五百年了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「導師們啊，芙羅蕾特就拜託給你們了。」",-1,2)
+	wait(60)
+
+//	cross_fade(60)
+	fade_out(60)
+	wait(120)
+
+	set_script_camera(-0.38,-0.88,0.83, -20,160,0, 10, 30)
+	fade_in(60)
+	wait(60)
+
+//　　ドヴォルザークが主人公に步み寄る。
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak",  -0.82,-0.88,0.13)
+	walk_pos("Dvorak",0,0.02)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0德沃夏克「這對你來説也許是很殘酷的事情……|　　　　　畢竟你和公主有交情啊。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「我可以代替你啊……」",-1,2)
+
+//　　手でドヴォルザークを制する主人公。
+	set_deg_ex("PC","Dvorak")
+	wait(120)
+
+	cross_fade(60)
+	set_script_camera(0.01,1.13,8.50,  -35.0,160.0,0.0, 6, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「聖劍選擇了你，|　　　　　真是太好了……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「那麼騎士先生，就拜託你了。」",-1,2)
+
+//　　リーゼ、膝を突いて兩手を合わせ、祈りを捧げる姿勢に。
+	set_motion("Liese", EMPTY3, -1)
+	wait(120)
+
+	fade_out(60)
+	wait(60)
+
+//　　⇒操作フリーに。
+
+	// 3808	EV リーゼ攻撃モード
+	GAME_FLAG_ON(3808)
+
+	set_pos("PC", 0.0,-0.63,7.00)
+	set_deg("PC", 0)
+
+	// 移動禁止
+	PC_FLAG(1, 1)
+	// スキル禁止
+	PC_FLAG(2, 1)
+
+	// リーゼ戰用カメラ
+	CAMERA_ON("リーゼ戰")
+
+	CINEMA_OFF(0)
+	fade_in(60)
+	PERMIT_SCRIPT_CAMERA(0)
+	wait(60)
+	ret
+
+SKIP:
+	//フラグとか
+	GAME_FLAG_ON(3808)
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+
+
+	//リーゼ
+	HIDE_CHR("Liese")
+	PUT_CHR( 9, "Liese",    -0.00,-0.13,8.42, 180)
+	set_motion("Liese", EMPTY3, 0)
+
+	//PCの處理
+	set_pos("PC", 0.0,-0.63,7.00)
+	set_deg("PC", 0)
+	PC_WEAPON(1, 0)
+	// 移動、スキル、會話禁止
+	PC_FLAG(1, 1)
+	PC_FLAG(2, 1)
+
+	//NPC處理
+	PUT_CHR( 1, "Fleurette",   0.00,-0.88, 3.24, 6)
+	PUT_CHR( 2, "Avatarlaha",  2.14,-0.88,-2.25, 0)
+	PUT_CHR( 3, "Tiowald",    -1.85,-0.88,-2.43, 0)
+	PUT_CHR( 4, "Sturm",      -3.96,-0.88,-1.12, 0)
+	PUT_CHR( 5, "Gandaltua",  -0.02,-0.63,-4.66, 0)
+	PUT_CHR( 6, "Dvorak",     -1.64,-0.88, 0.68, 126)
+	PUT_CHR( 7, "Beatrice",    0.97,-0.88,-3.22, 0)
+
+//	CAMERA_OFF("ボス戰（近距離）")
+//	CAMERA_OFF("ボス戰")
+	CAMERA_ON("リーゼ戰")
+	FOCUS_CHR("PC")
+	WAIT(50)
+
+	fade_in(60)
+	set_script_camera(0,0,0,  -45,180,0, 17, 15)
+	MOVE_SCRIPT_LOOK_AT( 0,0,5, 180, 1)
+	WAIT(180)
+
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+	CINEMA_OFF(60)
+	ret
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// 會話リーゼ
+
+DEF("Liese")
+
+RES("CLICK")
+{
+	// 會話禁止
+	PC_FLAG(3, 1)
+
+	MSG("騎士大人，|請用你的手讓這一切都結束吧。")
+
+	PUT_CHR( 8, "LieseHit",    -0.00,-0.13,8.42, 180)
+	hide_chr("LieseHit")
+	show_chr("LieseHit")
+
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// リーゼ攻撃用
+
+DEF("LieseHit")
+RES("ATTACK")
+{
+	CINEMA_ON(60)
+	stop_pc(0)
+	pc_weapon(1, 1)
+	set_motion("PC","EMPTY10",0)
+	WAIT(30)
+
+	FADE_OUT_EX(5, 1,"0xffffffff", 0)
+
+	WAIT(30)
+	SE("SE_EVENT_50")
+	//カメラ位置決定
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(0,0.5,8.5, 0,180,0, 5, 30)
+	rotate_script_camera(0,40,0, 1000, 1)
+
+	FADE_IN_EX(10, 1,"0xffffffff", 0)
+	WAIT(120)
+	FADE_OUT_EX(180, 1,"0xffffffff", 0)
+	wait(240)
+
+//　　フェード拔けて、リーゼロットをしゃがんで抱きかかえている
+//　　主人公。リーゼロットの體の上にはドラゴンスレイヤーが添え
+//　　られている。フローレットが近くに寄り添っている狀態。
+
+	MSG_EX("#S3#C0莉絲洛特「謝謝你……騎士大人……」",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0莉絲洛特「呵呵……體弱多病的我……|　　　　　已經活了這麼長時間了呢……」",-1,2)
+
+	set_pos("PC",          -0.21,-0.13,9.00)
+	set_pos("Liese",         0.00,-0.13,9.00)
+	set_pos("Fleurette",    0.60,-0.13,9.00)
+	set_pos("Avatarlaha",  -2.12,-0.63,4.61)
+	set_pos("Beatrice",    -3.07,-0.13,8.41)
+	set_pos("Dvorak",      -0.65,-0.13,10.82)
+	set_pos("Tiowald",     -0.03,-0.63,4.24)
+	set_pos("Sturm",        2.04,-0.63,5.49)
+	set_pos("Gandaltua",    2.07,-0.12,9.19)
+
+	set_deg("PC",           90)
+	set_deg("Liese",        180)
+	set_deg("Fleurette",   270)
+	set_deg("Avatarlaha",  39)
+	set_deg("Beatrice",    118)
+	set_deg("Dvorak",      161)
+	set_deg("Tiowald",     351)
+	set_deg("Sturm",       314)
+	set_deg("Gandaltua",   221)
+
+	// 移動、スキル、會話禁止解除
+	PC_FLAG(1, 0)
+	PC_FLAG(2, 0)
+	PC_FLAG(3, 0)
+
+	SET_MOTION("Liese","EMPTY4",0)
+	SET_MOTION("Fleurette","EMPTY9",0)
+	SET_MOTION("PC","EMPTY9",0)
+	WAIT(180)
+
+	//遠景カメラ
+	set_script_camera(0.00, 0.5,8.53, -70,150,0, 12, 30)
+	rotate_script_camera(0,40,0, 2000, 1)
+
+	FADE_IN_EX(120, 1,"0xffffffff", 0)
+	wait(180)
+
+//２部
+	MSG_EX("#S3#C0芙羅蕾特「出生的時候你在哭泣，|　　　　　周圍的人都在笑……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「死去的時候周圍的人都在哭泣，|　　　　　但是隻有你應該微笑。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「……這是在仙那度流傳的諺語。」",-1,2)
+
+	CROSS_FADE(60)
+	set_script_camera(0.00, 0.5,8.53, -30,170,0, 4.0, 30)
+	rotate_script_camera(5,20,0, 2000, 1)
+
+	MSG_EX("#S3#C0芙羅蕾特「姐姐……你為什麼還能那麼平靜……」",-1,2)
+	wait(120)
+
+	MSG_EX("#S3#C0提歐巴特「芙羅蕾特大人，時間馬上就到了……」",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0芙羅蕾特「我知道了。」",-1,2)
+
+	look_chr("Fleurette","PC")
+	wait(60)
+
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人，姐姐就拜託給你了。」",-1,2)
+
+//　　フローレット、リーゼロットに祈りを捧げる姿勢。
+//　　ドラゴンスレイヤーが反應して輝き出す。
+
+	cross_fade(60)
+	set_script_camera(0.00,0.5,8.53, -10,210,0, 4, 30)
+	SCALE_SCRIPT_CAMERA( 0.8, 2000, 0)
+	wait(120)
+
+
+	look_chr("Fleurette","Liese")
+	MSG_EX("#S3#C0芙羅蕾特「姐姐……|　　　　　你總是在為我的幸福著想。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「如果我要報答你的話，|　　　　　答案只有一個。」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「讓我們永遠在一起。|　　　　　就像幸福的年幼時光那樣……」",-1,2)
+	SET_MOTION("Fleurette","EMPTY10",20)
+	WAIT(68)
+	SET_MOTION("Fleurette","EMPTY11", 0)
+	WAIT(60)
+
+	MSG_EX("#S3#C0德沃夏克「芙羅蕾特大人，您打算幹什麼……」",-1,2)
+
+	MSG_EX("#S3#C0芙羅蕾特「騎士大人，還有導師們……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「再見……」",-1,2)
+
+//　　ドラゴンスレイヤーが眩い光を放ち、邊り一面が光に
+//　　覆われる。畫面、そのままホワイトアウト。
+
+	FADE_OUT_EX(60, 0, "0xffffffff", 1)
+	wait(180)
+
+//     ちょっと邪魔なので隱す。あとで戻す（井）
+//	play_movie("system\ins02.dat")
+
+//　　以降は插入ムービーによるイベント
+//　　光はやがて一箇所に集約され、それが次第に不死鳥の
+//　　形を作っていく。
+//　　不死鳥となったフローレットは力強く羽ばたき、その
+//　　まま上空へと飛び立っていく。ムービーはここで終了。
+//　　フェードアウト拔けて、再び奇岩城。
+//    明るい背景
+
+	set_script_camera(-1.21, 2.13,14.86,  0,150,0, 15, 30)
+	LOAD_MAP("MP_0689")
+
+	HIDE_CHR("Liese")
+	HIDE_CHR("Fleurette")
+
+	set_pos("PC",           0.04,-0.13,15.66)
+	set_pos("Avatarlaha",  -1.64,-0.13,13.98)
+	set_pos("Beatrice",    -3.45,-0.13,13.62)
+	set_pos("Dvorak",       1.77,-0.13,14.65)
+	set_pos("Tiowald",      0.12,-0.13,12.91)
+	set_pos("Sturm",        0.90,-0.13,11.01)
+	set_pos("Gandaltua",   -1.43,-0.13,10.67)
+
+	set_deg("PC",           348)
+	set_deg("Avatarlaha",   325)
+	set_deg("Beatrice",     347)
+	set_deg("Dvorak",       347)
+	set_deg("Tiowald",      318)
+	set_deg("Sturm",        341)
+	set_deg("Gandaltua",    339)
+
+	LOOK_CHR("PC","-")
+	LOOK_CHR("Avatarlaha","-")
+	LOOK_CHR("Beatrice","-")
+	LOOK_CHR("Dvorak","-")
+	LOOK_CHR("Tiowald","-")
+	LOOK_CHR("Sturm","-")
+	LOOK_CHR("Gandaltua","-")
+
+	PC_WEAPON( 0,1)
+	set_motion("PC","STAND",0)
+	PICK_ITEM(36)
+	FOCUS_CHR("PC")
+
+	WAIT(60)
+
+//エピローグへ
+	FADE_IN_EX(60, 0, "0xffffffff", 1)
+	wait(60)
+
+	MSG_EX("#S3#C0修特威爾姆「什麼…………」",-1,2)
+
+	MSG_EX("#S3#C0貝亞特里奇「那是……芙羅蕾特大人……？」",-1,2)
+
+	MSG_EX("#S3#C0提歐巴特「白色不死鳥……原來如此……」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「芙羅蕾特大人打算用那種姿態|　　　　　永遠將加爾西斯封印。」",-1,2)
+
+	MSG_EX("#S3#C0貝亞特里奇「但是，不死鳥怎麼會……」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「就算是芙羅蕾特大人，|　　　　　　也沒有那麼強大的力量啊……」",-1,2)
+
+	MSG_EX("#S3#C0提歐巴特「並不是只有芙羅蕾特大人自己……|　　　　　莉絲洛特大人也在啊。」",-1,2)
+
+	MSG_EX("#S3#C0剛達爾奇「嗯，正因為是孿生巫女，|　　　　　才有瞭解決的方法啊……」",-1,2)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「結果……|　　　　　　我們什麼忙都沒有幫上啊……」",-1,2)
+	wait(40)
+	cross_fade(60)
+	set_script_camera(1.66,1.13,14.55, -10,35,0, 7, 30)
+	move_script_look_at( -4,0,0, 3000, 1)
+
+	MSG_EX("#S3#C0德沃夏克「……我們的任務才剛剛開始不是嗎。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「就算失去了一切，|　　　　　也還擁有未來。」",-1,2)
+	wait(40)
+
+	set_deg_ex("Dvorak", "PC")
+	wait(20)
+
+	cross_fade(60)
+	SET_SCRIPT_CAMERA_EX( "PC",-2, 3,90,0, 3, 15 )
+	SCALE_SCRIPT_CAMERA( 0.8, 1000,0)
+
+	WAIT(60)
+	MSG_EX("#S3#C0德沃夏克「對吧，騎士。」",-1,2)
+	WAIT(120)
+
+	fade_out(120)
+	WAIT(180)
+
+		SET_MSG_TIME(5,40,90,90)
+	MSG_EX("騎士戰爭結束後三年———",-1,0X00000094)
+	MSG_EX("古老的時代宣告終結，|新的時代開始了。",-1,0X00000094)
+	MSG_EX("某個騎士選擇的道路是，|繼續做一名騎士。",-1,0X00000094)
+	MSG_EX("在那次事件之後，|我和他又踏上了旅途。",-1,0X00000094)
+	MSG_EX("似乎我們到過的地方|一定都會有白色不死鳥出現。",-1,0X00000094)
+	MSG_EX("是他一直在追尋著她們呢，|還是她們在引導他……",-1,0X00000094)
+	MSG_EX("這我也不知道。",-1,0X00000094)
+	MSG_EX("他幾乎已經不再談|與莉絲姐姐她們有關的回憶了。",-1,0X00000094)
+	MSG_EX("但是，在我們到訪的地方，|他今天也依舊揮動著手中的劍。",-1,0X00000094)
+	MSG_EX("為了守護這個新的時代，|也為了需要他的力量幫助的人們。",-1,0X00000094)
+	MSG_EX("那是他找到的|作為最後的騎士存在的方式……還有……",-1,0X00000094)
+	MSG_EX("現在看來，|也許是為了去世的騎士們奉上鎮魂歌。",-1,0X00000094)
+	MSG_EX("不覺得很適合沒用的他嗎？",-1,0X00000094)
+	MSG_EX("明天，我們還要出發。",-1,0X00000094)
+	MSG_EX("莉絲姐姐、芙羅蕾特姐姐，|他非常非常努力。",-1,0X00000094)
+	MSG_EX("無論如何都請你們二位守護著他。",-1,0X00000094)
+		SET_MSG_TIME(5,40,90,300)
+	MSG_EX("於故鄉的孤兒院|夏洛特·Ｌ·維爾斯",-1,0X00000094)
+		SET_MSG_TIME(-1,-1,-1,-1)
+
+	wait(300)
+	fade_in(60)
+
+	CINEMA_OFF(0)
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+}
+
+

@@ -1,0 +1,387 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+//
+// ROOM_FLAG
+//	0 アバターラハ
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ポータル關連
+	CHECK_GAME_FLAG(4014)
+	ON_SKIP(2)
+	LOAD_MAP("MP_087f")
+	HIDE_CHR("cover")
+
+	// SE再生
+	SE("SE_WIND2")
+
+	HIDE_CHR("Beatrice")
+	HIDE_CHR("Avatarlaha")
+
+	HIDE_CHR("Sturm")
+
+	// EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	CHECK_GAME_FLAG(3607)
+	ON_JUMP NEXT
+
+	SHOW_CHR("Beatrice")
+	SHOW_CHR("Avatarlaha")
+
+NEXT:
+	// インフェルノを倒した
+	CHECK_GAME_FLAG(4)
+	ON_JUMP NEXT2
+
+	SHOW_CHR("Sturm")
+	SET_MOTION("Sturm","STAND",0)
+	jump NEXT3
+
+NEXT2:
+	SHOW_CHR("Sturm")
+	SET_MOTION("Sturm","HOOK",0)
+
+NEXT3:
+
+//--------------------------------------------------------------------
+	CHECK_GAME_FLAG(4014)
+	OFF_JUMP P
+	SWITCH_ON("portal")
+	KILL_CHR("cover",0,0,1)
+
+P:
+
+set_rain_inf("EFC_HINOKO3",1, 45, 15,30)
+rain(1)
+set_raster_info( 1, 5,5, 0.0005,0.0005, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+END
+}
+
+
+// -------------------------------------------------------------------
+// ポータル
+// -------------------------------------------------------------------
+DEF("portal")
+
+RES("EVENT")
+{
+	INIT_WALK_DST("PC")
+
+	// ★05/06/20:Ｆクリスタルは最初の一回だけでいい事になりました（ひ）
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4014)
+	ON_JUMP NEXT
+
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-0.5,0.375,5.5)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+SE("SE_WARP1")
+	KILL_CHR("cover",0,1,120)
+	LOAD_MAP("MP_0871")
+	SHOW_CHR("cover")
+	SWITCH_ON("portal")
+	WAIT(120)
+	WAIT(120)
+
+	GAME_FLAG_ON(4014)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-0.5,0.375,5.5)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+
+DEF("Avatarlaha")
+
+RES("INIT")
+{
+
+	// EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	CHECK_GAME_FLAG(3607)
+	ON_JUMP EXIT
+
+//▼シュトゥルム石像前
+
+//　　石化したシュトゥルムの前でベアトリーチェとアバターラハが
+//　　會話している。
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	set_pos("Beatrice", -7.25,0.42,-1.96)
+	set_pos("Avatarlaha", -7.17,0.00,0.67)
+	set_deg("Beatrice", 340)
+	set_deg("Avatarlaha", 200)
+
+	SET_SPOT_ORG(1, -7.25,0.42,-1.96 )
+	BGM( 18, 1, 1000 )
+
+	STOP_PC(0)
+	PC_WEAPON(0,1)
+	SET_MOTION("PC","STAND",-1)
+	HIDE_CHR("PC")
+
+	CINEMA_ON(0)
+
+	permit_script_camera(1)
+	set_script_camera(-4.62,1.58,-1.43, 10,280.0,0.0, 10.0, 15.0)
+	rotate_script_camera(-20,-20,0, 600, 1)
+
+	set_skip_label("SKIP")
+
+	MSG_EX("#S3#C0威嚴的女性「沒事吧，阿巴塔拉哈。」",-1,2)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「嗯，總算是……」",-1,2)
+	wait(60)
+
+//	wait_camera(0)
+	cross_fade(60)
+	set_script_camera(1.43,0.00,-2.74, -35,240.0,0.0, 10.0, 15.0)
+	rotate_script_camera(0,20,0, 400, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0威嚴的女性「這樣一來剩下的還有修特威爾姆，|　　　　　　然後是剛達爾奇……」",-1,2)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「恐怕那兩個人的蘇醒|　　　　　　　也只是時間問題吧。」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「對了，貝亞特里奇。|　　　　　　有事情要告訴你。」",-1,2)
+
+	wait(60)
+	wait_camera(0)
+	cross_fade(60)
+	set_script_camera(-6.33,0.00,0.80, -35,240.0,0.0, 10.0, 15.0)
+	rotate_script_camera(0,20,0, 2000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0貝亞特里奇「什麼事？」",-1,2)
+	set_motion("Avatarlaha","ATTACK1",-1)
+	MSG_EX("#S3#C0阿巴塔拉哈「一個好訊息，|　　　　　　還有一個壞訊息。」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0貝亞特里奇「……從好訊息開始説吧。」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0阿巴塔拉哈「好像提歐巴特老頭|　　　　　　已經確認了公主所在的地方。」",-1,2)
+	set_motion("Beatrice","ATTACK1",-1)
+	MSG_EX("#S3#C0貝亞特里奇「真的嗎？　到底在哪兒……」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「和我們一樣……|　　　　　　是在那場戰鬥中最後所在的地方。」",-1,2)
+	wait(60)
+	set_deg("Beatrice", 325)
+	look_chr("Beatrice", "-")
+	wait(60)
+	MSG_EX("#S3#C0貝亞特里奇「幾百年來一直一個人……|　　　　　　……多麼可憐啊……」",-1,2)
+	wait(120)
+	look_chr("Beatrice", "Avatarlaha")
+	set_deg("Beatrice", 340)
+	MSG_EX("#S3#C0貝亞特里奇「……那麼，壞訊息是什麼？」",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(-6.43,0.49,-2.27, -35,300.0,0.0, 10.0, 15.0)
+	rotate_script_camera(0,-20,0, 2000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「是將我們石化的罪魁禍首———」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「『黑色新娘』的事情。」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0貝亞特里奇「…………果然她也？」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0阿巴塔拉哈「是啊……」",-1,2)
+	wait(40)
+	look_chr("Beatrice", "-")
+	wait(40)
+	MSG_EX("#S3#C0貝亞特里奇「我已經做好心理準備了。」",-1,2)
+	wait(40)
+	look_chr("Beatrice", "Avatarlaha")
+	wait(40)
+	MSG_EX("#S3#C0貝亞特里奇「既然已經變成這樣，|　　　　　　就趕快去迎接公主吧……」",-1,2)
+
+//　　ふと、主人公の氣配に氣づくアバターラハ
+
+	set_pos("PC", 5.36,0.00,0.05)
+	set_deg("PC",270)
+	SHOW_CHR("PC")
+
+	set_deg("Avatarlaha", 161)
+	look_chr("Avatarlaha", "PC")
+	wait(40)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「哦？你是哪位啊？」",-1,2)
+
+	set_deg("Beatrice", 10)
+	look_chr("Beatrice", "PC")
+
+	move_script_look_at(2.8,0,0.5, 100, 1)
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC",-1.78,0.00,-0.43)
+	walk_pos("PC",0,0.026)
+
+	wait_walk("PC")
+
+	look_chr("PC", "Beatrice")
+
+//　　ベアトリーチェも氣づいて主人公のほうに步み寄る。
+
+	INIT_WALK_DST("Beatrice")
+	set_walk_dst("Beatrice",-4.87,0.19,-1.07)
+	walk_pos("Beatrice",0,0.026)
+
+	wait(60)
+	set_deg("Avatarlaha", 120)
+
+	wait_walk("Beatrice")
+
+	set_motion("Beatrice","ATTACK1",-1)
+	MSG_EX("#S3#C0貝亞特里奇「你是…………」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「提歐巴特老頭提到過的騎士吧。」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「如果你要尋找聖劍的話，|　　　　　　我們的道路總有一天會交匯在一起。」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「從現在開始要小心。」",-1,2)
+
+	set_deg("Beatrice", 65)
+	wait(60)
+
+	MSG_EX("#S3#C0貝亞特里奇「告辭了。」",-1,2)
+
+//　　主人公を押しのけて去っていくベアトリーチェ。
+//　　⇒操作フリーに。
+
+	INIT_WALK_DST("Beatrice")
+	set_walk_dst("Beatrice",-3.28,0.04,-0.45)
+	set_walk_dst("Beatrice",-1.64,0.00,0.20)
+	set_walk_dst("Beatrice",1.04,0.00,0.12)
+	set_walk_dst("Beatrice",5.58,0.00,0.17)
+	walk_pos("Beatrice",0,0.026)
+
+	wait(120)
+	set_deg("PC", 0)
+//	move_vec("PC", 0.0, 0.0, -1.5, 20)
+
+	wait_walk("Beatrice")
+
+	// EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	GAME_FLAG_ON(3607)
+
+	SHOW_CHR("PC")
+	focus_chr("PC")
+	cross_fade(60)
+	SET_SPOT_ORG(0, -7.25,0.42,-1.96 )
+	HIDE_CHR("Beatrice")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 0, 1000 )
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+EXIT:
+	END
+
+SKIP:
+	// EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	GAME_FLAG_ON(3607)
+
+	STOP_WALK("PC")
+	SHOW_CHR("PC")
+	set_pos("PC", -1.78,0,-0.43)
+	set_deg("PC", 0)
+
+	HIDE_CHR("Beatrice")
+
+	focus_chr("PC")
+	cross_fade(60)
+	SET_SPOT_ORG(0, -7.25,0.42,-1.96 )
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	BGM( -1, 0, 1000 )
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	END
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("Avatarlaha")
+	SET_NAME("AVATARLAHA", "阿巴塔拉哈")
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+
+	CHECK_ROOM_FLAG(0)
+	ON_JUMP TALK2
+
+	MSG("呵呵，|真是個不錯的年輕人啊。")
+	MSG("我總算知道那個提歐巴特老頭|這麼賛賞你的原因了。")
+	MSG("我想你遲早會知道的，|你已經處在旋渦之中了。")
+	MSG("不久一切就會開始了吧……")
+	MSG("……沒錯，和停滯的時間一起。")
+	ROOM_FLAG_ON(0)
+	jump EXIT
+
+TALK2:
+	MSG("我想你遲早會知道的，|你已經處在旋渦之中了。")
+	MSG("不久一切就會開始了吧……|和停滯的時間一起。")
+
+EXIT:
+	SET_MOTION("Avatarlaha","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// 石造の土臺１
+
+DEF("Sturm")
+
+RES("CLICK")
+{
+	//インフェルノを倒したかどうか
+	CHECK_GAME_FLAG(4)
+	ON_JUMP NEXT
+
+	SYS("石像看起來|是位很穩重的男性。")
+	END
+NEXT:
+	SYS("石頭的碎片到處散落。")
+}

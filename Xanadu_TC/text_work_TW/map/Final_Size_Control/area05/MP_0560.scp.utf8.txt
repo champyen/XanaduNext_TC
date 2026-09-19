@@ -1,0 +1,388 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期設定                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+
+	// スライム
+	PUT_MONSTER("m00",004,3,0,0,0)
+	PUT_MONSTER("m01",004,3,0,0,1)
+	PUT_MONSTER("m02",004,3,0,0,2)
+	
+	// モンスター一匹もいなければ"door"が開く
+	check_monster(0)
+	on_jump skip
+
+	INIT_SWITCH_ON("door")
+
+skip:
+
+
+
+
+//SET_TREASURE("box",1,111,"a")
+
+// 石版・手記を適當に突っ込んだ箱
+SET_TREASURE("box",1,270,"-")
+SET_TREASURE("box",1,272,"-")
+SET_TREASURE("box",1,278,"-")
+SET_TREASURE("box",1,292,"-")
+SET_TREASURE("box",1,301,"-")
+
+}
+
+
+
+
+
+// オッサン ////////////////////////////////
+DEF("warp")
+RES("CLICK")
+{
+
+// 預かり所TEST --------------
+	call_shop(3)
+	end
+
+
+
+
+
+	MSG("給你減少解讀時間")
+	add_text_time(21600)
+	end
+
+
+
+
+
+
+
+
+
+	MSG("現在開始跳轉")
+
+	ATTACH_EFC("EFC_WARP_T","warp","POS")
+	warp_chr("warp",0)
+
+	wait(180)
+
+	warp_chr("warp",1)
+
+	MSG("我回來了")
+
+}
+
+
+
+
+
+
+// リーゼ ////////////////////////////////
+DEF("gal")
+RES("CLICK")
+{
+
+	// 首チェック -----------------------------------
+	MSG("夏兒→莉絲")
+	LOOK_CHR("girl","gal")
+	MSG("莉絲→ＰＣ")
+	LOOK_CHR("gal","PC")
+	MSG("ＰＣ→夏兒")
+	LOOK_CHR("PC","girl")
+	MSG("重置")
+	LOOK_CHR("PC","-")
+	LOOK_CHR("girl","-")
+	LOOK_CHR("gal","-")
+	MSG("結束")
+
+}
+
+
+
+
+
+
+// シャル /////////////////////////////////
+DEF("girl")
+RES("CLICK")
+{
+
+// アイコンサンプル -----------------------------------------------------
+
+	pop_item_icon("abc", 187, 3.0, 0.0, -0.24, 5.0, 180, 0)
+	wait(240)
+	del_item_icon("abc")
+	end
+// ----------------------------------------------------------------------
+
+
+// 石版サンプル(START) -----------------------------------------------------
+
+	MSG("★石版閲覧測試★|請拿著石版觸碰我。")
+
+	// 石版持ってる？（0:石版/1:手記）
+	check_text_item(0)
+	off_jump skip
+	// 全部沒收（0:石版/1:手記）
+	MSG("不要拿著石版！")
+	MSG("沒收！")
+	pick_text_item(0)
+skip:
+
+
+	// とりあえずシネスコ
+	cinema_on(0)
+	wait(60)
+
+menu_start:
+	// 石版MENU呼び出し（0:石版/1:手記）
+	call_text(0)
+
+	// call_text()內で「キャンセル(12)」を選んだ時はここでスキップさせる
+	check_sel_text(12)
+	on_jump menu_end
+
+	// 石版用背景を讀みこみ
+	load_novel_bg("epitaph\plate")
+//	load_novel_bg("epitaph\paper")
+	// 石版用背景表示
+	novel_on(0)
+	wait(60)
+
+	// 選んだ石版に應じた文面の表示
+	check_sel_text(0)
+	off_jump sel1
+	MSG_EX("石板①的內容",-1,0X00000010)
+	jump novel_end
+sel1:
+	check_sel_text(1)
+	off_jump sel2
+	MSG_EX("石板②的內容",-1,0X00000010)
+	jump novel_end
+sel2:
+
+	// 以下、石版⑫まで續く…
+
+
+novel_end:
+	// 石版用背景消去
+	novel_off(0)
+	wait(60)
+	
+	// 再び石版MENUへ
+	jump menu_start
+
+menu_end:
+	// シネスコ消去
+	cinema_off(0)
+	wait(60)
+	
+skip:
+
+	MSG("結束")
+	
+	end
+
+// 石版サンプル(END) ----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	MSG("你的名字是#N0！")
+	MSG("用有聲小説的風格顯示文字。|（還未與每行的顯示相對應）")
+
+	fade_out_ex(30,1,0x7f000000,0)
+	wait(30)
+
+	MSG_EX("每當煩躁的時候，我就更清楚地認識到自己是多麼沒用。|但是幾年後，他這樣對我説。|「除此之外我沒有其他的生存意義，所以我走上了這條道路。」———|現在回想起來，實在是件非常慚愧的事情。|我對那個人完全不瞭解。|　|選自夏洛特·Ｌ·維爾斯著|「最後的騎士」　第二章　黑色新娘",-1,0X00000010)
+
+	fade_in_ex(30,1,0x7f000000,0)
+	wait(30)
+
+	MSG("接下來用第１６號以後的緩衝讀取角色資訊吧")
+
+	entry_chr(0,76)
+	put_chr(0,"abc",1,0,3,233)
+
+	MSG("結束")
+
+	end
+
+
+	// 步行チェック ----------------------------------------
+	MSG("準備…開始！")
+
+	LOOK_CHR("PC","girl")
+	LOOK_CHR("girl","PC")
+
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC",   1, 0, 4.00)
+	set_walk_dst("PC",-2.6,-1, 4.22)
+	set_walk_dst("PC",-4.4,-1, 1.32)
+	set_walk_dst("PC",-4.1, 0,-5.10)
+	set_walk_dst("PC",-0.2, 0,-4.45)
+	set_walk_dst("PC", 1.2, 0,-0.10)
+	walk_pos("PC",1,0.050000)
+	
+	wait(120)
+	
+//	stop_walk("PC")
+
+ENTRY_MAP("0710_0711")
+
+	wait_walk("PC")
+	
+	MSG("終點")
+
+}
+
+
+
+
+
+
+
+
+
+
+// ドヴォルザーク /////////////////////////////////
+DEF("dvorak")
+RES("CLICK")
+{
+	load_npc_eqp(7,105,0)
+	MSG("德沃夏克通常→拔刀")
+	// 拔刀モーションの再生…
+	set_motion("dvorak","WEAPON_O")
+	// 拔刀モーション再生待ち…
+	wait(54)
+	// モーションテーブル讀み替え
+	dvorak(1)
+	// 拔刀用テーブル側のSTANDに
+	set_motion("dvorak","STAND")
+	
+	// 走らせてみる…
+	MSG("拔刀行走")
+	INIT_WALK_DST("dvorak")
+	set_walk_dst("dvorak",   1, 0, 4.00)
+	set_walk_dst("dvorak",-2.6,-1, 4.22)
+	walk_pos("dvorak",0,0.040000)
+	wait_walk("dvorak")
+
+	// モーションテーブル戻す
+	dvorak(0)
+
+	MSG("結束")
+}
+
+
+
+
+
+
+
+
+
+
+
+// アニエス /////////////////////////////////
+DEF("aniece")
+RES("CLICK")
+{
+// 裝備ＴＥＳＴ --------------------------------------------------------
+	MSG("換裝阿尼艾絲")
+	
+	MSG("鎧甲系，|除了『鎖子鎧』『鎖甲』之外都有資料。")
+	
+	load_npc_eqp(80,12)
+	MSG("長袍")
+
+	load_npc_eqp(81,12)
+	MSG("布衫")
+
+	load_npc_eqp(82,12)
+	MSG("半身鎧")
+
+	load_npc_eqp(83,12)
+	MSG("皮甲")
+
+//	load_npc_eqp(84,12)
+//	msg("リングメイル")
+
+	load_npc_eqp(85,12)
+	MSG("鱗甲")
+
+	load_npc_eqp(86,12)
+	MSG("全身鎧")
+
+//	load_npc_eqp(87,12)
+//	msg("バデットアーマー")
+
+	load_npc_eqp(88,12)
+	MSG("全身護鎧")
+
+
+	MSG("男玩家應該有一套劍、盾、頭盔穿在身上。")
+
+	load_npc_eqp(12,10)
+	MSG("霜之烙印")
+
+	load_npc_eqp(65,11)
+	MSG("塔盾")
+
+	load_npc_eqp(51,13)
+	MSG("封口頭盔")
+
+
+// 拔刀ＴＥＳＴ --------------------------------------------------------
+
+	MSG("阿尼艾絲通常→拔刀")
+	// モーションテーブル讀み替え
+	aniece(1)
+	// 拔刀モーションの再生…
+	set_motion("aniece","WEAPON_O")
+	wait(58)
+	// 拔刀用テーブル側のSTANDに
+	set_motion("aniece","STAND")
+
+	wait(60)
+
+// 步行ＴＥＳＴ --------------------------------------------------------
+
+	// 走らせてみる…
+	MSG("阿尼艾絲步行")
+	INIT_WALK_DST("aniece")
+	set_walk_dst("aniece",3.28,0.00,-5.71)
+	set_walk_dst("aniece",3.32,0.00,-4.34, 45)
+	walk_pos("aniece",0,0.040000)
+	wait_walk("aniece")
+
+	// モーションテーブル戻す
+	aniece(0)
+	// 通常時テーブル側のSTANDに
+	set_motion("aniece","STAND")
+
+
+	end
+}

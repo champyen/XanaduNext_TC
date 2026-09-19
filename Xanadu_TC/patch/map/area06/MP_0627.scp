@@ -1,0 +1,312 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ポータル關連
+	CHECK_GAME_FLAG(4017)
+	ON_SKIP(2)
+	LOAD_MAP("MP_062a")
+	HIDE_CHR("cover")
+
+
+	// 縮小マップ（赤）
+	GAME_FLAG_ON(203)
+
+	CHECK_GAME_FLAG(4017)
+	OFF_JUMP P
+	SWITCH_ON("portal")
+	KILL_CHR("cover",0,0,1)
+
+P:
+
+	SWITCH_ON("warp")
+
+// スイッチオンオフチェック
+	CHECK_GAME_FLAG(609)
+	OFF_JUMP exit
+
+	INIT_SWITCH_ON("sw")
+	SET_POS("bar",0,-7.95,-2)
+	MOVE_VEC("box1",0,0,-4.5,1)
+	MOVE_VEC("box2",0,0,-4.5,1)
+	MOVE_VEC("s1",0,-2,0,1)
+	MOVE_VEC("s2",0,-2,0,1)
+	MOVE_VEC("s3",0,-3.95,0,1)
+	MOVE_VEC("s4",0,-3.95,0,1)
+	ROOM_FLAG_ON(19)
+	ROOM_FLAG_ON(20)
+
+exit:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1627)
+	ON_SKIP(2)
+	KAGI("d1627",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1627")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1660)
+	ON_SKIP(2)
+	KAGI("d1660",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1660")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1663)
+	ON_SKIP(2)
+	KAGI("d1663",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1663")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1627")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1627)
+}
+
+DEF("d1660")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1660)
+}
+
+DEF("d1663")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1663)
+}
+
+
+//// ----------------------------------------------------------------------------
+//// セーブ(save)
+//// ----------------------------------------------------------------------------
+//
+//DEF("save")
+//RES("CLICK")
+//{
+//	STOP_PC(0)
+//	ACTIVE_CHR("SCREEN")
+//	SEL("#c2旅の記濾を殘しますか？|はい|いいえ")
+//
+//	CHECK_SELECT(0)
+//	ON_JUMP SEL1
+//	JUMP SEL2
+//
+//SEL1:
+//	SE("SE_GETITEM")
+//	CALL_SHOP(4)
+//	SYS("#c2データをセーブしました。")
+//	END
+//
+//SEL2:
+//	END
+//}
+//
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+DEF("sw1")
+RES("FOOT")
+{
+	CHECK_SWITCH("sw1")
+	OFF_JUMP no
+	CHECK_SWITCH("sw2")
+	OFF_JUMP no
+
+// 下がります
+
+	// 既にONなら飛ばす
+//	CHECK_GAME_FLAG(609)
+	CHECK_ROOM_FLAG(9)
+	ON_JUMP exit
+
+	// サブルーチン呼び出し
+	CALL bar_on
+
+exit:
+
+	END
+
+no:
+
+// 上がります
+
+	// 既にOFFなら飛ばす
+//	CHECK_GAME_FLAG(609)
+	CHECK_ROOM_FLAG(9)
+	OFF_JUMP exit
+
+	// サブルーチン呼び出し
+	CALL bar_off
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+	CHECK_SWITCH("sw1")
+	OFF_JUMP no
+	CHECK_SWITCH("sw2")
+	OFF_JUMP no
+
+// 下がります
+
+	// 既にONなら飛ばす
+//	CHECK_GAME_FLAG(609)
+	CHECK_ROOM_FLAG(9)
+	ON_JUMP exit
+
+	// サブルーチン呼び出し
+	CALL bar_on
+
+exit:
+
+	END
+
+no:
+
+// 上がります
+
+	// 既にOFFなら飛ばす
+//	CHECK_GAME_FLAG(609)z
+	CHECK_ROOM_FLAG(9)
+	OFF_JUMP exit
+
+	// サブルーチン呼び出し
+	CALL bar_off
+}
+
+
+// ----------------------------------------------------------------------------
+// バー關連サブルーチン                                                        
+// ----------------------------------------------------------------------------
+
+@bar_on
+{
+CHECK_ROOM_FLAG(19)
+ON_JUMP next
+CHECK_ROOM_FLAG(20)
+ON_JUMP next
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(60)
+	FOCUS_CHR("bar")
+			MOVE_VEC("bar",0,-3.95,0,240)
+	SE("SE_HEDGE")
+			QUAKE(0,5,240)
+			WAIT(240)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,3,"box1")
+	OFF_JUMP next
+	CHECK_GRID(11,3,"box2")
+	OFF_JUMP next
+	GAME_FLAG_ON(609)
+next:
+	ROOM_FLAG_ON(9)
+	ROOM_FLAG_OFF(19)
+	ROOM_FLAG_OFF(20)
+	RET
+}
+
+@bar_off
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(60)
+	FOCUS_CHR("bar")
+			MOVE_VEC("bar",0,3.95,0,240)
+	SE("SE_HEDGE")
+			QUAKE(0,5,240)
+			WAIT(240)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(609)
+	ROOM_FLAG_OFF(9)
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// ポータル
+// ----------------------------------------------------------------------------
+DEF("portal")
+
+RES("EVENT")
+{
+	INIT_WALK_DST("PC")
+
+	// ★05/06/20:Ｆクリスタルは最初の一回だけでいい事になりました（ひ）
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4017)
+	ON_JUMP NEXT
+
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",0,-4,-15)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+SE("SE_WARP1")
+	KILL_CHR("cover",0,1,120)
+	LOAD_MAP("MP_0627")
+	SHOW_CHR("cover")
+	SWITCH_ON("portal")
+	WAIT(120)
+	WAIT(120)
+
+	GAME_FLAG_ON(4017)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",0,-4,-15)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+

@@ -1,0 +1,382 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// カギ設定
+	CHECK_GAME_FLAG(1689)
+	ON_SKIP(2)
+	//KAGI("d1689",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1689")
+
+//--------------------------------------------------------------------
+
+	ENTRY_CHR( 0, 072)
+	ENTRY_CHR( 1, 398)
+	ENTRY_CHR( 2,  36)
+	ENTRY_CHR( 3,  37)
+	ENTRY_CHR( 4,  38)
+	ENTRY_CHR( 5,  39)
+	ENTRY_CHR( 6,  40)
+	ENTRY_CHR( 7,  41)
+
+	// 3800	EV 祭壇の花嫁
+	check_game_flag(3800)
+	on_jump NEXT
+
+	// 最初のイベント用はリーゼのみ
+	PUT_CHR( 0, "Liese",       -0.03,4.88,22.46,   0)
+//	PUT_CHR( 1, "Fleurette",    0.00,0.70, 8.50, 180)
+//	PUT_CHR( 2, "Avatarlaha",  -1.35,0.25, 0.75, 120)
+//	PUT_CHR( 7, "Beatrice",    -2.10,0.00,-0.70,  95)
+//	PUT_CHR( 6, "Dvorak",      -2.20,0.00,-2.40,  90)
+//	PUT_CHR( 3, "Tiowald",      1.35,0.25, 0.75, 240)
+//	PUT_CHR( 4, "Sturm",        2.10,0.00,-0.70, 265)
+//	PUT_CHR( 5, "Gandaltua",    2.20,0.00,-2.40, 270)
+
+	jump EXIT
+
+NEXT:
+
+	// 3801	EV ボス戰鬥前イベント
+	check_game_flag(3801)
+	on_jump NEXT2
+
+	//魔法で封じられた
+	PUT_CHR( 7, "Beatrice",    -3.31,2.06,-12.65, 351)
+	PUT_CHR( 6, "Dvorak",      -0.26,2.06, -8.98, 359)
+	PUT_CHR( 5, "Gandaltua",    1.90,2.06, -9.41, 350)
+	PUT_CHR( 4, "Sturm",       -1.42,2.19,-14.25, 348)
+	PUT_CHR( 3, "Tiowald",      1.43,2.06,-12.88, 346)
+
+	jump EXIT
+
+NEXT2:
+
+	// 救援に來た
+	PUT_CHR( 1, "Fleurette",   -0.50,2.06,-11.62, 151)
+	PUT_CHR( 2, "Avatarlaha",  -2.87,2.06, -9.66, 147)
+
+	//魔法で封じられた
+	PUT_CHR( 7, "Beatrice",    -3.31,2.06,-12.65, 351)
+	PUT_CHR( 6, "Dvorak",      -0.26,2.06, -8.98, 359)
+	PUT_CHR( 5, "Gandaltua",    1.90,2.06, -9.41, 350)
+	PUT_CHR( 4, "Sturm",       -1.42,2.19,-14.25, 348)
+	PUT_CHR( 3, "Tiowald",      1.43,2.06,-12.88, 346)
+
+EXIT:
+	end
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+//DEF("d1689")
+//RES("KAGI")
+//{
+//	GAME_FLAG_ON(1689)
+//}
+
+//--------------------------------------------------------------------
+//-- イベント 
+//--------------------------------------------------------------------
+
+DEF("Liese")
+RES("INIT")
+{
+	// 3800	EV 祭壇の花嫁
+	check_game_flag(3800)
+	on_jump EXIT
+
+//--------------------------------------------------------------------
+
+	STOP_PC(0)
+	set_deg_EX("PC", "Liese")
+	PC_WEAPON( 0, 1 )
+
+	STOP_BGM(0, 120)
+
+	SYS("周圍充滿了非常邪惡的氣氛。")
+	WAIT(30)
+
+	cross_fade(120)
+
+	CINEMA_ON(0)
+
+	permit_script_camera(1)
+	set_script_camera(0.00,0.13,-21.56,  -15.0,180.0,0.0, 12, 30.0)
+	move_script_look_at( 0,9,42, 700, 1)
+	rotate_script_camera(20,0,0, 800, 1)
+
+	set_skip_label("SKIP")
+
+	wait_camera(0)
+//　　畫面ビスタサイズ化して、イベントムービー開始。
+//　　部屋の奧へスクロールして、祭壇に祈りを捧げている
+//　　リーゼを映し出す。そのままの姿勢でセリフ表示。
+
+	MSG_EX("#S3#C0莉絲洛特「……騎士大人，你果然還是來了啊。」",-1,2)
+
+//　　祭壇の前で立ち上がり、
+//　　主人公のほうを向くリーゼロット。
+
+	move_script_look_at(  0,-1, 0, 300, 1)
+	rotate_script_camera(-25,0, 0, 300, 1)
+
+	set_deg_EX("Liese", "PC")
+
+	MSG_EX("#S3#C0莉絲洛特「呵呵，不要擺出那種表情。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「你可是來到了|　　　　　我丈夫即將再度降臨的地方啊。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「這可以作為炫耀的資本哦。」",-1,2)
+
+	wait_camera(0)
+
+	set_pos("PC", 0.0,4.06,9.41)
+	set_deg("PC", 0)
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.00,4.88,19.74)
+	walk_pos("Liese",0,0.03)
+
+	move_script_look_at( 0, 0,-12, 300, 1)
+	rotate_script_camera(-10,0,0, 300, 1)
+
+	wait(120)
+
+//　　カメラ引くなど間をつなぐカメラワークもしくは切り替えを
+//　　付けて下さい。
+
+	MSG_EX("#S3#C0莉絲洛特「在鎮上的時候，|　　　　　我受到了騎士大人很多幫助。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「如果可以的話，|　　　　　真的想把你召入我們陣營……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「但是，就像我之前説的……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「作為妻子，不能看著丈夫加爾西斯的仇敵——|　　　　　聖劍的存在而置之不理。」",-1,2)
+
+	wait_camera(0)
+
+//　　祭壇を步いて降り、主人公の正面に立つリーゼロット。
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", -3.61,4.88,19.10)
+	set_walk_dst("Liese", -3.85,4.88,16.69)
+	set_walk_dst("Liese", -3.20,4.88,14.39)
+	set_walk_dst("Liese", -2.10,5.00,12.80)
+	walk_pos("Liese",0,0.03)
+
+	move_script_look_at( 0, 0, 0, 300, 1)
+	rotate_script_camera(-5,-40,0, 300, 1)
+
+	wait(120)
+	set_deg_EX("PC", "Liese")
+
+	MSG_EX("#S3#C0莉絲洛特「今晚會召開一場宴會。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「讓我們在祝福的酒杯中|　　　　　裝滿騎士大人的鮮血吧。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「如果是聖劍勇者之血的話，|　　　　　對我丈夫來説應該是最特別的美酒了……」",-1,2)
+
+	wait_walk("Liese")
+//	set_deg_EX("Liese", "PC")
+	wait_camera(0)
+
+	MSG_EX("#S3#C0男人的聲音「……騎士啊，請躱開一下。」",-1,2)
+
+	PUT_CHR( 7, "Beatrice",    -3.31,2.06,-12.65, 351)
+	PUT_CHR( 6, "Dvorak",      0.04,2.06,-11.81, 359)
+	PUT_CHR( 5, "Gandaltua",  1.90,2.06,-9.41, 350)
+	PUT_CHR( 4, "Sturm",      -1.42,2.19,-14.25, 348)
+	PUT_CHR( 3, "Tiowald",    1.58,2.19,-13.93, 346)
+
+//　　次の瞬間、主人公の背後からドヴォルザークのスキルが炸裂。
+//　　飛び退ってかわす主人公。スキル技が直撃するも、指先一つ動
+//　　かさずに障壁を張ってかわすリーゼロット。聲のした方向を
+//　　キッと見據える。入り口で劍を構えているドヴォルザーク。
+//　　他の導師たちもすでに部屋へ入り込んでいる狀態。
+
+	// よけた後の位置
+	set_pos("PC", 2.20,4.06,9.37, 292)
+	set_deg_EX("PC", "Liese")
+
+
+	cross_fade(60)
+	set_script_camera(0.11,2.06,-8.00,  -32.0,20.0,0.0, 12, 15.0)
+	rotate_script_camera(0,-10,0, 300, 1)
+	move_script_look_at( 0, 0, -4, 300, 1)
+
+	wait(120)
+
+	SET_MOTION("Gandaltua","ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「哎呀呀……|　　　　　　你依然還是缺乏優雅的氣質啊。」",-1,2)
+
+	SET_MOTION("Beatrice","ATTACK1",-1)
+	MSG_EX("#S3#C0貝亞特里奇「騎士大人，我們來幫忙了哦。」",-1,2)
+
+	INIT_WALK_DST("Tiowald")
+	set_walk_dst("Tiowald", 1.43,2.06,-12.88)
+	walk_pos("Tiowald",0,0.01)
+	MSG_EX("#S3#C0提歐巴特「好久不見了，莉絲洛特公主……」",-1,2)
+	wait_walk("Tiowald")
+	SET_MOTION("Tiowald","ATTACK1",-1)
+	MSG_EX("#S3#C0提歐巴特「不，應該説『黑色新娘』。」",-1,2)
+
+	MSG_EX("#S3#C0莉絲洛特「………………………………」",-1,2)
+
+	wait(120)
+	SET_MOTION("Sturm","ATTACK1",-1)
+	MSG_EX("#S3#C0修特威爾姆「……加爾西斯好像就在這裡面。」",-1,2)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", -0.26,2.06,-8.98)
+	walk_pos("Dvorak",0,0.05)
+	wait_walk("Dvorak")
+	SET_MOTION("Dvorak","ATTACK1",-1)
+	MSG_EX("#S3#C0德沃夏克「給我們讓路吧。」",-1,2)
+
+//　　ドヴォルザークが前に出ようとするが、リーゼが
+//　　手をかざすと黑い炎が現れて導師たちの體を縛り上げる。
+
+	set_deg_EX("Liese", "Dvorak")
+
+	cross_fade(60)
+	set_script_camera(-2.44,4.88,13.22,  -12.0,160.0,0.0, 8, 15.0)
+	rotate_script_camera(0, 5,0, 40, 1)
+	move_script_look_at( 0, 0, 2, 40, 1)
+
+	MSG_EX("#S3#C0莉絲洛特「退下，無禮的人！」",-1,2))
+	MSG_EX("#S3#C0莉絲洛特「失去力量的手下敗將們，|　　　　　到現在還想説些什麼……」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「哼……」",-1,2)
+
+//　　リーゼロット、祭壇の脅にある出口付近まで步いて振り向く。
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", -3.99,4.88,15.89)
+	set_walk_dst("Liese", -4.41,4.88,18.93)
+	set_walk_dst("Liese", -8.90,4.00,21.58)
+	set_walk_dst("Liese", -9.74,4.00,25.58)
+	walk_pos("Liese",0,0.03)
+
+	move_script_look_at( -5, 1, 10, 300, 1)
+	rotate_script_camera(-5, 0, 0, 300, 1)
+
+	wait_walk("Liese")
+
+	wait(60)
+	se("SE_DOOR")
+	switch_on("d1689")
+	GAME_FLAG_ON(1689)
+	wait(60)
+
+	set_deg_EX("Liese", "PC")
+
+	MSG_EX("#S3#C0莉絲洛特「騎士大人，有人來擣亂了啊……|　　　　　請到這邊來。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我丈夫在等你。」",-1,2)
+
+//　　言い置いて、扉の向こうに消えるリーゼロット。
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", -9.52,4.00,27.79)
+	walk_pos("Liese",0,0.03)
+
+	fade_out(120)
+	wait(200)
+	hide_chr("Liese")
+
+	jump NEXT
+
+SKIP:
+	//魔法で封じられた狀態にする
+	PUT_CHR( 7, "Beatrice",    -3.31,2.06,-12.65, 351)
+	PUT_CHR( 6, "Dvorak",      -0.26,2.06, -8.98, 359)
+	PUT_CHR( 5, "Gandaltua",    1.90,2.06, -9.41, 350)
+	PUT_CHR( 4, "Sturm",       -1.42,2.19,-14.25, 348)
+	PUT_CHR( 3, "Tiowald",      1.43,2.06,-12.88, 346)
+	hide_chr("Liese")
+
+	// よけた後の位置
+	set_pos("PC", 2.20,4.06,9.37, 292)
+	set_deg_EX("PC", "Liese")
+
+	// ドア開く
+	INIT_SWITCH_ON("d1689")
+	GAME_FLAG_ON(1689)
+
+NEXT:
+//　　⇒操作フリーに。
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+
+	BGM(-1)
+
+	// 3800	EV 祭壇の花嫁
+	game_flag_on(3800)
+
+EXIT:
+	end
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// ボス戰鬥開始イベント續き
+
+DEF("Fleurette")
+
+RES("INIT")
+{
+	// 3800	EV 祭壇の花嫁
+	check_game_flag(3800)
+	off_jump EXIT
+
+	// 3801	EV ボス戰鬥前イベント
+	check_game_flag(3801)
+	off_jump EXIT
+
+	STOP_PC(0)
+	PC_WEAPON( 0, 1 )
+//	HIDE_CHR("PC")
+
+	reset_camera(0)
+
+	permit_script_camera(1)
+	set_script_camera(-0.72,2.56,-11.39,  -16.0,160.0,0.0, 8, 15.0)
+	fade_in(60)
+
+//	set_skip_label("SKIP")
+
+	wait_camera(0)
+
+//▼奇岩城・祭壇部屋
+
+//　　フェードアウト拔けで導師たちのいる祭壇部屋でフローレット
+//　　が導師たちの咒縛を解除しているところに、地震と地響きが
+//　　始まる。
+
+	MSG_EX("#S3#C0貝亞特里奇「公主殿下……那是……」",-1,2)
+
+	MSG_EX("#S3#C0芙羅蕾特「……沒錯，|　　　　　和我封印屠龍劍相同的巫女封印術……」",-1,2)
+	MSG_EX("#S3#C0芙羅蕾特「不過……到底封印了什麼……」",-1,2)
+
+//　　ティオバルト、何か思い當たるフシがある仕草。
+
+	MSG_EX("#S3#C0提歐巴特「……難道是…………」",-1,2)
+
+//　　一同、ティオバルトのほうを向く。
+
+	MSG_EX("#S3#C0提歐巴特「我們……|　　　　　也許弄錯了件很重要的事情……」",-1,2)
+
+//　　畫面フェードアウト
+
+	fade_out(60)
+	wait(80)
+	ENTRY_MAP("0685_0683")
+
+EXIT:
+	end
+}

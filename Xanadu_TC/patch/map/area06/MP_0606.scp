@@ -1,0 +1,138 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// ゴブリンシャーマン
+	put_monster("m00",402,16,0,0,0)
+	put_monster("m01",402,16,0,0,1)
+	put_monster("m02",402,16,0,0,2)
+	put_monster("m03",402,16,0,0,3)
+	// ゴブリンヒーラー
+	put_monster("m04",540,16,0,0,4)
+	put_monster("m05",540,16,0,0,5)
+	put_monster("m06",540,16,0,0,6)
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3949)
+	off_skip 1
+	room_flag_on(253)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1610)
+	ON_SKIP(2)
+	KAGI("d1610",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1610")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1611)
+	ON_SKIP(2)
+	KAGI("d1611",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1611")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1612)
+	ON_SKIP(2)
+	KAGI("d1612",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1612")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1624)
+	ON_SKIP(2)
+	KAGI("d1624",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1624")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1625)
+	ON_SKIP(2)
+	KAGI("d1625",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1625")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1626)
+	ON_SKIP(2)
+	KAGI("d1626",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1626")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1610")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1610)
+}
+
+DEF("d1611")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1611)
+}
+
+DEF("d1612")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1612)
+}
+
+DEF("d1624")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1624)
+}
+
+DEF("d1625")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1625)
+}
+
+DEF("d1626")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1626)
+}
+
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3949)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈等級上升1級！",-1,0X00000200)
+	game_flag_on(3949)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

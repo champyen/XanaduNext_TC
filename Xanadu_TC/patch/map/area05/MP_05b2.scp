@@ -1,0 +1,306 @@
+
+// ----------------------------------------------------------------------------
+// 水門２讀み替え                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+//	CHECK_GAME_FLAG(1536)
+//	ON_SKIP(2)
+//	KAGI("d1536",1)
+//	SKIP(1)
+	INIT_SWITCH_ON("d1536")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1535)
+	ON_SKIP(2)
+	KAGI("d1535",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1535")
+
+	// NPCのうろつきっぷり設定
+	SET_WALK_RANGE("ita1", 3.0, 50, 90)
+	SET_WALK_RANGE("ita2", 1.5, 30, 30)
+
+	// 水門チェック（マップ變え、オブジェクト位置變え）
+	CHECK_GAME_FLAG(537)
+	ON_JUMP SUIMON
+
+	LOAD_MAP("MP_05b3")
+	LOAD_HITMAP("MP_05b3h")
+	SET_POS("ita1",4.117836,-4,-5.903951)
+	SET_POS("ita2",0.627364,-4,-5.915293)
+	SET_POS("ita3",0.616248,-4,-0.549492)
+	SET_POS("ita4",-2.280771,-4,-2.179022)
+	SET_POS("ita5",2.782919,-4,3.491266)
+	SET_POS("ita6",-1.449536,-4,2.964533)
+	SET_MOTION("ita1","HOOK",-1)
+	SET_MOTION("ita2","HOOK",-1)
+	SET_MOTION("ita3","HOOK",-1)
+	SET_MOTION("ita4","HOOK",-1)
+	SET_MOTION("ita5","HOOK",-1)
+	SET_MOTION("ita6","HOOK",-1)
+
+	END
+
+SUIMON:
+
+	// 水マップ
+	SE("SE_MIZU")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1536")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1536)
+}
+
+DEF("d1535")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1535)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 炎１                                                                        
+// ----------------------------------------------------------------------------
+
+
+DEF("hit1")
+
+RES("HIT")
+{
+	CHECK_SWITCH("fire1")
+	ON_JUMP RET
+
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP RET
+
+	SWITCH_ON("fire1")
+
+// 全部ついているのかチェック
+	CHECK_SWITCH("fire2")
+	ON_JUMP CHECK
+	END
+
+// ＯＫ！
+CHECK:
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("bar")
+	WAIT(60)
+			WAIT(60)
+			MOVE_VEC("bar",0,3.75,0,240)
+	CINEMA_OFF(0)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+	GAME_FLAG_ON(564)
+	END
+
+RET:
+}
+
+RES("GOAL")
+{
+	SWITCH_OFF("fire1")
+	SWITCH_OFF("fire2")
+	GAME_FLAG_OFF(564)
+}
+
+// ----------------------------------------------------------------------------
+// 炎２                                                                        
+// ----------------------------------------------------------------------------
+
+
+DEF("hit2")
+
+RES("HIT")
+{
+	CHECK_SWITCH("fire2")
+	ON_JUMP RET
+
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP RET
+
+	SWITCH_ON("fire2")
+
+// 全部ついているのかチェック
+	CHECK_SWITCH("fire1")
+	ON_JUMP CHECK
+	END
+
+// ＯＫ！
+CHECK:
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("bar")
+	ROOM_FLAG_ON(4)
+	WAIT(60)
+			WAIT(60)
+			MOVE_VEC("bar",0,3.75,0,240)
+	CINEMA_OFF(0)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+	GAME_FLAG_ON(564)
+	END
+
+RET:
+}
+
+RES("GOAL")
+{
+	SWITCH_OFF("fire1")
+	SWITCH_OFF("fire2")
+	GAME_FLAG_OFF(564)
+}
+
+
+// ----------------------------------------------------------------------------
+// ばー                                                                        
+// ----------------------------------------------------------------------------
+
+
+DEF("bar")
+
+RES("GOAL")
+{
+	CHECK_ROOM_FLAG(99)
+	ON_JUMP RET
+
+	MOVE_VEC("bar",0,-3.75,0,240)
+	ROOM_FLAG_ON(99)
+	MOVE_VEC("hit1",0,0,0,240)
+	MOVE_VEC("hit2",0,0,0,240)
+	GAME_FLAG_OFF(564)
+	END
+
+RET:
+	ROOM_FLAG_OFF(99)
+
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(507)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(507)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 8,0,-1, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【100Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(100)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板③　雙児の石板
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 272, 8,0,-1, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【雙子之石板】！",-1,0X00000200)
+
+	GET_ITEM(272, 1)
+	GAME_FLAG_ON(507)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

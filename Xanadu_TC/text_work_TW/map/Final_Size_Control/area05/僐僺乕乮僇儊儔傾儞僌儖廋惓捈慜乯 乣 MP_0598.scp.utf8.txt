@@ -1,0 +1,716 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化時にボスパーツを全部讀み込む                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// カギ設定
+	CHECK_GAME_FLAG(1551)
+	ON_SKIP(2)
+	KAGI("d1551",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1551")
+
+	// スポット出さない
+	PERMIT_SPOT(0)
+	
+//吊りももオブジェ消し
+	hide_chr("turimomo")
+//ドラスレ消し
+	hide_chr("drasure")
+
+
+//ボスを倒したかどうか？
+	check_game_flag(566)
+	off_jump boss
+
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+	hide_chr("girl")
+	hide_chr("drasure")
+	hide_chr("turimomo")
+
+	// 一部のカメラを無效に
+	camera_off("ボス中央（改改）")
+	camera_off("ボス中央（改）")
+	camera_off("ボス中央")
+	camera_off("ボス右")
+	camera_off("ボス左")
+	camera_off("第二形態")
+	camera_off("ももイベント用？")
+
+	//壁を消す
+	hide_chr("kaiga")
+	hide_chr("kabe1")
+	hide_chr("kabe2")
+	hide_chr("hand")
+
+	// 寶箱取ってないなら表示
+	CHECK_GAME_FLAG(587)
+	ON_SKIP(1)
+	MOVE_VEC("box",0,6,0,1)
+
+
+	end
+
+boss:
+	// 胴體
+	load_chr("M_0280\ARM_280a",0)
+	// 右腕１～３
+	load_chr("M_0280\ARM_280b",1)
+	load_chr("M_0280\ARM_280d",2)
+	load_chr("M_0280\ARM_280f",3)
+	// 左腕１～３
+	load_chr("M_0280\ARM_280c",4)
+	load_chr("M_0280\ARM_280e",5)
+	load_chr("M_0280\ARM_280g",6)
+	// 子ガニ
+	load_chr("O_0524\O_0524",7)
+	// 簡易コリジョンモデル
+	load_chr("M_0280\M_0280h",8)
+
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+
+	hide_chr("girl")
+	hide_chr("drasure")
+
+	// 一部のカメラを無效に
+	camera_off("ボス中央（改改）")
+	camera_off("ボス中央（改）")
+	camera_off("ボス中央")
+	camera_off("ボス右")
+	camera_off("ボス左")
+	camera_off("第二形態")
+	camera_off("ももイベント用？")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1551")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1551)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボス（コア）                                                                
+// ----------------------------------------------------------------------------
+
+DEF("kani_core")
+
+RES("KILL")
+{
+	// PCの動きを止める
+	stop_pc(0)
+
+	// カニから出てたエフェクト消去
+	delete_efc("kani_body")
+
+	// シネマON
+	cinema_on(0)
+
+	// ブラー效果ON
+	blur(50)
+
+	// 甲羅脫ぎモーション再生
+	set_motion("kani_body","EMPTY3",0)
+	wait(220)
+
+// 以前は RES("PROG") として記述していた處理 ---------------------------------
+	// 足用NULL當たりを用意し、本體とリンク
+	show_chr("kani_ashi1")
+	show_chr("kani_ashi2")
+	show_chr("kani_ashi3")
+	show_chr("kani_ashi4")
+	show_chr("kani_ashi5")
+	show_chr("kani_ashi6")
+	show_chr("kani_ashi7")
+	show_chr("kani_ashi8")
+	link_hp_chr("kani_ashi1","kani_body")
+	link_hp_chr("kani_ashi2","kani_body")
+	link_hp_chr("kani_ashi3","kani_body")
+	link_hp_chr("kani_ashi4","kani_body")
+	link_hp_chr("kani_ashi5","kani_body")
+	link_hp_chr("kani_ashi6","kani_body")
+	link_hp_chr("kani_ashi7","kani_body")
+	link_hp_chr("kani_ashi8","kani_body")
+
+	// コアを復活させ本體とリンクさせる
+	refresh("kani_core")
+	link_hp_chr("kani_core","kani_body")
+
+	// ＨＰバー再表示
+	disp_hp_bar("kani_body")
+// ---------------------------------------------------------------------------
+
+	// 消した柱を戻す
+//	show_chr("pillar1")
+//	show_chr("pillar2")
+
+	// シネマOFF
+	cinema_off(0)
+	
+	// ブラー效果OFF
+	blur(0)
+	
+	// カメラ空間の固定を解除
+	unlock_camera("ボス中央（改改）")
+	
+	// 第一形態用カメラをOFF
+	camera_off("ボス中央（改改）")
+	// 第二形態用カメラをON
+	camera_on("第二形態")
+	lock_camera("第二形態")
+	// スクロール制限
+	set_scroll_rect(-24,-25, 24,27)
+
+	// フリー回轉モードにする
+	set_map_attr(16)
+	// オートターゲットモードにする
+	set_map_attr(17)
+
+	// ぶつかりイベント用タイマー
+	MOVE_VEC("null",0,1,0,360)
+
+	// 扉を入れ替え。
+	HIDE_CHR("d1551")
+	SHOW_CHR("door")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ぶつかりイベント                                                            
+// ----------------------------------------------------------------------------
+
+DEF("null")
+RES("GOAL")
+{
+	shake(0,64)
+	EFC("EFC_SPI_ROCK3",0,3.5,-21)
+	EFC("EFC_SPI_ROCK2",1,3,-23)
+	EFC("EFC_SPI_ROCK1",3,2.5,-18)
+	EFC("EFC_SPI_ROCK2",5,0,-21)
+	EFC("EFC_SPI_ROCK3",-1,3,-20)
+	EFC("EFC_SPI_ROCK2",-3,2,-23)
+	EFC("EFC_SPI_ROCK1",-5,0,-17)
+	EFC("EFC_SPI_ROCK2",-7,0,-20)
+	EFC("EFC_SPI_ROCK3",7,0,-19)
+	EFC("EFC_SPI_ROCK2",10,0,-20)
+
+	EFC("EFC_SPI_ROCK3",10,0,-19)
+	EFC("EFC_SPI_ROCK2",1,3,-21)
+	EFC("EFC_SPI_ROCK1",7,0,-16)
+	EFC("EFC_SPI_ROCK2",-5,0,-19)
+	EFC("EFC_SPI_ROCK3",-1,2,-18)
+	EFC("EFC_SPI_ROCK2",-7,0,-21)
+	EFC("EFC_SPI_ROCK1",5,0,-15)
+	EFC("EFC_SPI_ROCK2",-3,2.5,-18)
+	EFC("EFC_SPI_ROCK3",3,2,-17)
+	EFC("EFC_SPI_ROCK2",0,3,-18)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボス（本體）                                                                
+// ----------------------------------------------------------------------------
+
+DEF("kani_body")
+
+// 最初のタックル直前にプログラマから送信されるレス
+/*RES("PROG")
+{
+	// 足用NULL當たりを用意し、本體とリンク
+	show_chr("kani_ashi1")
+	show_chr("kani_ashi2")
+	show_chr("kani_ashi3")
+	show_chr("kani_ashi4")
+	show_chr("kani_ashi5")
+	show_chr("kani_ashi6")
+	show_chr("kani_ashi7")
+	show_chr("kani_ashi8")
+	link_hp_chr("kani_ashi1","kani_body")
+	link_hp_chr("kani_ashi2","kani_body")
+	link_hp_chr("kani_ashi3","kani_body")
+	link_hp_chr("kani_ashi4","kani_body")
+	link_hp_chr("kani_ashi5","kani_body")
+	link_hp_chr("kani_ashi6","kani_body")
+	link_hp_chr("kani_ashi7","kani_body")
+	link_hp_chr("kani_ashi8","kani_body")
+
+	// コアを復活させ本體とリンクさせる
+	refresh("kani_core")
+	link_hp_chr("kani_core","kani_body")
+
+	// ＨＰバー表示
+	disp_hp_bar("kani_body")
+}*/
+
+// 落石直前にプログラマから送信されるレス
+RES("PROG2")
+{
+	// とりあえず止める
+	stop_pc(0)
+
+	cross_fade(15)
+
+	cinema_on(0)
+
+	// カメラをスクリプトに渡す
+	PERMIT_SCRIPT_CAMERA(1)
+
+	// 位置指定
+	SET_SCRIPT_CAMERA_EX("kani_core",3, -30,180,0, 18, 36 )
+	SCALE_SCRIPT_CAMERA(0.8, 90,1)
+	wait(90)
+
+	// カメラをスクリプトから戻す
+	PERMIT_SCRIPT_CAMERA(0)
+
+	cross_fade(30)
+	
+	cinema_off(0)
+	wait(60)
+}
+
+RES("KILL")
+{
+	// カメラ空間の固定を解除
+	unlock_camera("第二形態")
+	
+	// PCの動きを止める
+	stop_pc(0)
+
+	// シネマON
+	cinema_on(0)
+
+	// ブラー效果ON
+	blur(50)
+
+	// 死亡モーション再生
+	set_motion("kani_body","EMPTY4",0)
+	wait(296)
+		// もとはwait(436)
+	
+	// フェードアウト
+	FADE_OUT_EX(200, 0, ("0xffffffff"), 0)
+	WAIT(320)
+
+	game_flag_on(566)
+	
+	blur(0)
+	
+	// カニたち退場
+	hide_chr("kani_body")
+	hide_chr("kani_core")
+	hide_chr("kani_ashi1")
+	hide_chr("kani_ashi2")
+	hide_chr("kani_ashi3")
+	hide_chr("kani_ashi4")
+	hide_chr("kani_ashi5")
+	hide_chr("kani_ashi6")
+	hide_chr("kani_ashi7")
+	hide_chr("kani_ashi8")
+	
+	// カメラのターゲットを切る
+	set_target_chr("null")
+
+	// クリアフラグ立て
+	GAME_FLAG_ON(1)
+
+	// 出入り口扉フラグ立て
+	GAME_FLAG_ON(598)
+
+	// 壞れ壁を排除
+	hide_chr("kaiga")
+	hide_chr("kabe1")
+	hide_chr("kabe2")
+
+
+				// カメラをスクリプトに渡す
+				PERMIT_SCRIPT_CAMERA(1)
+
+
+				// 位置指定
+				SET_SCRIPT_CAMERA( 0,1,26, -30,180,0, 20, 31.5 )
+
+				//カメラをズーム
+				SCALE_SCRIPT_CAMERA( 0.75, 360, 0 )
+
+	// フェード切り替え
+	FADE_IN_EX( 60, 0, ("0xffffffff"), 0)
+	bgm(7,0,-1)
+	// ウェイト
+	WAIT(120)
+
+	// 出現エフェクト再生
+	EFC("EFC_ADD_TREASURE",0,1,26)
+
+	// 寶箱移動
+	MOVE_VEC("box",0,6,0,1)
+
+	// ウェイト
+	WAIT(120)
+
+	// シネマOFF
+	CINEMA_OFF(0)
+
+				// クロスで切り替え
+				CROSS_FADE(60)
+
+				// カメラをゲームに返す
+				PERMIT_SCRIPT_CAMERA(0)
+
+	// 地圖表示戻す
+//	enable_system_window(0,1)
+
+	// カメラを「全體」に戻す
+	camera_off("ボス中央（改改）")
+	camera_off("ボス中央（改）")
+	camera_off("ボス中央")
+	camera_off("ボス右")
+	camera_off("ボス左")
+	camera_off("第二形態")
+	camera_off("ももイベント用？")
+
+	camera_on("全體")
+
+	// フリー回轉モードをＯＦＦ
+	set_map_attr(16)
+	// オートターゲットモードをＯＦＦ
+	set_map_attr(17)
+
+	// あたりマップ讀み替え
+	LOAD_HITMAP("MP_0598H")
+
+
+	// 05/01/14
+	// クロスフェード終わるまで待つ
+	WAIT(60)
+	// PCにフォーカス戻す
+	FOCUS_CHR_EX("PC",60,1,1)
+	// 全快！
+	refresh("PC")
+	// EXP獲得
+	get_exp(100)
+	SYS("#C2得到100EXP！")
+
+	END
+}
+
+// ----------------------------------------------------------------------------
+// 壞れ壁                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("kabe")
+
+RES("EVENT")
+{
+	check_game_flag(567)
+	off_jump boss
+	end
+
+boss:
+	game_flag_on(567)
+
+	// システムウィンドウ強制CLOSE
+//	CLOSE_SYS_DLG(0)
+
+	// PCの動きを止める
+	stop_pc(0)
+	LOAD_HITMAP("MP_0598HB")
+
+	// 出入り口の扉を閉める
+	SWITCH_OFF("door")
+
+	// フェードOUT
+	fade_out(-1)
+	wait(64)
+
+	// カメラをオン
+	camera_on("ボス中央（改改）")
+
+	set_target_chr("kani_body")
+	
+	// カメラ空間を固定
+	lock_camera("ボス中央（改改）")
+//	set_scroll_rect(-6.5,17.5, 6.5,21.5)
+	set_scroll_rect(-2,20, 2,24)
+
+	// 座標を變更
+	set_pos("PC",0,0,19)
+	// 向きを變更
+	SET_DEG_EX("PC","turimomo")
+
+	// ２本の柱が邪魔なんで一時的に消す
+//	hide_chr("pillar1")
+//	hide_chr("pillar2")
+
+	// ムービー用カメラ讀み込み
+	load_camera("C_0598")
+	set_camera_org(0,1,26)
+	SET_FOV(36)
+	play_camera(410,1450)
+
+	// フェードIN
+	fade_in(-1)
+
+	// シネマON
+	cinema_on(0)
+
+	// 登場シーン ////////////////////////////////////////////////////////////
+
+	// スキップ許可
+//	skip_enable(1)
+
+	// BGM變更
+//	bgm(4,1,0,0,-1)
+//	bgm(4,0,-1)
+	bgm(17,0,-1)
+
+	// 吊りモモを上に移動
+//	MOVE_VEC("turimomo",0,6,0,900)
+
+	// ボス表示（壁の裡で待機狀態を維持）
+	show_chr("kani_body")
+	show_chr("kani_core")
+	set_motion("kani_body","EMPTY1",0)
+
+// ★NEWスキップ處理(05/01/14)
+set_skip_label("SKIP")
+
+	// 壁破壞①
+	wait(60)
+	SHAKE(25,25)
+	se("SE_WALL_HIT")
+
+	wait(10)
+	shake(0,15)
+
+	wait(60)
+	SHAKE(25,25)
+	se("SE_WALL_HIT")
+
+	wait(10)
+	shake(0,15)
+
+	wait(90)
+
+	SWITCH_ON("kaiga")
+	set_motion("kabe1","DOWN",0)
+	set_motion("hand","DOWN",0)
+	shake(25,25)
+	se("SE_WALL_HIT")
+
+	wait(40)
+	shake(0,15)
+	wait(80)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	shake(0,15)
+	wait(140)
+
+	blur(50)
+	slow(1)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	// 目光る
+	attach_efc("EFC_SPI_EYE","kani_core","Frame1_O_0603_Layer1")
+
+	shake(0,15)
+	wait(20)
+
+	set_motion("kabe1","HOOK",0)
+
+	wait(0)
+
+	slow(0)
+	blur(0)
+
+	// 突進モーション再生
+	set_motion("kani_body","EMPTY2",0)
+	
+	// 壁の邊りまで迫ってきたら…
+	wait(263)
+
+	slow(1)
+	blur(50)
+
+	// 壁破壞②
+	set_motion("kabe2","DOWN",0)
+
+	shake(25,25)
+	se("SE_WALL_HIT")
+	wait(40)
+
+	shake(0,15)
+	wait(20)
+
+	set_motion("kabe2","HOOK",0)
+//	wait(127)
+	wait(27)
+	wait(25)
+	shake(0,50)
+	wait(75)
+
+// ★NEWスキップ處理受付け終了(05/01/14)
+set_skip_label("-")
+
+	blur(0)
+	slow(0)
+
+	// シネマＯＦＦ
+	cinema_off(0)
+
+	// マジ當たりON
+	set_collision_obj("kani_body",8)
+	
+	// ＨＰバー表示
+	disp_hp_bar("kani_core")
+
+//	bgm(5,0,0,0,-1)
+//	bgm(5,0,-1)
+//	bgm(17,0,-1)
+
+	end
+
+
+// ★スキップボタンを押した時は一瞬で最後の狀態にしちゃう ----------------------
+SKIP:
+	// BGMを一瞬で止め
+//	stop_bgm(1,500)
+	// 早めの黑フェードIN
+	FADE_OUT(30)
+	WAIT(30)
+	
+	// ムービーカメラは最終フレームにあわせちゃう
+	play_camera(1450,1450)
+	// 壁を壞れた狀態に
+	set_motion("kabe1","HOOK",0)
+	set_motion("kabe2","HOOK",0)
+	set_motion("kaiga","HOOK",0)
+	// 突進モーション再生
+	set_motion("kani_body","STAND",0)
+	// ブラーとかOFF
+	blur(0)
+	slow(0)
+	// シネマＯＦＦ
+	cinema_off(0)
+	// マジ當たりON
+	set_collision_obj("kani_body",8)
+	// ＨＰバー表示
+	disp_hp_bar("kani_core")
+	// BGMを切替
+//	bgm(17,0,-1)
+	// 早めの黑フェードOUT
+	FADE_IN(30)
+	WAIT(30)
+
+	end
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(587)
+	ON_JUMP next
+
+	SET_TREASURE("box",1,178,"ITEM")
+	END
+
+next:
+	HIDE_CHR("box")
+	END
+}
+
+DEF("ITEM")
+RES("CATCH")
+{
+	SE("SE_GETITEM")
+//	STOP_PC(0)
+//	SYS("#C2スペクタクルズを手に入れた！")
+//	KILL_CHR("box",0,0,0)
+	GAME_FLAG_ON(587)
+}
+
+
+// ----------------------------------------------------------------------------
+// 扉                                                                          
+// ----------------------------------------------------------------------------
+
+DEF("door")
+RES("INIT")
+{
+
+	// カニグモ倒したか
+	CHECK_GAME_FLAG(1)
+	OFF_JUMP next
+
+	// 岩を壞したか
+	CHECK_GAME_FLAG(588)
+	ON_JUMP next
+
+	HIDE_CHR("d1551")
+
+	END
+
+next:
+
+	HIDE_CHR("door")
+
+}
+
+RES("CLICK")
+{
+	CHECK_GAME_FLAG(1)
+	OFF_JUMP next
+
+		CHECK_GAME_FLAG(588)
+		ON_JUMP next
+
+		STOP_PC(0)
+	SYS("#C2門的另一邊好像有什麼東西峠著")
+		END
+
+next:
+
+	SWITCH_ON("door")
+
+}

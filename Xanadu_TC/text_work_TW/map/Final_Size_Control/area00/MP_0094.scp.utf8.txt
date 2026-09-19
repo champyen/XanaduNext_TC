@@ -1,0 +1,1074 @@
+
+// ----------------------------------------------------------------------------
+// マップ  道具や
+// ----------------------------------------------------------------------------
+
+//-- ROOM_FLAG -------------------------------------------------------
+//  0 スペンス會話
+//  1 リネット會話
+//  2 ロスポ會話
+
+
+DEF("MAP")
+RES("INIT")
+{
+	// 店員とカウンターの關連付け
+	link_ev_pop("Spence2","Spence")
+
+//	// NPCのうろつきっぷり設定
+//	set_walk_range("pot", 3.0, 50, 30)
+//	set_walk_range("mins", 1.5, 50,90)
+//	set_walk_range("ril", 1.5, 50,90)
+//	set_walk_range("pat", 1.5, 50,90)
+
+	// 3720	TK 巫女姬の弓を買った
+	check_game_flag(3720)
+	on_jump EXIT
+
+	// インフェルノを倒したか？
+	check_game_flag(4)
+	on_jump TK_ANIECE
+
+	// 3600	EV B-1 聖劍の探索へ(シャルとの會話)
+	check_game_flag(3600)
+	on_jump EXIT
+
+TK_ANIECE:
+
+	SHOW_CHR("Aniece")
+	// グラディウス、バックラー、ローブ
+	load_npc_eqp(00,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+
+	// 3600	EV B-1 聖劍の探索へ(シャルとの會話)
+	check_game_flag(3600)
+	on_jump EXIT2
+
+	ENABLE_AUTO_TURN("Aniece", 0)
+	end
+
+EXIT:
+	HIDE_CHR("Aniece")
+EXIT2:
+	end
+}
+
+
+// 道具屋ポートレイト處理 ///////////////////////////////////////////////
+
+// 道具屋畫像(512x512)讀み込み＆チップ登錄
+@entry_DOUGUYA
+{
+	entry_img(0,"douguya_a",0)
+	entry_img(1,"douguya_b",0)
+	entry_img(2,"douguya_c",0)
+	entry_img(3,"douguya_d",0)
+	set_img( 0, 184, 10, 0, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(0)
+	set_img( 1, 440, 10, 1, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(1)
+	set_img( 2, 184,266, 2, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(2)
+	set_img( 3, 440,266, 3, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(3)
+	ret
+}
+
+// 道具屋消去
+@erase_DOUGUYA
+{
+	img_off(0)
+	img_off(1)
+	img_off(2)
+	img_off(3)
+	ret
+}
+
+// 道具屋フレームIN
+@fi_DOUGUYA
+{
+	//move_img(0, -456,0, 30, 1)
+	color_img(0, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(1, -456,0, 30, 1)
+	color_img(1, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(2, -456,0, 30, 1)
+	color_img(2, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(3, -456,0, 30, 1)
+	color_img(3, 0xffffffff, 0xff000000, 30, 1)
+	ret
+}
+
+// 道具屋フレームOUT
+@fo_DOUGUYA
+{
+	//move_img(0, 456,0, 30, 1)
+	color_img(0, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(1, 456,0, 30, 1)
+	color_img(1, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(2, 456,0, 30, 1)
+	color_img(2, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(3, 456,0, 30, 1)
+	color_img(3, 0x00ffffff, 0xff000000, 30, 1)
+	ret
+}
+
+
+
+// ====================================================================
+// 道具屋
+// ====================================================================
+
+DEF("Spence")
+
+RES("INIT")
+{
+	// マップの回轉角度を強制變更（所要時間 1 フレームで方向 6 に回轉）
+	RESET_MAP_ROT_Y(1,1)
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("Spence")
+	SET_NAME("SPENCE","道具店老闆史密斯")
+	SET_MOTION("Spence","ATTACK1",-1)
+	MSG("對不起，|要買東西的話請到櫃臺前。")
+	SET_MOTION("Spence","STAND",-1)
+	END
+}
+
+// ============================================================================
+// 道具屋（イベントトリガー）
+// ============================================================================
+
+//////////////////////////////////////////////////////////////////////
+// スペンス
+
+DEF("Spence2")
+RES("CLICK")
+{
+	SET_DEG_EX("Spence","")
+	ACTIVE_CHR("Spence")
+	FOCUS_CHR("Spence")
+	SET_NAME("SPENCE","道具店老闆史密斯")
+	SET_MOTION("Spence","ATTACK1",-1)
+
+	// 不死鳥の羽ある？
+	check_item(193)
+	off_jump NEXT2
+	// 3805	TK スペンス、不死鳥の羽會話
+	check_game_flag(3805)
+	on_jump NEXT2
+
+	game_flag_on(3805)
+	MSG("哎呀，是騎士先生啊。|那羽毛難道是……")
+	MSG("啊啊，果然。|這不就是『不死鳥的羽毛』嗎。")
+	MSG("我們家代代相傳著|包治百病的靈藥的製作方法。")
+	MSG("製造這種靈藥必備的材料|就是不死鳥的羽毛。")
+	MSG("真讓人吃驚啊，|現在竟然還存在著……")
+	MSG("怎麼樣？|需要的話現在就可以幫您調藥哦。")
+
+	call MAKE_POTION
+	jump EXIT
+
+NEXT2:
+	// TK 道具屋の店主スペンスの臺詞
+	check_game_flag(3512)
+	off_jump TALK
+
+MENU:
+	// 不死鳥の羽ある？
+	check_item(193)
+	on_jump MENU2
+
+	SEL("#C1　歡迎光臨！　|#C2對話|買東西|取消")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump ITEM
+	jump EXIT
+
+MENU2:
+	// 不死鳥の羽がある場合
+	SEL("#C1　歡迎光臨！　|#C2對話|製作藥物|買東西|取消")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump POTION
+	check_select(2)
+	on_jump ITEM
+
+	jump EXIT
+
+POTION:
+	call MAKE_POTION
+	jump EXIT
+
+TALK:
+	call TALK_Spence
+	jump MENU
+
+ITEM:
+	erase_shop_list(0)
+	// 基本道具
+//	entry_shop_list("210/211/212/213/214/215/216/217/220/222/227/228/229/230/231")
+//	entry_shop_list("210/211/212/213/214/215/216/217/220/222/227")
+	entry_shop_list("210/211/212/216/217/220/222/227")
+
+	// 進み具合で「咒文書」の品揃えチェンジ
+	CHECK_GAME_FLAG(6)
+	ON_JUMP s5
+	CHECK_GAME_FLAG(4)
+	ON_JUMP s4
+	CHECK_GAME_FLAG(1)
+	ON_JUMP s3
+	CHECK_GAME_FLAG(3)
+	ON_JUMP s2
+
+//	entry_shop_list("228/229/230/231")
+	entry_shop_list("228/229/230/231")
+	JUMP next
+s2:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252")
+	entry_shop_list("232/236/243/250/238/245/252")
+	JUMP next
+s3:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255")
+	entry_shop_list("232/236/243/250/238/245/252/241/248/255")
+	JUMP next
+s4:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255/233/237/244/251")
+	entry_shop_list("233/237/244/251/238/245/252/241/248/255")
+	JUMP next
+s5:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255/233/237/244/251/240/247/254")
+	entry_shop_list("233/237/244/251/240/247/254/241/248/255")
+	JUMP next
+
+next:
+	////////////////////////////////////////////////////
+	// ★05/09/10:ショップ説明スクリプトを入店時に再生
+	check_game_flag(74)
+	on_jump skip_help
+	game_flag_on(74)
+	add_shop_script("help")
+skip_help:
+	////////////////////////////////////////////////////
+	CALL_SHOP(2)
+	jump MENU
+
+EXIT:
+	SET_MOTION("Spence","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// 靈藥を作ってもらう
+
+@MAKE_POTION
+{
+	SEL("　製作靈藥嗎？　|#C2是|否")
+	check_select(0)
+	on_jump YES
+
+//　　⇒「いいえ」の場合
+
+	MSG("是這樣啊，|需要的話隨時都可以來找我。")
+	ret
+
+//　　→操作フリー
+//　　再度話しかけるとメニューに[藥を作ってもらう]を表示。
+//　　選擇肢に接續する。
+
+//　　⇒「はい」の場合
+YES:
+	MSG("那麼，請稍等一下。")
+	MSG("我也是第一次製作這種藥，|所以不查查書的話……呵呵……")
+	MSG("哎呀～我已經躍躍欲試了。")
+
+//　　畫面ブラックアウト＆フェードイン
+	fade_out(60)
+	wait(300)
+	fade_in(60)
+	wait(60)
+
+	MSG("……讓您久等了，已經調好了哦。")
+
+	SE("SE_GETITEM")
+	SYS_EX("得到【不死鳥之靈藥】。",-1,0X00000200)
+	PICK_ITEM(193)
+	GET_ITEM(194, 1)
+	// 3806	TK スペンス、不死鳥の靈藥を作った
+	game_flag_on(3806)
+
+	MSG("這就是從仙那度時代開始流傳的，|連不治之症都可以治好的靈藥。")
+	MSG("如果有朋友生病了的話，|請一定要讓他喝下這個。")
+	MSG("保證有療效哦。")
+
+	ret
+}
+
+//////////////////////////////////////////////////////////////////////
+// スペンス
+
+@TALK_Spence
+{
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	// TK リーゼからカギをもらった
+	check_game_flag(3517)
+	on_jump TALK1_5
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("……莉絲小姐走了啊。")
+	MSG("騎士先生……實際上|在這里居住的人中有一部分是仙那度的末裔。")
+	MSG("我們的任務是『確認』……")
+	MSG("真是艱苦的任務啊……")
+	jump EXIT
+
+//▼奇岩城出現後
+TALK6:
+	MSG("騎士先生……|奇岩城終於出現了啊。")
+	MSG("你對從現在起會發生的事情……")
+	MSG("不……沒什麼……")
+	MSG("就算我説出來，|也不是什麼好事情啊……")
+	jump EXIT
+
+//▼インフェルノ戰後
+TALK5:
+	// 3720	TK 巫女姬の弓を買った
+	check_game_flag(3720)
+	off_jump TALK5_1
+
+	MSG("哎呀，雖然經常|受到阿尼艾絲小姐您的照顧……")
+	MSG("不過我畢竟是做生意的，|這個説什麼也不能讓步啊。")
+	jump EXIT
+
+TALK5_1:
+	check_room_flag(0)
+	on_jump TALK5_2
+
+	MSG("我們的祖先從很早以前|就在這一帶居住。")
+	MSG("是啊……|我想這是在哈萊克鎮建成之前的事情了。")
+	MSG("不知道是什麼原因，|周圍的人們似乎都很討厭我們……")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK5_2:
+	MSG("我們的祖先從很早以前|就在這一帶居住。")
+	MSG("不知道是什麼原因，|周圍的人們似乎都很討厭我們……")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	check_room_flag(0)
+	on_jump TALK4_2
+
+TALK4_1:
+	MSG("請聽我説，騎士先生。")
+	MSG("做買賣還是和藹可親比較好。|這樣買賣才能做得順利。")
+	MSG("我只會用不停説話的方法招攬顧客……")
+	MSG("……總之我想説的是，|似乎有可以讓人學會做生意的守護精靈存在哦。")
+	MSG("要是真有那樣的守護精靈存在的話，|真想讓自己脫胎換骨啊。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK4_2:
+	MSG("似乎有可以讓人|學會做生意的守護精靈存在哦。")
+	MSG("要是真有那樣的守護精靈存在的話，|真想讓自己脫胎換骨啊。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	check_room_flag(0)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("騎士先生，我聽説了哦。")
+	MSG("最近你似乎|和阿尼艾絲小姐一起到遺跡探索去了吧。")
+	MSG("如果發掘到什麼東西|而又不需要的話，|請賣給我們小店。")
+	MSG("我們都會微笑著付現金的。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK3_2:
+	MSG("最近你似乎|和阿尼艾絲小姐一起到遺跡探索去了吧。")
+	MSG("如果發掘到什麼東西|而又不需要的話，|請賣給我們小店。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	check_room_flag(0)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("只買咒文書的話，|是不能使用『魔法』的哦。")
+	MSG("必須使用咒文書，|將魔法學會才可以。")
+	MSG("學到的魔法同技能一樣，|設定好以後就可以使用了。")
+	MSG("關於這個的詳細情況，|去問武器店裡的僱傭兵吧。")
+	room_flag_on(0)
+	jump EXIT
+
+//　　★繰り返し
+TALK2_2:
+	MSG("只買咒文書的話，|是不能使用『魔法』的哦。")
+	MSG("必須使用咒文書，|將魔法學會才可以。")
+	MSG("學到的魔法同技能一樣，|設定好以後就可以使用了。")
+	jump EXIT
+
+//▽遺跡の鍵を手に入れた後
+TALK1_5:
+	check_room_flag(1)
+	on_jump TALK1_6
+
+	MSG("對了對了，|我想遺跡裡面會有很多打不開的『門』。")
+	MSG("為了開啟門，|本店賣的『鑰匙』是必備物品哦。")
+	MSG("如果去調查遺跡的話，|最好買一些備用。")
+	MSG("……這麼説的話，我好像是|為了賣鑰匙才把遺跡的地點告訴你的嘛。")
+	MSG("哈哈，其實的確可以這麼説。")
+	MSG("順便告訴你，|因為鑰匙都是手工製作的，|所以如果庫存減少的話就會漲價。")
+	MSG("如果你能給我作為材料的魔獸之『骨』的話，|鑰匙就可以便宜賣給你哦。")
+	room_flag_on(1)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_6:
+	MSG("為了開啟遺跡中的門，|本店賣的『鑰匙』是必備物品哦。")
+	MSG("順便告訴你，|因為鑰匙都是手工製作的，|所以如果庫存減少的話就會漲價。")
+	MSG("如果你能給我作為材料的魔獸之『骨』的話，|鑰匙就可以便宜賣給你哦。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	// TK 道具屋の店主スペンスの臺詞
+	check_game_flag(3512)
+	on_jump TALK1_2
+
+	MSG("請聽我説，騎士先生。")
+	MSG("最近，|為了建倉庫而挖掘地面的時候，|挖到了地下遺跡。")
+	MSG("本來這個島就到處是遺跡，|所以這也是常有的事……")
+	MSG("……哎，你問遺跡的地點啊？|就在鎮子的東面。")
+	MSG("現在為了不讓小孩子進入，|把門都鎖上了。")
+	MSG("鑰匙寄存在祭司莉絲小姐那裡，|你去問問她吧。")
+	game_flag_on(3512)
+	jump EXIT
+
+//　　※以降、繰り返し用メッセージ
+TALK1_2:
+	MSG("遺跡就在鎮子的東面。")
+	MSG("鑰匙寄存在祭司莉絲小姐那裡，|你去問問她吧。")
+	jump EXIT
+
+EXIT:
+	RET
+}
+
+//////////////////////////////////////////////////////////////////////
+// リネット
+
+DEF("Lynette")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Lynette")
+	SET_NAME("LYNETTE","琳奈特")
+	SET_MOTION("Lynette", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	MSG("在我們的祖先中，|有個什麼都會製造的很了不起的人！")
+	MSG("那個人好像叫做梅克。")
+	MSG("但是，父親急著告訴我這件事，|究竟是為什麼呢？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("自從城堡出現之後，|父親的樣子就變得很奇怪了。")
+	MSG("平時總是從早晨開始|就會説些無聊的笑話……")
+	MSG("到底是怎麼回事啊？")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	MSG("我聽説有種不可思議的道具，|用它可以在水中呼吸。")
+	MSG("如果真的有那種東西存在的話，|和魚兒一起游泳就再也不是夢想了……")
+	jump EXIT
+//▼カニグモ戰後
+TALK4:
+	MSG("如果有富餘的錢的話，|買些黑瑪瑙預備著會很方便哦。")
+	MSG("既可以馬上回到鎮裡，|也可以返回地下迷宮裡面哦。|雖然只能用一次。")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("父親總是喋喋不休呢。")
+	MSG("不該説的話也説得很起勁，|真是讓我擔心啊。")
+	MSG("所以，|他跟母親相處得也不是很融洽。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("在地下迷宮的某處可能會找到|可以打破岩石和牆壁的道具。")
+	MSG("在這個島上也許還有其他|各種各樣的不可思議的道具存在。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(1)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("我們家族代代都是手很巧的人。")
+	MSG("是因為這個，|父親和爺爺才經營道具店的嗎？")
+	jump EXIT
+
+//▽アニエスのイベント直後
+TALK1_2:
+	MSG("那個女人是最近的常客。")
+	MSG("她總是在遺跡進進出出，|到底是去幹什麼的呢？")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Lynette","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ロスポ
+
+DEF("Rospo")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Rospo")
+	SET_NAME("ROSPO","羅斯伯")
+	SET_MOTION("Rospo", "ATTACK1",-1)
+
+	//▼障壁消滅後
+	check_game_flag(3710)
+	on_jump TALK7
+	//▼奇岩城出現後
+	check_game_flag(3702)
+	on_jump TALK6
+	//▼インフェルノ戰後
+	check_game_flag(4)
+	on_jump TALK5
+	//▼カニグモ戰後
+	check_game_flag(1)
+	on_jump TALK4
+	//▼トレント戰後
+	check_game_flag(3)
+	on_jump TALK3
+	//▼ガーディアン取得後
+	check_game_flag(3532)
+	on_jump TALK2
+	//▼ゲーム開始直後
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//▼障壁消滅後
+TALK7:
+	check_room_flag(2)
+	on_jump TALK7_2
+
+	MSG("自從那個城堡出現以來，|連白晝的天空都變得昏暗了。")
+	MSG("不管怎麼看也看不出|這是有好事情發生的前兆啊。")
+	MSG("也有傳聞説領主大人的病情|越來越惡化了。")
+	MSG("他女兒好像也沒有回來，|真是可憐啊……")
+	MSG("……林德爾湖群地區|以後到底會變成什麼樣子呢？")
+	room_flag_on(2)
+	jump EXIT
+
+//　　☆繰り返し
+TALK7_2:
+	MSG("自從那個城堡出現以來，|連白晝的天空都變得昏暗了。")
+	MSG("也有傳聞説領主大人的病情|越來越惡化了。")
+	MSG("……林德爾湖群地區|以後到底會變成什麼樣子呢？")
+	jump EXIT
+//▼奇岩城出現後
+TALK6:
+	MSG("常來這個店的那個大姐|好像去了奇岩城。")
+	MSG("不知道她在想什麼，|竟然要去那種讓人毛骨悚然的城堡。")
+	MSG("她到底有什麼目的……")
+	jump EXIT
+//▼インフェルノ戰後
+TALK5:
+	check_room_flag(2)
+	on_jump TALK5_2
+
+	MSG("這個林德爾湖群地區的領主|是位很和藹的人。")
+	MSG("不過因為得了一種叫做千年夢的病，|這些年一直臥病在床。")
+	MSG("記得領主有一個獨生女，|不過……")
+	MSG("據説和繼母的關系處得不好，|所以離家出走了。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK5_2:
+	MSG("這個林德爾湖群地區的領主|是位很和藹的人。")
+	MSG("不過因為得了一種叫做千年夢的病，|這些年一直臥病在床。")
+	MSG("記得領主有一個獨生女，|不過……")
+	MSG("據説和繼母的關系處得不好，|所以離家出走了。")
+	jump EXIT
+
+//▼カニグモ戰後
+TALK4:
+	MSG("精靈堂的莉絲小姐雖然年輕，|卻是個冷靜而又有威嚴的人。")
+	MSG("而且，還是個大美女呢。")
+	MSG("雖然這麼説有些失禮，|你不覺得這讓人有些情不自禁嗎？")
+	jump EXIT
+//▼トレント戰後
+TALK3:
+	MSG("這裡的店主經常擺出一副和善的面孔，|不過其實是個非常頑固的傢伙。")
+	MSG("雖然平時他對我很親切，|不過我總懐疑是不是有什麼內情。")
+	jump EXIT
+
+//▼ガーディアン取得後
+TALK2:
+	MSG("這個島的遺跡裡|到處都設定了各式各樣的陷穽。")
+	MSG("其中也有一些|需要絞盡脳汁才能解決的。")
+	MSG("只有體力是不行的啊。")
+	jump EXIT
+
+//▼ゲーム開始直後
+TALK1:
+	check_room_flag(2)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("以前沒有見過你啊……|是來旅行的嗎？")
+	MSG("或者是來探索遺跡的|財寶獵人？")
+	MSG("不管怎麼説，|現在不能到鎮外去了。")
+	MSG("聽説北邊的遺跡剛剛發生了什麼案件。")
+	MSG("唉，暫時老實地呆在鎮裡吧。")
+	room_flag_on(2)
+	jump EXIT
+
+//　　★繰り返し
+TALK1_2:
+	MSG("現在不能到鎮外去了。")
+	MSG("聽説北邊的遺跡剛剛發生了什麼案件。")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Rospo","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// アニエス
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE","阿尼艾絲")
+
+	// TK 巫女姬の弓を買った
+	check_game_flag(3720)
+	on_jump TALK4
+
+	// TK アニエスと巫女姬の弓についての會話
+	check_game_flag(3722)
+	on_jump TALK3
+
+	// 4 インフェルノ倒した
+	check_game_flag(4)
+	on_jump TALK2
+
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+// 買った後
+TALK4:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("對了對了，|你知道什麼關於奇岩城的事嗎？")
+	MSG("我聽説你是和|一個學者孩子一起來的。")
+	MSG("如果有什麼關於遺跡的訊息，|請告訴我。")
+
+	jump EXIT
+
+
+//--------------------------------------------------------------------
+//　　斷った後に再度話しかけたら以下のメッセージ。
+TALK3:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("怎麼樣，想買這張弓嗎？")
+	MSG("這樣的話，|我賠本大甩賣３０００賣給你了。")
+
+	SEL("　買弓嗎？　|#C2買|不買")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL_YES3_1
+
+//　　⇒「買わない」の場合
+	MSG("呼，不知道這把弓的價值，|真是有辱騎士之名啊。")
+	MSG("算了，你要是改變主意再來也行。")
+
+	jump EXIT
+
+//　　⇒「買う」の場合
+SEL_YES3_1:
+	MSG("真的？")
+	MSG("那麼就請拿好了！")
+
+	CHECK_GOLD(3000)
+	ON_JUMP YES3_2
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("……喂，如果沒錢的話是不會給你的哦。")
+	MSG("把錢準備好了再來吧。")
+	jump EXIT
+
+YES3_2:
+	CHECK_MAX_ITEM(0)
+	OFF_JUMP YES3_3
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("……喂，你的行李已經裝滿了。")
+	MSG("整理好之後再來吧。")
+	jump EXIT
+
+YES3_3:
+	SE("SE_GETITEM")
+//	sys("#C2巫女姬の弓を手に入れた")
+	SYS_EX("得到【巫女公主之弓】。",-1,0X00000200)
+	GET_GOLD(-3000)
+	GET_ITEM(70, 1)
+
+
+	MSG("哎呀～不愧是騎士，真是慧眼啊！")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("對了對了，|你知道什麼關於奇岩城的事嗎？")
+	MSG("我聽説你是和|一個學者孩子一起來的。")
+	MSG("如果有什麼關於遺跡的訊息，|請告訴我。")
+	MSG("如果能賺錢的話，|無論什麼我都幫你。")
+
+	// TK 巫女姬の弓を買った
+	game_flag_on(3720)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+TALK2:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("我在遺跡中找到了一把奇怪的弓。")
+	MSG("看這個裝飾就知道了，|肯定是年代久遠的東西沒錯……")
+	MSG("不過，弓弦仍然很有弾力，|弓身也一點磨損都沒有。")
+	MSG("唔，根據我的猜測，|這把弓隱藏著不可思議的力量。")
+	MSG("……對了！")
+	MSG("喂，你不想要這把弓嗎？")
+	MSG("看在你我交情不錯的份上便宜賣給你了。")
+	MSG("現在特別大減價，|４０００Ｇ怎麼樣？")
+
+	// EV C-1 巫女姬の弓
+	game_flag_on(3722)
+
+	SEL("　買弓嗎？　|#C2買|不買")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL_YES
+
+//　　⇒「買わない」の場合
+	MSG("呼，不知道這把弓的價值，|真是有辱騎士之名啊。")
+	MSG("算了，你要是改變主意再來也行。")
+
+	jump EXIT
+
+//　　⇒「買う」の場合
+SEL_YES:
+	MSG("真的？")
+	MSG("那麼就請拿好了！")
+
+	CHECK_GOLD(4000)
+	ON_JUMP YES2
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("……喂，如果沒錢的話是不會給你的哦。")
+	MSG("把錢準備好了再來吧。")
+	jump EXIT
+
+YES2:
+	CHECK_MAX_ITEM(0)
+	OFF_JUMP YES3
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("……喂，你的行李已經裝滿了。")
+	MSG("整理好之後再來吧。")
+	jump EXIT
+
+YES3:
+	SE("SE_GETITEM")
+//	sys("#C2巫女姬の弓を手に入れた")
+	SYS_EX("得到【巫女公主之弓】。",-1,0X00000200)
+	GET_GOLD(-4000)
+	GET_ITEM(70, 1)
+
+	MSG("哎呀～不愧是騎士，真是慧眼啊！")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("對了對了，|你知道什麼關於奇岩城的事嗎？")
+	MSG("我聽説你是和|一個學者孩子一起來的。")
+	MSG("如果有什麼關於遺跡的訊息，|請告訴我。")
+	MSG("如果能賺錢的話，|無論什麼我都幫你。")
+
+	// TK 巫女姬の弓を買った
+	game_flag_on(3720)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+TALK1:
+
+	SET_NAME("ANIECE","高傲的女性")
+	MSG("這就是封印了守護精靈的峠片啊……")
+	//set_motion("Aniece", "EMPTY20",-1)獨り言らしいのでカット
+	MSG("如果我也能用的話，|也許探索遺跡就會變得輕松許多了。")
+
+	jump EXIT
+
+EXIT:
+	RET
+}
+
+RES("INIT")
+{
+	// 3700	EV C-1 巫女姬の弓
+	check_game_flag(3700)
+	on_jump EXIT
+
+	// インフェルノを倒したか？
+	check_game_flag(4)
+	on_jump EV2
+
+	// EV 道具屋のアニエスとスペンスの會話
+	check_game_flag(3523)
+	on_jump EXIT
+
+	// EV 宿酒場のイベント(調查開始)
+	check_game_flag(3502)
+	on_jump EV1
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+//　　イーグリット山のインフェルノを倒した後、道具屋を訪れると
+//　　強制的にイベント開始。アニエスと店主のスペンスが商談をし
+//　　ている。
+
+EV2:
+	permit_script_camera(1)
+	RESET_MAP_ROT_Y(1,1)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	stop_camera(0)
+	set_script_camera_EX("PC",0, -55.5,240.0,0.0, 12, 15.0)
+
+	set_deg_ex("Aniece", "Spence")
+	set_deg_ex("Spence", "Aniece")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -3.39,0.00,-3.39)
+	walk_pos("PC",0,0.05)
+
+	move_script_look_at(0,0,5, 180, 1)
+	wait(140)
+
+	ACTIVE_CHR("Aniece")
+	MSG("３０００！")
+
+	ACTIVE_CHR("Spence")
+	MSG("２７００怎麼樣？")
+
+	ACTIVE_CHR("Aniece")
+	MSG("不行，２９００！")
+
+	ACTIVE_CHR("Spence")
+	MSG("２８００。")
+
+	ACTIVE_CHR("Aniece")
+	MSG("那就２８５０！")
+
+	ACTIVE_CHR("Spence")
+	MSG("……唔～對我來説|２８００就已經是極限了啊。")
+	MSG("如果是劍的話，|當作古董賣給貴族會有個好價錢的……")
+	MSG("就算是阿尼艾絲小姐你求我，|也不能比這個價錢再高了。")
+
+	ACTIVE_CHR("Aniece")
+	MSG("嘁，擺著一副溫和的表情，|卻還是那麼難對付啊……")
+
+	set_deg("Aniece", 0)
+	set_deg("Spence", 261)
+	FOCUS_CHR("PC")
+
+	cross_fade(80)
+	CINEMA_OFF(0)
+	permit_script_camera(0)
+
+	wait(80)
+
+	// 3700	EV C-1 巫女姬の弓
+	game_flag_on(3700)
+	jump EXIT
+
+
+//--------------------------------------------------------------------
+//　　道具屋に移動すると以下のイベントが發動。武器屋で店主とア
+//　　ニエスが會話している。主人公は入り口にフィックスしたまま、
+//　　カメラを二人に振る。
+
+EV1:
+	permit_script_camera(1)
+	RESET_MAP_ROT_Y(1,1)
+	STOP_PC(0)
+	CINEMA_ON(0)
+	stop_camera(0)
+	set_script_camera_EX("PC",0, -55.5,240.0,0.0, 12, 15.0)
+
+	set_deg_ex("Aniece", "Spence")
+	set_deg_ex("Spence", "Aniece")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -3.39,0.00,-3.39)
+	walk_pos("PC",0,0.05)
+
+	move_script_look_at(0,0,5, 180, 1)
+	wait(140)
+
+//	FOCUS_CHR("Aniece")
+//	SET_NAME("Aniece", "アニエス")
+	SET_NAME("ANIECE","高傲的女性")
+
+	SET_NAME("SPENCE","道具店老闆史密斯")
+	SET_MOTION("Spence", "ATTACK1",-1)
+
+	ACTIVE_CHR("Aniece")
+	MSG("最近，我在遺跡裡找到了描繪著精靈圖案的神奇峠片。")
+
+	ACTIVE_CHR("Spence")
+	MSG("神奇的峠片是嗎？|不介意的話請讓我看看。")
+	MSG("……這不是封印著『守護精靈』的峠片嗎？")
+
+	ACTIVE_CHR("Aniece")
+	MSG("守護精靈？")
+
+	ACTIVE_CHR("Spence")
+	MSG("在林德爾湖群地區|從很久以前就流傳著一種風俗。")
+	MSG("小孩子一生下來就要在精靈堂接受洗禮，|在他身上寄宿守護精靈。")
+
+	ACTIVE_CHR("Aniece")
+	MSG("唔～|做這樣的事情有什麼作用嗎？")
+
+	ACTIVE_CHR("Spence")
+	MSG("人生下來的那一瞬間，根據命運之星，|他的能力和性格就已經決定了。")
+	MSG("比如體力、魔力、運氣、手靈巧與否……")
+	MSG("就算透過成長和努力而有所提高，|但是各人之間的差距優劣還仍然會存在的。")
+	MSG("透過守護精靈|就可以對這些能力進行彌補和提高。")
+
+	ACTIVE_CHR("Aniece")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("嘿～|真是大開眼界了啊。")
+
+	ACTIVE_CHR("Spence")
+	MSG("寄宿在身上一輩子的守護精靈|只能是最初選出的一隻。")
+	MSG("所以孩子的母親為了選一個好的精靈|通常會絞盡脳汁想破頭。")
+
+	ACTIVE_CHR("Aniece")
+	MSG("原來是這樣……")
+	MSG("但是，|這種精靈只能在剛出生的時候寄宿。")
+	MSG("不管怎麼説，|這個峠片對我來説是沒什麼用了。")
+
+	ACTIVE_CHR("Spence")
+	MSG("是嗎，真遺憾……")
+
+	FOCUS_CHR("PC")
+	cross_fade(80)
+	CINEMA_OFF(0)
+	set_deg("Aniece", 0)
+	set_deg("Spence", 261)
+
+	permit_script_camera(0)
+	wait(80)
+
+	game_flag_on(3523)
+
+	// リネットの最初の會話用
+	room_flag_on(1)
+
+EXIT:
+	end
+}
+
+
+
+
+
+
+
+
+
+// 05/09/10
+//////////////////////////////////////////////////////////////////////
+// 初入店時HELPメッセージ（道具屋編）
+@help
+{
+	MSG_EX("#W0　",70,0X00000002)
+	SYS_EX("#F0#C2關於【道具店】",-1,0X20000400)
+	SYS_EX("#F0#C2在道具店可以購買到對探險有用的道具。",-1,0X20000400)
+	SYS_EX("#F0#C2除了藥水等回復藥品之外，|還出售鑰匙和咒文書。",-1,0X20000400)
+	SYS_EX("#F0#C2選擇商品列表上面表示型別的標籤，|然後點撃需要的商品。",-1,0X20000400)
+	SYS_EX("#F0#C2如果想賣掉不需要的物品，|請點撃所持有物品的圖標。",-1,0X20000400)
+}

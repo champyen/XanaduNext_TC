@@ -1,0 +1,1655 @@
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv‰Šú‰»‚Éƒ{ƒXƒp[ƒc‚ğ‘S•”æ¤‚İ‚Ş                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// SEÄ¶
+	SE("SE_THUNDER")
+	SE("SE_WIND2")
+	SE("SE_NAMI2")
+
+	// ƒŠ[ƒ[D—pƒJƒƒ‰OFF
+	CAMERA_OFF("ƒŠ[ƒ[D")
+
+	// š05/05/18:ƒuƒ‰ƒbƒNƒIƒjƒLƒX‹Ö~ƒtƒ‰ƒOON
+	room_flag_on(255)
+
+	// ƒRƒA
+	load_chr("M_0322\ARM_322a",0)
+	// ‚c‚r
+	load_chr("M_0322\ARM_322b",1)
+	// ƒqƒbƒgƒ}ƒbƒv
+	load_chr("M_0322\M_0322h",8)
+	set_collision_obj("body",8)
+
+	lock_camera("ƒ{ƒXD")
+	set_scroll_rect(-0,-2.5, 0,15)
+
+
+// ‚g‚oƒŠƒ“ƒNİ’è
+	link_hp_chr("core","body")
+	
+	// ƒrƒbƒgèª‚·iŒÄ‚Ño‚µ‚ÍƒvƒƒOƒ‰ƒ€‘¤‚Å‚â‚éj
+	hide_chr("bit1")
+	hide_chr("bit2")
+	hide_chr("bit3")
+	hide_chr("bit4")
+
+	set_target_chr("body")
+	bgm(17,0,-1)
+
+	ENTRY_CHR( 0,  72)
+	ENTRY_CHR( 1, 535)
+	ENTRY_CHR( 2,  36)
+	ENTRY_CHR( 3,  37)
+	ENTRY_CHR( 4,  38)
+	ENTRY_CHR( 5,  39)
+	ENTRY_CHR( 6,  40)
+	ENTRY_CHR( 7,  41)
+	ENTRY_CHR( 8, 538)
+	ENTRY_CHR( 9, 543)
+
+// 3808	EV ƒŠ[ƒ[UŒ‚ƒ‚[ƒh
+	CHECK_GAME_FLAG(3808)
+	OFF_JUMP NEXT
+
+	BGM(19, 0, -1)
+
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+	CAMERA_ON("ƒŠ[ƒ[D")
+	CINEMA_ON(0)
+	PC_FLAG(5, 1)
+
+	//PC‚Ì™|—
+	set_pos("PC", 0.0,-0.63,6.75)
+	set_deg("PC", 0)
+	PC_WEAPON(1, 0)
+	// ˆÚ“®AƒXƒLƒ‹AƒLƒƒƒ“ƒv‹Ö~
+	PC_FLAG(1, 1)
+	PC_FLAG(2, 1)
+	PC_FLAG(4, 1)
+	SET_PC_EQUIP( 1 ,0)
+	SET_PC_EQUIP( 3 ,0)
+	FOCUS_CHR("PC")
+	set_motion("PC", EMPTY22, 0)
+
+	//NPC™|—
+	PUT_CHR( 1, "Fleurette",   1.00,-0.88, 0.0, 20)
+	PUT_CHR( 2, "Avatarlaha",  2.14,-0.88,-2.25, 0)
+	PUT_CHR( 3, "Tiowald",    -1.85,-0.88,-2.43, 0)
+	PUT_CHR( 4, "Sturm",      -3.96,-0.88,-1.12, 0)
+	PUT_CHR( 5, "Gandaltua",   1.5, -0.88, 0.3,210)
+	PUT_CHR( 6, "Dvorak",      -1,-0.88, 0.68,  0)
+	PUT_CHR( 7, "Beatrice",    0.97,-0.88,-3.22, 0)
+	PUT_CHR( 9, "Liese0",       -0.00,-0.13, 8.42, 180)
+	set_motion("Liese0", EMPTY3, 0)
+	set_motion("Fleurette", EMPTY8, 0)
+	set_motion("Gandaltua", EMPTY20, 0)
+	LOOK_CHR("Gandaltua","PC")
+	load_npc_eqp(7,00)
+	DVORAK( 0)
+
+	hide_chr("core",0,1,120)
+	hide_chr("body",0,1,400)
+
+	end
+
+NEXT:h
+	// 3809	EV ƒ{ƒXDà”ŒãƒCƒxƒ“ƒg‚ğŒÄ‚Ño‚µ—p(DEBUG)
+	CHECK_GAME_FLAG(3809)
+	OFF_JUMP NEXT2
+
+	hide_chr("core",0,1,120)
+	hide_chr("body",0,1,400)
+	stop_bgm(0,1)
+
+NEXT2:
+
+	end
+}
+
+
+// ƒRƒA //////////////////////////////////////////////////////////////////////
+DEF("core")
+
+RES("INIT")
+{
+}
+RES("KILL")
+{
+	SYS("Ÿ—˜I")
+}
+
+
+
+
+
+
+
+// “·à //////////////////////////////////////////////////////////////////////
+
+DEF("body")
+RES("INIT")
+{
+	// 3809	EV ƒ{ƒXDà”ŒãƒCƒxƒ“ƒg‚ğŒÄ‚Ño‚µ—p(DEBUG)
+	CHECK_GAME_FLAG(3809)
+	OFF_JUMP NEXT
+
+	// 3808	EV ƒŠ[ƒ[UŒ‚ƒ‚[ƒh
+	CHECK_GAME_FLAG(3808)
+	ON_JUMP LISE_HIT
+
+	stop_bgm(0)
+
+	CINEMA_ON(0)
+	call EVENT_LISE
+	jump EXIT
+
+
+//-- ƒŠ[ƒ[UŒ‚ƒ‚[ƒh ------------------------------------------------
+
+LISE_HIT:
+	set_pos("PC", 0.0,-0.63,7.00)
+	set_deg("PC", 0)
+
+	// ˆÚ“®‹Ö~
+	PC_FLAG(1, 1)
+	// ƒXƒLƒ‹‹Ö~
+	PC_FLAG(2, 1)
+	// ƒLƒƒƒ“ƒv‹Ö~
+	PC_FLAG(4, 1)
+	PC_FLAG(10, 1)
+	set_motion("PC", EMPTY22, 0)
+
+	CINEMA_ON(0)
+	PC_FLAG(5, 1)
+
+	// ƒŠ[ƒ[D—pƒJƒƒ‰
+	CAMERA_ON("ƒŠ[ƒ[D")
+
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+	end
+
+
+NEXT:
+	//0685‚©‚ç’˜‚½ê‡‚Ì™|—A™¹“üƒ€[ƒr[
+	permit_script_camera(1)
+	set_script_camera(-0.7,8.5,7, -55,195,0, 9, 15)
+	set_motion("body","EMPTY1",0)
+	STOP_PC(0)
+	set_pos("PC",0.00,-0.875,0.00)
+	set_deg_ex("PC","body")
+
+
+	FADE_IN_EX( 60, 1, "0xffffffff",0)
+	SE("SE_B6_79001")
+	SE("SE_B6_79002")
+	blur(30)
+	SLOW(4)
+	wait(50)
+	SE("SE_B6_79003")
+	SLOW(0)
+	wait(50)
+
+	rotate_script_camera(40,-15,0, 10, 1)
+	move_script_look_at(0,-3.5,0, 10, 1)
+	blur(50)
+	SLOW(4)
+	wait(10)
+	SLOW(0)
+	blur(0)
+	scale_script_camera(1.1, 60, 1)
+	wait(55)
+//	SE("SE_B6_79001")
+
+	//ˆø‚­
+	scale_script_camera(2.5, 120, 1)
+	move_script_look_at(0,-3,0, 120, 1)
+	blur(2)
+	wait(100)
+//	SE("SE_B6_79001")
+	STOP_ENV_SE("SE_B6_79001",1500)
+
+	//Œã™|—
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CROSS_FADE(60)
+	blur(0)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+
+
+RES("KILL")
+{
+	stop_pc(0)
+	set_motion("body","DYING",0)
+	delete_efc("body")
+	delete_efc("core")
+	delete_efc("bit1")
+	delete_efc("bit2")
+	delete_efc("bit3")
+	delete_efc("bit4")
+
+	kill_chr("core",0,1,120)
+	kill_chr("bit1",0,1,120)
+	kill_chr("bit2",0,1,120)
+	kill_chr("bit3",0,1,120)
+	kill_chr("bit4",0,1,120)
+	kill_chr("kao1",0,1,120)
+	kill_chr("kao2",0,1,120)
+	kill_chr("kao3",0,1,120)
+
+	set_target_chr("-")
+
+//‚±‚±‚©‚ç€–Sƒfƒ‚-------------------------------------------
+
+	stop_bgm(0)
+
+	blur(50)
+	SE("SE_B6_79800")
+	SLOW(6)
+	FADE_OUT_EX( 16, 0, "0xffffff7d", 4)
+	wait(20)
+	SLOW(0)
+	cinema_on(0)
+
+	//ƒJƒƒ‰ˆÊ’uŒˆ’è
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(0,10,12, -30,-145,0, 10, 0)
+
+	//PC‚ÌˆÊ’u•â³
+	refresh("PC")
+	set_pos("PC",0.00,-0.12,9.0)
+	set_deg_ex("PC","body")
+	set_motion("PC","EMPTY2",0)
+	DELETE_EFC("PC")
+
+	//ƒKƒ‹èøƒAƒbƒvà—‚È‚ß
+	rotate_script_camera(10,10,0, 250, 1)
+	wait(60)
+	SLOW(2)
+	wait(60)
+	SLOW(0)
+	wait(130)
+
+	//ƒRƒAüç²‰º‚Öƒp[ƒ“
+	cross_fade(60)
+	move_script_look_at(0,-9,0, 50, 0)
+	rotate_script_camera(0,-15,0, 50, 0)
+	scale_script_camera(0.7, 50, 0)
+	wait(50)
+	rotate_script_camera(0,-3,0, 50, 1)
+	set_motion("PC","EMPTY3",50)
+	wait(50)
+	SLOW(4)
+	scale_script_camera(1.5, 20, 0)
+	wait(20)
+	SLOW(0)
+
+	//’†‰›‚©‚çùç
+	rotate_script_camera(-5.0,-10,0,280, 1)
+	blur(40)
+	wait(40)
+	set_motion("PC","STAND",0)
+	WAIT(100)
+	SE("SE_B6_79801")
+	wait(50)
+	SLOW(2)
+	wait(15)
+	SE("SE_B6_79801")
+	wait(15)
+	SLOW(0)
+//	wait(75)
+	wait(40)
+	SE("SE_B6_79802")
+	wait(35)
+
+	//ˆêŸ†‚Éˆø‚­
+	blur(100)
+	scale_script_camera(3, 5, 0)
+	wait(2)
+	SLOW(3)
+	wait(3)
+	SLOW(0)
+	blur(0)
+
+	//‚ä‚Á‚­‚èùç‚µ‚Â‚ÂƒzƒƒCƒgƒAƒEƒg
+	blur(60)
+	rotate_script_camera(-10,-60,0,660, 1)
+	QUAKE(5,5,660)
+	FADE_IN_EX(20, 0, "0xffffff7d", 0)
+	wait(20)
+	set_collision_obj("body",-1)
+	FADE_OUT_EX(590, 0, "0xffffffff", 0)
+	WAIT(100)
+	EFC("EFC_SPI_DEAD",0,3,10)
+	WAIT(200)
+	kill_chr("body",0,1,300)
+	WAIT(600)
+	
+	blur(0)
+
+	INIT_SWITCH_ON("beatgalsis")
+
+//--------------------------------------------------------------------
+
+	call EVENT_LISE
+
+	end
+}
+
+
+@EVENT_LISE
+{
+	// ƒŠ[ƒ[D—pƒJƒƒ‰ON
+	CAMERA_ON("ƒŠ[ƒ[D")
+
+	//PC
+	stop_pc(0)
+	PC_WEAPON( 0,1)
+	set_motion("PC","STAND",-1)
+	set_pos("PC",0.25,-0.88,0)
+	set_deg("PC", 10)
+	SET_PC_EQUIP( 1 ,0)
+	SET_PC_EQUIP( 3 ,0)
+
+	//NPC
+	PUT_CHR( 0, "Liese",    -0.00,-0.13,8.42, 180)
+	PUT_CHR( 1, "Fleurette",    -0.76,-0.63,-5.91, 6)
+	PUT_CHR( 2, "Avatarlaha",    2.41,-0.63,-7.00, 0)
+	PUT_CHR( 3, "Tiowald",    1.44,-0.63,-6.76, 0)
+	PUT_CHR( 4, "Sturm",    -4.05,-0.63,-6.32, 0)
+	PUT_CHR( 5, "Gandaltua",    -0.05,-0.63,-6.25, 0)
+	PUT_CHR( 6, "Dvorak",      -1.72,-0.63,-6.58, 126)
+	PUT_CHR( 7, "Beatrice",   -1.82,-0.63,-6.69, 0)
+	PUT_CHR( 9, "Liese0",       -0.00,-0.13, 8.42, 180)
+	load_npc_eqp(7,00)
+	DVORAK(0)
+	HIDE_CHR("Liese")
+	HIDE_CHR("Liese0")
+
+	//ƒJƒƒ‰
+	permit_script_camera(1)
+	set_script_camera(-0.0,-0.63,6.11,  -25.0,130.0,0.0, 12, 30.0)
+	move_script_look_at( 0,1,-6, 400, 1)
+	rotate_script_camera(5,5,0, 400, 1)
+	FADE_IN_EX(300, 0, "0xffffffff", 0)
+
+//	«ì‹Æ“I‚ÉƒXƒLƒbƒv‚Å‚«‚È‚¢‚Æh‚¢‚Ì‚Å‚Æ‚è‚ ‚¦‚¸“ü‚ê‚Ü‚µ‚½
+	set_skip_label("SKIP")
+	wait(300)
+
+
+//¥ŠïŠâéE•öšÓ‚µ‚½“ƒ‰®ã
+//@@ƒtƒ[ƒŒƒbƒg‚Æ“±t‚½‚¿‚ªà‚¯‚Â‚¯‚Ä‚­‚éB
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu‹Rm‘ålIIv",-1,2)
+
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.59,-0.88,-1.61)
+	walk_pos("Fleurette",1,0.05)
+
+	wait(20)
+	set_deg("PC", 245)
+	look_chr("PC", "Fleurette")
+	wait(40)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", -1.64,-0.88,0.68)
+	walk_pos("Dvorak",1,0.035)
+	wait_walk("Dvorak")
+	set_Deg("Dvorak", 42)
+	look_chr("Dvorak", "-")
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuš†ŠÒDåhHv",-1,2)
+
+	move_script_look_at( 0,0,-1, 500, 1)
+	rotate_script_camera(0,-20,0, 500, 1)
+
+	INIT_WALK_DST("Avatarlaha")
+	set_walk_dst("Avatarlaha", 2.14,-0.88,-2.25)
+	walk_pos("Avatarlaha",0,0.03)
+	wait(60)
+
+	INIT_WALK_DST("Beatrice")
+	set_walk_dst("Beatrice", -1.85,-0.88,-2.43)
+	walk_pos("Beatrice",0,0.03)
+	wait_walk("Beatrice")
+	look_chr("Beatrice", "PC")
+
+	set_Deg("Avatarlaha", 328)
+	look_chr("Avatarlaha", "PC")
+
+	INIT_WALK_DST("Tiowald")
+	set_walk_dst("Tiowald", 0.97,-0.88,-3.22)
+	set_walk_dst("Tiowald", 0.92,-0.88,-1.78)
+	walk_pos("Tiowald",0,0.02)
+	wait(60)
+
+	INIT_WALK_DST("Sturm")
+	set_walk_dst("Sturm", -3.96,-0.88,-1.12)
+	walk_pos("Sturm",0,0.03)
+	wait_walk("Sturm")
+	set_Deg("Sturm", 50)
+	look_chr("Sturm", "PC")
+	look_chr("Tiowald", "PC")
+
+	INIT_WALK_DST("Gandaltua")
+	set_walk_dst("Gandaltua", -0.02,-0.63,-4.66)
+	walk_pos("Gandaltua",0,0.03)
+	wait_walk("Gandaltua")
+
+
+//@@ålŒö‚ÉŠñ‚è“Y‚¤ƒtƒ[ƒŒƒbƒgB
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒNA‚Ü‚í‚è‚ğŒ©“n‚·d‘B
+
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.38,-0.88,-1.00)
+	walk_pos("Fleurette",0,0.02)
+	set_deg_EX("Fleurette", "PC")
+
+	set_deg("Dvorak", 350)
+	wait(60)
+	set_deg("Dvorak", 10)
+	wait(60)
+
+	MSG_EX("#S3#C0„’B¢Šïu‰Á¢¼zcc”íŠ²{—¹åhHv",-1,2)
+
+	set_motion("Sturm", ATTACK1, -1)
+	MSG_EX("#S3#C0C“ÁˆĞ¢›GuœäŠY™Ûccv",-1,2)
+
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒN‚ªålŒö‚ÉŒê‚è‚©‚¯‚éB
+//	dvorak(0, 0)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(0.25,0.88,-1.00,  -12.0,70.0,0.0, 7, 30.0)
+	set_deg_EX("Dvorak", "PC")
+	wait(60)
+
+	set_motion("Dvorak", ATTACK1, -1)
+	look_chr("PC", "Dvorak")
+	MSG_EX("#S3#C0à—€‰Äu‹Rmˆ¦CDà””V‘O–‚‰¤à“I˜bcc|@@@@@“’ê¥œƒ›õ‰ñ–Hv",-1,2)
+	MSG_EX("#S3#C0à—€‰Äuãã“ßàMàE“IŒûŸ†C|@@@@@D‘œ”íàŸFV–º‹\à“—¹ˆêéccv",-1,2)
+
+	look_chr("Tiowald", "Fleurette")
+	MSG_EX("#S3#C0’ñŸ^”b“Áuccccccccccv",-1,2)
+
+//@@Ÿ‚ÌuŠÔAŒõ‚Ì’Œ‚ª—§‚¿ã‚è(ƒIƒjƒLƒXƒGƒtƒFƒNƒg)A—Íá¶‚«‚Ä
+//@@•G‚ğ‚Â‚¢‚½ƒŠ[ƒ[ƒƒbƒg‚ªŒ»‚ê‚éB‘SˆõA‹Á‚¢‚Äg\‚¦‚éB
+//@@•À‚ñ‚Å™˜‚ğ\‚¦‚ÄAƒtƒ[ƒŒƒbƒg‚ğç‚éålŒö‚Æƒhƒ”ƒHƒ‹ƒU[ƒNB
+
+	
+	SHOW_CHR("Liese")
+	ATTACH_EFC("EFC_WARP_E","Liese","POS")
+	SE("SE_WARP3")
+	cross_fade(60)
+	set_script_camera(-0.00,-0.13,8.53,  -12.0,180.0,0.0, 8, 30.0)
+	move_script_look_at( 0,0.5,0, 1000, 1)
+
+	wait(20)
+	ATTACH_EFC("EFC_WARP_T","Liese","POS")
+	wait(120)
+
+	set_deg_EX("PC", "Liese")
+	look_chr("PC", "Liese")
+//	set_deg_EX("Dvorak", "Liese")
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·ccccv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‹Rm‘ålccccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŠÒŸ“—LŒ‹‘©B|@@@@@‘ü—vìˆ×–‚‰¤”VÈ“I‰äŠÒ‘¶İccv",-1,2)
+
+//	move_script_look_at( 0,4,-12, 500, 1)
+//	rotate_script_camera(-20,0,0, 500, 1)
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áuccä»ãN—Œ“ÁŒöåC›ßãS‰ÂˆÈ—¹Bv",-1,2)
+
+	cross_fade(60)
+	set_script_camera(-0.35,0.00,-1.17,  -12.0,45.0,0.0, 10, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0à—€‰Äu’ñŸ^”b“Á˜V“ªHv",-1,2)
+
+	look_chr("Tiowald", "Liese")
+	set_motion("Tiowald", ATTACK1, -1)
+	MSG_EX("#S3#C0’ñŸ^”b“Áu‘å‰Æ–çœäŠYâc”÷@æS“—¹™ÛBv",-1,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áuä»ãN—Œ“ÁŒöå‘´›‰–ç—Lç»©ŒÈ“IŒ´ˆöccv",-1,2)
+	wait(30)
+	set_deg("Dvorak", 32)
+	look_chr("Dvorak", "Liese")
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuccccccccccccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áu”\•s”\‘i‰ä˜ìcc”I“I–{ˆÓBv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.00, 0.63,8.53,  -12.0,180.0,0.0, 5, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áucc‰äccccccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.35,0.00,-1.17,  -12.0,45.0,0.0, 10, 30.0)
+	wait(60)
+
+	// ƒtƒ[ƒŒ‚ğ‘O‚Ü‚ÅíM‚©‚¹‚é
+	move_script_look_at( 0,0.5,7, 500, 1)
+
+	INIT_WALK_DST("Fleurette")
+	set_walk_dst("Fleurette", -0.69,-0.88,0.31)
+	set_walk_dst("Fleurette", -0.56,-0.88,2.04)
+	set_walk_dst("Fleurette",  0.01,-0.63,4.61)
+	walk_pos("Fleurette",0,0.02)
+
+//	move_script_look_at( 0,0,4, 200, 1)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·ccccv",-1,2)
+
+	wait_walk("Fleurette")
+	set_deg_EX("Fleurette", "Liese")
+	wait(60)
+	wait_camera(0)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(-0.00,1.00,6.42,  -25.0,100.0,0.0, 9, 30.0)
+	rotate_script_camera(0,20,0, 2000, 1)
+
+	look_chr("Fleurette", "Liese")
+
+	MSG_EX("#S3#C0•‡—…åQ“ÁuŒÜ•S”N‘Occ|@@@@@‰ä˜ì”í••ˆó”VŒã–”á¢¶—¹Y›õ–Hv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu‰ä˜ìˆê’¼ˆÈˆ×|@@@@@@‰Á¢¼zİŠïŠâé’†Ÿ‰‡’˜Bv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu§ˆ·ˆ·İ™ûàÅ“‡|@@@@@@ã‹ã”çŒì’˜‘¼ccv",-1,2)
+	cross_fade(60)
+	set_script_camera(-0.67,1.03,7.24,  -8.0,150.0,0.0, 6, 30.0)
+	rotate_script_camera(5,0,0, 1000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu’A¥–‚‰¤ˆ×Y›õ|@@@@@@˜ğ••ˆóİˆ·ˆ·“Igà—¡šCHv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu„Ë‰Á¢¼zà“I˜bcc|@@@@@‰äˆê’è—v–âŒÂ–¾”’Iv",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•‡—…åQ“Áccccv",-1,2)
+	wait(20)
+	fade_out(60)
+	stop_bgm(0, 1000)
+	wait(120)
+
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+
+	BGM(19, 0, 0)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰ä“’êcc|@@@@@ŠYœƒ›õ˜ôËDšCHv",-1,2)
+	wait(60)
+
+	set_script_camera(0.06,1.0,4.34,  -2.0,5.0,0.0, 8, 30.0)
+	move_script_look_at( 1.0,0,0, 1000, 1)
+
+	fade_in(60)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áucc‰ä˜ììˆ×™Ô–E‘Ù’a¶İ‰¤ºC|@@@@@ˆê“¯Úó›Ş—“IŒP—ûBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu“¯–ç‘œ•’Ê“Iˆ·–…ˆêéC|@@@@@“x‰ß—¹›‹M“IŒõBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•scc–ç‹–³ˆöˆ×ˆê‹NãSó—¹šŠi“IŒP—ûC|@@@@@ŠˆÈ”VŠÔ“Iã±ãJX[Bv",-1,2)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·ccv",-1,2)
+
+	cross_fade(60)
+	set_script_camera(-0.84,1.03,8.01,  5.0,90.0,0.0, 6, 30.0)
+	move_script_look_at( 0,-0.5,-3, 1200, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuã`¥ŠJ˜N–z•ú“I•‡—…åQ“Áccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁugààTã“I‰ä—L±¹“i”IC|@@@@@ŠˆÈãSí—L”‡é“I‘z–@Bv",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŠó–]”I•s—v˜ôY›õ••ˆó›Ş—C|@@@@@§¥ìˆ×ˆêŒÂ•’ÊlK•Ÿ’n¶Šˆccv",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu›Ş—A‘œ¥“Bİ”í••ˆó“I‰Á¢¼z|@@@@@gã“ITqˆêé“I‘¶İBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•s—vàŒ‹¥—¹C|@@@@@˜A‰ß•’Ê“I¶Šˆ“s•s”íˆò‹–Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥İ‚P‚Uà}¶“ú“I‘O–éccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äãã“—¹|@@@@@@”I”í‘Iˆ×›Ş—“Iu‘§ccv",-1,2)
+
+	look_chr("Fleurette", "-")
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ¦ccv",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(-0.06,1.0,4.34,  -2.0,355.0,0.0, 5, 30.0)
+	rotate_script_camera(5,0,0, 1000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘´›‰C‘z‘z©ŒÈ•aã“IgàC|@@@@@–çA’m“¹˜ğ—L”‡é“IŒ‹‰ÊBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥Cˆöˆ×–›‰“Ë‘R²İŠá‘OC|@@@@@‰ä“IS–çAàm¶—¹—ô­Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu–…–…”í”—Úó—¹Ÿ‰d“I–½‰^C|@@@@@ÅŒã‰ä™ÈY›õ–ç•s”\ˆ×ç»˜ôccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äæf™î‰ä•aã“Igàccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áucc•s˜ğ“Iccccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+//	set_script_camera(-1.20,-0.88,-1.89,  -55.0,30.0,0.0, 14, 30.0)
+	set_script_camera(-1.0, 0.0, -0.5,  -8.0,45.0,0.0, 6, 30.0)
+	move_script_look_at( 2, 0.2,-3, 800, 1)
+	set_deg_EX("Dvorak", "Liese")
+	wait(60)
+
+	set_motion("Dvorak", ATTACK1, -1)
+	MSG_EX("#S3#C0à—€‰Äu‘I’è›Ş—“I–î|@@@@@’¼“éàD“IŒó“sœäŠY¥‹@–§Bv",-1,2)
+	MSG_EX("#S3#C0à—€‰Äu“’ê¥’Nccv",-1,2)
+	wait(30)
+
+	set_motion("Gandaltua", ATTACK1, -1)
+	MSG_EX("#S3#C0„’B¢Šïu›”—¹cc¥—ŒåQàÅ™ÛBv",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	set_script_camera(0.01,-0.13,8.50,  -25.0,180.0,0.0, 9, 30.0)
+	rotate_script_camera(5,0,0, 1000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuccŸ“öBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuç»’ñoæ¨‰ä‰Å‹‹–‚‰¤C|@@@@@“¾“‹­‘å“I—Í—Êccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘RŒã—p“ß—Í—Ê˜a›Ş—“I›Şp‹\à“–‚‰¤C|@@@@@›’‘¼••ˆóİ‰ä“Igà—¡“I’ñˆÄBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”@‰Ê–‚‰¤”\àBœnå“ß“xÁ¸C|@@@@@•‡—…åQ“ÁA•s—p‹ác›Ş——¹Bv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(0.01,1.13,8.50,  -4.0,200.0,0.0, 15, 30.0)
+	wait(60)
+
+	look_chr("Sturm", "Liese")
+	wait(10)
+
+	MSG_EX("#S3#C0C“ÁˆĞ¢›Gu—ŒåQàÅcc|@@@@@^¥”Úç¿ˆ¦ccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuİç»ŠÅ˜ÒC|@@@@@@‰ä•s‰ß¥ˆ×—Ä‰ğ•ú–‚‰¤§‘¶İ“I“¹‹ï”ë—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥›”‰ä˜ÒàC|@@@@@”‡ŒÂu‘§A‘œ¥ˆêüŒõ–¾“ßé“IŠó–]Bv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.84,1.03,4.51,  5.0,90.0,0.0, 4, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áucc‰äccccv",-1,2)
+	wait(60)
+	move_script_look_at( 0,0,0.5, 500, 1)
+	look_chr("Fleurette", "Liese")
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu‰ä–çŠó–]ˆ·ˆ·”\àB“¾“K•Ÿccv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“ÁuŠˆÈ›Ş—”‡í–³ãÖ“IHì|@@@@@ŠÒ¥—R‰ä˜Ò˜ô”äŠrDcc",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áucc‰ä¥”‡›õ‘z“Iˆ¦ccccv",-1,2)
+	look_chr("Fleurette", "-")
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(0.1,1.23,7.5,  3.0,150.0,0.0, 3, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰ä’m“¹ccÓÓ”Icc|@@@@@‰ä‘P—Ç“I•‡—…åQ“Áccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu³ˆöˆ×”@ŸC|@@@@@‰äË‹F‹”I”\àBK•Ÿccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.84,1.03,5.01,  5.0,90.0,0.0, 4, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·ccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(0.45,1.23,7.5,  3.0,150.0,0.0, 3, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•aã“I‰äŸ“—L‘´›€“IàH–@Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŠˆÈ‰äËÚó—¹—ŒåQàÅ“IŒš‹cBv",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+// ¡ˆê–‡ã‰@‘åœAŠÔ‚ği‚ŞàŸ‚«‰Ô‰Å
+	ENTRY_IMG(0,"mono\MONO01_01",0)
+	ENTRY_IMG(1,"mono\MONO01_02",0)
+	ENTRY_IMG(2,"mono\MONO01_03",0)
+	ENTRY_IMG(3,"mono\MONO01_04",0)
+	ENTRY_IMG(4,"mono\MONO01_05",0)
+	ENTRY_IMG(5,"mono\MONO01_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘RŒãCİ“ßˆê“VC|@@@@@‰ä‹—¹ˆÊ‰—‰¤é’†â“I••ˆó”VŠÔBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ŠL˜±“Á—¢Šïu“ßA¥àŸFV–º–Œccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¥“Iccv",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+// ¡ˆê–‡ã‰@ƒhƒ‰ƒXƒŒ‚ğ\‚¦‚éƒtƒ[ƒŒƒbƒg
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•s‹v–‚‰¤˜aå“ß“x“IDà¥•ÖŠJn—¹C|@@@@@•‡—…åQ“Á‘¼˜ì—§U‘Å—¹ŠïŠâéBv",-1,2)
+	ENTRY_IMG(0,"mono\MONO02_01",0)
+	ENTRY_IMG(1,"mono\MONO02_02",0)
+	ENTRY_IMG(2,"mono\MONO02_03",0)
+	ENTRY_IMG(3,"mono\MONO02_04",0)
+	ENTRY_IMG(4,"mono\MONO02_05",0)
+	ENTRY_IMG(5,"mono\MONO02_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuDà”–{¥—L—˜‰—å“ß“xˆê•û“IC|@@@@@•s‰ß”I˜ì™È”Æ—¹ˆêŒÂöŒëBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“ÁuccöŒëHv",-1,2)
+	wait(30)
+
+	fade_out(60)
+	wait(60)
+
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+
+// ¡ˆê–‡ã‰@™˜‚ÌƒAƒbƒv
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¹™˜“I—Em•ÀŸ“—LoŒ»Bv",-1,2)
+	ENTRY_IMG(0,"mono\MONO03_01",0)
+	ENTRY_IMG(1,"mono\MONO03_02",0)
+	ENTRY_IMG(2,"mono\MONO03_03",0)
+	ENTRY_IMG(3,"mono\MONO03_04",0)
+	ENTRY_IMG(4,"mono\MONO03_05",0)
+	ENTRY_IMG(5,"mono\MONO03_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘ü—L©ŒÈ‘I’†“I—EmC|@@@@@¹™˜Ë˜ğ’—\‘¼^³“I—Í—ÊBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘¦g•‡—…åQ“Áèˆ¬¹™˜C|@@@@@–ç•s”\‹‹–‚‰¤’v–½“I‘ÅŒ‚Bv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áu‰Ê‘R¥”‡éˆ¦ccv",-1,2)
+	wait(30)
+
+	fade_out(60)
+	wait(60)
+
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+
+// ¡ˆê–‡ã‰@é‚Ì^ã‚ÉŒ»‚ê‚éƒKƒ‹ƒVƒX
+	MSG_EX("#S3#C0•‡—…åQ“Áu“ß›õC|@@@@@”@‰ÊA“ßéã‹ã”Dà”‰º‹ccv",-1,2)
+	wait(30)
+	ENTRY_IMG(0,"mono\MONO04_01",0)
+	ENTRY_IMG(1,"mono\MONO04_02",0)
+	ENTRY_IMG(2,"mono\MONO04_03",0)
+	ENTRY_IMG(3,"mono\MONO04_04",0)
+	ENTRY_IMG(4,"mono\MONO04_05",0)
+	ENTRY_IMG(5,"mono\MONO04_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¥“IC|@@@@@‹°œ†˜ğ‘SŒR•¢Ÿ“ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŠˆÈ‰äˆê’¼İqQ‹óácC|@@@@@ˆ×—¹••ˆó–‚‰¤§’‹’˜D‹µBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥C‰äˆê’¼“sŸ“—LQ“‹@˜ğC|@@@@@’¼“”Iäo–‚‰¤›”ŒˆBv",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰—¥‰äccv",-1,2)
+
+	set_script_camera(0.25,-0.0,0.00,  -10.0,330.0,0.0, 10, 30.0)
+	rotate_script_camera(0,5,0, 800, 1)
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuİ›”–‚‰¤{—¹••ˆóŠÔ“I–@p“¯cc|@@@@@–ç›’”I˜ì–çˆê“¯••ˆó—¹‹N˜ÒBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuš‰cc“ßcc“ßŒÂÎ‰»¥ccv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ×—¹à¸•cc‰ä˜ìccHv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¥“IC›”•s‹Nccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuˆ×—¹à¸•”I˜ìC|@@@@@“ß‘ü”\“ßé˜ô—¹ccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0à—€‰Äuccœƒ›õ˜ğ”‡éccccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.09,0.60,8.48,  5.0,340.0,0.0, 2, 30.0)
+	move_script_look_at( 0, 0.8,0, 800, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuİ“ß”VŒãC|@@@@@‰ä›’–‚‰¤ìˆ×çŒì¸èË••ˆóİ©ŒÈààABv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥Cç¬’˜ŠÔ“I—¬ÀC|@@@@@ààA“I–‚‰¤‰ø•œ—¹—Í—ÊBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu˜A‰ä“I—Í—Ê–ç›ßãS•s”\T§‘¼—¹ccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ˆ¢”b“ƒf™ûuˆöˆ×“ßŒÂ“I‰e‹¿C|@@@@@‰ä˜ì“IÎ‰»æÁ‘Ô–ç”í‰ğŠJ—¹¥åhBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¥“Iccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.81,1.0,6.66,  -8.0,45.0,0.0, 6, 30.0)
+	move_script_look_at( 0, -1.0,-8, 600, 1)
+//	set_script_camera(-0.09,0.60,8.48,  5.0,340.0,0.0, 2, 30.0)
+//	move_script_look_at( 0, 0.8,0, 800, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu³Dİ“ßŒÂŒóC|@@@@@•m€“I‹Rm”í›æ“‰ä“Igç²Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘åŠT¥ˆöˆ×”w—£—¹l—Ş“¹˜H“I‰äC|@@@@@ŠÒ—L–¢Š®¬“Ig–½™Ûccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äİ‰õ—v€‹“I‹Rm‘ål“IèË°’†|@@@@@Š´ó“—¹à]˜a§‹­‘å“I—Í—ÊBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu“ï“¹¥¹™˜—EmoŒ»—¹ccv",-1,2)
+	look_chr("PC", "Liese")
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äŒˆ’è”c”‡ˆêüŠó–]|@@@@@Šñ‘õİ‹Rm‘ålgãBv",-1,2)
+	wait(30)
+
+	look_chr("Beatrice", "Liese")
+	MSG_EX("#S3#C0ŠL˜±“Á—¢Šïu‰ä˜ìccŠ¡ˆ×~Y›õ“s•s’m“¹ccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.00, 0.23,8.53,  -12.0,180.0,0.0, 8, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”‡‘S“s¥‰ä“IˆÓuB|@@@@@•s¥”I˜ì“IöBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”@‰Ê•s‰ğ•ú–‚‰¤C|@@@@@”‡é“I–îAccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·ccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu^“I‹‹‘å‰Æ“Y—¹œk‘½–ƒ”ÏBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu’A¥cc|@@@@@–îŠÒŸ“—LŠ®‘SŒ‹‘©Bv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0„’B¢Šïuœƒ›õ‰ñ–Hv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.00, 0.23,8.53,  -12.0,180.0,0.0, 4, 30.0)
+	move_script_look_at( 0, 1.0, 0, 200, 1)
+//	set_script_camera(0.14, 0.7,8.23,  -5.0,100.0,0.0, 5, 30.0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuccãS‰ß”‡›õ‘½”Nˆê’¼ã”’˜••ˆóC|@@@@@‰ä“Igà›ßãSŠJn˜a–‚‰¤“¯‰»—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŒ»İ“I‰äŠù¥ä»ãN—Œ“ÁC|@@@@@“¯–ç¥–‚‰¤‰Á¢¼zBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu”Ià“lccv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu—Lˆêí••ˆó–‚‰¤“I•û–@Bv",-1,2)
+
+	fade_out(60)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‹Rm‘ålC|@@@@@¿—p“j—´™˜ú“§‰ä“IgàBv",-1,2)
+	wait(30)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘RŒã•‡—…åQ“ÁC|@@@@@”I—p¹™˜ác”}‰î›’‰ä••ˆóBv",-1,2)
+	wait(30)
+
+	set_script_camera(-0.10,0.88,2.85,  -20.0,0.0,0.0, 8, 30.0)
+	rotate_script_camera(0,20,0, 1200, 1)
+	fade_in(60)
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu“ßí–îcc‰ä˜ô•s“IIv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuccÅŒãŠÒæ¨”I|@@@@@˜ô”‡í˜ğ‹‹”I›æ˜Ò’É‹ê“I–îBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¿Œ´—È‰ä”‡ŒÂ•sâiE“Iˆ·ˆ·™ÛBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuccˆ×Y›õcc|@@@@@‘´›€“IccŸ“—L‘´‘¼“I•û–@—¹åhIHv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuœkˆâŠ¶CŸ“—Lcc|@@@@@§Š‰ä˜ì›ßãSŸ“—LŠÔ—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”‡é‰º‹“I˜bC|@@@@@“™‰Á¢¼z“I¨áx–ü”VŒã˜ğÄ“xoŒ»“IBv",-1,2)
+	wait(30)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu”‡ccccv",-1,2)
+	wait(30)
+
+	cross_fade(60)
+	set_script_camera(-0.00, 0.75,8.53,  -12.0,180.0,0.0, 4.4, 30.0)
+	scale_script_camera(0.9, 500, 0)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äˆ×—¹”‡ˆê“I“˜ÒC|@@@@@›ßãSŠˆ—¹‰õŒÜ•S”N—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu“±t˜ìˆ¦C•‡—…åQ“ÁA`‘õ‹‹”I˜ì—¹Bv",-1,2)
+	wait(60)
+
+//	cross_fade(60)
+	fade_out(60)
+	wait(120)
+
+	set_script_camera(-0.38,-0.88,0.83, -20,160,0, 10, 30)
+	fade_in(60)
+	wait(60)
+
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒN‚ªålŒö‚ÉíM‚İŠñ‚éB
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak",  -0.82,-0.88,0.13)
+	walk_pos("Dvorak",0,0.02)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0à—€‰Äu”‡›””I˜Òà–ç‹–¥œkŸk““I–îcc|@@@@@•Lèí”I˜aŒöå—LŒğîˆ¦Bv",-1,2)
+	MSG_EX("#S3#C0à—€‰Äu”@‰Ê‰ÂˆÈ“I˜bC|@@@@@Aæ¨‰ä‘ã‘Ö”I˜Òccv",-1,2)
+
+//@@è‚Åƒhƒ”ƒHƒ‹ƒU[ƒN‚ğ§‚·‚éålŒöB
+	LOOK_CHR("PC","Dvorak")
+	WAIT(30)
+	set_motion("PC", EMPTY24, 0)
+	wait(120)
+
+	cross_fade(60)
+	set_script_camera(0.01,1.13,8.50,  -35.0,160.0,0.0, 6, 30.0)
+	wait(60)
+
+	HIDE_CHR("Liese")
+	SHOW_CHR("Liese0")
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¹™˜‘I¢—¹”IC|@@@@@^¥‘¾D—¹ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu“ß›õ‹Rm‘ålccv",-1,2)
+
+//@@ƒŠ[ƒ[A•G‚ğ“Ë‚¢‚Ä™_è‚ğ‡‚í‚¹A‹F‚è‚ğ•ù‚°‚ép¨‚ÉB
+	set_motion("Liese0", EMPTY3, -1)
+	wait(80)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu`‘õ”I—¹Bv",-1,2)
+	wait(80)
+
+	fade_out(60)
+	wait(120)
+
+
+SKIP:
+	//ƒtƒ‰ƒO‚Æ‚©ŠÂ‹«‚Æ‚©
+	GAME_FLAG_ON(3808)
+	KILL_CHR("KAMINARI",0,0,1)
+	STOP_ENV_SE("SE_THUNDER", 4000)
+	STOP_ENV_SE("SE_WIND2", 4000)
+	CAMERA_ON("ƒŠ[ƒ[D")
+
+	// ƒCƒ[ƒW•\¦’†‚ÌƒXƒLƒbƒv›”œä
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+
+	BGM(19, 0, 0)
+
+	//PC‚Ì™|—
+	set_pos("PC", 0.0,-0.63,6.75)
+	set_deg("PC", 0)
+	PC_WEAPON(1, 0)
+	PC_FLAG(1, 1)
+	PC_FLAG(2, 1)
+	PC_FLAG(4, 1)
+	PC_FLAG(10, 1)
+	FOCUS_CHR("PC")
+	LOOK_CHR("PC","-")
+
+	//NPC™|—
+	HIDE_CHR("Liese")
+	SHOW_CHR("Liese0")
+
+	STOP_WALK("PC")
+	STOP_WALK("Fleurette")
+	STOP_WALK("Avatarlaha")
+	STOP_WALK("Tiowalde")
+	STOP_WALK("Sturme")
+	STOP_WALK("Gandaltua")
+	STOP_WALK("Dvorake")
+	STOP_WALK("Beatrice")
+
+	SET_POS("Fleurette",1.00,-0.88, 0.0)
+	SET_POS("Avatarlaha",2.14,-0.88,-2.25)
+	SET_POS("Tiowald",-1.85,-0.88,-2.43)
+	SET_POS("Sturme",-3.96,-0.88,-1.12)
+	SET_POS("Gandaltua", 1.5, -0.88, 0.3)
+	SET_POS("Dvorak", -1,-0.88, 0.68)
+	SET_POS("Beatrice", 0.97,-0.88,-3.22)
+	SET_POS("Liese0", -0.00,-0.13, 8.42)
+
+	SET_DEG("Fleurette",20)
+	SET_DEG("Avatarlaha",0)
+	SET_DEG("Tiowald",0)
+	SET_DEG("Sturme",0)
+	SET_DEG("Gandaltua",210)
+	SET_DEG("Dvorak",0)
+	SET_DEG("Beatrice",0)
+	SET_DEG("Liese0",180)
+
+	set_motion("PC", EMPTY22, 0)
+	set_motion("Liese0", EMPTY3, 0)
+	set_motion("Fleurette", EMPTY8, 0)
+	set_motion("Gandaltua", EMPTY20, 0)
+	LOOK_CHR("Gandaltua","PC")
+	delete_efc("Liese")
+
+	//ƒJƒƒ‰Ø‚è‘Ö‚¦
+	WAIT(50)
+	fade_in(60)
+	set_script_camera(0,0,0,  -45,180,0, 17, 15)
+	MOVE_SCRIPT_LOOK_AT( 0,0,5, 180, 1)
+	WAIT(180)
+
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+//	CINEMA_OFF(60)
+	PC_FLAG(5, 1)
+	ret
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ˜ğ˜bƒŠ[ƒ[
+
+DEF("Liese0")
+
+RES("CLICK")
+{
+	// ˜ğ˜b‹Ö~
+	PC_FLAG(3, 1)
+
+	MSG("^“IœkÓÓ”Icc|¿—p”I“Ièæ¨”‡ˆêØ“sŒ‹‘©™ÛB")
+	MSG("”‡–ç‹–¥‰äˆÙ‘z“VŠJC•s‰ßcc")
+	MSG("”@‰Ê”\äo”Icc|—LX‰Á•½–}“Iç®çAD—¹cc")
+
+	PUT_CHR( 8, "LieseHit",    -0.00,-0.13,8.42, 180)
+	hide_chr("LieseHit")
+	show_chr("LieseHit")
+
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ƒŠ[ƒ[UŒ‚—p
+
+DEF("LieseHit")
+RES("ATTACK")
+{
+//	CINEMA_ON(60)
+	PC_FLAG(5, 0)
+	stop_pc(0)
+	pc_weapon(1, 1)
+	set_motion("PC","EMPTY23",5)
+	WAIT(29)
+
+	FADE_OUT_EX(10, 1,"0xffffffff", 0)
+	BLUR(10)
+	SLOW(5)
+	WAIT(10)
+	SE("SE_EVENT_50")
+	BLUR(0)
+	SLOW(0)
+
+	set_skip_label("SKIP")
+
+	wait(260)
+
+//@@ƒtƒF[ƒhU‚¯‚ÄAƒŠ[ƒ[ƒƒbƒg‚ğ‚µ‚á‚ª‚ñ‚Å•ø‚«‚©‚©‚¦‚Ä‚¢‚é
+//@@ålŒöBƒŠ[ƒ[ƒƒbƒg‚Ìà‚Ìã‚É‚Íƒhƒ‰ƒSƒ“ƒXƒŒƒCƒ„[‚ª“Y‚¦
+//@@‚ç‚ê‚Ä‚¢‚éBƒtƒ[ƒŒƒbƒg‚ª‹ß‚­‚ÉŠñ‚è“Y‚Á‚Ä‚¢‚éæÁ‘ÔB
+
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuÓÓ”Icc‹Rm‘ålccv",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu™è™èccàã‘½•a“I‰äcc|@@@@@›ßãSŠˆ—¹”‡›õ’·ŠÔ—¹šCccv",-1,2)
+
+	set_pos("PC",          -0.21,-0.13,9.50)
+	set_pos("Liese0",       0.00,-0.13,9.50)
+	set_pos("Fleurette",    0.60,-0.13,9.50)
+	set_pos("Avatarlaha",  -2.12,-0.63,4.61)
+	set_pos("Beatrice",    -3.07,-0.13,8.41)
+	set_pos("Dvorak",      -2,-0.13,13)
+	set_pos("Tiowald",     -0.03,-0.63,4.24)
+	set_pos("Sturm",        4,-0.63,7)
+	set_pos("Gandaltua",    2.5,-0.13,12)
+	set_motion("Gandaltua", STAND, 0)
+
+	set_deg("PC",           90)
+	set_deg("Liese0",        180)
+	set_deg("Fleurette",   270)
+	set_deg("Avatarlaha",  39)
+	set_deg("Beatrice",    85)
+	set_deg("Dvorak",      170)
+	set_deg("Tiowald",     351)
+	set_deg("Sturm",       300)
+	set_deg("Gandaltua",   221)
+
+	HIDE_CHR("LieseHit")
+
+	// ˆÚ“®AƒXƒLƒ‹A˜ğ˜b‹Ö~‰ğœ
+	PC_FLAG(1, 0)
+	PC_FLAG(2, 0)
+	PC_FLAG(3, 0)
+	SET_PC_EQUIP( 0 ,0)
+
+	SET_MOTION("Liese0","EMPTY4",0)
+	SET_MOTION("Fleurette","EMPTY9",0)
+	SET_MOTION("PC","EMPTY25",0)
+	set_motion("Gandaltua", EMPTY18, 0)
+	WAIT(180)
+
+	//‰“ŒiƒJƒƒ‰
+	permit_script_camera(1)
+	set_script_camera(0.00, 0.5,8.53, -70,150,0, 12, 30)
+	rotate_script_camera(0,40,0, 2000, 1)
+
+	FADE_IN_EX(120, 1,"0xffffffff", 0)
+	wait(180)
+
+//‚Q•”
+	MSG_EX("#S3#C0•‡—…åQ“Áuo¶“IŒó”IİšL‹ƒC|@@@@@üš¡“Il“sİÎccv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu€‹“IŒóüš¡“Il“sİšL‹ƒãìãìãìv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu’A¥Ç—L”IœäŠY”÷ÎBv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áucc”‡¥İå“ß“x—¬™B“IŒ¿ŒêBv",-1,2)
+
+	CROSS_FADE(60)
+	set_script_camera(0.00, 0.5,8.53, -30,170,0, 4.0, 30)
+	rotate_script_camera(5,20,0, 2000, 1)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·cc”Iˆ×Y›õŠÒ”\“ß›õ•½èÎccv",-1,2)
+	wait(120)
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áu•‡—…åQ“Á‘ålCŠÔ”nãA“—¹ccv",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu‰ä’m“¹—¹Bv",-1,2)
+
+	look_chr("Fleurette","PC")
+	wait(60)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áu‹Rm‘ålCˆ·ˆ·A`‘õ‹‹”I—¹Bv",-1,2)
+
+//@@ƒtƒ[ƒŒƒbƒgAƒŠ[ƒ[ƒƒbƒg‚É‹F‚è‚ğ•ù‚°‚ép¨B
+//@@ƒhƒ‰ƒSƒ“ƒXƒŒƒCƒ„[‚ª”½œä‚µ‚Ä‹P‚«o‚·B
+
+	cross_fade(60)
+	set_script_camera(0.00,0.5,8.53, -10,210,0, 4, 30)
+	SCALE_SCRIPT_CAMERA( 0.8, 2000, 0)
+	wait(120)
+
+	MSG_EX("#S3#C0•‡—…åQ“Áuˆ·ˆ·cc|@@@@@”Iã`¥İˆ×‰ä“IK•Ÿ’˜‘zBv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áu”@‰Ê‰ä—v•ñ“š”I“I˜bC|@@@@@“šˆÄ‘ü—LˆêŒÂBv",-1,2)
+	MSG_EX("#S3#C0•‡—…åQ“Áuæ¨‰ä˜ì‰i‰“İˆê‹NB|@@@@@A‘œK•Ÿ“I”N—cŒõ“ßéccv",-1,2)
+	SET_MOTION("Fleurette","EMPTY10",20)
+	WAIT(68)
+	SE("SE_EVENT_01")
+	ATTACH_EFC("EFC_06FENIX1","Fleurette","POS")
+	SET_MOTION("Fleurette","EMPTY11", 20)
+	WAIT(60)
+	SE("SE_EVENT_54")
+	ATTACH_EFC("EFC_06FENIX2","Fleurette","POS")
+	WAIT(120)
+
+	cross_fade(60)
+	set_script_camera(0.00,0.5,8.53, -30,290,0, 20, 30)
+	rotate_script_camera(0,30,0, 2000, 1)
+	WAIT(30)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak",  -1.5,-0.13,12)
+	walk_pos("Dvorak",0,0.02)
+	WAIT_WALK("Dvorak")
+	
+	MSG_EX("#S3#C0à—€‰Äu•‡—…åQ“Á‘ålCš†‘ÅZŠ²Y›õccv",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0•‡—…åQ“Áu‹Rm‘ålCŠÒ—L“±t˜ìccv",-1,2)
+	WAIT(90)
+	MSG_EX("#S3#C0•‡—…åQ“ÁuÄŒ©ccv",-1,2)
+
+
+
+//@@ƒhƒ‰ƒSƒ“ƒXƒŒƒCƒ„[‚ªá¿‚¢Œõ‚ğ•ú‚¿Aç²‚èˆê–Ê‚ªŒõ‚É
+//@@•¢‚í‚ê‚éBá`–ÊA‚»‚Ì‚Ü‚ÜƒzƒƒCƒgƒAƒEƒgB
+
+	FADE_OUT_EX(60, 1,"0x99ffffff", 0)
+	blur(10)
+	SLOW(1)
+	wait(60)
+	FADE_IN_EX(30, 1,"0x99ffffff", 0)
+	wait(30)
+
+	FADE_OUT_EX(30, 1,"0xAAffffff", 0)
+	wait(30)
+	FADE_IN_EX(30, 1,"0xAAffffff", 0)
+	wait(60)
+	blur(20)
+	SE("SE_EVENT_55")
+	FADE_OUT_EX(120, 1,"0xffffffff", 0)
+	WAIT(120)
+
+	blur(0)
+	SLOW(0)
+	STOP_ENV_SE("SE_NAMI2", 4000)
+	STOP_ENV_SE("SE_EVENT_54", 4000)
+	DELETE_EFC("Fleurette")
+	stop_bgm(0, 3000)
+
+	WAIT(120)
+
+		play_movie("system\ins02.dat", 1)
+
+//@@ˆÈ~‚Í‡“üƒ€[ƒr[‚É‚æ‚éƒCƒxƒ“ƒg
+//@@Œõ‚Í‚â‚ª‚Äˆê‰ÓŠ‚ÉW–ñ‚³‚êA‚»‚ê‚ªŸ‘æ‚É•s€’¹‚Ì
+//@@Œ`‚ğì‚Á‚Ä‚¢‚­B
+//@@•s€’¹‚Æ‚È‚Á‚½ƒtƒ[ƒŒƒbƒg‚Í—Í‹­‚­‰H‚Î‚½‚«A‚»‚Ì
+//@@‚Ü‚Üã‹ó‚Ö‚Æ”ò‚Ñ—§‚Á‚Ä‚¢‚­Bƒ€[ƒr[‚Í‚±‚±‚ÅI—¹B
+//@@ƒtƒF[ƒhƒAƒEƒgU‚¯‚ÄAÄ‚ÑŠïŠâéB
+//    –¾‚é‚¢”wŒi
+
+	FADE_OUT(0)
+
+	set_script_camera(-1.21, 7.13,14.86,  0,150,0, 15, 30)
+	MOVE_SCRIPT_LOOK_AT( 0,-5,0, 1400, 1)
+	LOAD_MAP("MP_0689")
+
+	HIDE_CHR("Liese0")
+	HIDE_CHR("Fleurette")
+	set_motion("Gandaltua", STAND, 0)
+
+	//PC—p–Úüæ”z’uš
+	ENTRY_CHR(10,  283)
+	PUT_CHR( 10, "PCLOOK",    -0.00,2.15,18, 180)
+
+	set_pos("PC",           0.04,-0.13,15.66)
+	set_pos("Avatarlaha",  -1.64,-0.13,13.98)
+	set_pos("Beatrice",    -3.45,-0.13,13.62)
+	set_pos("Dvorak",       1.77,-0.13,14.65)
+	set_pos("Tiowald",      0.12,-0.13,12.91)
+	set_pos("Sturm",        0.90,-0.13,11.01)
+	set_pos("Gandaltua",   -1.43,-0.13,10.67)
+
+	set_deg("PC",           348)
+	set_deg("Avatarlaha",   325)
+	set_deg("Beatrice",     347)
+	set_deg("Dvorak",       347)
+	set_deg("Tiowald",      318)
+	set_deg("Sturm",        341)
+	set_deg("Gandaltua",    339)
+
+	//PCã‚ğŒü‚­š
+	look_chr("PC", "PCLOOK")
+	LOOK_CHR("Avatarlaha","-")
+	LOOK_CHR("Beatrice","-")
+	LOOK_CHR("Dvorak","-")
+	LOOK_CHR("Tiowald","-")
+	LOOK_CHR("Sturm","-")
+	LOOK_CHR("Gandaltua","-")
+
+	//SET_PC_EQUIP( 0 ,1)
+	PC_WEAPON( 0,1)
+	set_motion("PC","STAND",0)
+	FOCUS_CHR("PC")
+
+//ƒGƒsƒ[ƒO‚ÖBi’ˆÓF‚±‚±‚©‚çƒmƒ“ƒXƒgƒbƒvÄ¶j
+
+	wait(70)
+
+	FADE_IN(120)
+	wait(120)
+
+	MSG_EX("#S3#C0C“ÁˆĞ¢›GuY›õccccv",120,2)
+	wait(30)
+
+	MSG_EX("#S3#C0ŠL˜±“Á—¢Šïu“ß¥cc•‡—…åQ“Á‘ålccHv",200,2)
+	wait(30)
+
+//	MSG_EX("#S3#C0ƒhƒ”ƒHƒ‹ƒU[ƒNuˆêà‰½‚ª‹N‚±‚Á‚½‚Æ‚¢‚¤‚Ì‚¾Bv",200,2)
+//	wait(30)
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áu”’F•s€’¹ccŒ´˜Ò”@Ÿccv",180,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áu•‡—…åQ“Á‘ål‘ÅZ—p“ßíp‘Ô|@@@@@‰i‰“›’‰Á¢¼z••ˆóBv",300,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áuˆöˆ×”@‰ÊÌ¬•s€’¹C|@@@@@ç»A‰i‰“•s˜ğ€Bv",260,2)
+	wait(30)
+
+//	MSG_EX("#S3#C0ƒxƒAƒgƒŠ[ƒ`ƒFu‚»A‚»‚ñ‚Èccv",120,2)
+//	wait(30)
+//
+//	MSG_EX("#S3#C0ƒAƒoƒ^[ƒ‰ƒnu‰½‚Æcc”ßšá‚ÈŒˆˆÓ‚Å‚µ‚å‚¤ccv",180,2)
+//	wait(30)
+
+	CROSS_FADE(60)
+	set_script_camera(0,1.1,12, -5,290,0, 8, 30)
+	rotate_script_camera(0,15,0, 2100, 1)
+	wait(40)
+
+	SET_MOTION("Beatrice","EMPTY2",30)
+	MSG_EX("#S3#C0ŠL˜±“Á—¢Šïu’A¥C•s€’¹œƒ›õ˜ğccv",220,2)
+	MSG_EX("#S3#C0ŠL˜±“Á—¢ŠïuAZ¥•‡—…åQ“Á‘ålC|@@@@@@–çŸ“—L“ß›õ‹­‘å“I—Í—Êˆ¦ccv",280,2)
+	wait(40)
+
+	LOOK_CHR("Beatrice","Tiowald")
+	set_motion("Tiowald", ATTACK1, -1)
+	MSG_EX("#S3#C0’ñŸ^”b“Áu•À•s¥‘ü—L•‡—…åQ“Á‘ål©ŒÈcc|@@@@@ä»ãN—Œ“Á‘ål–çİˆ¦Bv",280,2)
+	LOOK_CHR("Sturm","-")
+	wait(30)
+
+	set_motion("Gandaltua", ATTACK1, -1)
+	MSG_EX("#S3#C0„’B¢ŠïušEC³ˆöˆ×¥à`¶›Ş—C|@@@@@Ë—L—Ä‰ğŒˆ“I•û–@ˆ¦ccv",280,2)
+	wait(60)
+
+	MSG_EX("#S3#C0ˆ¢”b“ƒf™ûuŒ‹‰Êcc|@@@@@@‰ä˜ìY›õ–Z“sŸ“—Là¸ãˆ¦ccv",280,2)
+	wait(40)
+
+	CROSS_FADE(60)
+	LOOK_CHR("Beatrice","-")
+	set_script_camera(1.66,1.3,14.55, -10,35,0, 3, 30)
+	SCALE_SCRIPT_CAMERA( 1.2, 1000, 0)
+
+	MSG_EX("#S3#C0à—€‰Äucc‰ä˜ì“I”C–±Ë„„ŠJn•s¥åhBv",220,2)
+	MSG_EX("#S3#C0à—€‰ÄuAZ¸‹—¹ˆêØC|@@@@@–çŠÒ—i—L–¢˜ÒBv",260,2)
+	wait(30)
+
+	look_chr("Dvorak", "PC")
+	wait(40)
+
+	cross_fade(60)
+	SET_SCRIPT_CAMERA_EX( "PC",-2, 3,100,0, 3, 15 )
+	SCALE_SCRIPT_CAMERA( 0.8, 1000,0)
+	MOVE_SCRIPT_LOOK_AT( 0,0.5,2, 1000, 1)
+
+	WAIT(40)
+	MSG_EX("#S3#C0à—€‰Äu›”™ÛC‹RmBv",340,2)
+	WAIT(240)
+
+	FADE_OUT(240)
+	WAIT(240)
+
+SKIP:
+	STOP_ENV_SE("SE_EVENT_54",500)
+	set_skip_label("SKIP2")
+
+//	FADE_OUT_EX(0, 1,"0xffffffff", 0)
+	fade_out(0)
+	blur(0)
+	SLOW(0)
+	stop_bgm(0, 4000)
+	STOP_ENV_SE("SE_NAMI2", 4000)
+
+	WAIT(300)
+
+	ENTRY_IMG(0,"mono\MONO05_01",0)
+	ENTRY_IMG(1,"mono\MONO05_02",0)
+	ENTRY_IMG(2,"mono\MONO05_03",0)
+	ENTRY_IMG(3,"mono\MONO05_04",0)
+	ENTRY_IMG(4,"mono\MONO05_05",0)
+	ENTRY_IMG(5,"mono\MONO05_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	BGM(2, 0, 0)
+
+	fade_in(100)
+	wait(120)
+
+//	SET_MSG_TIME(5,40,90,90)
+		SET_MSG_TIME(5,80,90,90)
+	MSG_EX("‹RmDà¥Œ‹‘©ŒãO”Nãìãìãì",240,0X00000094)
+	MSG_EX("ŒÃ˜V“I‘ãéIŒ‹C|V“I‘ãŠJn—¹B",380,0X00000094)
+	MSG_EX("–^ŒÂ‹Rm‘I¢“I“¹˜H¥C|ã‹ã”˜ôˆê–¼‹RmB",360,0X00000094)
+	MSG_EX("İ“ßŸ–Œ”VŒãC|‰ä˜a‘¼–”“¥ã—¹—·“rB",360,0X00000094)
+	MSG_EX("—ŒÁ‰ä˜ì“‰ß“I’n•û|ˆê’è“s˜ğ—L”’F•s€’¹oŒ»B",400,0X00000094)
+	MSG_EX("¥‘¼ˆê’¼İ’Çq’˜ç»˜ìšCC|ŠÒ¥ç»˜ìİˆø“±‘¼cc",420,0X00000094)
+//	MSG_EX("‚»‚ê‚Í„‚É‚Í•ª‚©‚è‚Ü‚¹‚ñB",260,0x00000094)
+
+	MSG_EX("‘¼ŠôŒÁ›ßãS•sÄ’k|äoä»ãNˆ·ˆ·ç»˜ì—Lè“I‰ñ‰¯—¹B",420,0X00000094)
+	MSG_EX("’A¥Cİ‰ä˜ì“–K“I’n•û|‘¼¡“VˆËäpŠö“®’˜è’†“I™˜B",400,0X00000094)
+	MSG_EX("ˆ×—¹çŒì”‡ŒÂV“I‘ãC|–çˆ×—¹ù—v‘¼“I—Í—Êà¸•“Il˜ìB",420,0X00000094)
+	MSG_EX("“ß¥‘¼Q““I|ìˆ×ÅŒã“I‹Rm‘¶İ“I•û®ccŠÒ—Lcc",420,0X00000094)
+	MSG_EX("Œ»İŠÅ˜ÒC|–ç‹–¥ˆ×—¹‹¢“I‹Rm˜ì•òã’Á°‰ÌB",400,0X00000094)
+	MSG_EX("”‡“|¥œk“K‡âœÙ“I‘¼™ÛB",260,0X00000094)
+
+	fade_out(120)
+	wait(120)
+	fade_out(0)
+
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+
+	// ƒXƒ^ƒbƒtƒ[ƒ‹
+	CALL_ENDING( 115 )
+	fade_out(0)
+
+	// ˆê–‡ã‰•\¦
+	ENTRY_IMG(0,"mono\MONO06_01",0)
+	ENTRY_IMG(1,"mono\MONO06_02",0)
+	ENTRY_IMG(2,"mono\MONO06_03",0)
+	ENTRY_IMG(3,"mono\MONO06_04",0)
+	ENTRY_IMG(4,"mono\MONO06_05",0)
+	ENTRY_IMG(5,"mono\MONO06_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+
+	// ˆê–‡ã‰•\¦
+	ENTRY_IMG( 6,"mono\MONO07_01",0)
+	ENTRY_IMG( 7,"mono\MONO07_02",0)
+	ENTRY_IMG( 8,"mono\MONO07_03",0)
+	ENTRY_IMG( 9,"mono\MONO07_04",0)
+	ENTRY_IMG(10,"mono\MONO07_05",0)
+	ENTRY_IMG(11,"mono\MONO07_06",0)
+	SET_IMG( 6, 000,000, 6,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 7, 256,000, 7,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 8, 512,000, 8,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 9, 000,256, 9,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG(10, 256,256,10,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG(11, 512,256,11,  0,  0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON( 6)
+	IMG_ON( 7)
+	IMG_ON( 8)
+	IMG_ON( 9)
+	IMG_ON(10)
+	IMG_ON(11)
+
+	wait(60)
+
+//–³‰¹æÁ‘Ô‚ğì‚éš
+	WAIT(300)
+
+	BGM(23, 0, 0)
+	fade_in(120)
+	wait(120)
+
+	wait(120)
+	MSG_EX("–¾“VC‰ä˜ìŠÒ—voá¢B",280,0X00000094)
+	MSG_EX("ä»ãNˆ·ˆ·A•‡—…åQ“Áˆ·ˆ·C|œn“V‹ó’†ŠÅ““I”‡ŒÂ¢ŠE¥ŒÂY›õéq“IšCH",420,0X00000094)
+	MSG_EX("‘¼”ñí“w—ÍB|–³˜_”@‰½“s¿”I˜ì“ñˆÊçŒì’˜‘¼B",420,0X00000094)
+	wait(40)
+		SET_MSG_TIME(5,120,90,60)
+//	MSG_EX("ŒÌàº‚ÌŒÇ™‰@‚É‚Ä|ƒVƒƒ[ƒƒbƒgE‚kEƒEƒFƒ‹ƒY",420,0x00000094)
+	MSG_EX("‰—ŒÌàº“IŒÇ™Z‰@|‰Ä—Œ“ÁàK‚kàKˆÛ¢z",-1,0X00000094)
+		SET_MSG_TIME(-1,-1,-1,-1)
+
+	// ƒm[ƒ}ƒ‹ƒJƒ‰[‚ğ•\¦
+	COLOR_IMG( 6, 0xffffffff, 0xff000000, 120, 1)
+	COLOR_IMG( 7, 0xffffffff, 0xff000000, 120, 1)
+	COLOR_IMG( 8, 0xffffffff, 0xff000000, 120, 1)
+	COLOR_IMG( 9, 0xffffffff, 0xff000000, 120, 1)
+	COLOR_IMG(10, 0xffffffff, 0xff000000, 120, 1)
+	COLOR_IMG(11, 0xffffffff, 0xff000000, 120, 1)
+
+	wait(300)
+
+	fade_out(120)
+SKIP2:
+	// skip ‹Ö~
+	set_skip_label("-")
+
+	stop_bgm(0,3000)
+	wait(180)
+	BGM(18, 0, 0)
+	wait(60)
+
+	IMG_OFF( 0)
+	IMG_OFF( 1)
+	IMG_OFF( 2)
+	IMG_OFF( 3)
+	IMG_OFF( 4)
+	IMG_OFF( 5)
+	IMG_OFF( 6)
+	IMG_OFF( 7)
+	IMG_OFF( 8)
+	IMG_OFF( 9)
+	IMG_OFF(10)
+	IMG_OFF(11)
+
+	// ƒNƒŠƒAŒã‚ÌƒXƒRƒA•\¦
+	CALL_RESULT(0)
+
+//	STOP_ENV_SE("SE_NAMI2", 4000)
+	cross_fade(60)
+//	fade_out(0)
+
+	stop_bgm(0,3000)
+	wait(180)
+
+	call_title(0)
+
+//	wait(300)
+//	fade_in(60)
+//
+//	CINEMA_OFF(0)
+//	CROSS_FADE(60)
+//	PERMIT_SCRIPT_CAMERA(0)
+//	//ˆêœäåä”õ–ß‚·
+//	SET_PC_EQUIP( 1 ,1)
+//	SET_PC_EQUIP( 3 ,1)
+}
+
+

@@ -1,0 +1,376 @@
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv‰Šú‰»                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	HIDE_CHR("Liese")
+	// ³–Ê”à‚ÌŒ®‚Í‚ ‚¯‚Ä‚µ‚Ü‚¤
+	GAME_FLAG_ON(1600)
+	HIDE_CHR("d1600")
+
+	// ƒC[ƒrƒ‹ƒAƒC
+	put_monster("m00",404,16,0,0,0)
+	put_monster("m01",404,16,0,0,1)
+	put_monster("m02",404,16,0,0,2)
+	put_monster("m03",404,16,0,0,3)
+	put_monster("m04",404,16,0,0,4)
+	// ƒLƒ}ƒCƒ‰
+	put_monster("m05",406,16,0,0,5)
+	put_monster("m06",406,16,0,0,6)
+	put_monster("m07",406,16,0,0,7)
+	// ƒLƒ}ƒCƒ‰
+	put_monster("m08",406,16,0,0,8)
+	put_monster("m09",406,16,0,0,9)
+	put_monster("m10",406,16,0,0,10)
+	put_monster("m11",406,16,0,0,11)
+
+	// ƒJƒMİ’è
+	CHECK_GAME_FLAG(1600)
+	ON_SKIP(2)
+	KAGI("d1600",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1600")
+
+	// ƒJƒMİ’è
+	CHECK_GAME_FLAG(1601)
+	ON_SKIP(2)
+	KAGI("d1601",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1601")
+
+	// ƒJƒMİ’è
+	CHECK_GAME_FLAG(1608)
+	ON_SKIP(2)
+	KAGI("d1608",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1608")
+
+	// ƒJƒMİ’è
+	CHECK_GAME_FLAG(1609)
+	ON_SKIP(2)
+	KAGI("d1609",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1609")
+
+	// ƒJƒMİ’è
+	CHECK_GAME_FLAG(1615)
+	ON_SKIP(2)
+	KAGI("d1615",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1615")
+
+	// …–åŠJ‚«Œãiw°’£ƒpƒbƒNx‚Ì‚¾‚¯‚±‚Ì•”‰®‚É’Ç‰Áƒ_ƒ“ƒWƒ‡ƒ“‚Ö‚Ì“ü‚èŒû‚ğì‚éj
+	check_expansion_pack(0)
+	off_jump DANGEON
+	CHECK_GAME_FLAG(643)
+	OFF_JUMP DANGEON
+	EFC("EFC_WARP_MX",0,7.4,16.25)
+
+//	CHECK_GAME_FLAG(986)
+//	OFF_JUMP DANGEON
+//	game_flag_off(986)
+//	warp_chr("PC", 1)
+//	EFC("EFC_WARP_TX", 0.02,7.25,13.19)
+DANGEON:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ƒJƒMŠJ‚¯
+// ----------------------------------------------------------------------------
+
+DEF("d1600")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1600)
+}
+
+DEF("d1601")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1601)
+}
+
+DEF("d1608")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1608)
+}
+
+DEF("d1609")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1609)
+}
+
+DEF("d1615")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1615)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒŠ[ƒ[ƒƒbƒgƒCƒxƒ“ƒg
+
+DEF("Liese")
+
+RES("INIT")
+{
+	// EV C-11 àŸ‚«‰Ô‰Å
+	CHECK_GAME_FLAG(3710)
+	ON_JUMP EXIT
+
+	// EV C-9 s–£t‚Ìƒ[ƒŒƒ‰ƒC
+	CHECK_GAME_FLAG(3708)
+	OFF_JUMP EXIT
+
+//--------------------------------------------------------------------
+
+	set_skip_label("SKIP")
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PC_WEAPON( 0, 1 )
+	wait(60)
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 9.48,2.00,8.23)
+	walk_pos("PC",0,0.022)
+	wait_walk("PC")
+	wait(60)
+	set_deg("PC", 320)
+	wait(60)
+	set_deg("PC", 215)
+	wait(60)
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 6.81,2.13,3.22)
+	walk_pos("PC",0,0.022)
+	wait(120)
+
+	cross_fade(120)
+	SET_SPOT_ORG( 1, -0.00,10.50,22.33 )
+	permit_script_camera(1)
+	set_script_camera(-0.00,10.50,22.33,  0,180.0,0.0, 40, 30.0)
+	stop_walk("PC")
+	set_pos("PC", 2.67,2.00,-3.59)
+	set_deg("PC", 339)
+	wait(120)
+
+	move_script_look_at(0,-2,-10, 800, 1)
+	rotate_script_camera(2,0,0, 800, 1)
+
+		ENTRY_IMG(0,"AREANAME06",0)
+
+		// ƒ¿‚ª'1'‚Ì‚Í'‰ÁZƒ‚[ƒh'‚È‚Ì‚Åu“§–¾v‚É‚·‚é‚ÍA
+		// ƒfƒBƒtƒ…[ƒY‚ğ'0x00ffffff'‚Å‚Í‚È‚­'0xff000000'‚Æ‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢‚ÌƒfƒXB
+		//  ½Ìß×²Ä •\¦ˆÊ’u Tex TX  TY  TW  TH ƒ¿ ƒfƒBƒtƒ…[ƒY ƒXƒyƒLƒ…ƒ‰ °‘å ‰ñ ’† Fit
+		SET_IMG( 0, 192,166, 0,  0,  0,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		SET_IMG( 2, 192,166, 0,  0, 48,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		SET_IMG( 1, 208,206, 0,  0,224,255, 16, 1, 0xff000000, 0xff000000, 0,1, 0, 0,1)
+		SET_IMG( 3, 192,206, 0,  0,240,255, 16, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		IMG_ON(0)
+		IMG_ON(1)
+		IMG_ON(2)
+		IMG_ON(3)
+
+		// á¢¶‚Ü‚Å‚É'ŠÔ'‚ª—~‚µ‚¢ê‡‚Í‚±‚ñ‚È•—‚É‚µ‚Ü‚·B
+		SUSPEND_IMG(0,60)
+		SUSPEND_IMG(1,30)
+		SUSPEND_IMG(2,300)
+		SUSPEND_IMG(3,300)
+
+		// ƒtƒF[ƒhƒCƒ“
+		COLOR_IMG    (0, 0xffffffff, 0xff000000, 60, 1)
+		COLOR_IMG_EX (2, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+		COLOR_IMG    (1, 0xffffffff, 0xff000000, 10, 1)
+		SCALE_IMG    (1, 0.9,1,                 30, 1)
+		SCALE_IMG    (3, 1.2, 1,                  1, 1)
+		COLOR_IMG_EX (3, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+
+	wait(300)
+
+		COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+		COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+
+	wait(300)
+
+//	wait(600)
+
+//¥ŠïŠâéEœAŠÔ
+
+	MSG_EX("#S3#C0—«“Iãß‰¹ucccc‹Rm‘ålBv",-1,2)
+	wait_camera(0)
+
+	set_deg("PC", 200)
+
+	cross_fade(120)
+	SHOW_CHR("Liese")
+	SET_SPOT_ORG( 1, 0.00,2.00,0.0 )
+	set_script_camera(0.00,2.00,0.0,  0,180.0,0.0, 20, 30.0)
+
+	wait(120)
+
+//@@é‚Ì³–Ê“ü‚èŒû‚ÉàŸ‚¢ƒhƒŒƒX‚ğ‚Ü‚Æ‚Á‚½ƒŠ[ƒ[‚ª—§‚Á‚Ä‚¢‚éB
+//@@“ü‚èŒû‚©‚çålŒö‚Ì‚Ù‚¤‚Ö—I‘R‚ÆíM‚«n‚ß‚éƒŠ[ƒ[B
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.0,2.00,-3.51)
+	walk_pos("Liese",0,0.03)
+	wait(120)
+
+	MSG_EX("#S3#C0àŸˆß—«u‹±Šì”Iˆ¦B|@@@@@I‰—“’BŠïŠâé—¹šCBv",-1,2)
+	MSG_EX("#S3#C0àŸˆß—«u‰äˆê’¼‘ŠM’˜C|@@@@@@‹Rm‘ålˆê’è‰ÂˆÈ¬Œ÷“IBv",-1,2)
+	MSG_EX("#S3#C0àŸˆß—«u•s‰ßCŠÒ•s”\cc|@@@@@ŠÒ•s”\‘åˆÓBv",-1,2)
+	MSG_EX("#S3#C0àŸˆß—«u’¼““¾“¹™˜“j—´™˜Bv",-1,2)
+
+//@@ƒŠ[ƒ[AålŒö‚Ì‘O‚ÅƒXƒgƒbƒvB
+
+	cross_fade(120)
+	set_script_camera(0.0,2.00,0.71,  -15,180.0,0.0, 12, 30.0)
+
+	set_deg_EX("PC", "Liese")
+//	MSG_EX("#S3#C0HHHu’N‚¾‚©•ª‚©‚è‚Ü‚¹‚ñ‚©Hv",-1,2)
+
+	wait_walk("Liese")
+	set_deg_EX("PC", "Liese")
+	wait(60)
+
+	set_deg_EX("Liese","PC")
+	wait(120)
+
+	cross_fade(120)
+	set_script_camera_EX("Liese",1,  -12,60.0,0.0, 7, 15.0)
+	wait(60)
+	rotate_script_camera(0,10,0, 800, 1)
+
+	MSG_EX("#S3#C0àŸˆß—«ucccc”IŸ“”Fo‰ä¥’NåhHv",-1,2)
+	MSG_EX("#S3#C0àŸˆß—«u¥‰äˆ¦CÕiä»ãNBv",-1,2)
+//	MSG_EX("#S3#C0HHHu„‚Å‚·ccÕi‚ÌƒŠ[ƒ[‚Å‚·Bv",-1,2)
+
+//@@¡“x‚Í‹ÊÀ‚Ì‘O‚ÉíM‚«o‚·ƒŠ[ƒ[B
+//@@‹ÊÀ‚Ìà—‚Ü‚Åi‚İAü‚è‚ğŒ©“n‚µ‚È‚ª‚çƒƒbƒZ[ƒWB
+
+	cross_fade(120)
+	set_script_camera(0.0,2.00,0.71,  -1,180.0,0.0, 12, 30.0)
+	wait(80)
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.00,2.00,0.83)
+	walk_pos("Liese",0,0.03)
+	set_deg("PC", 320)
+
+	move_script_look_at(0,3,0, 800, 1)
+	rotate_script_camera(10,0,0, 800, 1)
+
+	wait_walk("Liese")
+
+	wait(60)
+
+	set_deg("Liese", 340)
+	wait(60)
+	set_deg("Liese", 20)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãNuˆ¦ˆ¦C^æ¨l‰ùšXˆ¦ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu–”‰ñ“”‡—¡˜Ò—¹šCBv",-1,2)
+
+	wait_camera(0)
+
+//@@ƒŠ[ƒ[ƒƒbƒgAålŒö‚Ì‚Ù‚¤‚ÖU‚èŒü‚­B
+
+	set_deg_EX("Liese","PC")
+	wait(60)
+
+	cross_fade(120)
+	set_script_camera_EX("Liese",1,  -8,180.0,0.0, 10, 15.0)
+	wait(120)
+	rotate_script_camera(0,-10,0, 1000, 1)
+
+	MSG_EX("#S3#C0ä»ãNu‹Rm‘ålC‰ä—L˜b‘z›””IàBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‰ä“I–{–¼¥ä»ãN—Œ“Áccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu¥å“ß“x‘æ\l‰¤’©“I‘æˆêŒöåBv",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu§Šccccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äA¥İÉ•S”N‘O‰Å‹‹—¹‰Á¢¼zC|@@@@@”ílâiìwàŸFV–ºx“IlBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰ä“Iä•v‰Á¢¼z‹‹—¹àã‘½•a“I‰ä|@@@@@”‡í—Í—Ê˜a”‡ŒÂgàBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”ID‘œœk‹h‹Áˆ¦ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu™è™èC”‡–ç¥“ï–Æ“IBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu•s‹v‰äeˆ¤“Iä•vA—vÄ“x~—Õ—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŒ»İ‰ä—v|@@@@@‹˜ôŒ}Ú‘¼“I€”õ—¹Bv",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‘RŒãC‹Rm‘ålccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‰äŠó–]”I|@@@@@–³˜_”@‰½”\àBQ“¹™˜Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¹™˜“j—´™˜˜a›€“Ig—pÒ|@@@@@›”‰ää•v˜Òà¥Å‘å“IáâGccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu”@‰Ê”\œ{‘¼˜ìC|@@@@@ìˆ×Èq“I‰ä˜ğ”ñí‚‹»“IBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu™è™èC‹Rm‘ål“¾“¹™˜“IŒóccv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuA¥‰ä—vE—¹”I“IŒóBv",-1,2)
+
+//@@ƒŠ[ƒ[ƒƒbƒg‚Ì‘«Œ³‚Éƒuƒ‰ƒbƒNƒIƒjƒLƒX‚Ì–‚•ûw‚ª•`‚©‚ê‚éB
+
+	cross_fade(120)
+//	set_script_camera_EX("PC",1,  -10,302.0,0.0, 7, 15.0)
+	set_script_camera_EX("Liese",2,  -6,165.0,0.0, 6.5, 15.0)
+	rotate_script_camera(4,0,0, 800, 1)
+	wait(120)
+
+	MSG_EX("#S3#C0ä»ãN—Œ“Áucc‰ä•K{—v‘–—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áuè‰—¹™˜“IŠİC|@@@@@‰ä˜Ò‘iˆêŒÂüõ™ÛBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu¹™˜¥—LçŒìÒ“IBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“ÁuŠïŠâéoŒ»“I“¯C|@@@@@“ßŒÂçŒìÒ–çœäŠYæSÁ—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu‹QQ“ßŒÂl”äŠrDBv",-1,2)
+	MSG_EX("#S3#C0ä»ãN—Œ“Áu“ß›õC‹Rm‘ålB|@@@@@Šú‘Ò’˜‰ºŸäo”IŒ©–ÊšGBv",-1,2)
+
+	wait(120)
+
+	wait(60)
+	SET_MOTION("Liese","EMPTY20",10)
+	wait(110)
+	ATTACH_EFC("EFC_WARP_E","Liese","POS")
+	wait(100)
+	ATTACH_EFC("EFC_WARP_T","Liese","POS")
+	warp_chr("Liese",0)
+	wait(120)
+
+	fade_out(120)
+	wait(120)
+
+//--------------------------------------------------------------------
+
+SKIP:
+	hide_chr("Liese")
+	DELETE_EFC("Liese")
+
+	COLOR_IMG(0, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(1, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(2, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(3, 0x00000000, 0x00000000, 1, 0)
+
+	STOP_WALK("PC")
+	set_pos("PC", 2.67,2.00,-3.59)
+	set_deg("PC", 320)
+
+	// EV C-11 àŸ‚«‰Ô‰Å
+	GAME_FLAG_ON(3710)
+	set_pos("PC", 2.67,2.00,-3.59)
+	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+
+	wait(60)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	fade_in(60)
+	CINEMA_OFF(0)
+
+
+EXIT:
+	END
+}

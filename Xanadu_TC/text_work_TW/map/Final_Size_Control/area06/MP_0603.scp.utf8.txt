@@ -1,0 +1,376 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	HIDE_CHR("Liese")
+	// 正面扉の鍵はあけてしまう
+	GAME_FLAG_ON(1600)
+	HIDE_CHR("d1600")
+
+	// イービルアイ
+	put_monster("m00",404,16,0,0,0)
+	put_monster("m01",404,16,0,0,1)
+	put_monster("m02",404,16,0,0,2)
+	put_monster("m03",404,16,0,0,3)
+	put_monster("m04",404,16,0,0,4)
+	// キマイラ
+	put_monster("m05",406,16,0,0,5)
+	put_monster("m06",406,16,0,0,6)
+	put_monster("m07",406,16,0,0,7)
+	// キマイラ
+	put_monster("m08",406,16,0,0,8)
+	put_monster("m09",406,16,0,0,9)
+	put_monster("m10",406,16,0,0,10)
+	put_monster("m11",406,16,0,0,11)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1600)
+	ON_SKIP(2)
+	KAGI("d1600",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1600")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1601)
+	ON_SKIP(2)
+	KAGI("d1601",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1601")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1608)
+	ON_SKIP(2)
+	KAGI("d1608",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1608")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1609)
+	ON_SKIP(2)
+	KAGI("d1609",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1609")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1615)
+	ON_SKIP(2)
+	KAGI("d1615",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1615")
+
+	// 水門開き後（『擴張パック』の時だけこの部屋に追加ダンジョンへの入り口を作る）
+	check_expansion_pack(0)
+	off_jump DANGEON
+	CHECK_GAME_FLAG(643)
+	OFF_JUMP DANGEON
+	EFC("EFC_WARP_MX",0,7.4,16.25)
+
+//	CHECK_GAME_FLAG(986)
+//	OFF_JUMP DANGEON
+//	game_flag_off(986)
+//	warp_chr("PC", 1)
+//	EFC("EFC_WARP_TX", 0.02,7.25,13.19)
+DANGEON:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1600")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1600)
+}
+
+DEF("d1601")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1601)
+}
+
+DEF("d1608")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1608)
+}
+
+DEF("d1609")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1609)
+}
+
+DEF("d1615")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1615)
+}
+
+//////////////////////////////////////////////////////////////////////
+// リーゼロットイベント
+
+DEF("Liese")
+
+RES("INIT")
+{
+	// EV C-11 黑き花嫁
+	CHECK_GAME_FLAG(3710)
+	ON_JUMP EXIT
+
+	// EV C-9 《魅》のローレライ
+	CHECK_GAME_FLAG(3708)
+	OFF_JUMP EXIT
+
+//--------------------------------------------------------------------
+
+	set_skip_label("SKIP")
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PC_WEAPON( 0, 1 )
+	wait(60)
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 9.48,2.00,8.23)
+	walk_pos("PC",0,0.022)
+	wait_walk("PC")
+	wait(60)
+	set_deg("PC", 320)
+	wait(60)
+	set_deg("PC", 215)
+	wait(60)
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 6.81,2.13,3.22)
+	walk_pos("PC",0,0.022)
+	wait(120)
+
+	cross_fade(120)
+	SET_SPOT_ORG( 1, -0.00,10.50,22.33 )
+	permit_script_camera(1)
+	set_script_camera(-0.00,10.50,22.33,  0,180.0,0.0, 40, 30.0)
+	stop_walk("PC")
+	set_pos("PC", 2.67,2.00,-3.59)
+	set_deg("PC", 339)
+	wait(120)
+
+	move_script_look_at(0,-2,-10, 800, 1)
+	rotate_script_camera(2,0,0, 800, 1)
+
+		ENTRY_IMG(0,"AREANAME06",0)
+
+		// αが'1'の時は'加算モード'なので「透明」にする時は、
+		// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+		//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+		SET_IMG( 0, 192,166, 0,  0,  0,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		SET_IMG( 2, 192,166, 0,  0, 48,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		SET_IMG( 1, 208,206, 0,  0,224,255, 16, 1, 0xff000000, 0xff000000, 0,1, 0, 0,1)
+		SET_IMG( 3, 192,206, 0,  0,240,255, 16, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+		IMG_ON(0)
+		IMG_ON(1)
+		IMG_ON(2)
+		IMG_ON(3)
+
+		// 發生までに'間'が欲しい場合はこんな風にします。
+		SUSPEND_IMG(0,60)
+		SUSPEND_IMG(1,30)
+		SUSPEND_IMG(2,300)
+		SUSPEND_IMG(3,300)
+
+		// フェードイン
+		COLOR_IMG    (0, 0xffffffff, 0xff000000, 60, 1)
+		COLOR_IMG_EX (2, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+		COLOR_IMG    (1, 0xffffffff, 0xff000000, 10, 1)
+		SCALE_IMG    (1, 0.9,1,                 30, 1)
+		SCALE_IMG    (3, 1.2, 1,                  1, 1)
+		COLOR_IMG_EX (3, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+
+	wait(300)
+
+		COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+		COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+
+	wait(300)
+
+//	wait(600)
+
+//▼奇岩城・廣間
+
+	MSG_EX("#S3#C0女性的聲音「…………騎士大人。」",-1,2)
+	wait_camera(0)
+
+	set_deg("PC", 200)
+
+	cross_fade(120)
+	SHOW_CHR("Liese")
+	SET_SPOT_ORG( 1, 0.00,2.00,0.0 )
+	set_script_camera(0.00,2.00,0.0,  0,180.0,0.0, 20, 30.0)
+
+	wait(120)
+
+//　　城の正面入り口に黑いドレスをまとったリーゼが立っている。
+//　　入り口から主人公のほうへ悠然と步き始めるリーゼ。
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.0,2.00,-3.51)
+	walk_pos("Liese",0,0.03)
+	wait(120)
+
+	MSG_EX("#S3#C0黑衣女性「恭喜你啊。|　　　　　終於到達奇岩城了呢。」",-1,2)
+	MSG_EX("#S3#C0黑衣女性「我一直相信著，|　　　　　　騎士大人一定可以成功的。」",-1,2)
+	MSG_EX("#S3#C0黑衣女性「不過，還不能……|　　　　　還不能大意。」",-1,2)
+	MSG_EX("#S3#C0黑衣女性「直到得到聖劍屠龍劍。」",-1,2)
+
+//　　リーゼ、主人公の前でストップ。
+
+	cross_fade(120)
+	set_script_camera(0.0,2.00,0.71,  -15,180.0,0.0, 12, 30.0)
+
+	set_deg_EX("PC", "Liese")
+//	MSG_EX("#S3#C0？？？「誰だか分かりませんか？」",-1,2)
+
+	wait_walk("Liese")
+	set_deg_EX("PC", "Liese")
+	wait(60)
+
+	set_deg_EX("Liese","PC")
+	wait(120)
+
+	cross_fade(120)
+	set_script_camera_EX("Liese",1,  -12,60.0,0.0, 7, 15.0)
+	wait(60)
+	rotate_script_camera(0,10,0, 800, 1)
+
+	MSG_EX("#S3#C0黑衣女性「…………你沒認出我是誰嗎？」",-1,2)
+	MSG_EX("#S3#C0黑衣女性「是我啊，祭司莉絲。」",-1,2)
+//	MSG_EX("#S3#C0？？？「私です……祭司のリーゼです。」",-1,2)
+
+//　　今度は玉座の前に步き出すリーゼ。
+//　　玉座の橫まで進み、周りを見渡しながらメッセージ。
+
+	cross_fade(120)
+	set_script_camera(0.0,2.00,0.71,  -1,180.0,0.0, 12, 30.0)
+	wait(80)
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.00,2.00,0.83)
+	walk_pos("Liese",0,0.03)
+	set_deg("PC", 320)
+
+	move_script_look_at(0,3,0, 800, 1)
+	rotate_script_camera(10,0,0, 800, 1)
+
+	wait_walk("Liese")
+
+	wait(60)
+
+	set_deg("Liese", 340)
+	wait(60)
+	set_deg("Liese", 20)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲「啊啊，真讓人懐唸啊……」",-1,2)
+	MSG_EX("#S3#C0莉絲「又回到這裡來了呢。」",-1,2)
+
+	wait_camera(0)
+
+//　　リーゼロット、主人公のほうへ振り向く。
+
+	set_deg_EX("Liese","PC")
+	wait(60)
+
+	cross_fade(120)
+	set_script_camera_EX("Liese",1,  -8,180.0,0.0, 10, 15.0)
+	wait(120)
+	rotate_script_camera(0,-10,0, 1000, 1)
+
+	MSG_EX("#S3#C0莉絲「騎士大人，我有話想對你説。」",-1,2)
+	MSG_EX("#S3#C0莉絲「我的本名是莉絲洛特……」",-1,2)
+	MSG_EX("#S3#C0莉絲「是仙那度第十四王朝的第一公主。」",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「而且…………」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我就是在數百年前嫁給了加爾西斯，|　　　　　被人稱作『黑色新娘』的人。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我的丈夫加爾西斯給了體弱多病的我|　　　　　這種力量和這個身體。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「你好像很吃驚啊……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「呵呵，這也是難免的。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「不久我親愛的丈夫就要再度降臨了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「現在我要|　　　　　去做迎接他的準備了。」",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0莉絲洛特「然後，騎士大人……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「我希望你|　　　　　無論如何能夠找到聖劍。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「聖劍屠龍劍和它的使用者|　　　　　對我丈夫來説是最大的障礙……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「如果能除掉他們，|　　　　　作為妻子的我會非常高興的。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「呵呵，騎士大人得到聖劍的時候……」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「就是我要殺了你的時候。」",-1,2)
+
+//　　リーゼロットの足元にブラックオニキスの魔方陣が描かれる。
+
+	cross_fade(120)
+//	set_script_camera_EX("PC",1,  -10,302.0,0.0, 7, 15.0)
+	set_script_camera_EX("Liese",2,  -6,165.0,0.0, 6.5, 15.0)
+	rotate_script_camera(4,0,0, 800, 1)
+	wait(120)
+
+	MSG_EX("#S3#C0莉絲洛特「……我必須要走了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「關於聖劍的所在，|　　　　　我來告訴一個線索吧。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「聖劍是有守護者的。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「奇岩城出現的同時，|　　　　　那個守護者也應該覺醒了。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「去找找那個人比較好。」",-1,2)
+	MSG_EX("#S3#C0莉絲洛特「那麼，騎士大人。|　　　　　期待著下次與你見面哦。」",-1,2)
+
+	wait(120)
+
+	wait(60)
+	SET_MOTION("Liese","EMPTY20",10)
+	wait(110)
+	ATTACH_EFC("EFC_WARP_E","Liese","POS")
+	wait(100)
+	ATTACH_EFC("EFC_WARP_T","Liese","POS")
+	warp_chr("Liese",0)
+	wait(120)
+
+	fade_out(120)
+	wait(120)
+
+//--------------------------------------------------------------------
+
+SKIP:
+	hide_chr("Liese")
+	DELETE_EFC("Liese")
+
+	COLOR_IMG(0, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(1, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(2, 0x00000000, 0x00000000, 1, 0)
+	COLOR_IMG(3, 0x00000000, 0x00000000, 1, 0)
+
+	STOP_WALK("PC")
+	set_pos("PC", 2.67,2.00,-3.59)
+	set_deg("PC", 320)
+
+	// EV C-11 黑き花嫁
+	GAME_FLAG_ON(3710)
+	set_pos("PC", 2.67,2.00,-3.59)
+	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+
+	wait(60)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	fade_in(60)
+	CINEMA_OFF(0)
+
+
+EXIT:
+	END
+}

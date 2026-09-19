@@ -1,0 +1,121 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// BGM
+	BGM( 7, 0, 0)
+
+	// エリアネーム表示
+	CHECK_ENTRY_GATE("008c_008b")
+	OFF_SKIP(1)
+	DISP_PLACE(7)
+
+	// カギ設定
+	CHECK_GAME_FLAG(3300)
+	ON_SKIP(2)
+	KAGI("d3300",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d3300")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d3300")
+RES("KAGI")
+{
+	GAME_FLAG_ON(3300)
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(3305)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(3305)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+//	POP_ITEM_ICON("tbox", 225, 58.311466,25.000000,-2.095324, 1,80,0)
+	POP_ITEM_ICON("tbox", 225, 57.000000,25.000000,-2.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【200G】！",-1,0X00000200)
+
+	GET_GOLD(200)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//手記11      燈火の古文書 1216年 半神の月19日
+	SWITCH_ON("tbox")
+//	POP_ITEM_ICON("tbox", 290, 58.311466,25.000000,-2.095324, 1,80,0)
+	POP_ITEM_ICON("tbox", 300, 57.000000,25.000000,-2.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【燈火之古文書】！",-1,0X00000200)
+
+	GET_ITEM(300, 1)
+	GAME_FLAG_ON(3305)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

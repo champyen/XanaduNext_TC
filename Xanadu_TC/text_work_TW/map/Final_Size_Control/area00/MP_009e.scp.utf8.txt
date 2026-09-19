@@ -1,0 +1,1506 @@
+
+// ----------------------------------------------------------------------------
+// マップ  宿酒場２Ｆ　宿泊用部屋（シャルのいない部屋）デバッグ用
+// ----------------------------------------------------------------------------
+
+//-- ROOM_FLAG -------------------------------------------------------
+// 0 シャル會話
+//
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// DEBUG版exe判定
+	check_game_flag(4090)
+	off_jump NEXT
+	// デバッグキャラ。
+	ENTRY_CHR( 0, 057)
+	PUT_CHR( 0, "Momo",  1.10,0.00,-1.94, 261)
+	PUT_CHR( 0, "Momo2", -1.26,-0.00,3.28, 349)
+
+NEXT:
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// シャル
+
+
+DEF("Momo")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Momo")
+	SET_NAME("MOMO","DEBUG")
+
+MENU_MAIN:
+
+//	SEL("シナリオジャンプ|#c2Ａパート（到著～冒險開始まで）　　　|Ｂパート（インフェルノまで）　　　　|Ｃパート（フローレにＤＳもらうまで）|Ｄパート（終了まで）　　　　　　　　|フラグ制御|ボス戰|やめる")
+	SEL("劇本跳轉|#C2Ａ部分（到達～開始冒險）|Ｂ部分（到火山前）|Ｃ部分（從芙羅蕾特那裡得到屠龍劍）|Ｄ部分（到結束）|標志控制|想見到阿尼艾絲|取消")
+	check_select(0)
+	on_jump PART_A
+	check_select(1)
+	on_jump PART_B
+	check_select(2)
+	on_jump PART_C
+	check_select(3)
+	on_jump PART_D
+	check_select(4)
+	on_jump FLAG_MODE
+	check_select(5)
+	on_jump ANIECE
+//	check_select(5)
+//	on_jump BOSS_MODE
+
+	jump EXIT
+
+//-- Ａパート（到著～冒險開始まで） ----------------------------------
+PART_A:
+	SEL("Ａ部分|#C2到達街|開始冒險|DOVORUZAIK前|降靈的儀式|取消")
+	check_select(0)
+	on_jump PART_A01
+	check_select(1)
+	on_jump PART_A02
+	check_select(2)
+	on_jump PART_A03
+	check_select(3)
+	on_jump PART_A04
+	check_select(4)
+	on_jump PART_A05
+
+	jump MENU_MAIN
+//街到著
+PART_A01:
+	call SUB_000
+	call SUB_A01
+
+	ENTRY_MAP("game_start")
+
+//開始
+PART_A02:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+
+	ENTRY_MAP("009d_009c")
+
+//ドヴォルザーク前
+PART_A03:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+
+	ENTRY_MAP("1009_1008")
+
+//降靈の儀式前
+PART_A04:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+	call SUB_A04
+
+	fade_out(0)
+	wait(1)
+
+	ENTRY_MAP("0091_1009")
+
+//-- Ｂパート（インフェルノまで） ------------------------------------
+PART_B:
+	SEL("Ｂ部分|探索#C2聖劍|手槍呆笨CHIUA前|TLENT戰後|提高基本工資TRIICHIE石像前|RIIZE的破魔箭|SIUTORUMU石像前|取消")
+	check_select(0)
+	on_jump PART_B01
+	check_select(1)
+	on_jump PART_B02
+	check_select(2)
+	on_jump PART_B03
+	check_select(3)
+	on_jump PART_B04
+	check_select(4)
+	on_jump PART_B05
+	check_select(5)
+	on_jump PART_B06
+
+	jump MENU_MAIN
+
+// 聖劍の探索へ
+PART_B01:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+
+	ENTRY_MAP("009d_009c")
+
+// ガンダルチュア前
+PART_B02:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	ENTRY_MAP("0755_0790")
+
+// トレント戰後
+PART_B03:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+
+	ENTRY_MAP("0750_0727")
+
+// ベアトリーチェ石像前
+PART_B04:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+
+	ENTRY_MAP("05d7_05d8")
+
+// リーゼの破魔矢
+PART_B05:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("0097_0093")
+
+// シュトゥルム石像前
+PART_B06:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+	call SUB_B06
+
+	ENTRY_MAP("0871_0833")
+
+//-- Ｃパート（フローレにＤＳもらうまで） ----------------------------
+PART_C:
+	SEL("Ｃ部分|#C201女巫的弓（哥哥南）|02--死--|03奇岩城出現（破魔箭）|04相似的二人（城前）|05沉默的RIIZE（城的活動後）|06DOVO，酒徒|07不同界手槍呆笨CHIUA|08DOVORUZAIK的敗北|09戒律裝置|10黑色新娘|11聖劍的女巫姑娘|戒掉")
+	check_select(0)
+	on_jump PART_C01
+	check_select(1)
+	on_jump PART_C02
+	check_select(2)
+	on_jump PART_C03
+	check_select(3)
+	on_jump PART_C04
+	check_select(4)
+	on_jump PART_C05
+	check_select(5)
+	on_jump PART_C06
+	check_select(6)
+	on_jump PART_C07
+	check_select(7)
+	on_jump PART_C08
+	check_select(8)
+	on_jump PART_C09
+	check_select(9)
+	on_jump PART_C10
+	check_select(10)
+	on_jump PART_C11
+
+	jump MENU_MAIN
+
+// 巫女姬の弓（アニエス）
+PART_C01:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+
+	ENTRY_MAP("0097_0094")
+
+// リーゼが倒れる
+PART_C02:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+
+	ENTRY_MAP("0097_0093")
+
+// 奇岩城出現
+PART_C03:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+
+	ENTRY_MAP("0086_0087")
+
+// 相似の二人
+PART_C04:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+
+	ENTRY_MAP("0602_0089")
+
+// 沈默のリーゼ
+PART_C05:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+
+	ENTRY_MAP("0097_0093")
+
+// 街の門の外
+PART_C06:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+
+	ENTRY_MAP("0755_0790")
+
+// 異界ガンダルチュア
+PART_C07:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+
+	ENTRY_MAP("09c2_09b6")
+
+// ドヴォルザークの敗北
+PART_C08:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+
+	ENTRY_MAP("rndmap_0998")
+
+// 結界裝置
+PART_C09:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+
+	ENTRY_MAP("0610_0682s")
+
+// 黑き花嫁
+PART_C10:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+
+	ENTRY_MAP("0610_0603")
+
+// 聖劍の巫女姬
+PART_C11:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+	call SUB_C11
+
+	ENTRY_MAP("0097_0093")
+
+//-- Ｄパート（終了まで） --------------------------------------------
+PART_D:
+	SEL("Ｄ部分|#C2街的流動LET|祭壇的新娘|魔王加爾西斯再度降臨|談真實的李零T|RIIZE攻撃|取消")
+	check_select(0)
+	on_jump PART_D01
+	check_select(1)
+	on_jump PART_D02
+	check_select(2)
+	on_jump PART_D03
+	check_select(3)
+	on_jump PART_D04
+	check_select(4)
+	on_jump PART_D05
+
+
+	jump EXIT
+
+// 街のフローレット
+PART_D01:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0097_0093")
+
+// 祭壇の花嫁
+PART_D02:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0675_0684")
+
+// 魔王ガルシス再臨
+PART_D03:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+
+	ENTRY_MAP("garu_test")
+
+// 真實を語るリーゼロット
+PART_D04:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+
+	ENTRY_MAP("last_boss")
+
+// リーゼ攻撃
+PART_D05:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+	call SUB_D04
+
+	ENTRY_MAP("last_boss")
+
+
+
+
+
+
+
+
+
+
+
+//-- フラグ制御 ------------------------------------------------------
+FLAG_MODE:
+
+	SEL("標志控制|#C2全部的旗過關|取消全部的PORTAL|允許全部的PORTAL|取消")
+	check_select(0)
+	on_jump FLAG_01
+	check_select(1)
+	on_jump FLAG_02
+	check_select(2)
+	on_jump FLAG_03
+
+	jump MENU_MAIN
+
+FLAG_01:
+	call SUB_000
+	MSG("所有路標都已經初始化。")
+	jump EXIT
+
+FLAG_02:
+	set_game_flags(4010, 4017, 0)
+
+	MSG("所有傳送門已經關閉。")
+	jump EXIT
+
+FLAG_03:
+	set_game_flags(4010, 4017, 1)
+
+	MSG("所有傳送門已經被開啟。")
+	jump EXIT
+
+
+
+
+
+//-- アニエスに會いたい ----------------------------------------------
+
+ANIECE:
+	SEL("想見到阿尼艾絲|#C2蛇前|CROIVAI故址瀑布的先前|太古的迷宮後半|魔粧的森林脫落了的地方|火山|猶太教教士潤絲|城食人魔|城壞牆壁|不死鳥的只取消獲得|不死鳥的靈藥獲得的|偶然得到的珍品|")
+
+	check_select(0)
+	on_jump ANIECE_1
+	check_select(1)
+	on_jump ANIECE_2
+	check_select(2)
+	on_jump ANIECE_3
+	check_select(3)
+	on_jump ANIECE_4
+	check_select(4)
+	on_jump ANIECE_5
+	check_select(5)
+	on_jump ANIECE_6
+	check_select(6)
+	on_jump ANIECE_7
+	check_select(7)
+	on_jump ANIECE_8
+
+	check_select(8)
+	on_jump ANIECE_FEATHER
+	check_select(9)
+	on_jump ANIECE_POTION
+	check_select(10)
+	on_jump ANIECE_ITEM
+
+	jump MENU_MAIN
+
+//サラマンダー前
+ANIECE_1:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3601)
+	ENTRY_MAP("0715_0716")
+
+//クローヴァー遺跡瀧の前
+ANIECE_2:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3615)
+	game_flag_on(3616)
+	ENTRY_MAP("0722_0749")
+
+//千古の迷宮後半
+ANIECE_3:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+
+	ENTRY_MAP("05b6_05b5")
+
+//魔粧の森拔けたところ
+ANIECE_4:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("0751_0738")
+
+//火山
+ANIECE_5:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("082d_082e")
+
+//ラビリンス
+ANIECE_6:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+
+	ENTRY_MAP("09a5_09a6")
+
+// 城オーガ
+ANIECE_7:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0618_0606")
+
+// 城壞れ壁
+ANIECE_8:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0639_0641")
+
+// 不死鳥の羽をゲット
+ANIECE_FEATHER:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	get_item(193, 1)
+
+	ENTRY_MAP("0094_0097")
+	jump EXIT
+
+// 不死鳥の靈藥をゲット
+ANIECE_POTION:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	pick_item(193)
+	get_item(194,1)
+
+	ENTRY_MAP("0639_0641")
+	jump EXIT
+
+// 掘り出し物
+ANIECE_ITEM:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3615)
+	game_flag_on(3616)
+
+	get_item(160, 1)
+	get_item(161, 1)
+	get_item(162, 1)
+	get_item(163, 1)
+	get_item(164, 1)
+	get_item(165, 1)
+	get_item(192, 1)
+	get_item(195, 1)
+
+	game_flag_on(3640)
+	game_flag_on(3641)
+	game_flag_on(3642)
+	game_flag_on(3643)
+	game_flag_on(3644)
+	game_flag_on(3645)
+	game_flag_on(3646)
+	game_flag_on(3647)
+
+	ENTRY_MAP("0722_0749")
+
+//-- ボス制御 --------------------------------------------------------
+
+BOSS_MODE:
+
+	SEL("BOSS控制|#C2特倫頓開始戰鬥|螃蟹GMO開始戰鬥|界內球FERUNO開始戰鬥|ASCOMO本我開始戰鬥|羅勒萊開始戰鬥|GARUSIS開始戰鬥|取消")
+	check_select(0)
+	on_jump BOSS_01
+	check_select(1)
+	on_jump BOSS_02
+	check_select(2)
+	on_jump BOSS_03
+	check_select(3)
+	on_jump BOSS_04
+	check_select(4)
+	on_jump BOSS_05
+
+	jump EXIT
+
+BOSS_01:
+	MSG("『託雷頓』|追加推薦裝備。")
+	MSG("推薦等級為7。|請自己設定等級和魔法。")
+
+	call SUB_000
+	GET_ITEM()
+
+	ENTRY_MAP("0097_0093")
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// フラグ關連サブルーチン
+
+@SUB_000
+{
+	// 全フラグクリア
+	set_game_flags(0, 4017, 0)
+
+	ret
+}
+
+//-- ＡＡＡＡＡＡＡＡパート ------------------------------------------
+
+// Ａパート全部
+@SUB_A00
+{
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+	call SUB_A04
+
+	ret
+}
+
+// 最初
+@SUB_A01
+{
+	game_flag_on(3500)
+
+	ret
+}
+
+// 街到著
+@SUB_A02
+{
+	game_flag_on(3501)
+	game_flag_on(3502)
+
+	ret
+}
+
+// ドヴォ前
+@SUB_A03
+{
+	game_flag_on(3510)
+	game_flag_on(3511)
+	game_flag_on(3512)
+	game_flag_on(3513)
+	game_flag_on(3514)
+	game_flag_on(3515)
+	game_flag_on(3517)
+	game_flag_on(3518)
+	game_flag_on(3519)
+	game_flag_on(3523)
+
+	ret
+}
+
+// 儀式前
+@SUB_A04
+{
+	game_flag_on(3520)
+
+	ret
+}
+
+//-- ＢＢＢＢＢＢＢＢパート ------------------------------------------
+
+@SUB_B00
+{
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+	call SUB_B06
+
+	ret
+}
+
+
+// 最初
+@SUB_B01
+{
+	game_flag_on(3523)
+
+	game_flag_on(3531)
+	game_flag_on(3532)
+	game_flag_on(3600)
+
+	ret
+}
+
+// ガンダルチュア前
+@SUB_B02
+{
+	ret
+}
+
+// トレント戰後
+@SUB_B03
+{
+	game_flag_on(   3)
+	game_flag_on(3601)
+	game_flag_on(3602)
+	game_flag_on(3615)
+	game_flag_on(3616)
+	ret
+}
+
+// ベアトリーチェ石像前
+@SUB_B04
+{
+	game_flag_on(3603)
+	game_flag_on(3623)
+	game_flag_on(3604)
+	ret
+}
+
+// リーゼの破魔矢
+@SUB_B05
+{
+	game_flag_on(3605)
+	game_flag_on(   1)
+	ret
+}
+
+// シュトゥルム石像前
+@SUB_B06
+{
+	game_flag_on(3606)
+
+	GET_ITEM(191, 1)
+	game_flag_on(3610)
+	ret
+}
+
+
+
+//-- ＣＣＣＣＣＣＣＣＣパート ------------------------------------------
+
+@SUB_C00
+{
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+	call SUB_C11
+
+	ret
+}
+
+
+// 巫女姬の弓（アニエス）
+@SUB_C01
+{
+	game_flag_on(   4)
+	game_flag_on(3617)
+
+	ret
+}
+
+// リーゼが倒れる
+@SUB_C02
+{
+	game_flag_on(3700)
+	game_flag_on(3720)
+	game_flag_on(3722)
+
+	ret
+}
+
+// 奇岩城出現（破魔矢）
+@SUB_C03
+{
+	GET_ITEM(70, 1)
+	game_flag_on(3701)
+	game_flag_on(3721)
+
+	game_flag_on(3303)
+	game_flag_on(3304)
+	ret
+}
+
+// 相似の二人（城前）
+@SUB_C04
+{
+	game_flag_on(3302)
+
+	game_flag_on(3702)
+	ret
+}
+
+// 沈默のリーゼ（城のイベント後）
+@SUB_C05
+{
+	game_flag_on(3703)
+
+	ret
+}
+
+// 街の門の外
+@SUB_C06
+{
+	// TK シャルと城が現れたことについて話す
+	game_flag_on(3723)
+	game_flag_on(3704)
+
+	ret
+}
+
+// 異界ガンダルチュア
+@SUB_C07
+{
+	game_flag_on(3705)
+
+	ret
+}
+
+// ドヴォルザークの敗北
+@SUB_C08
+{
+	game_flag_on(3706)
+	game_flag_on(3724)
+	game_flag_on(3725)
+
+	ret
+}
+
+// 結界裝置
+@SUB_C09
+{
+	game_flag_on(   6)
+	game_flag_on(3707)
+	game_flag_on(3708)
+	game_flag_on(3718)
+
+	ret
+}
+
+// 黑き花嫁
+@SUB_C10
+{
+	game_flag_on(3709)
+	game_flag_on(3727)
+	game_flag_on(3728)
+
+	ret
+}
+
+// 聖劍の巫女姬
+@SUB_C11
+{
+	game_flag_on(3514)
+	game_flag_on(3710)
+
+	ret
+}
+
+//-- ＤＤＤＤＤＤＤＤパート ------------------------------------------
+
+@SUB_D00
+{
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+
+	ret
+}
+
+// 祭壇の花嫁
+@SUB_D01
+{
+	game_flag_on(3711)
+	game_flag_on(3803)
+
+	// 4017	0627	ポータルエリア５、中盤　街でフローレのイベント起動にも利用します
+	game_flag_on(4017)
+
+	ret
+}
+
+// 魔王ガルシス再臨
+@SUB_D02
+{
+	game_flag_on(3800)
+
+	ret
+}
+
+
+// 真實を語るリーゼロット
+@SUB_D03
+{
+	game_flag_on(3801)
+	game_flag_on(3809)
+
+	ret
+}
+
+// リーゼ攻撃
+@SUB_D04
+{
+	game_flag_on(3808)
+
+	ret
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------
+// ★05/07/04:とりあえず手っ取り早く石版讀めるようにしたかったので追記。
+// ジャンプちゃんにやらせるようにした方が良いかも。（ひ）
+
+DEF("Momo2")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Momo2")
+	SET_NAME("MOMO2","石板")
+	
+	get_item(270,1)
+	get_item(271,1)
+	get_item(272,1)
+	get_item(273,1)
+	get_item(274,1)
+	get_item(275,1)
+	get_item(276,1)
+	get_item(277,1)
+	get_item(278,1)
+	get_item(279,1)
+	get_item(280,1)
+	get_item(281,1)
+	pick_text_item(0)
+
+	get_item(290,1)
+	get_item(291,1)
+	get_item(292,1)
+	get_item(293,1)
+	get_item(294,1)
+	get_item(295,1)
+	get_item(296,1)
+	get_item(297,1)
+	get_item(298,1)
+	get_item(299,1)
+	get_item(300,1)
+	get_item(301,1)
+	pick_text_item(1)
+
+	add_text_time(6000000)
+
+	// EV 手記を預けたことがある
+	game_flag_on(3611)
+	// Ｂパート開始
+	game_flag_on(3532)
+
+MENU4:
+	MSG("如果要全部讀石板和手記，|找隔壁屋裡的夏兒談談吧。")
+
+//	SEL("どうしたの？|#c2石板を讀んでもらう|手記を讀んでもらう|やめる")
+//	check_select(0)
+//	on_jump STONE_PLATE
+//	check_select(1)
+//	on_jump NOTE_BOOK
+
+	end
+
+
+
+
+//-- 石板を讀む ------------------------------------------------------
+STONE_PLATE:
+	CINEMA_ON(0)
+
+	// 石板MENU呼び出し（0:石板/1:手記）
+	call_text(0)
+
+	// call_text()內で「キャンセル(12)」を選んだ時はここでスキップさせる
+	check_sel_text(12)
+	on_jump PLATE_END
+	check_sel_text(-1)
+	on_jump PLATE_END
+
+	// 石板用背景を讀みこみ
+	load_novel_bg("epitaph\plate")
+	// 石板用背景表示
+	novel_on(0)
+	wait(60)
+
+	// 選んだ石板に應じた文面の表示
+	check_sel_text(0)
+	on_jump Stone1
+	check_sel_text(1)
+	on_jump Stone2
+	check_sel_text(2)
+	on_jump Stone3
+	check_sel_text(3)
+	on_jump Stone4
+	check_sel_text(4)
+	on_jump Stone5
+	check_sel_text(5)
+	on_jump Stone6
+	check_sel_text(6)
+	on_jump Stone7
+	check_sel_text(7)
+	on_jump Stone8
+	check_sel_text(8)
+	on_jump Stone9
+	check_sel_text(9)
+	on_jump Stone10
+	check_sel_text(10)
+	on_jump Stone11
+	check_sel_text(11)
+	on_jump Stone12
+
+	jump STONE_END
+
+Stone1:
+		SET_MSG_TIME(5,40,50, 30)
+
+	MSG_EX("#S3#C0『歷史的繼承者啊』",-1,0X00000094)
+	MSG_EX("#S3#C0由偉大的忽必烈可汗建立的，|被稱作桃源鄉的國度——它的名字叫做仙那度。|　|鳥語花香、陽光灑滿大地。|　|仙那度充滿了美麗與和平。",-1,0X00000094)
+	MSG_EX("#S3#C0但是，這裡記述的並不只是這些輝煌。|　|因為據實記述這個國家的歷史———|記述正史是我們的使命。",-1,0X00000094)
+	MSG_EX("#S3#C0無論是什麼樣的國家，|有光明就有黑暗。|仙那度也不例外。",-1,0X00000094)
+	MSG_EX("#S3#C0歷史的繼承者啊，希望你能用心聆聽。",-1,0X00000094)
+	MSG_EX("#S3#C0誰能想象到那令人恐懼的災難|兩度造訪了這個國家。|　|加爾西斯——君臨虛無世界的魔王。|他是率領魔物蹂躪我祖國的可憎的存在。",-1,0X00000094)
+	MSG_EX("#S3#C0因為某個人造成的正義與秩序衰落，|桃源鄉被徹底變成了一個|由慾望和惡行支配的世界。",-1,0X00000094)
+	MSG_EX("#S3#C0但是，渡過那個災難的仙那度|又再次恢復了繁榮。|　|值得稱頌的是打敗魔王的|過去的賢人和勇士們。",-1,0X00000094)
+	MSG_EX("#S3#C0阻止第一次魔王來襲的是|約裡頓王與由星光引導的聖劍勇士。|　|而阻止第二次來襲的是同樣佩有聖劍、|集美麗與勇敢於一身的公主。|　|無論哪一位，都可以説是在仙那度的歷史上|擁有擧足輕重地位的人物。",-1,0X00000094)
+	MSG_EX("#S3#C0光與影共存。|　|在講述襲撃仙那度的災難的同時|也必須要講述這些人的事蹟。",-1,0X00000094)
+	
+
+		SET_MSG_TIME(-1,-1,-1)
+
+	jump STONE_END
+
+Stone2:
+		SET_MSG_TIME(-1,60,-1)
+
+	MSG_EX("#S3#C0『被選中的人們』",-1,0X00000054)
+	MSG_EX("#S3#C0他突然出現在約裡頓王的時代。|　|魔王加爾西斯———|自稱邪惡之異龍。",-1,0X00000054)
+	MSG_EX("#S3#C0加爾西斯把手下的魔物派到大地上，|一瞬間仙那度全國陷入了恐怖的汪洋。|　|然後命令名匠賽森，|在王都地下神聖的洞穴中|建造了一座魔之謎宮。",-1,0X00000054)
+	MSG_EX("#S3#C0無法反抗加爾西斯，|約裡頓王被迫單方面接受了很多要求。|　|作為仙那度王家象徵的至寶王冠被奪走，|世界眼看就要陷入黑暗之中。",-1,0X00000054)
+	MSG_EX("#S3#C0雖然充滿了恐懼與恥辱，|但是國王的心並沒有消沉。|　|國王在悄悄地等待時機的到來。",-1,0X00000054)
+	MSG_EX("#S3#C0然後，在占星術士的指引下，|國王聚集了一批有勇者天賦的年輕人。|　|年輕的志願者們被託付給七導師，|為了對抗魔王而磨練身心。",-1,0X00000054)
+	MSG_EX("#S3#C0七導師各自掌管著|『武』『功』『魅』『識』『智』『魔』『捷』，|他們給志願者們的試煉非常嚴苛。|　|但是，沒有一個人後退，|他們勇敢地向加爾西斯的巢穴———|地下迷宮進行挑戰。",-1,0X00000054)
+	MSG_EX("#S3#C0然後，其中一個人奪回了王冠，|並帶回了聖劍屠龍劍。|　|聖劍是狩獵惡龍的神之英靈，|或者説是化身。|　|得到聖劍的年輕人|平安渡過許多殊死戰鬥，|終於將魔王加爾西斯徹底打敗。",-1,0X00000054)
+	MSG_EX("#S3#C0那位年輕人是多麼有勇氣，|而國王的志向又是多麼遠大啊。",-1,0X00000054)
+	MSG_EX("#S3#C0年輕人的勇武與國王的睿智|順利地將仙那度從魔爪中救出。|　|現在他們的事蹟在國內廣為傳頌，|也是理所應當的。|　|不過有些惋惜的是，|這個年輕人的姓名未能流傳後世。",-1,0X00000054)
+	MSG_EX("#S3#C0不管怎樣，魔王加爾西斯被打倒了，|仙那度也恢復了和平。|　|但是，就像諸位知道的一樣，|事情到這裡並沒有完全結束。",-1,0X00000054)
+
+		SET_MSG_TIME(-1,-1,-1)
+
+	jump STONE_END
+
+Stone3:
+	MSG_EX("#S3#C0『驟雨突然襲來』",-1,0X00000014)
+	MSG_EX("#S3#C0無論在什麼時代|噩耗都是突然而來的。",-1,0X00000014)
+	MSG_EX("#S3#C0在聖劍勇者與魔王加爾西斯的|殊死戰斗的幾年之後———|　|某個深夜，有名使者急匆匆趕來拜訪|正在自己臥室中悠閒休息的約裡頓王。",-1,0X00000014)
+	MSG_EX("#S3#C0不知為何，安置在迷宮之中的|加爾西斯的身體開始復蘇，|脈搏再度開始跳動。",-1,0X00000014)
+	MSG_EX("#S3#C0感到事態嚴重的約裡頓王|將曾經訓練過聖劍勇士的|七導師召集到王城。|　|大概是為了商議對付|開始蘇醒的加爾西斯的對策吧。",-1,0X00000014)
+	MSG_EX("#S3#C0據説他們的討論不分晝夜|連續進行了整整七天。|　|在導師們來到王城之後的第八天早上，|終於得出了一個結論。",-1,0X00000014)
+	MSG_EX("#S3#C0將加爾西斯的身體運到王城，|為了封印即將蘇醒的魔王|而張開強大的結界。",-1,0X00000014)
+	MSG_EX("#S3#C0約裡頓王任命自己的親生女兒為巫女，|命其終生封印魔王加爾西斯。|　|然後，命令七導師們輔佐巫女。|　|王家的長女代代繼承封印的使命，|就是從這個時候開始的。",-1,0X00000014)
+	MSG_EX("#S3#C0根據約裡頓王的判斷，此後數百年間仙那度都能保持和平。|　|在這段時間裡，雖然也偶有因為流傳著|加爾西斯即將復活的傳聞而不安定的時候，|但是，這些並沒有記載在正史中。|　|對人民來説，仙那度一直都是桃源鄉。",-1,0X00000014)
+	MSG_EX("#S3#C0沒錯……直到那個女人出現———",-1,0X00000014)
+	jump STONE_END
+
+Stone4:
+	MSG_EX("#S3#C0『不被祝福的新娘』",-1,0X00000014)
+	MSG_EX("#S3#C0關於黑色新娘出現時的事情|當時的書記官記載得非常詳細。|　|下面就引用其中的內容。",-1,0X00000014)
+	MSG_EX("#S3#C0像今天這樣的不祥日子|是想忘也忘不掉的。",-1,0X00000014)
+	MSG_EX("#S3#C0芙羅蕾特公主迎來了１６歲的生日，|本應是個普天同慶的日子———|　|那是發生在公主生日典禮結束之後、|巫女的繼任儀式開始之前的事情。",-1,0X00000014)
+	MSG_EX("#S3#C0身穿黑色禮服的那個女人|悠然地出現在我們的面前。|　|在我們仙那度的權威面前|那傲慢的女人開口宣佈了那件事情。",-1,0X00000014)
+	MSG_EX("#S3#C0她説封印在王城的|魔王加爾西斯已經被解放了———",-1,0X00000014)
+	MSG_EX("#S3#C0而且不止如此。|　|她還不可理喩地自稱為魔王的新娘。",-1,0X00000014)
+	MSG_EX("#S3#C0在場的人們都不由得發笑。|　|盲目相信加爾西斯的人|即使是現在也還有不少。|　|人們以為那個女人也是一個瘋狂的信徒。|有人開始鄙視和咒罵她。",-1,0X00000014)
+	MSG_EX("#S3#C0但是，人們的笑容|在下一個瞬間凝固了。",-1,0X00000014)
+	MSG_EX("#S3#C0代表著對芙羅蕾特公主祝福的|萬里無雲的晴空轉眼間烏雲密佈。|　|然後，在電閃雷鳴的同時|魔王加爾西斯的聲音|響徹仙那度全境。",-1,0X00000014)
+	MSG_EX("#S3#C0這是在向整個王國宣戰。|　|在桃源鄉仙那度，|恐懼與混亂的時代再度到訪。",-1,0X00000014)
+	MSG_EX("#S3#C0那個女子確實與魔王加爾西斯|締結了成為夫婦的契約。|　|作為人類卻解放魔王、|擧起反叛仙那度旗幟的女人———|　|人們把她稱作『黑色新娘』。",-1,0X00000014)
+	jump STONE_END
+
+Stone5:
+	MSG_EX("#S3#C0『星光閃爍的地方』",-1,0X00000014)
+	MSG_EX("#S3#C0宣戰之後，|國王立刻下令追討|魔王加爾西斯和黑色新娘。",-1,0X00000014)
+	MSG_EX("#S3#C0受命的是將軍瓦納波特|和其麾下的精鋭部隊。|　|國王將聖劍託付給他們，|打算以此討伐加爾西斯。",-1,0X00000014)
+	MSG_EX("#S3#C0如果你用心閲讀之前的文章，|在這裡應該會有一個疑問。|　|對，以前加爾西斯來襲的時候|國王聚集了一批年輕人，由七導師來訓練他們。|　|其中的一人手持聖劍|徹底打敗了加爾西斯。",-1,0X00000014)
+	MSG_EX("#S3#C0這次為什麼不做同樣的事情呢？|其中一個理由就是星星的執行。",-1,0X00000014)
+	MSG_EX("#S3#C0以前聚集年輕人的時候，|烏雲密佈的天空中，|三顆星星合成了一顆，熠熠生輝。|　|這三顆星星被稱作希琉加之星，|似乎每過三百年就合併成一顆。|　|自古以來就被當作是吉兆，|並且被當作是勇者出現的標志。",-1,0X00000014)
+	MSG_EX("#S3#C0但是，黑色新娘使魔王復活|是連命運女神都沒有預料到的。|　|此時，希琉加之星並未合併，|三顆星星各自閃耀著光輝。|　|勇者的出現毫無希望。",-1,0X00000014)
+	MSG_EX("#S3#C0在不安與焦躁交錯的王城中，|又發生了一件事情。|　|封印之巫女芙羅蕾特公主|從城中失蹤了。|　|接著，七導師也失蹤了。",-1,0X00000014)
+	jump STONE_END
+
+Stone6:
+	MSG_EX("#S3#C0『不歸的公主』",-1,0X00000014)
+	MSG_EX("#S3#C0根據文獻記載，|芙羅蕾特公主開朗活溌而且文武兼備，|備受人民的崇敬。|　|她在１６歲時成為封印之巫女，|是眾所周知的事情，|但是實際上在這之前的事情|人們都不太瞭解。",-1,0X00000014)
+	MSG_EX("#S3#C0還有，同七導師一起|從仙那度消失的芙羅蕾特公主|到底去了哪裡呢？",-1,0X00000014)
+	MSG_EX("#S3#C0關於在這以後的事情|我想諸位在年幼的時候就知道吧。|　|並沒有留下正式的記錄，|只有當時的傳説流傳著芙羅蕾特公主的下落。",-1,0X00000014)
+	MSG_EX("#S3#C0因為敘述歷史真相是我的主旨，|所以下面的描述僅作為參考記載下來。",-1,0X00000014)
+	MSG_EX("#S3#C0最後確認到芙羅蕾特公主等人的行蹤|是在林德爾地區。|　|佩戴著光輝的榮譽之劍——屠龍劍，|芙羅蕾特公主正在尋找|出現在霧中的不可思議的城堡。",-1,0X00000014)
+	MSG_EX("#S3#C0那正是仙那度的正規軍|拼命尋找的加爾西斯的大本營——奇岩城。",-1,0X00000014)
+	MSG_EX("#S3#C0與七導師一同進入奇岩城的芙羅蕾特公主|對魔王加爾西斯和黑色新娘窮追不捨。|　|靈活自如地操縱聖劍的身姿|就連夢幻之守護精靈——女武神看到了|也會嘖嘖稱奇吧。",-1,0X00000014)
+	MSG_EX("#S3#C0然後，經過七天的激戰，|芙羅蕾特公主的聖劍|終於將加爾西斯的巨大頭顱砍下。|　|因為丈夫死去而失去力量的黑色新娘|沉入了深深的奇岩城的湖底，|永遠沉睡下去———",-1,0X00000014)
+	MSG_EX("#S3#C0這是古老的傳説，|所以不知道其中有多少是真實的。",-1,0X00000014)
+	MSG_EX("#S3#C0但是，芙羅蕾特公主失蹤一個多月之後，|魔王軍隊的進攻突然停止卻是事實。|　|威脅著仙那度的加爾西斯與黑色新娘|此後也從未再出現過。",-1,0X00000014)
+	MSG_EX("#S3#C0從現在的狀況來看，|和聖劍一起失蹤的芙羅蕾特公主|被人民想象、傳頌也是理所當然的。",-1,0X00000014)
+	MSG_EX("#S3#C0現在芙羅蕾特公主|被當作是與開國元勳忽必烈可汗|相提並論的英雄。|　|自從那件事情以來，直至今日|仙那度都享受著無盡的和平與繁榮。",-1,0X00000014)
+	MSG_EX("#S3#C0就算是隻追求歷史真相的我，|一想起揮舞著聖劍的芙羅蕾特公主的身姿，|也不由得心潮澎湃。",-1,0X00000014)
+
+	jump STONE_END
+
+Stone7:
+	MSG_EX("#S3#C0『精靈與歷史』",-1,0X00000014)
+	MSG_EX("#S3#C0談談關於仙那度與守護精靈的關系吧。",-1,0X00000014)
+	MSG_EX("#S3#C0在加爾西斯被封印在王城之後，|仙那度建設得比以前更加繁榮。|　|其中一個重要的原因|就是有守護精靈的存在。",-1,0X00000014)
+	MSG_EX("#S3#C0眾所周知，守護精靈是一種|人在剛出生的時候接受洗禮|並讓其寄宿在體內的精靈。",-1,0X00000014)
+	MSG_EX("#S3#C0現在守護精靈已經廣為人知，|但它們本來是在自然界存在的精靈。|　|以精靈為媒介幹涉自然界的力量，|它可以改善或者增強人生與生倶來的|性格、體力、運氣、魔力等特性。",-1,0X00000014)
+	MSG_EX("#S3#C0降服他們並將他們寄宿在人體中的巫術|是封印之巫女與七導師們想出來的。",-1,0X00000014)
+	MSG_EX("#S3#C0每當世代更替的時候，|負責監視魔王的他們的封印術|就會向更高階別發展。|　|那時的巫女提出建議，|希望寄宿守護精靈的儀式|能服務於百姓。",-1,0X00000014)
+	MSG_EX("#S3#C0此後，在仙那度的主要城市裡|為了進行洗禮和降靈儀式的精靈堂|一個接一個地建了起來。|　|城鎮裡和街道的旁邊|供奉著守護精靈的石碑和祠堂隨處可見。",-1,0X00000014)
+	MSG_EX("#S3#C0母親一邊用慈愛的目光看著自己的孩子，|一邊敲著精靈堂的門，|這情景如今已經很常見了。",-1,0X00000014)
+	jump STONE_END
+
+Stone8:
+	MSG_EX("#S3#C0『四頂王冠』",-1,0X00000014)
+	MSG_EX("#S3#C0雷比克|庫奧基|泰朧|扎格琉伊勒斯|　|只要是仙那度的居民，|都應該聽説過這些名字。",-1,0X00000014)
+	MSG_EX("#S3#C0這是仙那度的至寶———|四頂王冠的名字。",-1,0X00000014)
+	MSG_EX("#S3#C0在仙那度，無論的哪個統治者都可以證明，|這四頂王冠是比玉璽還重要的東西。|　|但是，它真正的意義|只有王室成員才知道，|所以現在不能在這裡記載。",-1,0X00000014)
+	MSG_EX("#S3#C0在勇者打倒加爾西斯的時候，|四頂王冠是必須的物品，|所以推測這四頂王冠隱藏著特殊的力量。|　|此後巫女封印魔王的時候|也需要這四頂王冠的力量。",-1,0X00000014)
+	MSG_EX("#S3#C0加爾西斯入侵時最先要求的就是|將這四頂王冠交給他。|　|那時的國王約裡頓為了保護人民，|毫不猶豫地答應了這個要求，|不過他的心裡到底有什麼打算呢。",-1,0X00000014)
+	MSG_EX("#S3#C0此後，由於聖劍勇者的活躍，|王冠又重新回到了王家手中，|但是現在誰也不知道王冠在什麼地方。|　|因為後來的某次不幸事件，|四頂王冠再次被邪惡者奪走。",-1,0X00000014)
+	MSG_EX("#S3#C0對，就是因為黑色新娘。",-1,0X00000014)
+	jump STONE_END
+
+Stone9:
+	MSG_EX("#S3#C0『聖劍與巫女』",-1,0X00000014)
+	MSG_EX("#S3#C0關於聖劍屠龍劍的事情|也是必須要談到的。",-1,0X00000014)
+	MSG_EX("#S3#C0屠龍劍就是曾經打倒魔王加爾西斯的勇士|使用的聖劍的名字。|　|聖劍本來是很久以前|消滅惡龍的神的化身。|　|它不僅有打敗魔龍的力量，|還能夠保護擁有它的人，|賜予他偉大的力量。",-1,0X00000014)
+	MSG_EX("#S3#C0王家害怕這把劍像王冠一樣|被交到邪惡的人手中。|　|因此平時聖劍保管在什麼地方是不公開的。",-1,0X00000014)
+	MSG_EX("#S3#C0也有人説是由封印之巫女來管理的，|但是事到如今也沒有辦法考證了。|　|因為聖劍被芙羅蕾特公主帶出王城之後，|就沒有人知道它的下落了。",-1,0X00000014)
+	MSG_EX("#S3#C0即使如此，作為封印之巫女，|身上肩負的責任也是很重大的。|　|她們在１６歲時被賦予使命，|直到下一個巫女成長到１６歲，|都必須坐在魔王前面保護封印。|　|這個任務自從加爾西斯被封印以來，|幾百年來一直代代繼承下去。",-1,0X00000014)
+	MSG_EX("#S3#C0聽説擔負這個使命的王家的長女|自懂事起就必須進行嚴酷的巫女修行。|　|就算説是年幼的巫女肩負著仙那度的和平也不為過。|　|但是，為她們過於殘酷的使命打下休止符的人|正是前面講到的芙羅蕾特公主。",-1,0X00000014)
+	jump STONE_END
+
+Stone10:
+	MSG_EX("#S3#C0『七導師』",-1,0X00000014)
+	MSG_EX("#S3#C0七導師本來是為了訓練能與加爾西斯|戰斗的勇者而被召集起來的人們。|　|他們種族不同，年齢各異，|是從仙那度各地召集來的，|每個人都被國王寄予了厚望。",-1,0X00000014)
+	MSG_EX("#S3#C0加爾西斯被勇者打倒後，|他們的責任就是輔佐進行封印的巫女。|　|七導師是封印巫女的侍奉者、|傾訴對象，也是監視者。",-1,0X00000014)
+	MSG_EX("#S3#C0在芙羅蕾特公主成為巫女之前，|七導師也選出了新的繼任者。",-1,0X00000014)
+	MSG_EX("#S3#C0那時的七導師是：|　|『武』之導師德沃夏克|『功』之導師剛達爾奇|『魅』之導師洛蕾萊|『識』之導師提歐巴特|『智』之導師阿巴塔拉哈|『魔』之導師貝亞特里奇|『捷』之導師修特威爾姆",-1,0X00000014)
+	MSG_EX("#S3#C0他們和芙羅蕾特公主一起|在加爾西斯之戰中被寄予很大期望。|　|據記載，他們與魔王軍的戰鬥異常激烈。|　|也可以説能將加爾西斯驅逐、|使和平重歸仙那度都是託他們的福。",-1,0X00000014)
+	MSG_EX("#S3#C0這麼説來，調查過那些記錄之後，|有一個地方讓我很在意。",-1,0X00000014)
+	MSG_EX("#S3#C0導師洛蕾萊———|關於她的紀錄完全沒有留下來。",-1,0X00000014)
+	MSG_EX("#S3#C0是在戰火中消失了呢，|抑或是什麼人為了某種目的|將其埋葬在歷史的黑暗之中呢……|　|和王冠與聖劍的行蹤一樣，|現在已經無人知曉。",-1,0X00000014)
+	MSG_EX("#S3#C0在如今的仙那度，|因為魔王加爾西斯已經不在了，|封印之巫女和七導師的制度也被廢除。|　|但是，我們會將他們的名字|和他們的功績永遠銘刻心中。|　|希望英雄芙羅蕾特公主|和七導師的英靈能夠安息。",-1,0X00000014)
+	jump STONE_END
+
+Stone11:
+	MSG_EX("#S3#C0『黑衣的新娘』",-1,0X00000014)
+	MSG_EX("#S3#C0嫁給魔王加爾西斯的人類女孩———|她就是黑色新娘。",-1,0X00000014)
+	MSG_EX("#S3#C0她仰頭向天，太陽就被遮住。|她將雙手擧起，就會掀起直達天際的火柱。|　|因為她與加爾西斯結合，|得到了超越人類智慧的力量。",-1,0X00000014)
+	MSG_EX("#S3#C0在加爾西斯與仙那度的戰爭開始之後，|黑色新娘作為魔王的使者|屢次造訪仙那度的王城。|　|就算是這樣，|黑色新娘到底是用什麼方法|與被封印在王城中樞的加爾西斯接觸的呢。",-1,0X00000014)
+	MSG_EX("#S3#C0在加爾西斯被封印期間，|除了巫女和七導師之外，|還安排了許多衛士，警備應該非常森嚴。|　|她能偷偷與加爾西斯接觸，|説明她應該是擁有強大力量的魔術師，|或者是王家內部的人？",-1,0X00000014)
+	MSG_EX("#S3#C0關於當時的記錄|也有一些可疑的地方。|　|比如重要罪犯的名字|在官方正式的紀錄裡都有記載。",-1,0X00000014)
+	MSG_EX("#S3#C0但是，所有的記錄中|都稱呼她為『黑色新娘』。|　|我將多年來的研究彙集起來，|也沒有找到明確記載她的名字的資料。|　|仿佛是為了要隱藏什麼事情一樣，|在任何地方都沒有記錄她的名字。",-1,0X00000014)
+	jump STONE_END
+
+Stone12:
+	MSG_EX("#S3#C0『悲劇的名匠』",-1,0X00000014)
+	MSG_EX("#S3#C0在仙那度王國的地下|曾經有一個神聖的洞穴。|　|在洞穴中以亞佛河為中心|注入了幾條清澈的溪流，|在那裡形成了一個大瀑布。",-1,0X00000014)
+	MSG_EX("#S3#C0據説太祖忽必烈可汗也遊歷過|那規模宏大的水池。|　|在當時的書中曾有這樣的記載———|『如真正的桃源鄉一樣的景觀』。",-1,0X00000014)
+	MSG_EX("#S3#C0但是，在約裡頓王的時代，|魔王加爾西斯來到仙那度之後，|神聖洞穴的情況就完全改變了。",-1,0X00000014)
+	MSG_EX("#S3#C0大概是因為魔法的影響，|河水乾涸、不祥的岩石叢生，|不久就變成了魔物棲息的巢穴。|　|統治仙那度的加爾西斯|對這個洞穴也十分關注。",-1,0X00000014)
+	MSG_EX("#S3#C0為了迷惑自己的敵人，|魔王命令約裡頓王將這個洞穴改造成迷宮。|　|正因為這裡是桃源鄉的象徵，|所以仙那度的人民十分憤怒。|　|但是，沒有人能夠反抗加爾西斯。",-1,0X00000014)
+	MSG_EX("#S3#C0傳聞設計和建造迷宮的是|被加爾西斯帶走的名匠賽森。",-1,0X00000014)
+	MSG_EX("#S3#C0賽森不僅在建築領域有很多成就，|而且在日用品、兵器、藥學等所有領域|都做出過巨大的貢獻。|　|他的藥曾經將國王從千年夢的折磨中|解救出來的事情已經被傳為佳話。",-1,0X00000014)
+	MSG_EX("#S3#C0此後據説賽森還建造了加爾西斯居住的城堡，|但是並不能確定這件事的真實性。|　|關於加爾西斯的城堡，不要説它的所在之處，|就連它是否存在都不能確定。",-1,0X00000014)
+	MSG_EX("#S3#C0而且，賽森再也沒有回到仙那度。",-1,0X00000014)
+	jump STONE_END
+
+STONE_END:
+	// 石版用背景消去
+	novel_off(0)
+
+	// 再び石版MENUへ
+	jump STONE_PLATE
+
+//-- 手記を讀む ------------------------------------------------------
+NOTE_BOOK:
+	CINEMA_ON(0)
+
+	// 石板MENU呼び出し（0:石板/1:手記）
+	call_text(1)
+
+	// call_text()內で「キャンセル(12)」を選んだ時はここでスキップさせる
+	check_sel_text(12)
+	on_jump PLATE_END
+	check_sel_text(-1)
+	on_jump PLATE_END
+
+	// 石板用背景を讀みこみ
+	load_novel_bg("epitaph\paper")
+	// 石板用背景表示
+	novel_on(0)
+	wait(60)
+
+	// 選んだ石板に應じた文面の表示
+	check_sel_text(0)
+	on_jump Note1
+	check_sel_text(1)
+	on_jump Note2
+	check_sel_text(2)
+	on_jump Note3
+	check_sel_text(3)
+	on_jump Note4
+	check_sel_text(4)
+	on_jump Note5
+	check_sel_text(5)
+	on_jump Note6
+	check_sel_text(6)
+	on_jump Note7
+	check_sel_text(7)
+	on_jump Note8
+	check_sel_text(8)
+	on_jump Note9
+	check_sel_text(9)
+	on_jump Note10
+	check_sel_text(10)
+	on_jump Note11
+	check_sel_text(11)
+	on_jump Note12
+
+	jump NOTE_END
+
+Note1:
+	MSG_EX("#S3#C0一二一〇年　牛飼之月二十三日參加",-1,2)
+	MSG_EX("#S3#C0從今天開始寫自己的手記。|　|不是要給什麼人看，|而是因為有人建議我記下各種事情|以便作為將來的參考。",-1,2)
+	MSG_EX("#S3#C0和姐姐不同，因為我做事總是沒長性，|所以不知道能否繼續下去，|就把想到的和感受到的東西留下來吧。",-1,2)
+	MSG_EX("#S3#C0今天早上訓練魔術，|下午練習劍術，|晚上學習禮儀規矩。|　|日復一日，|天天都在進行嚴格的訓練，好累啊。",-1,2)
+	MSG_EX("#S3#C0……不行、不行。|總寫一些抱怨的話是沒用的。|　|寫一些好事、高興的事更為重要。",-1,2)
+	MSG_EX("#S3#C0要説今天值得高興的事，|就是被姐姐表揚了。|　|因為總是和姐姐在一起，|我覺得無論什麼事情只要微笑面對就可以渡過難關。|　|抱有這樣的想法有些不好意思，|無論如何也不能當面對她説。",-1,2)
+	jump NOTE_END
+
+Note2:
+	MSG_EX("#S3#C0一二一〇年　銀狼之月二十七日",-1,2)
+	MSG_EX("#S3#C0姐姐既溫柔又有氣質，|和我比起來成熟多了。|　|父王從我們很小的時候開始就拿我和姐姐做比較，|所以有時候我很不高興。|　|有一個有能力的姐姐，|也是件累人的事呢。",-1,2)
+	MSG_EX("#S3#C0但是，這個優秀的姐姐|偏偏從小就體弱多病。",-1,2)
+	MSG_EX("#S3#C0今天姐姐身體不好，|所以沒有參加劍術練習。|我有些擔心……|　|我想一會兒去姐姐的房間|看看她的情況。",-1,2)
+	MSG_EX("#S3#C0就算這樣，如果我和姐姐比賽的話，|她還是比我厲害。|不覺得有些不合道理嗎？",-1,2)
+	jump NOTE_END
+
+Note3:
+	MSG_EX("#S3#C0一二一一年　鳳凰之月三十日",-1,2)
+	MSG_EX("#S3#C0今天逃課去鎮上玩。|　|所謂修行，就是一天到晚的學習，|都快要窒息了。",-1,2)
+	MSG_EX("#S3#C0雖然鎮上所有的地方我都喜歡，|但我最喜歡的還要數市場了。|　|從來沒有見過的器物、動物、食品，|總之沒見過的東西一大堆。|　|就算一整天都呆在那裡|也不會覺得厭煩。",-1,2)
+	MSG_EX("#S3#C0就在我大口吃著買來的點心的時候，|被衛兵發現帶了回來。|　|老師們非常嚴厲地斥責了我，|説明天的訓練會非常嚴格。|　|剛才我把這些告訴了姐姐，|還被姐姐笑話了。",-1,2)
+	MSG_EX("#S3#C0但是，我一點都不後悔。|能夠見識到那麼多東西|才是重要的事情。|　|只窩在房間裡學習太浪費了。|這就是我的生存之道。",-1,2)
+	jump NOTE_END
+
+Note4:
+	MSG_EX("#S3#C0一二一一年　天馬之月十一日",-1,2)
+	MSG_EX("#S3#C0今天從一大早開始就很鬱悶。|　|接下來我不得不去參加|在城裡擧行的舞會了。",-1,2)
+	MSG_EX("#S3#C0我一點都不習慣穿裙子啊。|　|為什麼一定要穿那樣|隨風飄動的衣服跳舞呢。",-1,2)
+	MSG_EX("#S3#C0裙子的下擺很長，|所以下樓梯的時候必須要一階一階地下。|　|唉，去年就是踩在自己的裙擺上摔了一……|　|總是被拿來和姐姐比，|所以一點美好的回憶也沒有呀。",-1,2)
+	MSG_EX("#S3#C0但是，在舞會上也能吃到好多美味的食物，|所以還是忍耐一下吧。|　|那麼我這就去了。",-1,2)
+	jump NOTE_END
+
+Note5:
+	MSG_EX("#S3#C0一二一二年　一角之月七日",-1,2)
+	MSG_EX("#S3#C0提歐巴特老師的課上|講了關於不死鳥的傳説。|　|那是即使在仙那度|也不容易看到的永生之鳥。|　|以前它們棲息在神聖的洞穴中，|但是最近似乎看不到它們了。",-1,2)
+	MSG_EX("#S3#C0傳説不死鳥能夠給所到之處帶來祝福。|　|也有人説當世界陷入混亂之中時，|它能給予人們引導。",-1,2)
+	MSG_EX("#S3#C0它是永生的，|永遠注視著世界。|　|聽了這個傳説，|不知為什麼心中泛起一股暖意。",-1,2)
+	MSG_EX("#S3#C0我很想能見到不死鳥，|哪怕只有一次也好。|　|姐姐也説想看，|所以我們就約定一起去看不死鳥。|　|雖然現在不行，|但是真的想有一天一起去看啊。",-1,2)
+	jump NOTE_END
+
+Note6:
+	MSG_EX("#S3#C0一二一二年　野兎之月十日",-1,2)
+	MSG_EX("#S3#C0姐姐暈倒了。",-1,2)
+	MSG_EX("#S3#C0本來身體就不是很好，|再加上過度労累。|　|在魔術課上姐姐暈倒了。",-1,2)
+	MSG_EX("#S3#C0雖然現在她在休息，|但是臉色依舊不好。",-1,2)
+	MSG_EX("#S3#C0平日常常掛念著我的姐姐、|總是對我微笑的姐姐……|　|不管多難，我都會代替姐姐努力，|希望姐姐不要勉強自己。",-1,2)
+	MSG_EX("#S3#C0我已經拜託父親和提歐巴特老師很多次了，|但是似乎不是那麼簡單。|　|如果這樣下去的話，姐姐她……|難道沒有什麼事情我可以做的嗎？",-1,2)
+	MSG_EX("#S3#C0我……從明天開始會更加更加努力，|為了得到不輸於姐姐的力量。|　|這樣的話，一定……",-1,2)
+	jump NOTE_END
+
+Note7:
+	MSG_EX("#S3#C0一二一五年　孝鴉之月三日",-1,2)
+	MSG_EX("#S3#C0今天指導我的老師表揚了我。",-1,2)
+	MSG_EX("#S3#C0自從我發誓要鍛煉出不輸於姐姐的力量之後，|已經過了三年了———|　|我自己也能感覺到|自己擁有了和以前不能同日而語的力量。|　|在魔術方面雖然還敵不過姐姐，|但是在劍術和守護精靈的控制方面|應該不遜色於她吧。",-1,2)
+	MSG_EX("#S3#C0那個時刻馬上就要到來了。",-1,2)
+	MSG_EX("#S3#C0為了即將到來的那個時刻做準備，|希望能就這樣一直進步下去。",-1,2)
+	jump NOTE_END
+
+Note8:
+	MSG_EX("#S3#C0一二一六年　半神之月十四日",-1,2)
+	MSG_EX("#S3#C0今天是我１６歲的生日。|馬上，那一刻就要到來了。|　|對我和姐姐來説，|非常非常重要的日子。",-1,2)
+	MSG_EX("#S3#C0不管是什麼樣的結果，|我們都必須接受。|因為那是規定好的事情。",-1,2)
+	MSG_EX("#S3#C0但是，如果可能的話……|命運女神啊，|希望你不要選我姐姐，選我吧。|　|雖然有些害怕，但那是我的希望。|為了這個，只要我能做的都做了。",-1,2)
+	MSG_EX("#S3#C0……必須要走了。|　|等我再回到這個房間來的時候，|到底會是什麼樣的心情呢……",-1,2)
+	jump NOTE_END
+
+Note9:
+	MSG_EX("#S3#C0一二一六年　半神之月十五日",-1,2)
+	MSG_EX("#S3#C0我崩潰了。",-1,2)
+	MSG_EX("#S3#C0到底是為什麼？|為什麼會發生這樣的事情……",-1,2)
+	MSG_EX("#S3#C0到底發生了什麼事情我也不知道。|痛苦、悲傷……姐姐……幫幫我……",-1,2)
+	jump NOTE_END
+
+Note10:
+	MSG_EX("#S3#C0一二一六年　半神之月十七日",-1,2)
+	MSG_EX("#S3#C0雖然發生了很多事情，但那個時刻終於到來了。|被選擇的人只有我。|　|所有的一切都在那天毀掉了。|再也回不到從前了。|　|因為姐姐走了。",-1,2)
+	MSG_EX("#S3#C0但是，我還有我的使命。|為了仙那度應該完成的使命。|　|不管是過去還是回憶都要捨棄掉，|現在，我成了封印之巫女。",-1,2)
+	jump NOTE_END
+
+Note11:
+	MSG_EX("#S3#C0一二一六年　半神之月十九日",-1,2)
+	MSG_EX("#S3#C0今天父王正式向將軍|下達了討伐命令。|　|我是誰？|坐在這裡等著真的好嗎？|　|不，我必須要查清楚。",-1,2)
+	MSG_EX("#S3#C0那個人的……黑色新娘的本意。",-1,2)
+	MSG_EX("#S3#C0即使只有一個人我也要去。|　|因為這是隻有我才能做的，|我自己的使命。",-1,2)
+	jump NOTE_END
+
+Note12:
+	MSG_EX("#S3#C0一二一七年　水蛇之月十六日",-1,2)
+	MSG_EX("#S3#C0這大概是我最後一次在這本手記裡記載了。",-1,2)
+	MSG_EX("#S3#C0從鎮上出發已經三個月了。|　|我得到了幫助我的人們，|而且終於調查到了———|　|魔王和黑色新娘的所在之處。",-1,2)
+	MSG_EX("#S3#C0魔王的巢穴，奇岩城———",-1,2)
+	MSG_EX("#S3#C0現在我們即將進入那裡。|歷代的巫女們啊，無論如何請賜予我力量。",-1,2)
+	jump NOTE_END
+
+NOTE_END:
+	// 背景消去
+	novel_off(0)
+
+	// 再びMENUへ
+	jump NOTE_BOOK
+
+//--------------------------------------------------------------------
+
+PLATE_END:
+	CINEMA_OFF(0)
+	novel_off(0)
+
+	jump MENU4
+}

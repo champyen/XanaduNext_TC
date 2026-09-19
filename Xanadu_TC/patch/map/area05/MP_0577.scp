@@ -1,0 +1,306 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+// 死神出さない
+	PERMIT_DEATH(0)
+
+	// フェード處理
+	CHECK_ENTRY_GATE("0577_0757")
+	OFF_JUMP NEXT
+
+//	CINEMA_ON(0)
+	CINEMA_OFF(0)
+
+	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3941)
+	off_skip 1
+	room_flag_on(253)
+
+	// エリアネーム表示
+	DISP_PLACE(1)
+//	ENTRY_IMG(0,"AREANAME01",0)
+//
+//		// αが'1'の時は'加算モード'なので「透明」にする時は、
+//		// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+//		//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+//		SET_IMG( 0, 192,166, 0,  0, 96,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 2, 192,166, 0,  0,144,255, 48, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		SET_IMG( 1, 224,206, 0,  0,224,255, 16, 1, 0xff000000, 0xff000000, 0,1, 0, 0,1)
+//		SET_IMG( 3, 192,206, 0,  0,240,255, 16, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//		IMG_ON(0)
+//		IMG_ON(1)
+//		IMG_ON(2)
+//		IMG_ON(3)
+//
+//		// 發生までに'間'が欲しい場合はこんな風にします。
+//		SUSPEND_IMG(0,60)
+//		SUSPEND_IMG(1,30)
+//		SUSPEND_IMG(2,180)
+//		SUSPEND_IMG(3,180)
+//
+//		// フェードイン
+//		COLOR_IMG    (0, 0xffffffff, 0xff000000, 60, 1)
+//		COLOR_IMG_EX (2, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//		COLOR_IMG    (1, 0xffffffff, 0xff000000, 10, 1)
+//		SCALE_IMG    (1, 0.75,1,                 30, 1)
+//		COLOR_IMG_EX (3, 0xffffffff, 0xff000000, 15, 1, 0, 1, 1)
+//
+//		// 120フレ後に指定したRESに飛ばし、そこで煮るなり燒くなり好きに出來ます。
+//		TIMER_IMG(0,120,"kesu")
+
+NEXT:
+
+	// 水マップ
+	SE("SE_MIZU")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1506)
+	ON_SKIP(2)
+	KAGI("d1506",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1506")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1508)
+	ON_SKIP(2)
+	KAGI("d1508",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1508")
+
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+//		DEF("kesu")
+//		RES("IMG")
+//		{
+//			COLOR_IMG(0, 0xff000000, 0xff000000, 15, 1)
+//			COLOR_IMG(1, 0xff000000, 0xff000000, 15, 1)
+//
+//			CINEMA_OFF(0)
+//			END
+//		}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1506")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1506)
+}
+
+DEF("d1508")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1508)
+}
+
+
+// ============================================================================
+// 門(exit)
+// ============================================================================
+
+DEF("gate")
+RES("CLICK")
+{
+
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("　外出乕？　|#C2外出|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL1
+	JUMP SEL2
+
+SEL1:
+
+	WAIT(30)
+	SWITCH_ON("gate")
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+
+	ENTRY_MAP("0757_out")
+
+SEL2:
+	CINEMA_OFF(0)
+	END
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+
+DEF("box")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(575)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box")
+	INIT_SWITCH_ON("box")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god03",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box")
+
+	CHECK_GAME_FLAG(575)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 225, 0,0.25,0, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99ITEM_GET","box","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【50Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(50)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 103, 0,0.25,0, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99CARD_GET","box","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(3)
+	GAME_FLAG_ON(575)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【顛茄】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【顛茄】",-1,0X00000200)
+	SYS_EX("這是可以燠強各種各樣的藥水|回復效果的守護精靈。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+//DEF("ITEM")
+//RES("CATCH")
+//{
+//	SE("SE_GETITEM")
+//	GAME_FLAG_ON(575)
+//}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kami")
+RES("CLICK")
+{
+	FOCUS_CHR("kami")
+	SET_NAME("KAMI","貼紙")
+	SYS("對不能分辨真偽的人來説，（到對岸去）很難。")
+}
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3941)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈等級上升1級！",-1,0X00000200)
+	game_flag_on(3941)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

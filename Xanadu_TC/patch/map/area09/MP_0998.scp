@@ -1,0 +1,1933 @@
+//////////////////////////////////////////////////////////////////////
+// ローレライボス戰
+//
+// ROOM_FLAG
+//  0: 1st 死亡チェック用
+//  1: 2nd 死亡チェック用
+//  2: 3rd 死亡チェック用
+//  3: イベントトリガー對策
+//  4: ボス名のIMG登濾したか
+//
+//////////////////////////////////////////////////////////////////////////////
+// 初期化
+//////////////////////////////////////////////////////////////////////////////
+
+DEF("MAP")
+RES("INIT")
+{
+	// BGM異界イベント用
+	BGM(22, 0, -1)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ポータル關連
+	CHECK_GAME_FLAG(4016)
+	ON_SKIP(2)
+	LOAD_MAP("MP_099a")
+	HIDE_CHR("cover")
+
+
+	SET_COLOR("k03",0x00000000,1,0)
+	SET_COLOR("k04",0x00000000,1,0)
+	SET_COLOR("k05",0x00000000,1,0)
+	SET_COLOR("k06",0x00000000,1,0)
+	SET_COLOR("k07",0x00000000,1,0)
+	SET_COLOR("k08",0x00000000,1,0)
+	SET_COLOR("k09",0x00000000,1,0)
+	SET_COLOR("k10",0x00000000,1,0)
+	SET_COLOR("k11",0x00000000,1,0)
+	SET_COLOR("k12",0x00000000,1,0)
+	SET_COLOR("k13",0x00000000,1,0)
+	SET_COLOR("k14",0x00000000,1,0)
+	SET_COLOR("k15",0x00000000,1,0)
+	SET_COLOR("k16",0x00000000,1,0)
+	SET_COLOR("k17",0x00000000,1,0)
+	SET_COLOR("k18",0x00000000,1,0)
+	SET_COLOR("k19",0x00000000,1,0)
+	SET_COLOR("k20",0x00000000,1,0)
+	SET_COLOR("k21",0x00000000,1,0)
+	SET_COLOR("k22",0x00000000,1,0)
+	SET_COLOR("k23",0x00000000,1,0)
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+	//とりあえず隱す
+	HIDE_CHR("lole2")
+	BLUR(0)
+	SLOW(0)
+
+// 05/04/26追記：ランダムマップから來た時のフェードを戻す處理 ----------------
+	CHECK_GAME_FLAG(920)
+	OFF_JUMP SKIP_FADE
+
+	CHECK_GAME_FLAG(3000)
+	OFF_JUMP SKIP_FADE
+	CINEMA_ON(0)
+	FADE_IN(-1)
+	CINEMA_OFF(0)
+	// フラグ戻して
+	GAME_FLAG_OFF(3000)
+
+SKIP_FADE:
+// ---------------------------------------------------------------------------
+
+	// EV C-9 《魅》のローレライを見たか（＝倒したか）
+	check_game_flag(3708)
+	off_jump NEXT3
+
+	// ワープゲート出現
+	ENTRY_CHR( 2, 459)
+	ENTRY_CHR( 3, 460)
+	ENTRY_CHR( 4, 461)
+	ENTRY_CHR( 5, 462)
+	ENTRY_CHR( 6, 479)
+	ENTRY_CHR( 7, 480)
+	ENTRY_CHR( 8, 481)
+
+	PUT_CHR( 2, "PoleRed",     0.00,0.00, 6.00,   0)
+	PUT_CHR( 3, "PoleBlue",    5.20,0.00,-3.00,   0)
+	PUT_CHR( 4, "PoleYellow", -5.20,0.00,-3.00,   0)
+	PUT_CHR( 5, "Base",        0.00,0.00, 0.00,   0)
+	PUT_CHR( 6, "NullBase3",   0.00,0.00, 0.00,   0)
+	PUT_CHR( 7, "NullBase2",   0.00,0.50, 0.00,   0)
+	PUT_CHR( 8, "NullBase1",   0.00,1.00, 0.00,   0)
+
+	set_motion("PoleRed",	"EMPTY2")
+	set_motion("PoleBlue",	"EMPTY2")
+	set_motion("PoleYellow","EMPTY2")
+	set_motion("Base","EMPTY2")
+
+	jump NEXT2
+
+NEXT3:
+	// 40 「武」の賢者ドヴォルザーク
+	ENTRY_CHR( 0, 498)
+	PUT_CHR( 0, "Dvorak",  -2.77,-11.61,-33.9, 180)
+	ENABLE_AUTO_TURN("Dvorak", 0)
+	ENTRY_CHR( 9, 234)
+	PUT_CHR( 9, "Dvonull",  -2.77,-11.61,-35.15, 180)
+	ENABLE_EV_POP( "Dvonull", 0)
+
+	// 124 「魅」の賢者ローレライ
+	ENTRY_CHR( 1, 124)
+	PUT_CHR( 1, "Lorele",  0.00,0.00,0.00,   0)
+
+NEXT2:
+
+	CHECK_GAME_FLAG(6)
+	ON_SKIP(1)
+	INIT_SWITCH_ON("efc")
+
+	CHECK_GAME_FLAG(4016)
+	OFF_JUMP START
+	SWITCH_ON("portal")
+	KILL_CHR("cover",0,0,1)
+
+START:
+	// うにゃーん空間
+//	set_raster_info( 0, 10,10, 0.001,0.001, 1,0, -1,-1, 0.5)
+	set_raster_info( 0, 200,200, 0.010,0.010, 1,1, -1,-1, 0.5)
+	raster(0,1)	
+	SET_CHR_SURFACE_ATTR("papa","M_0083e",0)
+
+	// とりあえず隱す
+	HIDE_CHR("1st")
+	HIDE_CHR("2nd")
+	HIDE_CHR("3rd")
+	HIDE_CHR("core")
+	HIDE_CHR("papa")
+	HIDE_CHR("box")
+	camera_off("こども用")
+	CAMERA_Off("ぱぱ用")
+	HIDE_CHR("stop")	
+
+	// ぱぱ用コリジョンモデルのアタッチ
+	load_chr("M_0083\M_0083h",0)
+	//set_collision_obj("papa",0)
+
+	CHECK_GAME_FLAG(905)
+	OFF_JUMP NEXT
+	CHECK_GAME_FLAG(906)
+	ON_JUMP NEXT
+	SHOW_CHR("box")
+	
+NEXT:
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// 部屋投入後デモ
+//////////////////////////////////////////////////////////////////////////////
+DEF("demoboss")
+RES("INIT")
+{
+//見たかチェック
+	CHECK_GAME_FLAG(920)
+	ON_JUMP NEXT
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	HIDE_CHR("Lorele")
+	SET_POS("PC",0,-11.6,-57.5)
+	SET_DEG("PC",0)
+	PC_WEAPON(1,1)
+	FOCUS_CHR("PC")
+	SET_MOTION("PC","DEAD",0)
+
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA(0,-8,-57.5,-80,120, 0,20,12)
+	ROTATE_SCRIPT_CAMERA(0,20,0, 300, 0)
+	FADE_IN(120)
+
+//スキップ
+	set_skip_label("SKIP")
+
+	WAIT(240)
+	CROSS_FADE(60)
+	SET_SCRIPT_CAMERA(0,-10,-56,-15,180, 0,10,12)
+	ROTATE_SCRIPT_CAMERA(10,0,0, 240, 0)
+	SET_MOTION("PC","WAKE",0)
+	WAIT(200)
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA(0,-1,-20, 0,180, 0, 8,12)
+	ROTATE_SCRIPT_CAMERA(10,0,0, 300, 0)
+	SCALE_SCRIPT_CAMERA(0.7, 300,1)
+	WAIT(180)
+	set_color("demoboss",0x00000000,120,1)
+	WAIT(60)
+	GAME_FLAG_ON(920)
+
+	//後處理
+	FADE_OUT(60)
+	WAIT(60)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)	
+	HIDE_CHR("demoboss")
+	SHOW_CHR("Lorele")
+
+	WAIT(60)
+	CINEMA_OFF(0)
+	FADE_IN(60)
+	GAME_FLAG_OFF(3000)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	END
+
+SKIP:
+	//後處理
+	GAME_FLAG_ON(920)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)	
+	SET_MOTION("PC","STAND",0)
+	HIDE_CHR("demoboss")
+	delete_efc("demoboss")
+	SHOW_CHR("Lorele")
+
+	WAIT(60)
+	CINEMA_OFF(0)
+	FADE_IN(60)
+	GAME_FLAG_OFF(3000)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	END
+
+NEXT:
+	HIDE_CHR("demoboss")
+	delete_efc("demoboss")
+
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// パパデス登場
+//////////////////////////////////////////////////////////////////////////////
+DEF("start")
+RES("EVENT")
+{
+
+//-- ローレライイベント ----------------------------------------------
+
+	check_room_flag(3)
+	on_jump NEXT
+	room_flag_on(3)
+
+	// EV C-9 《魅》のローレライ
+	check_game_flag(3708)
+	on_jump NEXT
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	// ボス戰用アタリマップ讀み込み
+	LOAD_HITMAP("MP_0998bh")
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	cross_fade(100)
+	SET_POS("PC",0,0,-6)
+	SET_DEG("PC",0)
+	SET_SPOT_ORG( 1, 0.00,0.00,0.00 )
+	permit_script_camera(1)
+	set_script_camera(0,1.5,0,  3,190,0, 7, 15.0)
+	ROTATE_SCRIPT_CAMERA( 0,-15,0, 500, 0)
+	scale_script_camera(0.9,500, 0)
+
+//スキップ
+	set_skip_label("SKIP")
+
+
+//　　ボスマップに入るとイベント開始。ローレライ長臺詞
+	wait(100)
+	MSG_EX("#S3#C0洛蕾倏「……祢是什麼人？」",-1,2)
+	WAIT_CAMERA(0)
+
+	cross_fade(10)
+	set_script_camera(0,1.5,0,  -15,170,0, 4, 15.0)
+	ROTATE_SCRIPT_CAMERA( -5,-5,0, 800, 1)
+	set_deg("Lorele", 180)
+	WAIT(60)
+	MSG_EX("#S3#C0洛蕾倏「我名叫洛蕾倏。」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「是曾經同燹色新娘一起|　　　　投奔魔王加爾西斯之人……」",-1,2)
+	WAIT(60)
+
+	CROSS_FADE(30)
+	set_script_camera(0,0,0,  -30,-40,0, 30, 15)
+	ROTATE_SCRIPT_CAMERA( 5,80,0, 2000, 1)
+	WAIT(100)
+	MSG_EX("#S3#C0洛蕾倏「雛鳥為了能滷出生，|　　　　必須要將養育自己的蛋殼弄破……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「為了創造一個新的世界，|　　　　就有必要毀掉一個世界。」",-1,2)
+	WAIT(60)
+	MSG_EX("#S3#C0洛蕾倏「締造了偉大繁榮時代、|　　　　被稱作桃源犲的仙那度……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「實際上那是汢溺在怠惰和快楽之中|　　　　貪圖安息的愚民之國。」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「對於失去自淨作用的人們來説，|　　　　被加爾西斯大人毀滅是必然的……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「那是在創造新的世界。」",-1,2)
+	WAIT(120)
+
+	cross_fade(30)
+	SET_SPOT_ORG( 1, -4.58,-4,-34.56 )
+	set_script_camera(-2.77,-11,-33.9,  -20,210,0, 10, 15.0)
+	ROTATE_SCRIPT_CAMERA( 0,-20,0, 1000, 1)
+	WAIT(100)
+	MSG_EX("#S3#C0洛蕾倏「騎士姶，祢也和矇昧的武之導師一樣，|　　　　是來討伐我的乕？」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「我能滷看透祢的心……」",-1,2)
+	wait(60)
+
+	cross_fade(30)
+	SET_SPOT_ORG( 1, 0.00,0.00,0.00 )
+	set_script_camera(0,1.5,-5,  -20,90,0, 4, 15)
+	MOVE_SCRIPT_LOOK_AT( 0,0,-1, 1000, 0)
+	MSG_EX("#S3#C0洛蕾倏「過去滿足於自己的軟弱，|　　　　現在則害怕死亡迫近的宿命……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「帶著這樣膽怯的心來討伐我，|　　　　真是笑死人了……」",-1,2)
+	wait(50)
+
+	cross_fade(30)
+	set_script_camera(0,1.5,0,  -15,20,0, 6, 15)
+	scale_script_camera(1.3, 1000, 1)
+	SET_MOTION("Lorele","ATTACK1",10)
+	MSG_EX("#S3#C0洛蕾倏「騎士姶，是裁決的時候了。」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「臣服在這從加爾西斯大人那裡得到的|　　　　完美的力量面前叺！」",-1,2)
+
+//　　ローレライ、醜い死神の姿へと變化する。
+
+	bgm(15,0,-1)
+
+	ROTATE_SCRIPT_CAMERA(5,0,0,180, 0)
+	QUAKE(0,3,260)
+	BLUR(30)
+	SLOW(1)	
+	FADE_IN_EX(20, 0, "0xffffffff", 0)
+	ATTACH_EFC("EFC_FLY_INAZUMA","Lorele","POS")
+	SE("SE_B1_61000")
+	move_vec("Lorele", 0,-4,0, 180)
+	SE("SE_B5_72000")
+	wait(180)
+	HIDE_CHR("Lorele")
+
+	//パパ出し	
+	SET_SCRIPT_CAMERA(0,1.5,0, -5,180,0, 12,12)
+	ROTATE_SCRIPT_CAMERA(5,0,0,260, 0)
+	QUAKE(0,3,260)
+	BLUR(30)
+	SLOW(1)	
+	FADE_IN_EX(20, 0, "0xffffffff", 0)
+
+	ATTACH_EFC("EFC_FLY_INAZUMA","papa","POS")
+	SHOW_CHR("papa")
+	SET_MOTION("papa","EMPTY1",0)
+	SE("SE_B5_72100")
+	WAIT(220)
+
+	//顏アップ
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA_EX("papa",2, -20,120,0, 6, 14)
+	SCALE_SCRIPT_CAMERA(1.2, 180,1)
+
+	SE("SE_B3_66004")
+	CALL NAME
+	wait(30)
+	SE("SE_B5_72200")
+	wait(120)
+	CALL NAME_ERASE
+	wait(40)
+
+	//カメラセットオン
+	BLUR(0)
+	SLOW(0)
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+	SET_SCROLL_RECT(-5,-4.5,5,7.5)
+	SHOW_CHR("stop")
+	set_target_chr("papa")
+
+	// シネマＯＦＦ
+	CINEMA_OFF(0)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	END
+
+
+SKIP:
+
+	//カメラセットオン
+	CALL NAME_ERASE2
+
+	BLUR(0)
+	SLOW(0)
+	STOP_SE(0)
+
+	CROSS_FADE(60)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	bgm(15,0,-1)
+	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+	SET_POS("Lorele",0,0,0)
+	set_deg("Lorele",180)
+	HIDE_CHR("Lorele")
+	delete_efc("Lorele")
+	SHOW_CHR("papa")
+	delete_efc("papa")
+	SET_SCROLL_RECT(-5,-4.5,5,7.5)
+	SHOW_CHR("stop")
+	set_target_chr("papa")
+	QUAKE(0,0,1)
+
+	// シネマＯＦＦ
+	CINEMA_OFF(0)
+	fade_in(60)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	END
+NEXT:
+	END
+}
+
+// マップ名--------------------------------------------------------------
+@NAME
+{
+	ENTRY_IMG(0,"BOSS05",0)
+
+	// αが'1'の時は'加算モード'なので「透明」にする時は、
+	// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+	//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+	SET_IMG( 0, 192,346, 0,  0,  0,255, 64, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+//	SET_IMG( 2, 192,346, 0,  0,144,255, 48, 1, 0xff000000, 0xff000000, 1.5,1.5, 0, 1,1)
+	IMG_ON(0)
+//	IMG_ON(2)
+
+	//  4: ボス名のIMG登濾したか
+	room_flag_on(4)
+
+	// 發生までに'間'が欲しい場合はこんな風にします。
+	SUSPEND_IMG(0,45)
+//	SUSPEND_IMG(2,30)
+
+	// フェードイン
+	COLOR_IMG    (0, 0xffffffff, 0xff000000, 30, 1)
+//	SCALE_IMG    (2, 1, 1                    30, 1)
+//	COLOR_IMG_EX (2, 0xffdfffaf, 0xff000000, 30, 1, 0, 1, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 45, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE2
+{
+	//  4: ボス名のIMG登濾したか
+	check_room_flag(4)
+	off_jump EXIT
+
+	COLOR_IMG(0, 0xff000000, 0xff000000, 1, 1)
+//	COLOR_IMG(2, 0xff000000, 0xff000000, 1, 1)
+
+EXIT:
+	RET
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// 子供登場
+//////////////////////////////////////////////////////////////////////////////
+DEF("papa")
+RES("DIVIDE")
+{
+	//再び小デス登場
+//	SET_SCRIPT_CAMERA( 0,0,0, -50,-120,15,16, 32 )
+//	SET_DEG("PC",0)
+//	SCALE_SCRIPT_CAMERA(1.2, 300,1)
+	QUAKE(0,3,460)
+	STOP_PC(0)
+
+	//フラッシュ效果
+	FADE_OUT_EX(10, 0, "0xffffffff", 1)
+	WAIT(10)
+	FADE_IN_EX(20, 0, "0xffffffff", 1)
+	WAIT(60)
+	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+	WAIT(10)	
+
+	// 子供たち登場
+	
+	SET_DEG_EX("1st","")
+	SET_DEG_EX("2nd","")
+	SET_DEG_EX("3rd","")
+	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","1st","POS")
+	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","2nd","POS")
+	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","3rd","POS")
+
+	FADE_IN_EX(10, 0, "0xffffffff", 1)
+	WAIT(20)
+
+	FADE_OUT_EX(10, 0, "0xffffffff", 1)
+	WAIT(10)
+
+	show_chr("1st")
+	show_chr("2nd")
+	show_chr("3rd")
+	show_chr("core")
+	SE("SE_B5_72800")
+
+	FADE_IN_EX(20, 0, "0xffffffff", 1)	
+	WAIT(40)
+
+//カットイン
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("1st",1, -30,80,0, 8, 14)
+//	WAIT(40)
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("2nd",1, -30,80,0, 8, 14)	
+//	WAIT(40)
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("3rd",1, -30,80,0, 8, 14)
+//	WAIT(40)
+
+
+//	//デスセリフ
+//	CROSS_FADE(60)
+//	SET_SCRIPT_CAMERA(0,0,6.5 , -20,190,0, 8, 14)
+//	SCALE_SCRIPT_CAMERA(0.8, 1000,1)
+//	ROTATE_SCRIPT_CAMERA(0,-30,0,1000,1)
+//	MSG_EX("#S3#C0ローレライ「燧興がすぎたようだ…、そろそろ葬ってやろう……。」",-1,2)
+//	wait(30)
+
+// 	ＨＰリンク設定
+//	link_hp_chr("1st","core")
+//	link_hp_chr("2nd","core")
+//	link_hp_chr("3rd","core")
+// 	ＨＰバー表示
+//	disp_hp_bar("core")
+
+//	camera_on("ぱぱ用")
+//	camera_on("こども用")
+//	camera_off("ぱぱ用")
+//	SET_SCROLL_RECT(-5,-4.5,5,7.5)
+//	FOCUS_CHR("PC")
+//	PERMIT_SCRIPT_CAMERA(0)
+//	CROSS_FADE(60)
+//	CINEMA_OFF(0)
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// 親デス死亡
+//////////////////////////////////////////////////////////////////////////////
+RES("KILL")
+{
+	// 通常アタリマップ讀み込み
+	LOAD_HITMAP("MP_0998h")
+
+	// ぱぱ死亡…。
+	GAME_FLAG_ON(6)
+	game_flag_on(3708)
+	GAME_FLAG_ON(905)
+
+	BLUR(30)
+	STOP_PC(0)
+	delete_efc("papa")
+	set_target_chr("-")
+
+	set_motion("papa","DOWN")
+	SE("SE_B5_74000")
+	SE("SE_B3_67000")
+	ATTACH_EFC("EFC_FLY_DEAD1","papa","CTR")
+	SE("SE_B1_60900")
+	SLOW(3)
+	WAIT(50)
+	SLOW(0)
+	set_motion("papa","DEAD")
+
+	KILL_CHR("papa",0,1,180)
+	ATTACH_EFC("EFC_FLY_DEAD2","papa","POS")
+	KILL_CHR("1st",0,1,180)
+	ATTACH_EFC("EFC_FLY_DEAD2","1st","POS")
+	KILL_CHR("2nd",0,1,180)
+	ATTACH_EFC("EFC_FLY_DEAD2","2nd","POS")
+	KILL_CHR("3rd",0,1,180)
+	ATTACH_EFC("EFC_FLY_DEAD2","3rd","POS")
+
+	FADE_OUT_EX( 200, 1, 0xffffffff", 0)
+	WAIT(200)
+
+	REFRESH("PC")
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	//初期カメラ
+	CINEMA_ON(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA( 0,0.2,0,  -40,220,0,  9,32 )
+	scale_script_camera(1.2, 1000, 1)
+	BLUR(0)
+	SLOW(0)
+
+	CAMERA_OFF("こども用")
+	CAMERA_OFF("ぱぱ用")
+	CAMERA_ON("通常用")
+	// BGM異界イベント用
+	BGM(22, 0, -1)
+	SET_SPOT_ORG( 1, 0.00,0.00,0.00 )
+	SET_SCROLL_RECT(-1000,-1000,1000,1000)
+
+	//各キャラ配置
+	HIDE_CHR("core")
+	HIDE_CHR("stop")
+	SHOW_CHR("lole2")
+	delete_efc("para")
+	SET_COLOR("lole2", 0xDD995555, 1, 0)
+	SET_POS("lole2",0,0,0)
+	SET_POS("PC",0,0,-3)
+	SET_DEG("PC",0)
+	PC_WEAPON( 0 ,1)
+	set_pos("1st",     0.00,0.00, 6.00)
+	set_pos("2nd",     5.20,0.00,-3.00)
+	set_pos("3rd",     0.20,0.00,-3.00)
+	set_pos("papa",    0.20,0.00, 2.00)
+
+	// ドヴォルザークは消してしまう
+	HIDE_CHR("Dvorak")
+
+	// ワープゲート配置
+	ENTRY_CHR( 2, 459)
+	ENTRY_CHR( 3, 460)
+	ENTRY_CHR( 4, 461)
+	ENTRY_CHR( 5, 462)
+	ENTRY_CHR( 6, 479)
+	ENTRY_CHR( 7, 480)
+	ENTRY_CHR( 8, 481)
+	PUT_CHR( 2, "PoleRed",     0.00,0.00, 6.00,   0)
+	PUT_CHR( 3, "PoleBlue",    5.20,0.00,-3.00,   0)
+	PUT_CHR( 4, "PoleYellow", -5.20,0.00,-3.00,   0)
+	PUT_CHR( 5, "Base",        0.00,0.00, 0.00,   0)
+	PUT_CHR( 6, "NullBase3",   0.00,0.00, 0.00,   0)
+	PUT_CHR( 7, "NullBase2",   0.00,0.50, 0.00,   0)
+	PUT_CHR( 8, "NullBase1",   0.00,1.00, 0.00,   0)
+
+	WAIT(120)
+	FADE_IN_EX(30, 1, 0xffffffff", 0)
+
+//スキップ
+	set_skip_label("SKIP_BOSS")
+
+	//ボス戰終了後、イベント開始。人間の姿に戻ったローレライ
+	WAIT(120)
+	MSG_EX("#S3#C0洛蕾倏「不可能……祢這種潼潸能把我……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「但是……聽好了……騎士姶……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「加爾西斯大人……在不久的|　　　　……將來……會再次降臨……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「……我感覺到了……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「加爾西斯大人的……脈搏|　　　　一天比一天強大……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「騎士姶……正是在那個時候……」",-1,2)
+	MSG_EX("#S3#C0洛蕾倏「呵呵呵……」",-1,2)
+	WAIT(60)
+
+	//ローレライ殺す。
+	KILL_CHR("lole2",0,1,240)
+	ATTACH_EFC("EFC_FLY_DEAD2","lole2","POS")
+	wait(30)
+	SE("SE_EVENT_25")
+
+
+//-- ワープゲート出現 ------------------------------------------------
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA( 0,0,0,  -20,180,0,16,32 )
+	scale_script_camera(1.3, 1000, 1)
+	QUAKE(1,1,670)
+	PC_WEAPON(0)
+
+	// ★３本の柱 //////////////////////////
+	// せりあがりアニメ…
+	set_motion("PoleRed",	"EMPTY1")
+	wait(20)
+	set_motion("PoleBlue",	"EMPTY1")
+	wait(20)
+	set_motion("PoleYellow","EMPTY1")
+	wait(60)
+	SE("SE_EVENT_26")
+	wait(60)
+
+	wait(20)
+//	SE("SE_EVENT_26")
+	wait(20)
+//	SE("SE_EVENT_26")
+	wait(70)
+
+	// 以降はループアニメを繰り返す
+	set_motion("PoleRed",	"EMPTY2")
+	wait(10)
+	set_motion("PoleBlue",	"EMPTY2")
+	wait(10)
+	set_motion("PoleYellow","EMPTY2")
+	wait(10)
+
+	// ★臺座 ///////////////////////////////
+	// せりあがりアニメ…
+	set_motion("Base","EMPTY1")
+	wait(120)
+	SE("SE_EVENT_27")
+	wait(80)
+//	SE("SE_EVENT_27")
+	wait(80)
+//	SE("SE_EVENT_27")
+	wait(20)
+	SE("SE_EVENT_28")
+	wait(69)
+	// 以降はループアニメを繰り返す
+	set_motion("Base","EMPTY2")
+	wait(300)
+
+
+//-- 後處理 ------------------------------------------------
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	CROSS_FADE(60)
+	SET_SPOT_ORG( 0, 0,0,0 )
+	CINEMA_OFF(0)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	INIT_SWITCH_ON("beatlorelei")
+
+	ret
+
+
+SKIP_BOSS:
+	HIDE_CHR("lole2")
+	HIDE_CHR("1st")
+	HIDE_CHR("2nd")
+	HIDE_CHR("3rd")
+	HIDE_CHR("papa")
+	delete_efc("lole2")
+	delete_efc("para")
+	delete_efc("1st")
+	delete_efc("2nd")
+	delete_efc("3rd")
+	QUAKE(0,0,1)
+	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+
+	// BGM異界イベント用
+	BGM(22, 0, -1)
+	set_motion("PoleRed",	"EMPTY2")
+	set_motion("PoleBlue",	"EMPTY2")
+	set_motion("PoleYellow","EMPTY2")
+	set_motion("Base","EMPTY2")
+	BLUR(0)
+	SLOW(0)
+	STOP_SE(0)
+
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	INIT_SWITCH_ON("beatlorelei")
+
+	ret
+
+}
+
+	// ぱぱ死亡…。
+//	BLUR(30)
+//	STOP_PC(0)
+//	delete_efc("papa")
+//	set_target_chr("-")
+//	SET_MOTION("papa","DOWN")
+//	attach_efc("EFC_FLY_BREAK","papa","CTR")
+//	WAIT(30)
+
+	//ここから死亡デモ
+//	CINEMA_ON(0)
+//	CROSS_FADE(30)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA_EX("papa",1, -30,80,0, 12, 14)
+//	ROTATE_SCRIPT_CAMERA(0,30,0,210,1)
+
+// ★NEWスキップ處理(05/02/18)
+//	set_skip_label("SKIP")
+
+//	SLOW(3)
+//	ATTACH_EFC("EFC_FLY_DEAD1","papa","POS")
+//	WAIT(30)
+//	SET_MOTION("papa","DEAD")
+//	// ふわっと消す
+//	set_color("papa",0x00000000,180,1)
+	
+//	wait(90)
+//	FADE_OUT_EX( 60, 0, "0xff000000", 0)
+//	WAIT(90)
+//	hide_chr("papa")
+//	SET_POS("PC",0,0,0)
+//	BLUR(0)
+//	SLOW(0)
+
+	//再び小デス登場
+//	SET_SCRIPT_CAMERA( 0,0,0, -50,-120,15,16, 32 )
+//	SET_DEG("PC",0)
+//	FADE_IN_EX(30, 0, "0xff000000", 0)
+//	SCALE_SCRIPT_CAMERA(1.2, 300,1)
+//	QUAKE(0,3,460)
+//	WAIT(120)
+//	//フラッシュ效果
+//	FADE_OUT_EX(10, 0, "0xffffffff", 1)
+//	WAIT(10)
+//	FADE_IN_EX(20, 0, "0xffffffff", 1)
+//	WAIT(90)
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(10)	
+//	FADE_IN_EX(10, 0, "0xffffffff", 1)
+//	WAIT(20)
+//	FADE_OUT_EX(10, 0, "0xffffffff", 1)
+//	WAIT(10)
+	// 子供たち登場
+//	show_chr("1st")
+//	show_chr("2nd")
+//	show_chr("3rd")
+//	show_chr("core")
+//	SET_DEG_EX("1st","")
+//	SET_DEG_EX("2nd","")
+//	SET_DEG_EX("3rd","")
+//	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","1st","POS")
+//	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","2nd","POS")
+//	ATTACH_EFC("EFC_FLY_DEMO_SMOKE","3rd","POS")
+////	bgm(6,0,-1)
+//	BLUR(30)	
+//	FADE_IN_EX(20, 0, "0xffffffff", 1)	
+//	WAIT(40)
+//	BLUR(0)
+
+	//カットイン
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("1st",1, -30,80,0, 8, 14)
+//	WAIT(40)
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("2nd",1, -30,80,0, 8, 14)	
+//	WAIT(40)
+//	FADE_OUT_EX(5, 0, "0xffffffff", 1)
+//	WAIT(5)
+//	FADE_IN_EX(5, 0, "0xffffffff", 1)
+//	SET_SCRIPT_CAMERA_EX("3rd",1, -30,80,0, 8, 14)
+//	WAIT(40)
+
+
+//	//デスセリフ
+//	CROSS_FADE(60)
+//	SET_SCRIPT_CAMERA(0,0,6.5 , -20,190,0, 8, 14)
+//	SCALE_SCRIPT_CAMERA(0.8, 1000,1)
+//	ROTATE_SCRIPT_CAMERA(0,-30,0,1000,1)
+//	MSG_EX("#S3#C0ローレライ「燧興がすぎたようだ…、そろそろ葬ってやろう……。」",-1,2)
+//	wait(30)
+
+// 	ＨＰリンク設定
+//	link_hp_chr("1st","core")
+//	link_hp_chr("2nd","core")
+//	link_hp_chr("3rd","core")
+// 	ＨＰバー表示
+//	disp_hp_bar("core")
+
+//	camera_on("こども用")
+//	camera_off("ぱぱ用")
+//	SET_SCROLL_RECT(-5,-4.5,5,7.5)
+//	FOCUS_CHR("PC")
+//	PERMIT_SCRIPT_CAMERA(0)
+//	CROSS_FADE(60)
+//	CINEMA_OFF(0)
+	
+//	end
+
+// ★スキップボタンを押した時は一瞬で最後の戝態にしちゃう ----------------------
+//SKIP:
+//	// 早めの燹フェードIN
+//	FADE_OUT(30)
+//	WAIT(30)
+
+	// いろいろ消す
+//	delete_efc("1st")
+//	delete_efc("2nd")
+//	delete_efc("3rd")
+//	delete_efc("papa")
+//	hide_chr("papa")
+	//基本姿勢に戻しとく
+//	show_chr("1st")
+//	show_chr("2nd")
+//	show_chr("3rd")
+//	show_chr("core")
+//	SET_DEG_EX("1st","")
+//	SET_DEG_EX("2nd","")
+//	SET_DEG_EX("3rd","")
+//	SET_POS("PC",0,0,0)
+//	SET_DEG("PC",0)
+//	// ブラーとかOFF
+//	blur(0)
+//	slow(0)
+//	QUAKE(0,0,1)
+//	// 戰熹用カメラ始動
+//	camera_on("こども用")
+//	camera_off("ぱぱ用")
+//	SET_SCROLL_RECT(-5,-4.5,5,7.5)
+//	FOCUS_CHR("PC")
+//	PERMIT_SCRIPT_CAMERA(0)
+//	// シネマＯＦＦ
+//	cinema_off(0)
+
+//	// 早めの燹フェードOUT
+//	FADE_IN(30)
+//	end
+//}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// 子デス死亡
+//////////////////////////////////////////////////////////////////////////////
+DEF("1st")
+RES("KILL")
+{
+	delete_efc("1st")
+	set_motion("1st","DOWN")
+	SE("SE_B5_73600")
+	attach_efc("EFC_TRE_BREAK","1st","CTR")
+	set_color("1st",0xFF000000,60,1)
+
+	room_flag_on(0)
+	check_room_flag(1)
+	off_jump skip
+	check_room_flag(2)
+	off_jump skip
+
+//	call defeat_boss
+skip:
+}
+
+DEF("2nd")
+RES("KILL")
+{
+	delete_efc("2nd")
+	set_motion("2nd","DOWN")
+	attach_efc("EFC_TRE_BREAK","2nd","CTR")
+	SE("SE_B5_73600")
+	set_color("2nd",0xFF000000,60,1)
+
+	room_flag_on(1)
+	check_room_flag(0)
+	off_jump skip
+	check_room_flag(2)
+	off_jump skip
+
+//	call defeat_boss
+skip:
+}
+DEF("3rd")
+RES("KILL")
+{
+	delete_efc("3rd")
+	set_motion("3rd","DOWN")
+	attach_efc("EFC_TRE_BREAK","3rd","CTR")
+	SE("SE_B5_73600")
+	set_color("3rd",0xFF000000,60,1)
+
+	room_flag_on(2)
+	check_room_flag(0)
+	off_jump skip
+	check_room_flag(1)
+	off_jump skip
+
+//	call defeat_boss
+
+skip:
+}
+
+//@defeat_boss
+//{
+//	STOP_PC(0)
+//
+//	GAME_FLAG_ON(6)
+//	game_flag_on(3708)
+//	GAME_FLAG_ON(905)
+//
+//	//3匹を倒す
+//	FADE_OUT_EX( 90, 1, 0xffffffff", 0)
+//	BLUR(20)
+//	SLOW(2)
+//	wait(60)
+//	set_motion("1st","DEAD")
+//	set_motion("2nd","DEAD")
+//	set_motion("3rd","DEAD")
+//	WAIT(30)
+//
+//	//初期カメラ
+//	CINEMA_ON(0)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA( 0,0.2,0,  -40,220,0,  9,32 )
+//	scale_script_camera(1.2, 1000, 1)
+//	BLUR(0)
+//	SLOW(0)
+//
+//	CAMERA_OFF("こども用")
+//	CAMERA_OFF("ぱぱ用")
+//	CAMERA_ON("通常用")
+//	bgm(-1,0,-1)
+//	SET_SPOT_ORG( 1, 0.00,0.00,0.00 )
+//	SET_SCROLL_RECT(-1000,-1000,1000,1000)
+//
+//	//各キャラ配置
+//	HIDE_CHR("core")
+//	HIDE_CHR("stop")
+//	SHOW_CHR("lole2")
+//	SET_COLOR("lole2", 0xDD995555, 1, 0)
+//	SET_POS("lole2",0,0,0)
+//	SET_POS("PC",0,0,-3)
+//	SET_DEG("PC",0)
+//	PC_WEAPON( 0 ,1)
+//	set_pos("1st",     0.00,0.00, 6.00)
+//	set_pos("2nd",     5.20,0.00,-3.00)
+//	set_pos("3rd",    -5.20,0.00,-3.00)
+//
+//	// ワープゲート配置
+//	ENTRY_CHR( 2, 459)
+//	ENTRY_CHR( 3, 460)
+//	ENTRY_CHR( 4, 461)
+//	ENTRY_CHR( 5, 462)
+//	ENTRY_CHR( 6, 479)
+//	ENTRY_CHR( 7, 480)
+//	ENTRY_CHR( 8, 481)
+//	PUT_CHR( 2, "PoleRed",     0.00,0.00, 6.00,   0)
+//	PUT_CHR( 3, "PoleBlue",    5.20,0.00,-3.00,   0)
+//	PUT_CHR( 4, "PoleYellow", -5.20,0.00,-3.00,   0)
+//	PUT_CHR( 5, "Base",        0.00,0.00, 0.00,   0)
+//	PUT_CHR( 6, "NullBase3",   0.00,0.00, 0.00,   0)
+//	PUT_CHR( 7, "NullBase2",   0.00,0.50, 0.00,   0)
+//	PUT_CHR( 8, "NullBase1",   0.00,1.00, 0.00,   0)
+//
+//	//デス殺す
+//	KILL_CHR("papa",0,1,180)
+//	ATTACH_EFC("EFC_FLY_DEAD2","papa","POS")
+//	KILL_CHR("1st",0,1,180)
+//	ATTACH_EFC("EFC_FLY_DEAD2","1st","POS")
+//	KILL_CHR("2nd",0,1,180)
+//	ATTACH_EFC("EFC_FLY_DEAD2","2nd","POS")
+//	KILL_CHR("3rd",0,1,180)
+//	ATTACH_EFC("EFC_FLY_DEAD2","3rd","POS")
+//
+//	WAIT(120)
+//	FADE_IN_EX(30, 1, 0xffffffff", 0)
+//
+////スキップ
+//	set_skip_label("SKIP_BOSS")
+//
+//	//ボス戰終了後、イベント開始。人間の姿に戻ったローレライ
+//	WAIT(120)
+//	MSG_EX("#S3#C0ローレライ「バカな……かような者にこの私が……」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「しかし……聞くがよい……騎士よ……」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「ガルシス樣は……遠くない|　　　　　　……未來において……再臨なさる……」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「……感じるのだ…………」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「ガルシス樣の……鼓動が|　　　　　　日に日に大きくなっていくのを……」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「騎士よ……その時こそ……」",-1,2)
+//	MSG_EX("#S3#C0ローレライ「フフフ……」",-1,2)
+//	WAIT(60)
+//
+//	//ローレライ殺す。
+//	SE("SE_EVENT_25")
+//	KILL_CHR("lole2",0,1,240)
+//	ATTACH_EFC("EFC_FLY_DEAD2","lole2","POS")
+//
+//
+////-- ワープゲート出現 ------------------------------------------------
+//	CROSS_FADE(30)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA( 0,0,0,  -20,180,0,16,32 )
+//	scale_script_camera(1.3, 1000, 1)
+//	QUAKE(1,1,670)
+//	PC_WEAPON(0)
+//
+//	// ★３本の柱 //////////////////////////
+//	// せりあがりアニメ…
+//	set_motion("PoleRed",	"EMPTY1")
+//	wait(20)
+//	set_motion("PoleBlue",	"EMPTY1")
+//	wait(20)
+//	set_motion("PoleYellow","EMPTY1")
+//	wait(120)
+//
+//	SE("SE_EVENT_26")
+//	wait(20)
+//	SE("SE_EVENT_26")
+//	wait(20)
+//	SE("SE_EVENT_26")
+//	wait(70)
+//
+//	// 以降はループアニメを繰り返す
+//	set_motion("PoleRed",	"EMPTY2")
+//	wait(10)
+//	set_motion("PoleBlue",	"EMPTY2")
+//	wait(10)
+//	set_motion("PoleYellow","EMPTY2")
+//	wait(10)
+//
+//	// ★臺座 ///////////////////////////////
+//	// せりあがりアニメ…
+//	set_motion("Base","EMPTY1")
+//	wait(120)
+//	SE("SE_EVENT_27")
+//	wait(80)
+//	SE("SE_EVENT_27")
+//	wait(80)
+//	SE("SE_EVENT_27")
+//	wait(20)
+//	SE("SE_EVENT_28")
+//	wait(69)
+//	// 以降はループアニメを繰り返す
+//	set_motion("Base","EMPTY2")
+//	wait(300)
+//
+//
+////-- 後處理 ------------------------------------------------
+//	FOCUS_CHR("PC")
+//	PERMIT_SCRIPT_CAMERA(0)
+//	CROSS_FADE(60)
+//	SET_SPOT_ORG( 0, 0,0,0 )
+//	CINEMA_OFF(0)
+//
+//	ret
+//
+//
+//SKIP_BOSS:
+//	stop_pc(0)
+//	SET_POS("PC",0,0,-3)
+//	SET_DEG("PC",0)
+//
+//	HIDE_CHR("lole2")
+//	HIDE_CHR("1st")
+//	HIDE_CHR("2nd")
+//	HIDE_CHR("3rd")
+//	delete_efc("lole2")
+//	QUAKE(0,0,1)
+//	SET_SPOT_ORG( 0, 0.00,0.00,0.00 )
+//
+//	bgm(-1,0,-1)
+//	set_motion("PoleRed",	"EMPTY2")
+//	set_motion("PoleBlue",	"EMPTY2")
+//	set_motion("PoleYellow","EMPTY2")
+//	set_motion("Base","EMPTY2")
+//	BLUR(0)
+//	SLOW(0)
+//	STOP_SE(0)
+//
+//	FOCUS_CHR("PC")
+//	PERMIT_SCRIPT_CAMERA(0)
+//	CINEMA_OFF(0)
+//	fade_in(60)
+//	ret
+//
+//}
+
+/*
+{
+	GAME_FLAG_ON(905)
+	delete_efc("1st")
+	delete_efc("2nd")
+	delete_efc("3rd")
+	STOP_PC(0)
+	QUAKE(0,10,10)
+	SET_MOTION("1st","DOWN")
+	SET_MOTION("2nd","DOWN")
+	SET_MOTION("3rd","DOWN")
+	BLUR(30)
+	SLOW(2)	
+	WAIT(10)
+	
+	//ここから死亡デモ
+	DELETE_EFC("core")
+	CINEMA_ON(0)
+	CROSS_FADE(15)
+	PERMIT_SCRIPT_CAMERA(1)
+	CAMERA_OFF("こども用")
+	CAMERA_OFF("ぱぱ用")
+	CAMERA_ON("通常用")
+	
+	SET_SCROLL_RECT(-1000,-1000,1000,1000)
+	
+	//カメラ３匹にパン
+	SET_SCRIPT_CAMERA_EX("PC",1, -40,0,0, 10, 14)
+	SCALE_SCRIPT_CAMERA(0.9,125,0)
+	BLUR(20)
+	WAIT(35)
+	SET_MOTION("1st","DEAD")
+	SET_MOTION("2nd","DEAD")
+	SET_MOTION("3rd","DEAD")
+
+	FADE_OUT_EX(20, 0, "0xffffffff", 0)
+	WAIT(60)
+
+	// 一言どうぞ
+	SET_SCRIPT_CAMERA_EX("1st",1, -30,80,0, 8, 14)
+	SCALE_SCRIPT_CAMERA(0.9,390,0)
+	FADE_IN_EX( 60, 0, "0xffffffff", 0)
+	BLUR(0)
+	SLOW(0)	
+	WAIT(90)
+	//長男セリフ
+	MSG_EX("#S3#C0竟然……我也會和別人一樣失敗……",120,2)
+	KILL_CHR("1st",0,1,240)
+	ATTACH_EFC("EFC_FLY_DEAD2","1st","POS")
+	WAIT(60)
+	
+	//次男セリフ
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA_EX("2nd",1, -30,80,0, 8, 14)
+	SCALE_SCRIPT_CAMERA(0.9, 300,0)
+	MSG_EX("#S3#C0如果是祢的話……也許連燹暗的力量都可以自由操縱……",120,2)
+	KILL_CHR("2nd",0,1,240)
+	ATTACH_EFC("EFC_FLY_DEAD2","2nd","POS")
+	WAIT(60)
+	
+	//3男セリフ
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA_EX("3rd",1, -30,80,0, 8, 14)
+	SCALE_SCRIPT_CAMERA(0.9, 300,0)
+	MSG_EX("#S3#C0呼呼……我還不想死姶……",120,2)
+	KILL_CHR("3rd",0,1,240)
+	KILL_CHR("core",0,1,180)
+	ATTACH_EFC("EFC_FLY_DEAD2","3rd","POS")
+	WAIT(60)
+	
+	// 寶箱
+	CROSS_FADE(60)
+	SET_SCRIPT_CAMERA( 0,0.5,0,-60,180,0,15,32 )
+	SCALE_SCRIPT_CAMERA(0.95, 150,0)
+	HIDE_CHR("stop")
+	WAIT(30)
+	SWITCH_OFF("efc")
+//	EFC("EFC_ADD_TREASURE",0,0,0)
+//	SHOW_CHR("box")
+	WAIT(120)
+
+	// BGM變更、シネマ解除
+//	bgm(2,0,-1)
+	bgm(11,0,-1)
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(0)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(6)
+}
+*/
+
+
+//////////////////////////////////////////////////////////////////////
+// テレポーターに乘った
+//////////////////////////////////////////////////////////////////////
+DEF("NullBase1")
+RES("STEP_ON")
+{
+	stop_pc(0)
+	CINEMA_ON(0)
+
+	INIT_WALK_DST("PC")
+	SET_WALK_DST("PC",0,1,0)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	FOCUS_CHR("PC")
+
+	WAIT(90)
+	ATTACH_EFC("EFC_WARP_T","NullBase1","POS")
+	SHAKE(5,5)
+	WARP_CHR("PC", 0)
+	wait(120)
+
+	stop_bgm(0,2000)
+	fade_out(60)
+	wait(120)
+
+	// 3718	EV C-9b 城へのワープを拔けた
+	check_game_flag(3718)
+	on_jump NEXT
+
+	set_skip_label("SKIP")
+
+	//-----------------------------
+	ENTRY_IMG(0,"mono\MONO05_01",0)
+	ENTRY_IMG(1,"mono\MONO05_02",0)
+	ENTRY_IMG(2,"mono\MONO05_03",0)
+	ENTRY_IMG(3,"mono\MONO05_04",0)
+	ENTRY_IMG(4,"mono\MONO05_05",0)
+	ENTRY_IMG(5,"mono\MONO05_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+	FADE_IN(60)
+	WAIT(60)
+	//-----------------------------
+
+		SET_MSG_TIME(5,40,90,90)
+	MSG_EX("害怕也不是壞事……|那是他的口頭禪。",-1,0X00000094)
+	MSG_EX("知道自己膽怯同時卻不逃避，|這才是最重要的。",-1,0X00000094)
+	MSG_EX("承認自己的弱熨，|這才是真正的強大。",-1,0X00000094)
+	MSG_EX("但是，就是這樣的他，|也會因為之後面臨的事實|而受到了前所未有的打撃。",-1,0X00000094)
+	MSG_EX("那對我來説也是一樣的。",-1,0X00000094)
+
+		SET_MSG_TIME(-1,-1,-1,-1)
+
+	//-----------------------------
+	FADE_OUT(60)
+	WAIT(60)
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+
+SKIP:
+	//-----------------------------
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+
+	// 3718	EV C-9b 城へのワープを拔けた
+	game_flag_on(3718)
+
+NEXT:
+	ENTRY_MAP("0682_0998")
+}
+
+RES("INIT")
+{
+	CHECK_ENTRY_GATE("0998_0682")
+	OFF_JUMP EXIT
+
+	stop_pc(0)
+	set_pos("PC", -0.00,1.00, 0.00)
+	set_deg("PC", 180)
+	WARP_CHR("PC", 1)
+	wait(120)
+
+	look_chr("PC", "-")
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0.0, 0.0, -3.0)
+	walk_pos("PC",0,0.03)
+	wait_walk("PC")
+
+	FOCUS_CHR("PC")
+
+EXIT:
+	END
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// ポータル
+//////////////////////////////////////////////////////////////////////////////
+DEF("portal")
+
+RES("EVENT")
+{
+	// ★05/06/20:Ｆクリスタルは最初の一回だけでいい事になりました（ひ）
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4016)
+	ON_JUMP NEXT
+
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 出現イベント
+	INIT_WALK_DST("PC")
+
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",0,-11.5,-45.625)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+SE("SE_WARP1")
+	KILL_CHR("cover",0,1,120)
+	LOAD_MAP("MP_0998")
+	SHOW_CHR("cover")
+	SWITCH_ON("portal")
+	WAIT(120)
+	WAIT(120)
+
+	GAME_FLAG_ON(4016)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	INIT_WALK_DST("PC")
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",0,-11.5,-45.625)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// セーブ
+//////////////////////////////////////////////////////////////////////////////
+
+DEF("save")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	refresh("PC")
+	se("SE_HEAL")
+
+	SEL("#C2　存漾乕？　|存漾|取消")
+	CHECK_SELECT(0)
+	OFF_JUMP SEL_A
+
+		CALL_SHOP(4)
+		SE("SE_UP_PRM")
+
+SEL_A:
+	CHECK_SELECT(1)
+
+	CINEMA_OFF(0)
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// ドヴォルザーク
+//////////////////////////////////////////////////////////////////////////////
+DEF("Dvorak")
+
+RES("CLICK")
+{
+	// EV C-8 ドヴォルザークの敗北
+	check_game_flag(3707)
+	on_jump TALK1_2
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	call DVORAK_LOSE
+
+	jump EXIT
+
+TALK1_2:
+	FOCUS_CHR("Dvorak")
+	SET_NAME("ANIECE", "阿尼艾絲")
+
+	SYS("#C2熏沃夏克暈過去了。")
+
+EXIT:
+	END
+}
+
+//--------------------------------------------------------------------
+
+@DVORAK_LOSE
+{
+	CINEMA_ON(0)
+	set_pos("PC", -0.62,-11.61,-35)
+	SET_DEG("PC",290)
+
+	cross_fade(120)
+	permit_script_camera(1)
+	set_script_camera(-1.04,-11.74,-35.76,  -25.5,200.0,0.0, 12, 15.0)
+
+	rotate_script_camera(0,-20,0, 2000, 1)
+
+	set_skip_label("SKIP")		
+
+	wait(120)
+
+	SET_MOTION("Dvorak", "ATTACK1",-1)
+	MSG_EX("#S3#C0熏沃夏克「祢……嗚……|　　　　　怎麼到這裡來了？」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「……在這裡面的是洛蕾倏……」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「扈是我們以前的同伴……|　　　　　因為犯了重罪被我們幽禁起來……」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「……弱者不能生存下來……乕……」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「……我到底……是什麼樣的人咾……|　　　　　實在……沒有面子姶……」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「唔……十分抱歉……」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「……芙羅蕾特大人……」",-1,2)
+
+	SYS("熏沃夏克好像暈過去了。")
+	fade_out(120)
+	wait(120)
+
+SKIP:
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	wait(60)
+	game_flag_on(3707)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	jump EXIT
+
+EXIT:
+	END
+}
+
+
+// ドヴォルザークイベント
+
+DEF("EV_Dvorak")
+RES("EVENT")
+{
+	// EV C-8 ドヴォルザークの敗北
+	check_game_flag(3707)
+	on_jump EXIT
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	stop_pc(0)
+	call DVORAK_LOSE
+
+EXIT:
+	END
+}
+
+// ---------------------------------------------------------------------------
+// 階段
+// ---------------------------------------------------------------------------
+
+DEF("k01")
+RES("STEP_ON")
+{
+	SET_COLOR("k02",0xff000000,10,0)
+	SET_COLOR("k03",0x00600000,60,0)
+}
+
+DEF("k02")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k01",0xff000000,10,0)
+	SET_COLOR("k02",0xff000000,10,0)
+	SET_COLOR("k03",0xff000000,10,0)
+	SET_COLOR("k04",0x00600000,60,0)
+}
+
+DEF("k03")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k01",0x00600000,60,0)
+	SET_COLOR("k02",0xff000000,10,0)
+	SET_COLOR("k03",0xff000000,10,0)
+	SET_COLOR("k04",0xff000000,10,0)
+	SET_COLOR("k05",0x00600000,60,0)
+}
+
+DEF("k04")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k02",0x00600000,60,0)
+	SET_COLOR("k03",0xff000000,10,0)
+	SET_COLOR("k04",0xff000000,10,0)
+	SET_COLOR("k05",0xff000000,10,0)
+	SET_COLOR("k06",0x00600000,60,0)
+}
+
+DEF("k05")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k03",0x00600000,60,0)
+	SET_COLOR("k04",0xff000000,10,0)
+	SET_COLOR("k05",0xff000000,10,0)
+	SET_COLOR("k06",0xff000000,10,0)
+	SET_COLOR("k07",0x00600000,60,0)
+}
+
+DEF("k06")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k04",0x00600000,60,0)
+	SET_COLOR("k05",0xff000000,10,0)
+	SET_COLOR("k06",0xff000000,10,0)
+	SET_COLOR("k07",0xff000000,10,0)
+	SET_COLOR("k08",0x00600000,60,0)
+}
+
+DEF("k07")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k05",0x00600000,60,0)
+	SET_COLOR("k06",0xff000000,10,0)
+	SET_COLOR("k07",0xff000000,10,0)
+	SET_COLOR("k08",0xff000000,10,0)
+	SET_COLOR("k09",0x00600000,60,0)
+}
+
+DEF("k08")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k06",0x00600000,60,0)
+	SET_COLOR("k07",0xff000000,10,0)
+	SET_COLOR("k08",0xff000000,10,0)
+	SET_COLOR("k09",0xff000000,10,0)
+	SET_COLOR("k10",0x00600000,60,0)
+}
+
+DEF("k09")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k07",0x00600000,60,0)
+	SET_COLOR("k08",0xff000000,10,0)
+	SET_COLOR("k09",0xff000000,10,0)
+	SET_COLOR("k10",0xff000000,10,0)
+	SET_COLOR("k11",0x00600000,60,0)
+}
+
+DEF("k10")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k08",0x00600000,60,0)
+	SET_COLOR("k09",0xff000000,10,0)
+	SET_COLOR("k10",0xff000000,10,0)
+	SET_COLOR("k11",0xff000000,10,0)
+	SET_COLOR("k12",0x00600000,60,0)
+}
+
+DEF("k11")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k09",0x00600000,60,0)
+	SET_COLOR("k10",0xff000000,10,0)
+	SET_COLOR("k11",0xff000000,10,0)
+	SET_COLOR("k12",0xff000000,10,0)
+	SET_COLOR("k13",0x00600000,60,0)
+}
+
+DEF("k12")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k10",0x00600000,60,0)
+	SET_COLOR("k11",0xff000000,10,0)
+	SET_COLOR("k12",0xff000000,10,0)
+	SET_COLOR("k13",0xff000000,10,0)
+	SET_COLOR("k14",0x00600000,60,0)
+}
+
+DEF("k13")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k11",0x00600000,60,0)
+	SET_COLOR("k12",0xff000000,10,0)
+	SET_COLOR("k13",0xff000000,10,0)
+	SET_COLOR("k14",0xff000000,10,0)
+	SET_COLOR("k15",0x00600000,60,0)
+}
+
+DEF("k14")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k12",0x00600000,60,0)
+	SET_COLOR("k13",0xff000000,10,0)
+	SET_COLOR("k14",0xff000000,10,0)
+	SET_COLOR("k15",0xff000000,10,0)
+	SET_COLOR("k16",0x00600000,60,0)
+}
+
+DEF("k15")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k13",0x00600000,60,0)
+	SET_COLOR("k14",0xff000000,10,0)
+	SET_COLOR("k15",0xff000000,10,0)
+	SET_COLOR("k16",0xff000000,10,0)
+	SET_COLOR("k17",0x00600000,60,0)
+}
+
+DEF("k16")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k14",0x00600000,60,0)
+	SET_COLOR("k15",0xff000000,10,0)
+	SET_COLOR("k16",0xff000000,10,0)
+	SET_COLOR("k17",0xff000000,10,0)
+	SET_COLOR("k18",0x00600000,60,0)
+}
+
+DEF("k17")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k15",0x00600000,60,0)
+	SET_COLOR("k16",0xff000000,10,0)
+	SET_COLOR("k17",0xff000000,10,0)
+	SET_COLOR("k18",0xff000000,10,0)
+	SET_COLOR("k19",0x00600000,60,0)
+}
+
+DEF("k18")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k16",0x00600000,60,0)
+	SET_COLOR("k17",0xff000000,10,0)
+	SET_COLOR("k18",0xff000000,10,0)
+	SET_COLOR("k19",0xff000000,10,0)
+	SET_COLOR("k20",0x00600000,60,0)
+}
+
+DEF("k19")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k17",0x00600000,60,0)
+	SET_COLOR("k18",0xff000000,10,0)
+	SET_COLOR("k19",0xff000000,10,0)
+	SET_COLOR("k20",0xff000000,10,0)
+	SET_COLOR("k21",0x00600000,60,0)
+}
+
+DEF("k20")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k18",0x00600000,60,0)
+	SET_COLOR("k19",0xff000000,10,0)
+	SET_COLOR("k20",0xff000000,10,0)
+	SET_COLOR("k21",0xff000000,10,0)
+	SET_COLOR("k22",0x00600000,60,0)
+}
+
+DEF("k21")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k19",0x00600000,60,0)
+	SET_COLOR("k20",0xff000000,10,0)
+	SET_COLOR("k21",0xff000000,10,0)
+	SET_COLOR("k22",0xff000000,10,0)
+	SET_COLOR("k23",0x00600000,60,0)
+}
+
+DEF("k22")
+RES("STEP_ON")
+{
+	SE("SE_FLYING")
+	SET_COLOR("k20",0x00600000,60,0)
+	SET_COLOR("k21",0xff000000,10,0)
+	SET_COLOR("k22",0xff000000,10,0)
+	SET_COLOR("k23",0xff000000,10,0)
+}
+
+DEF("k23")
+RES("STEP_ON")
+{
+	SET_COLOR("k21",0x00600000,60,0)
+	SET_COLOR("k22",0xff000000,10,0)
+	SET_COLOR("k23",0xff000000,10,0)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+// 寶箱                                                                        
+//////////////////////////////////////////////////////////////////////////////
+DEF("box")
+RES("INIT")
+{
+// 	CHECK_GAME_FLAG(906)
+// 	ON_JUMP NEXT
+// 
+// 	SET_TREASURE("box",1,135,"ITEM")
+// 	END
+// NEXT:
+	HIDE_CHR("box")
+// 	END
+}
+// DEF("ITEM")
+// RES("CATCH")
+// {
+// 	SE("SE_GETITEM")
+// 	STOP_PC(0)
+// 	SYS("#C2クラウンを手に入れた！")
+// 	KILL_CHR("box",0,0,0)
+// 	GAME_FLAG_ON(906)
+// }
+
+
+// ============================================================================
+// 城へ
+// ============================================================================
+
+//DEF("0998_0602")
+//RES("EVENT")
+//{
+//	CHECK_GAME_FLAG(6)
+//	OFF_SKIP(3)
+//	STOP_PC(0)
+//	SYS("#C2仮イベントで城に飛ばします")
+//	ENTRY_MAP("0602_0998")
+//}

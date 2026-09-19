@@ -1,0 +1,579 @@
+// ============================================================================
+// Ž›‰@iƒCƒxƒ“ƒg—pj
+// ============================================================================
+
+//////////////////////////////////////////////////////////////////////
+// ƒŠ[ƒ[ƒƒbƒgƒCƒxƒ“ƒg
+
+DEF("Liese")
+RES("INIT")
+{
+	STOP_PC(0)
+	CINEMA_ON(0)
+	// BGM –ß‚·
+	stop_bgm(1,0)
+
+	set_pos("PC", -0.22,1.50,-1.65)
+	set_deg("PC", 270)
+	set_motion("PC", "EMPTY16",-1)
+	// åä”õ‚Í‚¸‚·
+	remove_equip(0)
+	// åä”õ‹ÖŽ~
+//	pc_flag(0,1)
+	look_chr("Char", "HEAD")
+
+	permit_script_camera(1)
+	set_script_camera(1.10,0.00,-0.50,  -45,225.0,0.0, 8, 12.0)
+
+	reset_map_rot_y(1,1)
+	wait(2)
+	set_skip_label("SKIP2")
+
+
+//@@á`–Êƒuƒ‰ƒbƒNƒAƒEƒg‚Ì‚Ü‚ÜAå³‚Ì–Â‚«ãß‚ª•·‚±‚¦‚Ä‚­‚éB
+//@@“¯žé‚Éá`–Êƒuƒ‰ƒbƒN‚Ì‚Ü‚ÜAƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ð•\Ž¦B
+
+	MSG_EX("#S3#C0­—“Iãß‰¹ušjšjccv",-1,2)
+	MSG_EX("#S3#C0­—“Iãß‰¹uccšjccccv",-1,2)
+	MSG_EX("#S3#C0­—“Iãß‰¹u‰ß•ªcc‘¾‰ß•ª—¹ccˆ×Y›õccHv",-1,2)
+	MSG_EX("#S3#C0­—“Iãß‰¹u#N0ccccv",-1,2)
+
+	MSG_EX("#S3#C0—«“Iãß‰¹ucc‰Ä™Zcc|@@@@@@ˆÀèÎ±cc˜ðŠh˜ª–@p“Iccv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™Zu›”A›”•s‹Nccv",-1,2)
+
+	MSG_EX("#S3#C0—«“Iãß‰¹uccccccccccccv",-1,2)
+	MSG_EX("#S3#C0—«“Iãß‰¹uccŠÅ‹N˜Ò›”Žè‘Šácà˜ŠQBv",-1,2)
+	MSG_EX("#S3#C0—«“Iãß‰¹u”@‰ÊÄíLˆêà‘‘—‰ß˜Ò“I˜bC|@@@@@@A^“IŸ“‹~—¹Bv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™Zuèí‘R”\”c#N0‘Å“¾”‡›õœÌccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu“ïA“ï“¹àC|@@@¥’Á—¡“Il³Ý’k˜_“I“ßŒÂ™˜‹qŠ£“IHv",-1,2)
+
+	MSG_EX("#S3#C0—«“Iãß‰¹u”‡ŒÂšvcc|@@@@@@Œ»Ý”‡ŽíæÁ‹µ‰ºŠÒ•sDÐ’èBv",-1,2)
+
+//@@_“aàA•”‚Ìƒ}ƒbƒv‚Öá`–ÊƒtƒF[ƒhƒCƒ“BŽålŒö‚Í°‚É›Š‚©‚³‚ê
+//@@‚Ä‚¢‚ÄA‚»‚Î‚ÉƒVƒƒƒ‹‚ª‚Ð‚´‚Ü‚Ã‚¢‚Ä‚¢‚é(Õ’d‚Æ“ü‚èŒû‚Ì’†ŠÔ
+//@@‚ ‚½‚è‚É”z’u)B‚»‚Ì–T‚ç‚ÉƒŠ[ƒ[‚ªT‚¦‚Ä‚¢‚éB
+
+	wait(120)
+
+	EFC("EFC_99YAMI",0,0,0)
+	FADE_IN(60)
+	wait(70)
+	FADE_OUT(80)
+	wait(130)
+	FADE_IN(140)
+	wait(160)
+	// BGM –ß‚·
+	bgm(-1, 0, -1)
+
+	MSG_EX("#S3#C0‰Ä™Zuˆ¦ccIHv",-1,2)
+	set_motion("Char", "ATTACK1",0)
+	MSG_EX("#S3#C0‰Ä™Zucc#N0ccHv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu‘¾D—¹ccI‰—Á—¹ccv",-1,2)
+	look_chr("PC", "Char")
+	MSG_EX("#S3#C0‰Ä™Zuˆöˆ×”Iœk‹v“sŸ“—L‰ñ˜ÒC‰äœk^SC|@@@A¿’Áã“Ilà¸–Z‹ŽQ”IBv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu‘RŒãCAŠÅ“ž”IÝ’ÁŠO“IˆâÕ’†|@@@Žó—¹d“|Ý’nãccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zucccc^¥cc‘¾D—¹ccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu‰äŠÒˆÈˆ×”I˜ðŽ€šCccv",-1,2)
+
+//@@ƒŠ[ƒ[AŽålŒö‘¤‚ÉˆêíMi‚Ýo‚éB
+	wait(20)
+
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.00,0.00,0.50)
+	walk_pos("Liese",1,0.022)
+
+	wait(20)
+	look_chr("Liese", "HEAD")
+
+	MSG_EX("#S3#C0ä»ãNu‹RŽmæ¶ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu¥‰äCÕŽiä»ãNBv",-1,2)
+	look_chr("PC", "Liese")
+	look_chr("Char", "Liese")
+	MSG_EX("#S3#C0ä»ãNuš†A”‡›õç[’˜ãã‰äà™ÛC|@@@Ÿ“èŒn“IBv",-1,2)
+	look_chr("PC", "-")
+
+//@@ƒŠ[ƒ[‚ÌŒ¾—t‚ðŽó‚¯‚ÄA‚»‚ê‚Å‚Í–³âX‚ÆŒ¾‚í‚ñ‚Î‚©‚è‚É‹N‚«ã
+//@@‚ª‚èA‹RŽm‚ç‚µ‚­•Ð•G‚Â‚¢‚ÄŽp¨‚ð³‚·ŽålŒöB
+
+//PC‹N‚«ã‚ª‚ë‚¤‚Æ‚·‚é‚ª“|‚ê‚éƒ‚[ƒVƒ‡ƒ“
+	wait(40)
+	set_motion("PC", "EMPTY17",0)
+	wait(60)
+	set_motion("PC", "EMPTY18",0)
+	look_chr("Char", "-")
+	MSG_EX("#S3#C0‰Ä™Zu•sA•ssIv",-1,2)
+	wait(30)
+	set_motion("PC", "EMPTY19",0)
+	wait(25)
+	SE("SE_EVENT_04")
+	wait(15)
+	set_motion("PC", "EMPTY16",0)
+
+	look_chr("Char", "HEAD")
+	set_motion("Char", "ATTACK1",0)
+	MSG_EX("#S3#C0‰Ä™Zu”‡ŽíŽžŒóŠÒu‹†Y›õâXßˆ¦IIv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu#N0“Igàccccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zugàccccccv",-1,2)
+	wait(120)
+
+	MSG_EX("#S3#C0ä»ãNucccc—R‰ä˜Òà™ÛBv",-1,2)
+	wait(60)
+
+	cross_fade(45)
+	set_script_camera(0.00,1.30,-1.65,  -15.0,250.0,0.0, 12, 15.0)
+	rotate_script_camera( 0,45,0, 1800, 1)
+	wait(60)
+
+	look_chr("PC", "-")
+	MSG_EX("#S3#C0ä»ãNu‹RŽmæ¶C¿š†—âèÎ’nãã‰äàBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”\˜ô“I‰ä“s›ßãS˜ô—¹C|@@@ã`ŽZ¥•×‹­•ÛZ—¹«–½Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNucc’A¥CŒ»Ýî‹µ”ñíšŽdBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuå«‘R”‡˜bœk“ïàoŒûccv",-1,2)
+
+	look_chr("Liese", "Char")
+//@@¦‚±‚±‚Å‚a‚f‚l‚ðƒXƒgƒbƒv
+	stop_bgm(0, 2000)
+	cross_fade(60)
+	scale_script_camera(0.33, 1, 1)
+	wait(120)
+
+	MSG_EX("#S3#C0ä»ãNuŒ»Ý”I“Igà•s—vàŠö™˜—¹C|@@@A˜AŠî–{“Is“®“s—L–â‘èBv",-1,2)
+	look_chr("Liese", "HEAD")
+	MSG_EX("#S3#C0ä»ãNu”@‰Ê•×‹­˜ª˜Ò“I˜bC|@@@˜ðÄ“xŠë‹y“ž”I“I¶–½Bv",-1,2)
+	WAIT(30)
+
+	MSG_EX("#S3#C0‰Ä™Zucccccc‰äccccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu›”•s‹Nccccv",-1,2)
+	look_chr("Char", "HEAD")
+	MSG_EX("#S3#C0‰Ä™Zu‰ä–{˜Ò‘ü¥‘zæ¨”I‰ø•œ¸_C|@@@ccccË–ñ”Iˆê‹N—·s“IC‰Â¥ccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu™Èá¢¶—¹”‡žé“IŽ–îccccv",-1,2)
+	wait(60)
+
+	cross_fade(60)
+	scale_script_camera(1.0, 1, 1)
+	set_script_camera(0.00,0.00,-0.00,  -45,180.0,0.0, 9, 15.0)
+	rotate_script_camera( 20,0,0, 1800, 1)
+
+	MSG_EX("#S3#C0ä»ãNuccccccccccccccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuccŠÒ¥—LàH–@“IBv",-1,2)
+	bgm(18, 0, 0)
+
+	look_chr("Char", "-")
+	MSG_EX("#S3#C0‰Ä™Zuš‰ccccv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNu”I˜ì¥ˆ×’²àzŠïŠâéË˜Ò“ž”‡—¡“I™ÛBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuŠˆÈCœäŠYããà‰ß•s­|@@@è‰—“j—´™˜“I™B•·™ÛBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”\àB•úo”äŠô•SŒÂ‰Î”c“IŒõäŠ|@@@X‰Á—sŠá“IŒõ‹Pccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”\àB›æ˜ÒŸ—˜äožÄ—s“I™Bà’†“I¹™˜ccv",-1,2)
+	wait(20)
+	MSG_EX("#S3#C0ä»ãNu“ß—Í—Ê‰ÂˆÈ•ÛŒì—i—L›€“IlC|@@@‰ÂˆÈŽaŽEŽ×œ¦“I‹—´Bv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™Zu“ï“¹¥ccccv",-1,2)
+
+	cross_fade(60)
+	set_script_camera(0.07,1.00,0.96,  -15.0,340.0,0.0, 12, 15.0)
+	rotate_script_camera( 0,45,0, 1800, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãNu¥“IC”@‰Ê”\àB“¾“ž“j—´™˜C|@@@—p›€“I—Í—ÊA‰ÂˆÈæ¨‹RŽm‘ål“Igà•œŠˆ—¹Bv",-1,2)
+	look_chr("PC", "-")
+	set_motion("Char", "ATTACK1",0)
+	MSG_EX("#S3#C0‰Ä™Zu¥A¥”‡žéåhccv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu“ß›õC‰ä”‡A‹ŽQŠïŠâéIv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNu•sC|@@@‹RŽm‘ål—veŽ©‹ŽqQ¹™˜ËsBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu¹™˜˜ðŽ©ŒÈ‘I¢›€“IŠ—LŽÒccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu•K{æ¨‹RŽm‘ål”í‘I’†Bv",-1,2)
+
+	look_chr("Char", "Liese")
+	MSG_EX("#S3#C0‰Ä™Zuœƒ›õ‰Â”\I|@@@‘¼ˆê“®–ç•s”\“®C—vœƒ›õžéË”\ccv",-1,2)
+
+	cross_fade(60)
+	scale_script_camera(1.0, 1, 1)
+	set_script_camera(0.0,0.50,-3.08,  -20,0.0,0.0, 9, 15.0)
+	rotate_script_camera( 5,0,0, 1800, 1)
+
+	MSG_EX("#S3#C0ä»ãNu‹RŽm‘ålcc|@@@Œ»Ý‰ä—vÝš†“Igà—¡ŠñhŽçŒì¸èËBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”@‰Ê“¾“žŽçŒì¸èË“I•ÛŒìC|@@@œäŠY‰ÂˆÈŽbŽž‰ø•œ“žˆÈ‘Os“®Ž©”@“IžéŽqBv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™Zuš‰cc’A¥CŠˆàŽçŒì¸èË•s¥ccv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNu¥“IC–{˜ÒœäŠY‘ü—L„o¶“IŽžŒóC|@@@Ë”\æ¨¸èËŠñhÝgà—¡Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu’A¥ccccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‹RŽm‘ålÝŽ€–S“Iç²íQçz—¹ˆêšŸC|@@@Œ‹‰Ê–”ŠïÖ”Ê’n¶ŠÒ—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu—RŽ€“ž¶Aœn–³“ž—L“I—·’öcc|@@@‰ÂˆÈà”‡˜al“I’a¶¥“¯žé“IààŽBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuŠÅ‹N˜Ò¶Ž€D‘œ¥Š®‘S‘Š”½“IŽ–îC|@@@›‰Ûã›€˜ì“I—üŒnÅˆ×‹Ù–§Bv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™Zu“ßA“ß›õccv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNuŒ»Ý“I‹RŽm‘ålC|@@@ˆê’è”\àBÚŽóŽçŒì¸èË“IBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”@‰ÊŠèˆÓÝ¸èË“IŒì—C‰º‹ŽqQ¹™˜“I˜bC|@@@‰ä–ç˜ðá¶‘S—Íà¸–ZBv",-1,2)
+
+	look_chr("Char", "HEAD")
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0‰Ä™Zu#N0C`‘õ”I—¹Iv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu•sŠÇœƒ›õàC”‡žé‰º‹Ž“I˜bccv",-1,2)
+
+//@@ŽålŒöA“Vˆä‚ð‹Â‚¢‚Å•ð‚¯‚Ä‚¢‚éŽd‘
+	cross_fade(60)
+	set_script_camera(1.10,0.00,-0.50,  -45,225.0,0.0, 8, 12.0)
+	rotate_script_camera( 0,45,0, 1800, 1)
+	look_chr("PC", -1)
+
+	WAIT(60)
+	MSG_EX("#S3#C0‰Ä™Zu#N0ccHv",-1,2)
+
+	look_chr("Liese", "HEAD")
+	MSG_EX("#S3#C0ä»ãNuccŠÅ‹N˜ÒC|@@@‹RŽm‘ål›ßãSäÝ”O‹äŠD—¹šCBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu•s‰ßC”\œnŽ€–Sç²íQ‘hÁ‰ß˜ÒC|@@@A¥èË°ŠÒ–¢Ž¸‹ŽŒõ‹P“Iæš–¾Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‹RŽm‘ålccccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu–ç‹–¥‰ä‘½š{C|@@@•s‰ß¿š†ãã‰äàBv",-1,2)
+
+	wait(20)
+	INIT_WALK_DST("Liese")
+	set_walk_dst("Liese", 0.02,0.50,-0.22)
+	walk_pos("Liese",0,0.022)
+	wait_walk("Liese")
+	wait(40)
+
+	MSG_EX("#S3#C0ä»ãNu‹RŽm‘ålÝ”‡ŒÂŽž‘ã¶Šˆˆê’è¥Œ’É‹ê“IŽ–îBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu’A¥C‰ä•sæS“¾š†”‡žé“Il|@@@Œ»ÝŠÒŽù—vˆ×”‡ŒÂŽ§‹êœ»Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuš†¥ˆêŒÂ³’¼“Ilccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”ä‹NŽ©ŒÈ“IŽ–î˜ÒC|@@@š†Xˆ×”í•Š—\—¹X‘å“IÓ”CŽ§‹êœ»ccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu¥“Iccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuš†”w•‰’˜Š¸‰—ˆÈ‹RŽm“Ig˜Ì|@@@Ý”‡ŒÂŽž‘ã¶‘¶“IÓ”Cccv",-1,2)
+	WAIT(20)
+//@@ŽålŒöAƒnƒb‚Æ‚µ‚ÄƒŠ[ƒ[‚ðŒ©‚éB
+	look_chr("PC", "Liese")
+	wait(60)
+	MSG_EX("#S3#C0ä»ãNucc”‡±‰ÂˆÈœnš†ƒâí“IèË°˜as“®’†„‘ªo˜ÒBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu’A¥CÝ”‡ŒÂŽž‘ãìˆ×‹RŽmœäŠYœƒžé¶‘¶C|@@@•K{—vèÏš†Ž©ŒÈQo“šˆÄ˜ÒBv",-1,2)
+	WAIT(60)
+
+//@@ŽålŒöAÄ‚Ñ“Vˆä‚ð’­‚ß‚â‚éB
+
+	look_chr("PC", "-")
+	WAIT(40)
+	MSG_EX("#S3#C0ä»ãNu”@‰ÊQ•s“ž“šˆÄC|@@@ˆêØA˜ð‘œ”‡žéŒ‹‘©—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuš†•K{—vÄŽŸ’D‰ñìˆ×‹RŽm“IžÄ—sBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu–ç¥ˆ×—¹•ñ“š›’”‡ŽuŒü‘õ•t‰—š†“IlBv",-1,2)
+	WAIT(40)
+//@@“Vˆä‚ð’­‚ß‚Ä‚¢‚½ŽålŒöAƒŠ[ƒ[‚ðŒ©•Ô‚·B
+	look_chr("PC", "Liese")
+	WAIT(60)
+	MSG_EX("#S3#C0ä»ãNuccD‘œ›ßãS‰º’è—¹ŒˆSšCBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu›ßãSˆê–ç•s”\—P˜¬—¹Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu“ß›õAÝ‰äÕŽiä»ãN“I–¼‹`‰º|@@@isôâXˆÈ‹y~èË‹VŽ®™ÛBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‰Ä™ZC¿à¸•‰äBv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™ZuDAD“IIv",-1,2)
+
+	fade_out(60)
+	wait(180)
+
+//@@ˆÈ~A~èË‚Ì‹VŽ®ƒCƒxƒ“ƒgá`–Ê‚ÖB
+//@@eŽq‚ÌŽž‚ÆƒCƒ[ƒW‚ªd•¡‚µ‚È‚¢‚æ‚¤‚ÉŽålŒö‚Í›Š‚½‚Ü‚ÜA
+//@@›Šäi‚Ì‘O‚ÅƒCƒxƒ“ƒg‚ðs‚¢‚Ü‚·BƒŠ[ƒ[‚Ì‹VŽ®—pƒ‚[ƒVƒ‡ƒ“
+//@@‚Í‘S‚ÄŒ©‚¹‚é•K—v‚ ‚è‚Ü‚¹‚ñB˜r‚ðã‚Éã‚ª‚Á‚½‚Æ‚±‚ë‚Å
+//@@ƒtƒF[ƒhƒAƒEƒg‚³‚¹‚ÄÈ—ª‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚ÆŽv‚¢‚Ü‚·B
+//@@‚à‚¤‚·‚Å‚ÉŒ©‚Ä‚¢‚é‚Ì‚ÅB
+
+	// Å‰‚ÌƒK[ƒfƒBƒAƒ“
+	set_spirit(0)
+
+	look_chr("PC", "-")
+	set_pos("Liese",0,0.5,-0.3)
+	set_deg_ex("Liese","PC")
+	set_motion("Liese2","EMPTY1",0)
+	set_motion("Liese","EMPTY4",0)
+
+	SE("SE_EVENT_00")
+
+	CINEMA_ON(0)
+	wait(60)
+	fade_in(60)
+
+	permit_script_camera(1)
+	set_script_camera_ex("Liese",1, -5,200,0, 10, 40)
+	scale_script_camera( 1.2, 240, 0 )
+
+	wait(180)
+
+	cross_fade(40)
+	SET_SCRIPT_CAMERA( -0.03,1.50,-0.22, -5,170,0, 4, 30 )
+	ROTATE_SCRIPT_CAMERA( -10,-10,0, 240,0)
+	wait(240)
+
+	cross_fade(40)
+	set_script_camera_ex("PC",1, -20,180,0, 6, 40)
+	scale_script_camera( 0.9, 600, 0 )
+
+	set_motion("Liese","EMPTY3",0)
+	ATTACH_EFC("EFC_PC_CARD","Liese","POS")
+	wait(60)
+	SE("SE_EVENT_01")
+	wait(20)
+	BLUR(10)
+	SLOW(1)
+	wait(120)
+	FADE_OUT_EX(60, 1, "0xffffffff",0)
+	wait(60)
+
+//@@‹VŽ®ƒ€[ƒr[ŒãAƒtƒF[ƒhƒAƒEƒgU‚¯‚Ä_“ašú‚ÌŠÔ‚ÅŽålŒö•
+//@@ƒVƒƒƒ‹‚ª—§‚Á‚ÄAƒŠ[ƒ[‚ÆŒü‚«‡‚Á‚Ä‚¢‚éæÁ‘Ô‚©‚çB
+
+	set_motion("Liese2","STAND",0)
+	set_motion("PC","STAND",-1)
+	set_motion("Liese","STAND",0)
+	DELETE_EFC("Liese2")
+	DELETE_EFC("Liese")
+
+	set_pos("Liese", -1.16,0.00,1.10)
+	set_deg("Liese", 61)
+	set_pos("PC",0.62,0.00,0.83)
+	set_deg("PC", 280)
+	set_pos("Char",1.26,0.00,2.37)
+	set_deg("Char", 195)
+
+	BLUR(0)
+	SLOW(0)
+	STOP_ENV_SE("SE_EVENT_00", 2000)
+	wait(120)
+//	STOP_SE(0)
+
+	// ƒ}ƒbƒvŠO‚ð•`á`‚·‚é‚±‚Æ‚Å^‚ÁàŸ‚ð•\Œ»
+	set_script_camera(100.00,0.00,100.00 ,-55,10.0,0.0, 10, 15.0)
+
+	FADE_IN_EX(90, 1, "0xffffffff",0)
+	wait(90)
+
+	// skip ‹ÖŽ~
+	set_skip_label("-")
+
+	call draw_card
+
+	// skip ‹–‰Â
+	set_skip_label("SKIP2")
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("yŽçŒì¸èËzŠñhÝgã—¹B",-1,0X00000200)
+	SYS_EX("è‰—ŽçŒì¸èËyŠó˜I•‡z",-1,0X00000200)
+	SYS_EX("”‡¥”\•â[hŽåà—Í“IŽçŒì¸èËB|àš‰ÁhŽåÅ‘åHPB",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 180, 1)
+	wait(180)
+IMG_OFF(0)
+	//----------------------------
+
+	fade_out(60)
+	wait(60)
+
+	bgm(-1,0,-1)
+
+	set_script_camera(-0.02,0.00,0.74 ,-25,10.0,0.0, 10, 15.0)
+	ROTATE_SCRIPT_CAMERA( 0,-20,0, 1800,0)
+
+	fade_in(90)
+	wait(120)
+
+	look_chr("Liese", "PC")
+	MSG_EX("#S3#C0ä»ãNucc”ä‘zÛ“IX‰Á¢“ïC|@@@•s‰ßã`ŽZ‡—˜Š®¬—¹Bv",-1,2)
+
+	look_chr("Char", "PC")
+	MSG_EX("#S3#C0‰Ä™Zušjšjccccv",-1,2)
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0‰Ä™Zucc‘¾D—¹C#N0Bv",-1,2)
+	wait(60)
+
+	MSG_EX("#S3#C0ä»ãNuccŠÒ—LˆêŒŽ–îC|@@@•K{‘i‹RŽm‘ålBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu–{˜ÒCo¶ŽžŠñhÝgã“IŽçŒì¸èË|@@@äohŽå“IèË°”\àB‹Ù–§Œ‹‡Ýˆê‹NBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu’A¥‘œ‹RŽm‘ål”‡žéŽží–Ê›”’˜Ž€–SC|@@@ŠˆÈŽçŒì¸èË”ñí•sˆÀ’èBv",-1,2)
+
+	set_deg("Char", 241)
+	look_chr("Char", "Liese")
+	MSG_EX("#S3#C0‰Ä™Zuš‰cc“ß˜ðá¢¶Y›õŽ–îšCHv",-1,2)
+	wait(40)
+
+	cross_fade(60)
+	stop_camera(0)
+	set_script_camera(2.40,1.00,0.70 ,0,280.0,0.0, 7, 15.0)
+	ROTATE_SCRIPT_CAMERA( 0,5,0, 1800,0)
+	wait(100)
+
+	look_chr("Liese", "Char")
+	MSG_EX("#S3#C0ä»ãNu‹°œ†ŽçŒì¸èË˜ð”ñí—eˆÕœngãàY—£Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuˆÂÆ›€˜ì“IK«CácŽçŒì¸èËŽ@æS“ž|@@@hŽå“IŽ€Šú”VŒãA˜ðŽ©‘RàY—£Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‘RŽ§™˜Žm‘ål“IgàŠÒÝŽ€–S“Iç²íQC|@@@”‡Žíî‹µ‰ºŸ“l’m“¹ŽçŒì¸èË˜ðœƒ›õ˜ôBv",-1,2)
+
+	look_chr("Char", "PC")
+	MSG_EX("#S3#C0‰Ä™ZuœƒAœƒ›õ˜ð”‡žéccv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNu³ˆöˆ×”‡žéC|@@@‹RŽm‘ål•K{˜Ô‘“¾“ž¹™˜Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu•s‰ßccv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu—˜—p”‡ŒÂ“Á«C|@@@ŠÒœäŠY”\àB›””IisdV~èËBv",-1,2)
+
+	look_chr("Char", "Liese")
+	set_motion("Char","ATTACK1",-1)
+	MSG_EX("#S3#C0‰Ä™ZudV~èË¥œƒ›õ‰ñŽ–cc|@@@¥ŽwXŠ·ŽçŒì¸èËåhHv",-1,2)
+	MSG_EX("#S3#C0‰Ä™Zu”‡žé˜ô–ç‰ÂˆÈåhHv",-1,2)
+
+	MSG_EX("#S3#C0ä»ãNu¥“ICŸ“—L–â‘èBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”@‰Ê‡—˜“I˜bC|@@@A‰ÂˆÈ“¾“žŠeŽíŽçŒì¸èË“I‰¶“TBv",-1,2)
+
+	MSG_EX("#S3#C0‰Ä™ZuŒ´˜Ò”@ŸC”‡–ç‹–˜ð”hã—pêccv",-1,2)
+	wait(40)
+
+	cross_fade(60)
+	stop_camera(0)
+	set_script_camera(-1.43,1.0,-0.21 ,-8,35.0,0.0, 6, 15.0)
+	ROTATE_SCRIPT_CAMERA( 0,5,0, 1500,0)
+	wait(100)
+
+	look_chr("Liese", "PC")
+	MSG_EX("#S3#C0ä»ãNuÝ”‡‰ò“y’nãœäŠYŠÒ|@@@Ÿ‰‡’˜œk‘½ŽçŒì¸èËBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu”@‰ÊQ“ž‘z—v“IŽçŒì¸èË“I˜bC|@@@¿›’••ˆó›€“I“»•Ð\“ž”‡—¡˜ÒBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNu‰äœkŠyˆÓdVis~èË‹VŽ®Bv",-1,2)
+	wait(60)
+
+	look_chr("Liese", "-")
+	MSG_EX("#S3#C0ä»ãNu“ß›õC›ßãSœkíL—¹cc|@@@¿”I˜ì“ñˆÊ¡“VDD‹x‘§Bv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuæ¨ç¬œn‘—”I˜ì“ž—·“X™ÛBv",-1,2)
+	MSG_EX("#S3#C0ä»ãNuŽù—và¸•“I˜b¿ç¬Žž˜ÒQ‰äBv",-1,2)
+
+//@@á`–ÊAƒtƒF[ƒhƒAƒEƒg
+	fade_out(120)
+	stop_bgm(0, 2000)
+	wait(120)
+
+	wait(60)
+
+	//-----------------------------
+	ENTRY_IMG(0,"mono\MONO05_01",0)
+	ENTRY_IMG(1,"mono\MONO05_02",0)
+	ENTRY_IMG(2,"mono\MONO05_03",0)
+	ENTRY_IMG(3,"mono\MONO05_04",0)
+	ENTRY_IMG(4,"mono\MONO05_05",0)
+	ENTRY_IMG(5,"mono\MONO05_06",0)
+	SET_IMG( 0, 000,000, 0,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 1, 256,000, 1,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 2, 512,000, 2,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 3, 000,256, 3,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 4, 256,256, 4,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	SET_IMG( 5, 512,256, 5,  0,  0,256,256, 0, 0xffffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	IMG_ON(1)
+	IMG_ON(2)
+	IMG_ON(3)
+	IMG_ON(4)
+	IMG_ON(5)
+	FADE_IN(60)
+	WAIT(60)
+	//-----------------------------
+
+//	SET_MSG_TIME(5,40,50, 30)
+		SET_MSG_TIME(5,40,90,90)
+	MSG_EX("#S3#C0ŠÒ¥”N—c“IŽžŒóãìãìãì|‘¼ÝDà¥’†Ž¸‹Ž—¹™ÔeB|@|Ž©“ßˆÈŒãC‘¼AÝS’†á¢¾—v‘n‘¢ˆêŒÂ˜a•½“IŽž‘ãB|‰—¥‘¼¬ˆ×—¹‹RŽmB",-1,0X00000094)
+
+	MSG_EX("#S3#C0Œã˜ÒC‘¼‹ö“ž—¹ˆêŒÂ”\äo‘¼|•ª‹”‡ŒÂŽuŒü“IàÕˆê–³“ñ“I•ü—FB|@|–kŠC‹RŽmš£”Nçj“I–¾ŒNC–@“ò”bŽ¢ŒòŽÝãìãìãì|@|›”‘¼˜ÒàŒòŽÝ¥àa“¾Ž˜•ò“IŽålC|–ç¥‰ÂˆÈ„S’u• “I•—FB",-1,0X00000094)
+
+	MSG_EX("#S3#C0ÝˆÈ‚Œ‰AŒõ–¾³‘å•·–¼“I–@“ò”bŽ¢ŒòŽÝ“IŽüš¡|ãÚW—¹œk‘½—L—‘z“I”Nçj‹RŽmB|@|’A¥CAŽZ¥”‡žé“I–kŠC‹RŽmš£|–ç•s”\äoŽž‘ã“I’ª—¬‘ŠRtB",-1,0X00000094)
+
+	MSG_EX("#S3#C0ÝÉ‘Š²œN˜±Žzá¢“®“I‹RŽmDà¥’†C|–kŠC‹RŽmš£”íÁ–Å—¹B|@|‘¼—väo–@“ò”bŽ¢ŒòŽÝˆê‹N|•ÀŒ¨Dà”“žÅŒãˆêB|@|’A¥CŒòŽÝ•sˆò‹–‘¼”‡›õ˜ôB",-1,0X00000094)
+
+	MSG_EX("#S3#C0w‰ä›’Š—L‹RŽm“IˆÓŽu‘õ•t‰—”Ix|@|“ß¥ìˆ×•ü—F“I–@“ò”bŽ¢ŒòŽÝÅŒã“I˜bB",-1,0X00000094)
+
+	MSG_EX("#S3#C0ŒòŽÝŠó–]‘¼”\ìˆ×‹RŽm˜ì¶‘¶“Iæš–¾C|ÝV“IŽž‘ãã‹ã”¶Šˆ‰º‹ŽB|@|å«‘RŽ©ŒÈ“IŽuŒü”¼“rŽ§œE—¹C|’AŠó–]‘¼”\àBã‹³”‡ŒÂˆÓŽuŽ§Šˆ‰º‹Žãìãìãì",-1,0X00000094)
+
+	MSG_EX("#S3#C0“™‘¼´Á‰ß˜Ò“IŽžŒóC|›ßãSÝ‰“—£Dê“IŠCã˜©’˜¬‘Dà®“ B",-1,0X00000094)
+		SET_MSG_TIME(-1,-1,-1,-1)
+
+	//-----------------------------
+	FADE_OUT(60)
+	WAIT(60)
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+
+	WAIT(60)
+
+	// BGM –ß‚·
+	bgm( 4, 0, -1)
+
+	// EV ~èË‚Ì‹VŽ®ŠJŽn
+	game_flag_on(3531)
+	ENTRY_MAP("game_start")
+
+EXIT:
+	END
+
+SKIP2:
+	//-----------------------------
+	IMG_OFF(0)
+	IMG_OFF(1)
+	IMG_OFF(2)
+	IMG_OFF(3)
+	IMG_OFF(4)
+	IMG_OFF(5)
+	//-----------------------------
+
+
+
+	STOP_ENV_SE("SE_EVENT_01",2000)
+	STOP_ENV_SE("SE_EVENT_00", 2000)
+
+	stop_bgm(0, 0)
+	// BGM –ß‚·
+	bgm( 4, 0, -1)
+	//Å‰‚ÌƒK[ƒfƒBƒAƒ“
+	set_spirit(0)
+	BLUR(0)
+	SLOW(0)
+	novel_off(0)
+	// EV ~èË‚Ì‹VŽ®ŠJŽn
+	game_flag_on(3531)
+	ENTRY_MAP("game_start")
+	END
+}
+
+
+
+// ----------------------------------------------------------------------------
+// ƒJ[ƒh“üŽè‰‰o
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god00",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+
+
+
+
+

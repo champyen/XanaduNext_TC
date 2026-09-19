@@ -1,0 +1,175 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_MIZU")
+
+	// 岩をガントレットで破壞したか？
+	CHECK_GAME_FLAG(738)
+	OFF_SKIP(1)
+	HIDE_CHR("iwa")
+
+// 敵を倒したことがある
+	CHECK_GAME_FLAG(712)
+	OFF_JUMP next
+
+		HIDE_CHR("stop")
+		SET_POS_EX("tbox","htbox")
+		HIDE_CHR("htbox")
+
+NEXT:
+	
+	// ★05/05/19:イレギュラーモンスター①：巨大スライム
+	// スライム
+	put_monster("m00",021,3,0,0,0)
+	put_monster("m04",021,3,0,0,1)
+	put_monster("m05",021,3,0,0,2)
+
+	// スライム
+//	put_monster("m00",004,3,0,0,0)
+//	put_monster("m01",004,3,0,0,1)
+//	put_monster("m03",004,3,0,0,3)
+//	put_monster("m04",004,3,0,0,4)
+//	put_monster("m06",004,3,0,0,5)
+	// ゴブリンアーチャー
+//	put_monster("m02",001,3,0,0,2)
+	// ゴブリン
+//	put_monster("m05",000,3,0,0,6)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1704)
+	ON_SKIP(2)
+	KAGI("d1704",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1704")
+
+}
+
+// RES("WIN")
+// {
+// 	CHECK_GAME_FLAG(712)
+// 	ON_JUMP next
+// 
+// 		// きえる
+// 		STOP_PC(0)
+// 		SE("SE_STOPPER")
+// 		CINEMA_ON(0)
+// 		FOCUS_CHR("stop")
+// 		HIDE_CHR("stop")
+// 		SET_POS_EX("tbox","htbox")
+// 		HIDE_CHR("htbox")
+// 		WAIT(90)
+// 		CINEMA_OFF(0)
+// 
+// 	GAME_FLAG_ON(712)
+// 	next:
+// }
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1704")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1704)
+}
+
+// ----------------------------------------------------------------------------
+// 岩
+// ----------------------------------------------------------------------------
+
+DEF("iwa")
+RES("KILL")
+{
+	KILL_CHR("iwa",0,0,-1)
+	GAME_FLAG_ON(738)
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(711)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(711)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, -13.5,3,3.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【30Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(30)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//手記１      昔日の古文書 1210年 牛飼の月23日
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 290, -13.5,3,3.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【昔日之古文書】！",-1,0X00000200)
+
+	GET_ITEM(290, 1)
+	GAME_FLAG_ON(711)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

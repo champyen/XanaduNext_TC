@@ -1,0 +1,142 @@
+DEF("MAP")
+RES("INIT")
+{
+end
+}
+
+
+
+
+
+
+========================================================================
+いい寶箱
+========================================================================
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1024)
+	OFF_JUMP NEXT
+	HIDE_CHR("tbox1")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+//ドラゴンスレイヤー
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 36, -2,0,-2, 1,80,0)
+	WAIT(140)
+
+//＊荷物が一杯かどうかチェック。箱の漓容が金だったらここのチェックは外す。
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+	WAIT(45)
+
+	GET_ITEM(36, 1)
+	//GAME_FLAG_ON(1024)
+	SET_COLOR("tbox1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS("拿不動更多行李了。")
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================
+豪華な寶箱
+========================================================================
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1025)
+	OFF_JUMP NEXT
+	HIDE_CHR("tbox2")
+NEXT:
+}
+
+
+RES("CLICK")
+{
+	FADE_OUT(30)
+	WAIT(60)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "tbox2", -2, -20,70,0, 3.5, 15)
+	ROTATE_SCRIPT_CAMERA( 5,20,0, 300, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,0.5,0, 300,1)
+	SET_POS("PC",2,0,-3.35)
+	SET_DEG_EX("PC","tbox2")
+	PC_WEAPON(0)
+	WAIT(20)
+
+	//カメラ１
+	SET_MOTION("PC","OPENBOX",0)
+	SWITCH_ON("tbox2")
+	ATTACH_EFC("EFC_99K1","tbox2","POS")
+	FADE_IN(30)
+	WAIT(240)
+
+	//カメラ２
+	CROSS_FADE(20)
+	SET_SCRIPT_CAMERA_EX("PC", -3, -25,180,0, 2.8, 10)
+	ROTATE_SCRIPT_CAMERA( 5,0,0, 300, 1)
+	SCALE_SCRIPT_CAMERA( 1.05, 300,1)
+	WAIT(240)
+
+//荷物が一杯かどうかチェック。
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	GET_ITEM(36, 1)
+	//GAME_FLAG_ON(1025)
+
+	//後處理
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+	HIDE_CHR("tbox2")
+	DELETE_EFC("tbox2")
+	PERMIT_SCRIPT_CAMERA(0)
+	SE("SE_GETITEM")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	CROSS_FADE(60)
+	DELETE_EFC("tbox2")
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(30)
+	SE("SE_ERROR")
+	SYS("拿不動更多行李了。")
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

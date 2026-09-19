@@ -1,0 +1,253 @@
+
+// ------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// バット
+	PUT_MONSTER("m00",256,1,0,0,0)
+	PUT_MONSTER("m01",256,1,0,0,1)
+	// ゴブリン
+	PUT_MONSTER("m02",187,1,0,0,2)
+//	PUT_MONSTER("m03",187,1,0,0,3)
+//	PUT_MONSTER("m04",187,1,0,0,4)
+	// バットに變更(05/03/10)
+	PUT_MONSTER("m03",256,1,0,0,3)
+	PUT_MONSTER("m04",256,1,0,0,4)
+
+
+	// 寶箱①(05/03/10)
+//	CHECK_GAME_FLAG(1029)
+//	ON_SKIP(2)
+//	SET_TREASURE("trs00",0,20,"itm00")
+//	SKIP(1)
+//	HIDE_CHR("trs00")
+	
+	// 寶箱②(05/03/10)
+//	CHECK_GAME_FLAG(1030)
+//	ON_SKIP(2)
+//	SET_TREASURE("trs01",0,20,"itm01")
+//	SKIP(1)
+//	HIDE_CHR("trs01")
+
+	// 敵倒したことがあれば寶箱表示
+	CHECK_GAME_FLAG(1032)
+	ON_SKIP(2)
+	HIDE_CHR("trs00")
+	HIDE_CHR("trs01")
+
+
+	// カギ設定
+	CHECK_GAME_FLAG(2001)
+	ON_SKIP(2)
+	KAGI("d2001",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d2001")
+
+	// カギ設定
+	CHECK_GAME_FLAG(2002)
+	ON_SKIP(2)
+	KAGI("d2002",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d2002")
+
+	// カギ設定
+	CHECK_GAME_FLAG(2003)
+	ON_SKIP(2)
+	KAGI("d2003",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d2003")
+
+}
+
+RES("WIN")
+{
+	CHECK_GAME_FLAG(1032)
+	ON_JUMP next
+
+	STOP_PC(0)
+	CINEMA_ON(0)
+	
+	RESET_MAP_ROT_Y(6,90)
+	FOCUS_CHR("null")
+	WAIT(90)
+	SHOW_CHR("trs00")
+	SHOW_CHR("trs01")
+	EFC("EFC_ADD_TREASURE",9.25,0,3.7)
+	EFC("EFC_ADD_TREASURE",9.25,0,-3.7)
+	WAIT(120)
+
+	GAME_FLAG_ON(3526)
+	GAME_FLAG_ON(1032)
+
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於【地圖的轉動】",-1,0X00000200)
+	SYS_EX("在大多數迷宮中，|可以透過旋轉視角來更好地看清周圍。",-1,0X00000200)
+	SYS_EX("轉動滑鼠的滾輪/點撃手把旋轉視角鍵，|可以旋轉地圖的方向。",-1,0X00000200)
+	SYS_EX("將地圖轉至易看的角度，|有可能會發現隱藏的寶箱。",-1,0X00000200)
+	SYS_EX("但是，也有一些地圖是不能轉動的。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+	FOCUS_CHR("PC")
+
+	CINEMA_OFF(0)
+
+next:
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d2001")
+RES("KAGI")
+{
+	GAME_FLAG_ON(2001)
+}
+
+DEF("d2002")
+RES("KAGI")
+{
+	GAME_FLAG_ON(2002)
+}
+
+DEF("d2003")
+RES("KAGI")
+{
+	GAME_FLAG_ON(2003)
+}
+
+
+
+
+
+// -------------------------------------------------------------
+// 寶箱                                                         
+// -------------------------------------------------------------
+
+DEF("trs00")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1029)
+	OFF_JUMP next
+
+	INIT_SWITCH_ON("trs00")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("trs00")
+
+// 20ゴールド
+	SWITCH_ON("trs00")
+	POP_ITEM_ICON("trs00", 225, 9.25,0,-3.7, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("trs00")
+	ATTACH_EFC("EFC_99ITEM_GET","trs00","POS")
+
+	SYS_EX("得到【20Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(20)
+	GAME_FLAG_ON(1029)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+}
+
+
+DEF("trs01")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1030)
+	OFF_JUMP next
+
+	INIT_SWITCH_ON("trs01")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("trs01")
+
+// 20ゴールド
+	SWITCH_ON("trs01")
+	POP_ITEM_ICON("trs01", 225, 9.25,0,3.7, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("trs01")
+	ATTACH_EFC("EFC_99ITEM_GET","trs01","POS")
+
+	SYS_EX("得到【20Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(20)
+	GAME_FLAG_ON(1030)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+}
+
+
+
+// --------------------------------------------------------------
+// ちゅーとりある                                                
+// --------------------------------------------------------------
+
+DEF("tuto_tgt")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1034)
+	ON_JUMP EXIT
+
+	GAME_FLAG_ON(1034)
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	FOCUS_CHR("tuto_tgt")
+	WAIT(60)
+
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於【技能】",-1,0X00000200)
+	SYS_EX("每種武器中都附帶有【技能】。",-1,0X00000200)
+	SYS_EX("例如，匕首中附帶的【突刺】|可以將體型輕的敵人打飛。",-1,0X00000200)
+	SYS_EX("只有當前裝備並選中的技能才可以使用。|習得新技能後，可以將其裝備至頂部的技能欄。|使用滑鼠左鍵點撃技能圖標/鍵盤F1-4/手把左右十字鍵，切換當前選中的技能。",-1,0X00000200)
+	SYS_EX("【技能】分為用滑鼠右鍵發動的主動技能，|和只要設定就會有效果的被動技能兩種。",-1,0X00000200)
+	SYS_EX("還有，如果武器的熟練度上升到一定程度，|就可以學會該【技能】，|裝備其他武器時也能夠使用它。",-1,0X00000200)
+	SYS_EX("請注意，技能有時會有使用次數的限制。|當畫面頂部的技能計數歸零時，需要休息或觸控嗣柱恢復才能重新使用。",-1,0X00000200)
+
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+
+}

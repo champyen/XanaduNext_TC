@@ -1,0 +1,1506 @@
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv  hŽðê‚Q‚e@h”‘—p•”‰®iƒVƒƒƒ‹‚Ì‚¢‚È‚¢•”‰®jƒfƒoƒbƒO—p
+// ----------------------------------------------------------------------------
+
+//-- ROOM_FLAG -------------------------------------------------------
+// 0 ƒVƒƒƒ‹˜ð˜b
+//
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// DEBUG”Åexe”»’è
+	check_game_flag(4090)
+	off_jump NEXT
+	// ƒfƒoƒbƒOƒLƒƒƒ‰B
+	ENTRY_CHR( 0, 057)
+	PUT_CHR( 0, "Momo",  1.10,0.00,-1.94, 261)
+	PUT_CHR( 0, "Momo2", -1.26,-0.00,3.28, 349)
+
+NEXT:
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒVƒƒƒ‹
+
+
+DEF("Momo")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Momo")
+	SET_NAME("MOMO","DEBUG")
+
+MENU_MAIN:
+
+//	SEL("ƒVƒiƒŠƒIƒWƒƒƒ“ƒv|#c2‚`ƒp[ƒgi“ž’˜`–`è¨ŠJŽn‚Ü‚Åj@@@|‚aƒp[ƒgiƒCƒ“ƒtƒFƒ‹ƒm‚Ü‚Åj@@@@|‚bƒp[ƒgiƒtƒ[ƒŒ‚É‚c‚r‚à‚ç‚¤‚Ü‚Åj|‚cƒp[ƒgiI—¹‚Ü‚Åj@@@@@@@@|ƒtƒ‰ƒO§Œä|ƒ{ƒXD|‚â‚ß‚é")
+	SEL("Œ€–{’µçz|#C2‚`•”•ªi“ž’B`ŠJŽn–`è¨j|‚a•”•ªi“ž‰ÎŽR‘Oj|‚b•”•ªiœn•‡—…åQ“Á“ß—¡“¾“ž“j—´™˜j|‚c•”•ªi“žŒ‹‘©j|•WŽuT§|‘zŒ©“žˆ¢“òäˆãN|ŽæÁ")
+	check_select(0)
+	on_jump PART_A
+	check_select(1)
+	on_jump PART_B
+	check_select(2)
+	on_jump PART_C
+	check_select(3)
+	on_jump PART_D
+	check_select(4)
+	on_jump FLAG_MODE
+	check_select(5)
+	on_jump ANIECE
+//	check_select(5)
+//	on_jump BOSS_MODE
+
+	jump EXIT
+
+//-- ‚`ƒp[ƒgi“ž’˜`–`è¨ŠJŽn‚Ü‚Åj ----------------------------------
+PART_A:
+	SEL("‚`•”•ª|#C2“ž’BŠX|ŠJŽn–`è¨|DOVORUZAIK‘O|~èË“I‹VŽ®|ŽæÁ")
+	check_select(0)
+	on_jump PART_A01
+	check_select(1)
+	on_jump PART_A02
+	check_select(2)
+	on_jump PART_A03
+	check_select(3)
+	on_jump PART_A04
+	check_select(4)
+	on_jump PART_A05
+
+	jump MENU_MAIN
+//ŠX“ž’˜
+PART_A01:
+	call SUB_000
+	call SUB_A01
+
+	ENTRY_MAP("game_start")
+
+//ŠJŽn
+PART_A02:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+
+	ENTRY_MAP("009d_009c")
+
+//ƒhƒ”ƒHƒ‹ƒU[ƒN‘O
+PART_A03:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+
+	ENTRY_MAP("1009_1008")
+
+//~èË‚Ì‹VŽ®‘O
+PART_A04:
+	call SUB_000
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+	call SUB_A04
+
+	fade_out(0)
+	wait(1)
+
+	ENTRY_MAP("0091_1009")
+
+//-- ‚aƒp[ƒgiƒCƒ“ƒtƒFƒ‹ƒm‚Ü‚Åj ------------------------------------
+PART_B:
+	SEL("‚a•”•ª|’Tõ#C2¹™˜|Žè‘„•ðâœCHIUA‘O|TLENTDŒã|’ñ‚Šî–{HŽ‘TRIICHIEÎ‘œ‘O|RIIZE“I”j–‚û|SIUTORUMUÎ‘œ‘O|ŽæÁ")
+	check_select(0)
+	on_jump PART_B01
+	check_select(1)
+	on_jump PART_B02
+	check_select(2)
+	on_jump PART_B03
+	check_select(3)
+	on_jump PART_B04
+	check_select(4)
+	on_jump PART_B05
+	check_select(5)
+	on_jump PART_B06
+
+	jump MENU_MAIN
+
+// ¹™˜‚Ì’Tõ‚Ö
+PART_B01:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+
+	ENTRY_MAP("009d_009c")
+
+// ƒKƒ“ƒ_ƒ‹ƒ`ƒ…ƒA‘O
+PART_B02:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	ENTRY_MAP("0755_0790")
+
+// ƒgƒŒƒ“ƒgDŒã
+PART_B03:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+
+	ENTRY_MAP("0750_0727")
+
+// ƒxƒAƒgƒŠ[ƒ`ƒFÎ‘œ‘O
+PART_B04:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+
+	ENTRY_MAP("05d7_05d8")
+
+// ƒŠ[ƒ[‚Ì”j–‚–î
+PART_B05:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("0097_0093")
+
+// ƒVƒ…ƒgƒDƒ‹ƒ€Î‘œ‘O
+PART_B06:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+	call SUB_B06
+
+	ENTRY_MAP("0871_0833")
+
+//-- ‚bƒp[ƒgiƒtƒ[ƒŒ‚É‚c‚r‚à‚ç‚¤‚Ü‚Åj ----------------------------
+PART_C:
+	SEL("‚b•”•ª|#C201—›Þ“I‹|išFšF“ìj|02--Ž€--|03ŠïŠâéoŒ»i”j–‚ûj|04‘ŠŽ—“I“ñlié‘Oj|05Ÿ‰àÒ“IRIIZEié“IŠˆ“®Œãj|06DOVOCŽð“k|07•s“¯ŠEŽè‘„•ðâœCHIUA|08DOVORUZAIK“I”s–k|09‰ú—¥åä’u|10àŸFV–º|11¹™˜“I—›ÞŒÆ–º|‰ú{")
+	check_select(0)
+	on_jump PART_C01
+	check_select(1)
+	on_jump PART_C02
+	check_select(2)
+	on_jump PART_C03
+	check_select(3)
+	on_jump PART_C04
+	check_select(4)
+	on_jump PART_C05
+	check_select(5)
+	on_jump PART_C06
+	check_select(6)
+	on_jump PART_C07
+	check_select(7)
+	on_jump PART_C08
+	check_select(8)
+	on_jump PART_C09
+	check_select(9)
+	on_jump PART_C10
+	check_select(10)
+	on_jump PART_C11
+
+	jump MENU_MAIN
+
+// ›Þ—à‡‚Ì‹|iƒAƒjƒGƒXj
+PART_C01:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+
+	ENTRY_MAP("0097_0094")
+
+// ƒŠ[ƒ[‚ª“|‚ê‚é
+PART_C02:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+
+	ENTRY_MAP("0097_0093")
+
+// ŠïŠâéoŒ»
+PART_C03:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+
+	ENTRY_MAP("0086_0087")
+
+// ‘ŠŽ—‚Ì“ñl
+PART_C04:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+
+	ENTRY_MAP("0602_0089")
+
+// ’¾àÒ‚ÌƒŠ[ƒ[
+PART_C05:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+
+	ENTRY_MAP("0097_0093")
+
+// ŠX‚Ì–å‚ÌŠO
+PART_C06:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+
+	ENTRY_MAP("0755_0790")
+
+// ˆÙŠEƒKƒ“ƒ_ƒ‹ƒ`ƒ…ƒA
+PART_C07:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+
+	ENTRY_MAP("09c2_09b6")
+
+// ƒhƒ”ƒHƒ‹ƒU[ƒN‚Ì”s–k
+PART_C08:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+
+	ENTRY_MAP("rndmap_0998")
+
+// Œ‹ŠEåä’u
+PART_C09:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+
+	ENTRY_MAP("0610_0682s")
+
+// àŸ‚«‰Ô‰Å
+PART_C10:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+
+	ENTRY_MAP("0610_0603")
+
+// ¹™˜‚Ì›Þ—à‡
+PART_C11:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+	call SUB_C11
+
+	ENTRY_MAP("0097_0093")
+
+//-- ‚cƒp[ƒgiI—¹‚Ü‚Åj --------------------------------------------
+PART_D:
+	SEL("‚c•”•ª|#C2ŠX“I—¬“®LET|Õ’d“IV–º|–‚‰¤‰ÁŽ¢¼ŽzÄ“x~—Õ|’k^›‰“I—›—ëT|RIIZEUŒ‚|ŽæÁ")
+	check_select(0)
+	on_jump PART_D01
+	check_select(1)
+	on_jump PART_D02
+	check_select(2)
+	on_jump PART_D03
+	check_select(3)
+	on_jump PART_D04
+	check_select(4)
+	on_jump PART_D05
+
+
+	jump EXIT
+
+// ŠX‚Ìƒtƒ[ƒŒƒbƒg
+PART_D01:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0097_0093")
+
+// Õ’d‚Ì‰Ô‰Å
+PART_D02:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0675_0684")
+
+// –‚‰¤ƒKƒ‹ƒVƒXÄ—Õ
+PART_D03:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+
+	ENTRY_MAP("garu_test")
+
+// ^›‰‚ðŒê‚éƒŠ[ƒ[ƒƒbƒg
+PART_D04:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+
+	ENTRY_MAP("last_boss")
+
+// ƒŠ[ƒ[UŒ‚
+PART_D05:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+	call SUB_D04
+
+	ENTRY_MAP("last_boss")
+
+
+
+
+
+
+
+
+
+
+
+//-- ƒtƒ‰ƒO§Œä ------------------------------------------------------
+FLAG_MODE:
+
+	SEL("•WŽuT§|#C2‘S•”“IŠø‰ßè|ŽæÁ‘S•”“IPORTAL|ˆò‹–‘S•”“IPORTAL|ŽæÁ")
+	check_select(0)
+	on_jump FLAG_01
+	check_select(1)
+	on_jump FLAG_02
+	check_select(2)
+	on_jump FLAG_03
+
+	jump MENU_MAIN
+
+FLAG_01:
+	call SUB_000
+	MSG("Š—L˜H•W“s›ßãS‰Žn‰»B")
+	jump EXIT
+
+FLAG_02:
+	set_game_flags(4010, 4017, 0)
+
+	MSG("Š—L™B‘—–å›ßãSè•ÂB")
+	jump EXIT
+
+FLAG_03:
+	set_game_flags(4010, 4017, 1)
+
+	MSG("Š—L™B‘—–å›ßãS”íŠJàLB")
+	jump EXIT
+
+
+
+
+
+//-- ƒAƒjƒGƒX‚É˜ð‚¢‚½‚¢ ----------------------------------------------
+
+ANIECE:
+	SEL("‘zŒ©“žˆ¢“òäˆãN|#C2ŽÖ‘O|CROIVAIŒÌš¬àe•z“Iæ‘O|‘¾ŒÃ“I–À‹{Œã”¼|–‚Ï“IX—ÑàY—Ž—¹“I’n•û|‰ÎŽR|—P‘¾‹³‹³ŽmãN|éHl–‚|éšÓà­•Ç|•sŽ€’¹“I‘üŽæÁŠl“¾|•sŽ€’¹“IèËåZŠl“¾“I|‹ô‘R“¾“ž“I’¿•i|")
+
+	check_select(0)
+	on_jump ANIECE_1
+	check_select(1)
+	on_jump ANIECE_2
+	check_select(2)
+	on_jump ANIECE_3
+	check_select(3)
+	on_jump ANIECE_4
+	check_select(4)
+	on_jump ANIECE_5
+	check_select(5)
+	on_jump ANIECE_6
+	check_select(6)
+	on_jump ANIECE_7
+	check_select(7)
+	on_jump ANIECE_8
+
+	check_select(8)
+	on_jump ANIECE_FEATHER
+	check_select(9)
+	on_jump ANIECE_POTION
+	check_select(10)
+	on_jump ANIECE_ITEM
+
+	jump MENU_MAIN
+
+//ƒTƒ‰ƒ}ƒ“ƒ_[‘O
+ANIECE_1:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3601)
+	ENTRY_MAP("0715_0716")
+
+//ƒNƒ[ƒ”ƒ@[ˆâÕ‘ë‚Ì‘O
+ANIECE_2:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3615)
+	game_flag_on(3616)
+	ENTRY_MAP("0722_0749")
+
+//çŒÃ‚Ì–À‹{Œã”¼
+ANIECE_3:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+
+	ENTRY_MAP("05b6_05b5")
+
+//–‚Ï‚ÌXU‚¯‚½‚Æ‚±‚ë
+ANIECE_4:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("0751_0738")
+
+//‰ÎŽR
+ANIECE_5:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+
+	ENTRY_MAP("082d_082e")
+
+//ƒ‰ƒrƒŠƒ“ƒX
+ANIECE_6:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+
+	ENTRY_MAP("09a5_09a6")
+
+// éƒI[ƒK
+ANIECE_7:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0618_0606")
+
+// éšÓ‚ê•Ç
+ANIECE_8:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	ENTRY_MAP("0639_0641")
+
+// •sŽ€’¹‚Ì‰H‚ðƒQƒbƒg
+ANIECE_FEATHER:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	get_item(193, 1)
+
+	ENTRY_MAP("0094_0097")
+	jump EXIT
+
+// •sŽ€’¹‚ÌèËåZ‚ðƒQƒbƒg
+ANIECE_POTION:
+	call SUB_000
+	call SUB_A00
+	call SUB_B00
+	call SUB_C00
+
+	call SUB_D01
+
+	pick_item(193)
+	get_item(194,1)
+
+	ENTRY_MAP("0639_0641")
+	jump EXIT
+
+// Œ@‚èo‚µ•¨
+ANIECE_ITEM:
+	call SUB_000
+	call SUB_A00
+
+	call SUB_B01
+	call SUB_B02
+
+	game_flag_on(3615)
+	game_flag_on(3616)
+
+	get_item(160, 1)
+	get_item(161, 1)
+	get_item(162, 1)
+	get_item(163, 1)
+	get_item(164, 1)
+	get_item(165, 1)
+	get_item(192, 1)
+	get_item(195, 1)
+
+	game_flag_on(3640)
+	game_flag_on(3641)
+	game_flag_on(3642)
+	game_flag_on(3643)
+	game_flag_on(3644)
+	game_flag_on(3645)
+	game_flag_on(3646)
+	game_flag_on(3647)
+
+	ENTRY_MAP("0722_0749")
+
+//-- ƒ{ƒX§Œä --------------------------------------------------------
+
+BOSS_MODE:
+
+	SEL("BOSST§|#C2“Á—Ï“ÚŠJŽnDà”|åqŠIGMOŠJŽnDà”|ŠEàA‹…FERUNOŠJŽnDà”|ASCOMO–{‰äŠJŽnDà”|—…èÓàÅŠJŽnDà”|GARUSISŠJŽnDà”|ŽæÁ")
+	check_select(0)
+	on_jump BOSS_01
+	check_select(1)
+	on_jump BOSS_02
+	check_select(2)
+	on_jump BOSS_03
+	check_select(3)
+	on_jump BOSS_04
+	check_select(4)
+	on_jump BOSS_05
+
+	jump EXIT
+
+BOSS_01:
+	MSG("w‘õ—‹“Úx|’Ç‰Á„‘Eåä”õB")
+	MSG("„‘E“™‹‰ˆ×7B|¿Ž©ŒÈÝ’è“™‹‰˜a–‚–@B")
+
+	call SUB_000
+	GET_ITEM()
+
+	ENTRY_MAP("0097_0093")
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒtƒ‰ƒOè˜AƒTƒuƒ‹[ƒ`ƒ“
+
+@SUB_000
+{
+	// ‘Sƒtƒ‰ƒOƒNƒŠƒA
+	set_game_flags(0, 4017, 0)
+
+	ret
+}
+
+//-- ‚`‚`‚`‚`‚`‚`‚`‚`ƒp[ƒg ------------------------------------------
+
+// ‚`ƒp[ƒg‘S•”
+@SUB_A00
+{
+	call SUB_A01
+	call SUB_A02
+	call SUB_A03
+	call SUB_A04
+
+	ret
+}
+
+// Å‰
+@SUB_A01
+{
+	game_flag_on(3500)
+
+	ret
+}
+
+// ŠX“ž’˜
+@SUB_A02
+{
+	game_flag_on(3501)
+	game_flag_on(3502)
+
+	ret
+}
+
+// ƒhƒ”ƒH‘O
+@SUB_A03
+{
+	game_flag_on(3510)
+	game_flag_on(3511)
+	game_flag_on(3512)
+	game_flag_on(3513)
+	game_flag_on(3514)
+	game_flag_on(3515)
+	game_flag_on(3517)
+	game_flag_on(3518)
+	game_flag_on(3519)
+	game_flag_on(3523)
+
+	ret
+}
+
+// ‹VŽ®‘O
+@SUB_A04
+{
+	game_flag_on(3520)
+
+	ret
+}
+
+//-- ‚a‚a‚a‚a‚a‚a‚a‚aƒp[ƒg ------------------------------------------
+
+@SUB_B00
+{
+	call SUB_B01
+	call SUB_B02
+	call SUB_B03
+	call SUB_B04
+	call SUB_B05
+	call SUB_B06
+
+	ret
+}
+
+
+// Å‰
+@SUB_B01
+{
+	game_flag_on(3523)
+
+	game_flag_on(3531)
+	game_flag_on(3532)
+	game_flag_on(3600)
+
+	ret
+}
+
+// ƒKƒ“ƒ_ƒ‹ƒ`ƒ…ƒA‘O
+@SUB_B02
+{
+	ret
+}
+
+// ƒgƒŒƒ“ƒgDŒã
+@SUB_B03
+{
+	game_flag_on(   3)
+	game_flag_on(3601)
+	game_flag_on(3602)
+	game_flag_on(3615)
+	game_flag_on(3616)
+	ret
+}
+
+// ƒxƒAƒgƒŠ[ƒ`ƒFÎ‘œ‘O
+@SUB_B04
+{
+	game_flag_on(3603)
+	game_flag_on(3623)
+	game_flag_on(3604)
+	ret
+}
+
+// ƒŠ[ƒ[‚Ì”j–‚–î
+@SUB_B05
+{
+	game_flag_on(3605)
+	game_flag_on(   1)
+	ret
+}
+
+// ƒVƒ…ƒgƒDƒ‹ƒ€Î‘œ‘O
+@SUB_B06
+{
+	game_flag_on(3606)
+
+	GET_ITEM(191, 1)
+	game_flag_on(3610)
+	ret
+}
+
+
+
+//-- ‚b‚b‚b‚b‚b‚b‚b‚b‚bƒp[ƒg ------------------------------------------
+
+@SUB_C00
+{
+	call SUB_C01
+	call SUB_C02
+	call SUB_C03
+	call SUB_C04
+	call SUB_C05
+	call SUB_C06
+	call SUB_C07
+	call SUB_C08
+	call SUB_C09
+	call SUB_C10
+	call SUB_C11
+
+	ret
+}
+
+
+// ›Þ—à‡‚Ì‹|iƒAƒjƒGƒXj
+@SUB_C01
+{
+	game_flag_on(   4)
+	game_flag_on(3617)
+
+	ret
+}
+
+// ƒŠ[ƒ[‚ª“|‚ê‚é
+@SUB_C02
+{
+	game_flag_on(3700)
+	game_flag_on(3720)
+	game_flag_on(3722)
+
+	ret
+}
+
+// ŠïŠâéoŒ»i”j–‚–îj
+@SUB_C03
+{
+	GET_ITEM(70, 1)
+	game_flag_on(3701)
+	game_flag_on(3721)
+
+	game_flag_on(3303)
+	game_flag_on(3304)
+	ret
+}
+
+// ‘ŠŽ—‚Ì“ñlié‘Oj
+@SUB_C04
+{
+	game_flag_on(3302)
+
+	game_flag_on(3702)
+	ret
+}
+
+// ’¾àÒ‚ÌƒŠ[ƒ[ié‚ÌƒCƒxƒ“ƒgŒãj
+@SUB_C05
+{
+	game_flag_on(3703)
+
+	ret
+}
+
+// ŠX‚Ì–å‚ÌŠO
+@SUB_C06
+{
+	// TK ƒVƒƒƒ‹‚Æé‚ªŒ»‚ê‚½‚±‚Æ‚É‚Â‚¢‚Ä˜b‚·
+	game_flag_on(3723)
+	game_flag_on(3704)
+
+	ret
+}
+
+// ˆÙŠEƒKƒ“ƒ_ƒ‹ƒ`ƒ…ƒA
+@SUB_C07
+{
+	game_flag_on(3705)
+
+	ret
+}
+
+// ƒhƒ”ƒHƒ‹ƒU[ƒN‚Ì”s–k
+@SUB_C08
+{
+	game_flag_on(3706)
+	game_flag_on(3724)
+	game_flag_on(3725)
+
+	ret
+}
+
+// Œ‹ŠEåä’u
+@SUB_C09
+{
+	game_flag_on(   6)
+	game_flag_on(3707)
+	game_flag_on(3708)
+	game_flag_on(3718)
+
+	ret
+}
+
+// àŸ‚«‰Ô‰Å
+@SUB_C10
+{
+	game_flag_on(3709)
+	game_flag_on(3727)
+	game_flag_on(3728)
+
+	ret
+}
+
+// ¹™˜‚Ì›Þ—à‡
+@SUB_C11
+{
+	game_flag_on(3514)
+	game_flag_on(3710)
+
+	ret
+}
+
+//-- ‚c‚c‚c‚c‚c‚c‚c‚cƒp[ƒg ------------------------------------------
+
+@SUB_D00
+{
+	call SUB_D01
+	call SUB_D02
+	call SUB_D03
+
+	ret
+}
+
+// Õ’d‚Ì‰Ô‰Å
+@SUB_D01
+{
+	game_flag_on(3711)
+	game_flag_on(3803)
+
+	// 4017	0627	ƒ|[ƒ^ƒ‹ƒGƒŠƒA‚TA’†”Õ@ŠX‚Åƒtƒ[ƒŒ‚ÌƒCƒxƒ“ƒg‹N“®‚É‚à—˜—p‚µ‚Ü‚·
+	game_flag_on(4017)
+
+	ret
+}
+
+// –‚‰¤ƒKƒ‹ƒVƒXÄ—Õ
+@SUB_D02
+{
+	game_flag_on(3800)
+
+	ret
+}
+
+
+// ^›‰‚ðŒê‚éƒŠ[ƒ[ƒƒbƒg
+@SUB_D03
+{
+	game_flag_on(3801)
+	game_flag_on(3809)
+
+	ret
+}
+
+// ƒŠ[ƒ[UŒ‚
+@SUB_D04
+{
+	game_flag_on(3808)
+
+	ret
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------
+// š05/07/04:‚Æ‚è‚ ‚¦‚¸Žè‚ÁŽæ‚è‘‚­Î”Åæ¤‚ß‚é‚æ‚¤‚É‚µ‚½‚©‚Á‚½‚Ì‚Å’Ç‹LB
+// ƒWƒƒƒ“ƒv‚¿‚á‚ñ‚É‚â‚ç‚¹‚é‚æ‚¤‚É‚µ‚½•û‚ª—Ç‚¢‚©‚àBi‚Ðj
+
+DEF("Momo2")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Momo2")
+	SET_NAME("MOMO2","Î”Â")
+	
+	get_item(270,1)
+	get_item(271,1)
+	get_item(272,1)
+	get_item(273,1)
+	get_item(274,1)
+	get_item(275,1)
+	get_item(276,1)
+	get_item(277,1)
+	get_item(278,1)
+	get_item(279,1)
+	get_item(280,1)
+	get_item(281,1)
+	pick_text_item(0)
+
+	get_item(290,1)
+	get_item(291,1)
+	get_item(292,1)
+	get_item(293,1)
+	get_item(294,1)
+	get_item(295,1)
+	get_item(296,1)
+	get_item(297,1)
+	get_item(298,1)
+	get_item(299,1)
+	get_item(300,1)
+	get_item(301,1)
+	pick_text_item(1)
+
+	add_text_time(6000000)
+
+	// EV Žè‹L‚ð—a‚¯‚½‚±‚Æ‚ª‚ ‚é
+	game_flag_on(3611)
+	// ‚aƒp[ƒgŠJŽn
+	game_flag_on(3532)
+
+MENU4:
+	MSG("”@‰Ê—v‘S•”æ¤Î”Â˜aŽè‹LC|QŠu•Ç‰®—¡“I‰Ä™Z’k’k™ÛB")
+
+//	SEL("‚Ç‚¤‚µ‚½‚ÌH|#c2Î”Â‚ðæ¤‚ñ‚Å‚à‚ç‚¤|Žè‹L‚ðæ¤‚ñ‚Å‚à‚ç‚¤|‚â‚ß‚é")
+//	check_select(0)
+//	on_jump STONE_PLATE
+//	check_select(1)
+//	on_jump NOTE_BOOK
+
+	end
+
+
+
+
+//-- Î”Â‚ðæ¤‚Þ ------------------------------------------------------
+STONE_PLATE:
+	CINEMA_ON(0)
+
+	// Î”ÂMENUŒÄ‚Ño‚µi0:Î”Â/1:Žè‹Lj
+	call_text(0)
+
+	// call_text()àA‚ÅuƒLƒƒƒ“ƒZƒ‹(12)v‚ð‘I‚ñ‚¾Žž‚Í‚±‚±‚ÅƒXƒLƒbƒv‚³‚¹‚é
+	check_sel_text(12)
+	on_jump PLATE_END
+	check_sel_text(-1)
+	on_jump PLATE_END
+
+	// Î”Â—p”wŒi‚ðæ¤‚Ý‚±‚Ý
+	load_novel_bg("epitaph\plate")
+	// Î”Â—p”wŒi•\Ž¦
+	novel_on(0)
+	wait(60)
+
+	// ‘I‚ñ‚¾Î”Â‚Éœä‚¶‚½•¶–Ê‚Ì•\Ž¦
+	check_sel_text(0)
+	on_jump Stone1
+	check_sel_text(1)
+	on_jump Stone2
+	check_sel_text(2)
+	on_jump Stone3
+	check_sel_text(3)
+	on_jump Stone4
+	check_sel_text(4)
+	on_jump Stone5
+	check_sel_text(5)
+	on_jump Stone6
+	check_sel_text(6)
+	on_jump Stone7
+	check_sel_text(7)
+	on_jump Stone8
+	check_sel_text(8)
+	on_jump Stone9
+	check_sel_text(9)
+	on_jump Stone10
+	check_sel_text(10)
+	on_jump Stone11
+	check_sel_text(11)
+	on_jump Stone12
+
+	jump STONE_END
+
+Stone1:
+		SET_MSG_TIME(5,40,50, 30)
+
+	MSG_EX("#S3#C0wà[Žj“Iã‹³ŽÒˆ¦x",-1,0X00000094)
+	MSG_EX("#S3#C0—RˆÌ‘å“Iš•K—ó‰ÂŠ¾Œš—§“IC|”íâiì“Œ¹àº“Iš “xãìãì›€“I–¼Žš‹©˜ôå“ß“xB|@|’¹Œê‰ÔA—zŒõàrŸÞ‘å’nB|@|å“ß“x[ŸÞ—¹”ü—íäo˜a•½B",-1,0X00000094)
+	MSG_EX("#S3#C0’A¥C”‡—¡‹Lq“I•À•s‘ü¥”‡±‹PàŠB|@|ˆöˆ×Ÿ›‰‹Lq”‡ŒÂš ‰Æ“Ià[Žjãìãìãì|‹Lq³Žj¥‰ä˜ì“IŽg–½B",-1,0X00000094)
+	MSG_EX("#S3#C0–³˜_¥Y›õžé“Iš ‰ÆC|—LŒõ–¾A—LàŸˆÃB|å“ß“x–ç•s—áŠOB",-1,0X00000094)
+	MSG_EX("#S3#C0à[Žj“Iã‹³ŽÒˆ¦CŠó–]”I”\—pSã×ããB",-1,0X00000094)
+	MSG_EX("#S3#C0’N”\‘zÛ“ž“ß—ßl‹°œô“IÐ“ï|™_“x‘¢–K—¹”‡ŒÂš ‰ÆB|@|‰ÁŽ¢¼ŽzãìãìŒN—ÕàT–³¢ŠE“I–‚‰¤B|‘¼¥—¦—Ì–‚•¨æøçX‰ä‘cš “I‰Â‘ž“I‘¶ÝB",-1,0X00000094)
+	MSG_EX("#S3#C0ˆöˆ×–^ŒÂl‘¢¬“I³‹`äo’˜Š—ŽC|“Œ¹àº”í“O’êÌ¬—¹ˆêŒÂ|—R—|–]˜aœ¦sŽx”z“I¢ŠEB",-1,0X00000094)
+	MSG_EX("#S3#C0’A¥C“n‰ß“ßŒÂÐ“ï“Iå“ß“x|–”ÄŽŸ‰ø•œ—¹”ÉžÄB|@|àa“¾âièñ“I¥‘Å”s–‚‰¤“I|‰ß‹Ž“IŒ«l˜a—EŽm˜ìB",-1,0X00000094)
+	MSG_EX("#S3#C0‘jŽ~‘æˆêŽŸ–‚‰¤˜ÒP“I¥|–ñ—¡“Ú‰¤äo—R¯Œõˆø“±“I¹™˜—EŽmB|@|Ž§‘jŽ~‘æ“ñŽŸ˜ÒP“I¥“¯žé˜Î—L¹™˜A|W”ü—íäo—EŠ¸‰—ˆêg“IŒöŽåB|@|–³˜_štˆêˆÊC“s‰ÂˆÈà¥Ýå“ß“x“Ià[Žjã|—i—L§‘«çjd’nˆÊ“Il•¨B",-1,0X00000094)
+	MSG_EX("#S3#C0Œõäo‰e‹¤‘¶B|@|ÝuqPŒ‚å“ß“x“IÐ“ï“I“¯Žž|–ç•K{—vuq”‡±l“IŽ–ÖB",-1,0X00000094)
+	
+
+		SET_MSG_TIME(-1,-1,-1)
+
+	jump STONE_END
+
+Stone2:
+		SET_MSG_TIME(-1,60,-1)
+
+	MSG_EX("#S3#C0w”í‘I’†“Il˜ìx",-1,0X00000054)
+	MSG_EX("#S3#C0‘¼“Ë‘RoŒ»Ý–ñ—¡“Ú‰¤“IŽž‘ãB|@|–‚‰¤‰ÁŽ¢¼Žzãìãìãì|Ž©âiŽ×œ¦”VˆÙ—´B",-1,0X00000054)
+	MSG_EX("#S3#C0‰ÁŽ¢¼Žz”cŽè‰º“I–‚•¨”h“ž‘å’nãC|ˆêuŠÔå“ß“x‘Sš èœ“ü—¹‹°•|“IŸŠ—mB|@|‘RŒã–½—ß–¼ æÎXC|Ý‰¤“s’n‰º_¹“I“´ŒŠ’†|Œš‘¢—¹ˆêÀ–‚”V“ä‹{B",-1,0X00000054)
+	MSG_EX("#S3#C0–³–@”½R‰ÁŽ¢¼ŽzC|–ñ—¡“Ú‰¤”í”—šd•û–ÊÚŽó—¹œk‘½—v‹B|@|ìˆ×å“ß“x‰¤‰ÆÛàW“IŽŠ›‰¤Š¥”í’D‘–C|¢ŠEŠáŠÅA—vèœ“üàŸˆÃ”V’†B",-1,0X00000054)
+	MSG_EX("#S3#C0å«‘R[ŸÞ—¹‹°œôäo’pJC|’A¥š ‰¤“IS•ÀŸ“—LÁŸ‰B|@|š ‰¤ÝœŸœŸ’n“™‘ÒŽž‹@“I“ž˜ÒB",-1,0X00000054)
+	MSG_EX("#S3#C0‘RŒãCÝè¯pŽm“IŽwˆø‰ºC|š ‰¤ãÚW—¹ˆê”á—L—EŽÒ“V•Š“I”NçjlB|@|”Nçj“IŽuŠèŽÒ˜ì”í‘õ•t‹‹Žµ“±ŽtC|ˆ×—¹›”R–‚‰¤Ž§–—ûgSB",-1,0X00000054)
+	MSG_EX("#S3#C0Žµ“±ŽtŠeŽ©¶ŠÇ’˜|w•xwŒ÷xw–£xwŽ¯xw’qxw–‚xw·xC|‘¼˜ì‹‹ŽuŠèŽÒ˜ì“IŽŽ—ù”ñíšŽ‰ÕB|@|’A¥CŸ“—LˆêŒÂlŒã‘ÞC|‘¼˜ì—EŠ¸’nŒü‰ÁŽ¢¼Žz“IíNŒŠãìãìãì|’n‰º–À‹{is’§DB",-1,0X00000054)
+	MSG_EX("#S3#C0‘RŒãC‘´’†ˆêŒÂl’D‰ñ—¹‰¤Š¥C|•À›æ‰ñ—¹¹™˜“j—´™˜B|@|¹™˜¥ŽëàØœ¦—´“I_”V‰pèËC|ˆ½ŽÒà¥‰»gB|@|“¾“ž¹™˜“I”Nçjl|•½ˆÀ“n‰ß‹–‘½ŽêŽ€Dà”C|I‰—›’–‚‰¤‰ÁŽ¢¼Žz“O’ê‘Å”sB",-1,0X00000054)
+	MSG_EX("#S3#C0“ßˆÊ”Nçjl¥‘½›õ—L—EŸ†C|Ž§š ‰¤“IŽuŒü–”¥‘½›õ‰“‘åˆ¦B",-1,0X00000054)
+	MSG_EX("#S3#C0”Nçjl“I—E•äoš ‰¤“IáÍ’q|‡—˜’n›’å“ß“xœn–‚’Ü’†‹~oB|@|Œ»Ý‘¼˜ì“IŽ–ÖÝš àAœAˆ×™BèñC|–ç¥—Šœäác“IB|@|•s‰ß—L±—åÉ“I¥C|”‡ŒÂ”Nçjl“I©–¼–¢”\—¬™BŒã¢B",-1,0X00000054)
+	MSG_EX("#S3#C0•sŠÇœƒžéC–‚‰¤‰ÁŽ¢¼Žz”í‘Å“|—¹C|å“ß“x–ç‰ø•œ—¹˜a•½B|@|’A¥CA‘œ”ˆÊ’m“¹“IˆêžéC|Ž–î“ž”‡—¡•ÀŸ“—LŠ®‘SŒ‹‘©B",-1,0X00000054)
+
+		SET_MSG_TIME(-1,-1,-1)
+
+	jump STONE_END
+
+Stone3:
+	MSG_EX("#S3#C0wà¨‰J“Ë‘RP˜Òx",-1,0X00000014)
+	MSG_EX("#S3#C0–³˜_ÝY›õŽž‘ã|àn–Õ“s¥“Ë‘RŽ§˜Ò“IB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý¹™˜—EŽÒäo–‚‰¤‰ÁŽ¢¼Žz“I|ŽêŽ€D“l“IŠô”N”VŒããìãìãì|@|–^ŒÂ[–éC—L–¼ŽgŽÒ‹}™°™°àF˜Ò`–K|³ÝŽ©ŒÈ‰çŽº’†—IîÌ‹x‘§“I–ñ—¡“Ú‰¤B",-1,0X00000014)
+	MSG_EX("#S3#C0•s’mˆ×‰½CˆÀ’uÝ–À‹{”V’†“I|‰ÁŽ¢¼Žz“IgàŠJŽn•œ‘hC|–¬“Ä“xŠJŽn’µ“®B",-1,0X00000014)
+	MSG_EX("#S3#C0Š´“žŽ–‘ÔšŽd“I–ñ—¡“Ú‰¤|›’‘\ãSŒP—û‰ß¹™˜—EŽm“I|Žµ“±Žt¢W“ž‰¤éB|@|‘åŠT¥ˆ×—¹¤‹c›”•t|ŠJŽn‘hÁ“I‰ÁŽ¢¼Žz“I›”ô™ÛB",-1,0X00000014)
+	MSG_EX("#S3#C0Ÿà‘¼˜ì“I“¢˜_•s•ªê–é|˜Aã”is—¹®®Žµ“VB|@|Ý“±Žt˜ì˜Ò“ž‰¤é”VŒã“I‘æ”ª“V‘ãC|I‰—“¾o—¹ˆêŒÂŒ‹˜_B",-1,0X00000014)
+	MSG_EX("#S3#C0›’‰ÁŽ¢¼Žz“Igà‰^“ž‰¤éC|ˆ×—¹••ˆó‘¦›’‘hÁ“I–‚‰¤|Ž§’£ŠJ‹­‘å“IŒ‹ŠEB",-1,0X00000014)
+	MSG_EX("#S3#C0–ñ—¡“Ú‰¤”C–½Ž©ŒÈ“Ie¶—™Zˆ×›Þ—C|–½‘´I¶••ˆó–‚‰¤‰ÁŽ¢¼ŽzB|@|‘RŒãC–½—ßŽµ“±Žt˜ì•ã²›Þ—B|@|‰¤‰Æ“I’·—‘ã‘ãã‹³••ˆó“IŽg–½C|A¥œn”‡ŒÂŽžŒóŠJŽn“IB",-1,0X00000014)
+	MSG_EX("#S3#C0ªŸ–ñ—¡“Ú‰¤“I”»ÐCŸŒãÉ•S”NŠÔå“ß“x“s”\•ÛŽ˜a•½B|@|Ý”‡’iŽžŠÔ—¡Cå«‘R–ç‹ô—Lˆöˆ×—¬™B’˜|‰ÁŽ¢¼Žz‘¦›’•œŠˆ“I™B•·Ž§•sˆÀ’è“IŽžŒóC|’A¥C”‡±•ÀŸ“—L‹LÚÝ³Žj’†B|@|›”l–¯˜ÒàCå“ß“xˆê’¼“s¥“Œ¹àºB",-1,0X00000014)
+	MSG_EX("#S3#C0Ÿ“öcc’¼“ž“ßŒÂ—loŒ»ãìãìãì",-1,0X00000014)
+	jump STONE_END
+
+Stone4:
+	MSG_EX("#S3#C0w•s”íj•Ÿ“IV–ºx",-1,0X00000014)
+	MSG_EX("#S3#C0è‰—àŸFV–ºoŒ»Žž“IŽ–î|ácŽž“I‘‹LŠ¯‹LÚ“¾”ñíÚ×B|@|‰º–ÊAˆø—p‘´’†“IàA—eB",-1,0X00000014)
+	MSG_EX("#S3#C0‘œ¡“V”‡žé“I•sË“úŽq|¥‘z–Y–ç–Y•s{“IB",-1,0X00000014)
+	MSG_EX("#S3#C0•‡—…åQ“ÁŒöŽåŒ}˜Ò—¹‚P‚Uà}“I¶“úC|–{œä¥ŒÂ•“V“¯Œc“I“úŽqãìãìãì|@|“ß¥á¢¶ÝŒöŽå¶“ú“TâXŒ‹‘©”VŒãA|›Þ—“Iã‹”C‹VŽ®ŠJŽn”V‘O“IŽ–îB",-1,0X00000014)
+	MSG_EX("#S3#C0gúàŸFâX•ž“I“ßŒÂ—l|—I‘R’noŒ»Ý‰ä˜ì“I–Ê‘OB|@|Ý‰ä˜ìå“ß“x“IžÜˆÐ–Ê‘O|“ß˜ü–“I—lŠJŒûéàD—¹“ßŒŽ–îB",-1,0X00000014)
+	MSG_EX("#S3#C0ç»à••ˆóÝ‰¤é“I|–‚‰¤‰ÁŽ¢¼Žz›ßãS”í‰ð•ú—¹ãìãìãì",-1,0X00000014)
+	MSG_EX("#S3#C0Ž§ŠŽ•sŽ~”@ŸB|@|ç»ŠÒ•s‰Â—šg’nŽ©âiˆ×–‚‰¤“IV–ºB",-1,0X00000014)
+	MSG_EX("#S3#C0Ýê“Il˜ì“s•s—R“¾á¢ÎB|@|–Ó–Ú‘ŠM‰ÁŽ¢¼Žz“Il|‘¦Žg¥Œ»Ý–çŠÒ—L•s­B|@|l˜ìˆÈˆ×“ßŒÂ—l–ç¥ˆêŒÂá†‹¶“IM“kB|—LlŠJŽnç¿Ž‹˜a™î”lç»B",-1,0X00000014)
+	MSG_EX("#S3#C0’A¥Cl˜ì“IÎ—e|Ý‰ºˆêŒÂuŠÔ‹ÃŒÅ—¹B",-1,0X00000014)
+	MSG_EX("#S3#C0‘ã•\’˜›”•‡—…åQ“ÁŒöŽåj•Ÿ“I|äÝ—¢–³‰_“I°‹óçzŠáŠÔ‰G‰_–§àDB|@|‘RŒãCÝ“d‘M—‹–Â“I“¯Žž|–‚‰¤‰ÁŽ¢¼Žz“Iãß‰¹|‹¿“Oå“ß“x‘S‹«B",-1,0X00000014)
+	MSG_EX("#S3#C0”‡¥ÝŒü®ŒÂ‰¤š éDB|@|Ý“Œ¹àºå“ß“xC|‹°œôäo¬˜ª“IŽž‘ãÄ“x“ž–KB",-1,0X00000014)
+	MSG_EX("#S3#C0“ßŒÂ—ŽqŠm›‰äo–‚‰¤‰ÁŽ¢¼Žz|’÷Œ‹—¹¬ˆ×•v•w“IŒ_–ñB|@|ìˆ×l—Þ™È‰ð•ú–‚‰¤A|§‹N”½”¾å“ß“xŠø›î“I—lãìãìãì|@|l˜ì”cç»âiìwàŸFV–ºxB",-1,0X00000014)
+	jump STONE_END
+
+Stone5:
+	MSG_EX("#S3#C0w¯Œõ‘Mà¡“I’n•ûx",-1,0X00000014)
+	MSG_EX("#S3#C0éD”VŒãC|š ‰¤—§‰º—ß’Ç“¢|–‚‰¤‰ÁŽ¢¼Žz˜aàŸFV–ºB",-1,0X00000014)
+	MSG_EX("#S3#C0Žó–½“I¥›’ŒRŠ¢”[”g“Á|˜a‘´Ÿ€‰º“I¸‰s•”‘àB|@|š ‰¤›’¹™˜‘õ•t‹‹‘¼˜ìC|‘ÅŽZˆÈŸ“¢”°‰ÁŽ¢¼ŽzB",-1,0X00000014)
+	MSG_EX("#S3#C0”@‰Ê”I—pS‰{æ¤”V‘O“I•¶ÍC|Ý”‡—¡œäŠY˜ð—LˆêŒÂ‹^–âB|@|›”CˆÈ‘O‰ÁŽ¢¼Žz˜ÒP“IŽžŒó|š ‰¤ãÚW—¹ˆê”á”NçjlC—RŽµ“±Žt˜ÒŒP—û‘¼˜ìB|@|‘´’†“IˆêlŽèŽ¹™˜|“O’ê‘Å”s—¹‰ÁŽ¢¼ŽzB",-1,0X00000014)
+	MSG_EX("#S3#C0”‡ŽŸˆ×Y›õ•s˜ô“¯žé“IŽ–îšCH|‘´’†ˆêŒÂ——RA¥¯¯“IŽ·sB",-1,0X00000014)
+	MSG_EX("#S3#C0ˆÈ‘OãÚW”Nçjl“IŽžŒóC|‰G‰_–§àD“I“V‹ó’†C|ŽOè÷¯¯‡¬—¹ˆêè÷Càƒàƒ¶‹PB|@|”‡ŽOè÷¯¯”íâiìŠó—®‰Á”V¯C|Ž—ŒÁíP‰ßŽO•S”NA‡•¹¬ˆêè÷B|@|Ž©ŒÃˆÈ˜ÒA”íácì¥‹g’›C|•ÀŠŽ”íácì¥—EŽÒoŒ»“I•WŽuB",-1,0X00000014)
+	MSG_EX("#S3#C0’A¥CàŸFV–ºŽg–‚‰¤•œŠˆ|¥˜A–½‰^—_“sŸ“—L—a—¿“ž“IB|@|ŸŽžCŠó—®‰Á”V¯•À–¢‡•¹C|ŽOè÷¯¯ŠeŽ©‘M—s’˜Œõ‹PB|@|—EŽÒ“IoŒ»Ÿ|–³Šó–]B",-1,0X00000014)
+	MSG_EX("#S3#C0Ý•sˆÀäoÅçNŒðö“I‰¤é’†C|–”á¢¶—¹ˆêŒŽ–îB|@|••ˆó”V›Þ—•‡—…åQ“ÁŒöŽå|œné’†Ž¸çF—¹B|@|Ú’˜CŽµ“±Žt–çŽ¸çF—¹B",-1,0X00000014)
+	jump STONE_END
+
+Stone6:
+	MSG_EX("#S3#C0w•sŸd“IŒöŽåx",-1,0X00000014)
+	MSG_EX("#S3#C0ªŸ•¶àÙ‹LÚC|•‡—…åQ“ÁŒöŽåŠJ˜NŠˆ”¬Ž§ŠŽ•¶•Œ“”õC|”õŽól–¯“I’ŒhB|@|ç»Ý‚P‚Uà}Žž¬ˆ×••ˆó”V›Þ—C|¥àCŠŽü’m“IŽ–îC|’A¥›‰ÛãÝ”‡”V‘O“IŽ–î|l˜ì“s•s‘¾—Ä‰ðB",-1,0X00000014)
+	MSG_EX("#S3#C0ŠÒ—LC“¯Žµ“±Žtˆê‹N|œnå“ß“xÁŽ¸“I•‡—…åQ“ÁŒöŽå|“ž’ê‹Ž—¹št—¡šCH",-1,0X00000014)
+	MSG_EX("#S3#C0è‰—Ý”‡ˆÈŒã“IŽ–î|‰ä‘z”ˆÊÝ”N—c“IŽžŒóA’m“¹™ÛB|@|•ÀŸ“—L—¯‰º³Ž®“I‹LàhC|‘ü—LácŽž“I™Bà—¬™B’˜•‡—…åQ“ÁŒöŽå“I‰º—ŽB",-1,0X00000014)
+	MSG_EX("#S3#C0ˆöˆ×Åqà[Žj^‘Š¥‰ä“IŽåŽ|C|ŠˆÈ‰º–Ê“I•`q‹Íìˆ×™Òl‹LÚ‰º˜ÒB",-1,0X00000014)
+	MSG_EX("#S3#C0ÅŒãŠm”F“ž•‡—…åQ“ÁŒöŽå“™l“IsçF|¥Ý—ÑàŽ¢’n™½B|@|˜Î‘Õ’˜Œõ‹P“IžÄæ£”V™˜ãìãì“j—´™˜C|•‡—…åQ“ÁŒöŽå³ÝqQ|oŒ»Ý–¶’†“I•s‰ÂŽv‹c“IéšÆB",-1,0X00000014)
+	MSG_EX("#S3#C0“ß³¥å“ß“x“I³‹KŒR|ãR–½qQ“I‰ÁŽ¢¼Žz“I‘å–{šzãìãìŠïŠâéB",-1,0X00000014)
+	MSG_EX("#S3#C0äoŽµ“±Žtˆê“¯i“üŠïŠâé“I•‡—…åQ“ÁŒöŽå|›”–‚‰¤‰ÁŽ¢¼Žz˜aàŸFV–º‹‡’Ç•sŽÌB|@|èËŠˆŽ©”@’n‘€ãs¹™˜“IgŽp|A˜A–²Œ¶”VŽçŒì¸èËãìãì—•_ŠÅ“ž—¹|–ç˜ðšsšsâiŠï™ÛB",-1,0X00000014)
+	MSG_EX("#S3#C0‘RŒãCãS‰ßŽµ“V“IŒƒDC|•‡—…åQ“ÁŒöŽå“I¹™˜|I‰—›’‰ÁŽ¢¼Žz“I‹‘å“ªà±áç‰ºB|@|ˆöˆ×ä•vŽ€‹ŽŽ§Ž¸‹Ž—Í—Ê“IàŸFV–º|Ÿ‰“ü—¹[[“IŠïŠâé“IŒÎ’êC|‰i‰“Ÿ‰‡‰º‹Žãìãìãì",-1,0X00000014)
+	MSG_EX("#S3#C0”‡¥ŒÃ˜V“I™BàC|ŠˆÈ•s’m“¹‘´’†—L‘½­¥^›‰“IB",-1,0X00000014)
+	MSG_EX("#S3#C0’A¥C•‡—…åQ“ÁŒöŽåŽ¸çFˆêŒÂ‘½ŒŽ”VŒãC|–‚‰¤ŒR‘à“IiU“Ë‘R’âŽ~™È¥Ž–›‰B|@|ˆÐ‹º’˜å“ß“x“I‰ÁŽ¢¼ŽzäoàŸFV–º|ŸŒã–çœn–¢ÄoŒ»‰ßB",-1,0X00000014)
+	MSG_EX("#S3#C0œnŒ»Ý“IæÁ‹µ˜ÒŠÅC|˜a¹™˜ˆê‹NŽ¸çF“I•‡—…åQ“ÁŒöŽå|”íl–¯‘zÛA™Bèñ–ç¥—Šác‘R“IB",-1,0X00000014)
+	MSG_EX("#S3#C0Œ»Ý•‡—…åQ“ÁŒöŽå|”íácì¥äoŠJš Œ³™¬š•K—ó‰ÂŠ¾|‘Š’ñ•À˜_“I‰p—YB|@|Ž©œn“ßŒŽ–îˆÈ˜ÒC’¼ŽŠ¡“ú|å“ß“x“s‹Žó’˜–³á¶“I˜a•½äo”ÉžÄB",-1,0X00000014)
+	MSG_EX("#S3#C0AŽZ¥Ç’Ç‹à[Žj^‘Š“I‰äC|ˆê‘z‹NŠö•‘’˜¹™˜“I•‡—…åQ“ÁŒöŽå“IgŽpC|–ç•s—R“¾S’ªàOŸÚB",-1,0X00000014)
+
+	jump STONE_END
+
+Stone7:
+	MSG_EX("#S3#C0w¸èËäoà[Žjx",-1,0X00000014)
+	MSG_EX("#S3#C0’k’kè‰—å“ß“xäoŽçŒì¸èË“IèŒn™ÛB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý‰ÁŽ¢¼Žz”í••ˆóÝ‰¤é”VŒãC|å“ß“xŒšÝ“¾”äˆÈ‘OX‰Á”ÉžÄB|@|‘´’†ˆêŒÂd—v“IŒ´ˆö|A¥—LŽçŒì¸èË“I‘¶ÝB",-1,0X00000014)
+	MSG_EX("#S3#C0àCŠŽü’mCŽçŒì¸èË¥ˆêŽí|lÝ„o¶“IŽžŒóÚŽóôâX|•Àæ¨‘´ŠñhÝààA“I¸èËB",-1,0X00000014)
+	MSG_EX("#S3#C0Œ»ÝŽçŒì¸èË›ßãSœAˆ×l’mC|’A›€˜ì–{˜Ò¥ÝŽ©‘RŠE‘¶Ý“I¸èËB|@|ˆÈ¸èËˆ×”}‰îŠ²à~Ž©‘RŠE“I—Í—ÊC|›€‰ÂˆÈ‰ü‘Pˆ½ŽÒàš‹­l¶äo¶‹ä˜Ò“I|«ŠiAà—ÍA‰^Ÿ†A–‚—Í“™“Á«B",-1,0X00000014)
+	MSG_EX("#S3#C0~•ž‘¼˜ì•À›’‘¼˜ìŠñhÝlà’†“I›Þp|¥••ˆó”V›Þ—äoŽµ“±Žt˜ì‘zo˜Ò“IB",-1,0X00000014)
+	MSG_EX("#S3#C0íPác¢‘ãX‘Ö“IŽžŒóC|•‰ÓŠÄŽ‹–‚‰¤“I‘¼˜ì“I••ˆóp|A˜ðŒüX‚ŠK•Êá¢“WB|@|“ßŽž“I›Þ—’ñoŒš‹cC|Šó–]ŠñhŽçŒì¸èË“I‹VŽ®|”\•ž–±‰—•S©B",-1,0X00000014)
+	MSG_EX("#S3#C0ŸŒãCÝå“ß“x“IŽå—véŽs—¡|ˆ×—¹isôâX˜a~èË‹VŽ®“I¸èË“°|ˆêŒÂÚˆêŒÂ’nŒš—¹‹N˜ÒB|@|é’Á—¡˜aŠX“¹“IÓç²|‹Ÿ•ò’˜ŽçŒì¸èË“IÎ”è˜aâK“°ç¬™|‰ÂŒ©B",-1,0X00000014)
+	MSG_EX("#S3#C0•êeˆêç²—pŽœˆ¤“I–ÚŒõŠÅ’˜Ž©ŒÈ“I›wŽqC|ˆêç²È’˜¸èË“°“I–åC|”‡îŒi”@¡›ßãSœkíŒ©—¹B",-1,0X00000014)
+	jump STONE_END
+
+Stone8:
+	MSG_EX("#S3#C0wŽl’¸‰¤Š¥x",-1,0X00000014)
+	MSG_EX("#S3#C0—‹”äŽ|ŒÉšúŠî|‘×žO|HŠi—®ˆÉèÓŽz|@|‘ü—v¥å“ß“x“I‹–¯C|“sœäŠYããà‰ß”‡±–¼ŽšB",-1,0X00000014)
+	MSG_EX("#S3#C0”‡¥å“ß“x“IŽŠ›ãìãìãì|Žl’¸‰¤Š¥“I–¼ŽšB",-1,0X00000014)
+	MSG_EX("#S3#C0Ýå“ß“xC–³˜_“IštŒÂ“Ž¡ŽÒ“s‰ÂˆÈæš–¾C|”‡Žl’¸‰¤Š¥¥”ä‹ÊŽ£ŠÒd—v“I“Œ¼B|@|’A¥C›€^³“IˆÓ‹`|‘ü—L‰¤Žº¬ˆõË’m“¹C|ŠˆÈŒ»Ý•s”\Ý”‡—¡‹LÚB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý—EŽÒ‘Å“|‰ÁŽ¢¼Žz“IŽžŒóC|Žl’¸‰¤Š¥¥•K{“I•¨•iC|ŠˆÈ„‘ª”‡Žl’¸‰¤Š¥èªåU’˜“ÁŽê“I—Í—ÊB|@|ŸŒã›Þ—••ˆó–‚‰¤“IŽžŒó|–çŽù—v”‡Žl’¸‰¤Š¥“I—Í—ÊB",-1,0X00000014)
+	MSG_EX("#S3#C0‰ÁŽ¢¼Žz“üNŽžÅæ—v‹“IA¥|›’”‡Žl’¸‰¤Š¥Œð‹‹‘¼B|@|“ßŽž“Iš ‰¤–ñ—¡“Úˆ×—¹•ÛŒìl–¯C|Ÿ|•s—P˜¬’n“šœä—¹”‡ŒÂ—v‹C|•s‰ß‘¼“IS—¡“ž’ê—LY›õ‘ÅŽZšCB",-1,0X00000014)
+	MSG_EX("#S3#C0ŸŒãC—R‰—¹™˜—EŽÒ“IŠˆ–ôC|‰¤Š¥–”dV‰ñ“ž—¹‰¤‰ÆŽè’†C|’A¥Œ»Ý’N–ç•s’m“¹‰¤Š¥ÝY›õ’n•ûB|@|ˆöˆ×Œã˜Ò“I–^ŽŸ•sKŽ–ŒC|Žl’¸‰¤Š¥ÄŽŸ”íŽ×œ¦ŽÒ’D‘–B",-1,0X00000014)
+	MSG_EX("#S3#C0›”CA¥ˆöˆ×àŸFV–ºB",-1,0X00000014)
+	jump STONE_END
+
+Stone9:
+	MSG_EX("#S3#C0w¹™˜äo›Þ—x",-1,0X00000014)
+	MSG_EX("#S3#C0è‰—¹™˜“j—´™˜“IŽ–î|–ç¥•K{—v’k“ž“IB",-1,0X00000014)
+	MSG_EX("#S3#C0“j—´™˜A¥‘\ãS‘Å“|–‚‰¤‰ÁŽ¢¼Žz“I—EŽm|Žg—p“I¹™˜“I–¼ŽšB|@|¹™˜–{˜Ò¥œk‹vˆÈ‘O|Á–Åœ¦—´“I_“I‰»gB|@|›€•s‹Í—L‘Å”s–‚—´“I—Í—ÊC|ŠÒ”\àB•ÛŒì—i—L›€“IlC|Ž’—\‘¼ˆÌ‘å“I—Í—ÊB",-1,0X00000014)
+	MSG_EX("#S3#C0‰¤‰ÆŠQœ†”‡”c™˜‘œ‰¤Š¥ˆêžé|”íŒð“žŽ×œ¦“IlŽè’†B|@|ˆöŸ•½Žž¹™˜•ÛŠÇÝY›õ’n•û¥•sŒöŠJ“IB",-1,0X00000014)
+	MSG_EX("#S3#C0–ç—Llà¥—R••ˆó”V›Þ—˜ÒŠÇ—“IC|’A¥Ž–“ž”@¡–çŸ“—LàH–@læš—¹B|@|ˆöˆ×¹™˜”í•‡—…åQ“ÁŒöŽå›æo‰¤é”VŒãC|AŸ“—Ll’m“¹›€“I‰º—Ž—¹B",-1,0X00000014)
+	MSG_EX("#S3#C0‘¦Žg”@ŸCìˆ×••ˆó”V›Þ—C|gãŒ¨•‰“IÓ”C–ç¥œkd‘å“IB|@|ç»˜ìÝ‚P‚Uà}Žž”í•Š—\Žg–½C|’¼“ž‰ºˆêŒÂ›Þ—¬’·“ž‚P‚Uà}C|“s•K{¿Ý–‚‰¤‘O–Ê•ÛŒì••ˆóB|@|”‡ŒÂ”C–±Ž©œn‰ÁŽ¢¼Žz”í••ˆóˆÈ˜ÒC|Šô•S”N˜Òˆê’¼‘ã‘ãã‹³‰º‹ŽB",-1,0X00000014)
+	MSG_EX("#S3#C0ããà^•‰”‡ŒÂŽg–½“I‰¤‰Æ“I’·—|Ž©œšŽ–‹NA•K{isšŽ““I›Þ—CsB|@|AŽZà¥”N—c“I›Þ—Œ¨•‰’˜å“ß“x“I˜a•½–ç•sˆ×‰ßB|@|’A¥Cˆ×ç»˜ì‰ß‰—Ÿk““IŽg–½‘Å‰º‹xŽ~•„“Il|³¥‘O–Êu“ž“I•‡—…åQ“ÁŒöŽåB",-1,0X00000014)
+	jump STONE_END
+
+Stone10:
+	MSG_EX("#S3#C0wŽµ“±Žtx",-1,0X00000014)
+	MSG_EX("#S3#C0Žµ“±Žt–{˜Ò¥ˆ×—¹ŒP—û”\äo‰ÁŽ¢¼Žz|D“l“I—EŽÒŽ§”í¢W‹N˜Ò“Il˜ìB|@|‘¼˜ìŽí‘°•s“¯C”N—îŠeˆÙC|¥œnå“ß“xŠe’n¢W˜Ò“IC|íPŒÂl“s”íš ‰¤Šñ—\—¹Œú–]B",-1,0X00000014)
+	MSG_EX("#S3#C0‰ÁŽ¢¼Žz”í—EŽÒ‘Å“|ŒãC|‘¼˜ì“IÓ”CA¥•ã²is••ˆó“I›Þ—B|@|Žµ“±Žt¥••ˆó›Þ—“IŽ˜•òŽÒA|ŒX‘i›”ÛC–ç¥ŠÄŽ‹ŽÒB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý•‡—…åQ“ÁŒöŽå¬ˆ×›Þ—”V‘OC|Žµ“±Žt–ç‘Io—¹V“Iã‹”CŽÒB",-1,0X00000014)
+	MSG_EX("#S3#C0“ßŽž“IŽµ“±Žt¥F|@|w•x”V“±Žtà—€‰ÄŽ|wŒ÷x”V“±Žt„’BŽ¢Šï|w–£x”V“±Žt—ŒåQàÅ|wŽ¯x”V“±Žt’ñŸ^”b“Á|w’qx”V“±Žtˆ¢”b“ƒf™û|w–‚x”V“±ŽtŠL˜±“Á—¢Šï|w·x”V“±ŽtC“ÁˆÐŽ¢›G",-1,0X00000014)
+	MSG_EX("#S3#C0‘¼˜ì˜a•‡—…åQ“ÁŒöŽåˆê‹N|Ý‰ÁŽ¢¼Žz”VD’†”íŠñ—\œk‘åŠú–]B|@|Ÿ‹LÚC‘¼˜ìäo–‚‰¤ŒR“IDà”ˆÙíŒƒ—óB|@|–ç‰ÂˆÈà”\›’‰ÁŽ¢¼Žzà’€A|Žg˜a•½dŸdå“ß“x“s¥‘õ‘¼˜ì“I•ŸB",-1,0X00000014)
+	MSG_EX("#S3#C0”‡›õà˜ÒC’²àz‰ß“ß±‹Làh”VŒãC|—LˆêŒÂ’n•ûæ¨‰äœkÝˆÓB",-1,0X00000014)
+	MSG_EX("#S3#C0“±Žt—ŒåQàÅãìãìãì|è‰—ç»“I‹IàhŠ®‘SŸ“—L—¯‰º˜ÒB",-1,0X00000014)
+	MSG_EX("#S3#C0¥ÝD‰Î’†ÁŽ¸—¹šCC|—}ˆ½¥Y›õlˆ×—¹–^Ží–Ú“I|›’‘´–„‘’Ýà[Žj“IàŸˆÃ”V’†šCcc|@|˜a‰¤Š¥äo¹™˜“IsçFˆêžéC|Œ»Ý›ßãS–³l’múB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý”@¡“Iå“ß“xC|ˆöˆ×–‚‰¤‰ÁŽ¢¼Žz›ßãS•sÝ—¹C|••ˆó”V›Þ—˜aŽµ“±Žt“I§“x–ç”íœEœB|@|’A¥C‰ä˜ì˜ð›’‘¼˜ì“I–¼Žš|˜a‘¼˜ì“IŒ÷Ñ‰i‰“–ÁS’†B|@|Šó–]‰p—Y•‡—…åQ“ÁŒöŽå|˜aŽµ“±Žt“I‰pèË”\àBˆÀ‘§B",-1,0X00000014)
+	jump STONE_END
+
+Stone11:
+	MSG_EX("#S3#C0wàŸˆß“IV–ºx",-1,0X00000014)
+	MSG_EX("#S3#C0‰Å‹‹–‚‰¤‰ÁŽ¢¼Žz“Il—Þ—›wãìãìãì|ç»A¥àŸFV–ºB",-1,0X00000014)
+	MSG_EX("#S3#C0ç»‹Â“ªŒü“VC‘¾—zA”íŽÕZB|ç»›’™ÔŽè§‹NCA˜ðv‹N’¼’B“VÛ“I‰Î’ŒB|@|ˆöˆ×ç»äo‰ÁŽ¢¼ŽzŒ‹‡C|“¾“ž—¹’´‰zl—Þ’qŒd“I—Í—ÊB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý‰ÁŽ¢¼Žzäoå“ß“x“IDà¥ŠJŽn”VŒãC|àŸFV–ºìˆ×–‚‰¤“IŽgŽÒ|àqŽŸ‘¢–Kå“ß“x“I‰¤éB|@|AŽZ¥”‡žéC|àŸFV–º“ž’ê¥—pY›õ•û–@|äo”í••ˆóÝ‰¤é’†žâ“I‰ÁŽ¢¼ŽzÚæ\“IšCB",-1,0X00000014)
+	MSG_EX("#S3#C0Ý‰ÁŽ¢¼Žz”í••ˆóŠúŠÔC|œ—¹›Þ—˜aŽµ“±Žt”VŠOC|ŠÒˆÀ”r—¹‹–‘½‰qŽmCŒx”õœäŠY”ñíXšŽB|@|ç»”\àuàuäo‰ÁŽ¢¼ŽzÚæ\C|à–¾ç»œäŠY¥—i—L‹­‘å—Í—Ê“I–‚pŽtC|ˆ½ŽÒ¥‰¤‰ÆàA•”“IlH",-1,0X00000014)
+	MSG_EX("#S3#C0è‰—ácŽž“I‹Làh|–ç—Lˆê±‰Â‹^“I’n•ûB|@|”ä”@d—vß”Æ“I–¼Žš|ÝŠ¯•û³Ž®“I‹Iàh—¡“s—L‹LÚB",-1,0X00000014)
+	MSG_EX("#S3#C0’A¥CŠ—L“I‹Làh’†|“sâiŒÄç»ˆ×wàŸFV–ºxB|@|‰ä›’‘½”N˜Ò“IŒ¤‹†œbW‹N˜ÒC|–çŸ“—LQ“ž–¾Šm‹LÚç»“I–¼Žš“IŽ‘—¿B|@|íO˜Å¥ˆ×—¹—vèªåUY›õŽ–îˆêžéC|Ý”C‰½’n•û“sŸ“—L‹Làhç»“I–¼ŽšB",-1,0X00000014)
+	jump STONE_END
+
+Stone12:
+	MSG_EX("#S3#C0w”ßŒ€“I–¼ x",-1,0X00000014)
+	MSG_EX("#S3#C0Ýå“ß“x‰¤š “I’n‰º|‘\ãS—LˆêŒÂ_¹“I“´ŒŠB|@|Ý“´ŒŠ’†ˆÈ˜±˜Å‰Íˆ×’†S|’“ü—¹ŠôžŠ´à«“IŸâ—¬C|Ý“ß—¡Œ`¬—¹ˆêŒÂ‘åàe•zB",-1,0X00000014)
+	MSG_EX("#S3#C0Ÿà‘¾‘cš•K—ó‰ÂŠ¾–ç—Và[‰ß|“ß‹K–ÍG‘å“I…’rB|@|ÝácŽž“I‘’†‘\—L”‡žé“I‹LÚãìãìãì|w”@^³“I“Œ¹àºˆêžé“IŒiæVxB",-1,0X00000014)
+	MSG_EX("#S3#C0’A¥CÝ–ñ—¡“Ú‰¤“IŽž‘ãC|–‚‰¤‰ÁŽ¢¼Žz˜Ò“žå“ß“x”VŒãC|_¹“´ŒŠ“Iî‹µAŠ®‘S‰üÌ—¹B",-1,0X00000014)
+	MSG_EX("#S3#C0‘åŠT¥ˆöˆ×–‚–@“I‰e‹¿C|‰Í…Š£Ÿ¿A•sË“IŠâÎ‘p¶C|•s‹vAÌ¬—¹–‚•¨±‘§“IíNŒŠB|@|“Ž¡å“ß“x“I‰ÁŽ¢¼Žz|›””‡ŒÂ“´ŒŠ–ç\•ªè’B",-1,0X00000014)
+	MSG_EX("#S3#C0ˆ×—¹–À˜fŽ©ŒÈ“I“GlC|–‚‰¤–½—ß–ñ—¡“Ú‰¤›’”‡ŒÂ“´ŒŠ‰ü‘¢¬–À‹{B|@|³ˆöˆ×”‡—¡¥“Œ¹àº“IÛàWC|ŠˆÈå“ß“x“Il–¯\•ª•®“{B|@|’A¥CŸ“—Ll”\àB”½R‰ÁŽ¢¼ŽzB",-1,0X00000014)
+	MSG_EX("#S3#C0™B•·ÝŒv˜aŒš‘¢–À‹{“I¥|”í‰ÁŽ¢¼Žz›æ‘–“I–¼ æÎXB",-1,0X00000014)
+	MSG_EX("#S3#C0æÎX•s‹ÍÝŒš’z—Ìˆæ—Lœk‘½¬AC|Ž§ŠŽÝ“ú—p•iA•ºŠíAåZ›{“™Š—L—Ìˆæ|“s˜ôo‰ß‹‘å“IvàÙB|@|‘¼“IåZ‘\ãS›’š ‰¤œnç”N–²“IÜ–’†|‰ð‹~o˜Ò“IŽ–î›ßãS”í™Bˆ×‰À˜bB",-1,0X00000014)
+	MSG_EX("#S3#C0ŸŒãŸàæÎXŠÒŒš‘¢—¹‰ÁŽ¢¼Žz‹Z“IéšÆC|’A¥•À•s”\Šm’è”‡ŒŽ–“I^›‰«B|@|è‰—‰ÁŽ¢¼Žz“IéšÆC•s—và›€“IŠÝ”V™|C|A˜A›€¥”Û‘¶Ý“s•s”\Šm’èB",-1,0X00000014)
+	MSG_EX("#S3#C0Ž§ŠŽCæÎXÄ–çŸ“—L‰ñ“žå“ß“xB",-1,0X00000014)
+	jump STONE_END
+
+STONE_END:
+	// Î”Å—p”wŒiÁ‹Ž
+	novel_off(0)
+
+	// Ä‚ÑÎ”ÅMENU‚Ö
+	jump STONE_PLATE
+
+//-- Žè‹L‚ðæ¤‚Þ ------------------------------------------------------
+NOTE_BOOK:
+	CINEMA_ON(0)
+
+	// Î”ÂMENUŒÄ‚Ño‚µi0:Î”Â/1:Žè‹Lj
+	call_text(1)
+
+	// call_text()àA‚ÅuƒLƒƒƒ“ƒZƒ‹(12)v‚ð‘I‚ñ‚¾Žž‚Í‚±‚±‚ÅƒXƒLƒbƒv‚³‚¹‚é
+	check_sel_text(12)
+	on_jump PLATE_END
+	check_sel_text(-1)
+	on_jump PLATE_END
+
+	// Î”Â—p”wŒi‚ðæ¤‚Ý‚±‚Ý
+	load_novel_bg("epitaph\paper")
+	// Î”Â—p”wŒi•\Ž¦
+	novel_on(0)
+	wait(60)
+
+	// ‘I‚ñ‚¾Î”Â‚Éœä‚¶‚½•¶–Ê‚Ì•\Ž¦
+	check_sel_text(0)
+	on_jump Note1
+	check_sel_text(1)
+	on_jump Note2
+	check_sel_text(2)
+	on_jump Note3
+	check_sel_text(3)
+	on_jump Note4
+	check_sel_text(4)
+	on_jump Note5
+	check_sel_text(5)
+	on_jump Note6
+	check_sel_text(6)
+	on_jump Note7
+	check_sel_text(7)
+	on_jump Note8
+	check_sel_text(8)
+	on_jump Note9
+	check_sel_text(9)
+	on_jump Note10
+	check_sel_text(10)
+	on_jump Note11
+	check_sel_text(11)
+	on_jump Note12
+
+	jump NOTE_END
+
+Note1:
+	MSG_EX("#S3#C0ˆê“ñˆêZ”N@‹Ž””VŒŽ“ñ\ŽO“ú™Ò‰Á",-1,2)
+	MSG_EX("#S3#C0œn¡“VŠJŽn›Ž©ŒÈ“IŽè‹LB|@|•s¥—v‹‹Y›õlŠÅC|Ž§¥ˆöˆ×—LlŒš‹c‰ä‹L‰ºŠeŽíŽ–î|ˆÈ•Öìˆ×›’˜Ò“I™ÒlB",-1,2)
+	MSG_EX("#S3#C0˜aˆ·ˆ·•s“¯Cˆöˆ×‰ä˜ôŽ–ã`¥Ÿ“’·«C|ŠˆÈ•s’m“¹”\”Ûã‹ã”‰º‹ŽC|A”c‘z“ž“I˜aŠ´Žó“ž“I“Œ¼—¯‰º˜Ò™ÛB",-1,2)
+	MSG_EX("#S3#C0¡“V‘ãŒP—û–‚pC|‰ºŒß—ûK™˜pC|íLã›{KâX‹V‹K‹éB|@|“ú•œˆê“úC|“V“V“sÝisšŽŠi“IŒP—ûCD—Ýˆ¦B",-1,2)
+	MSG_EX("#S3#C0cc•ssA•ssB|ã`›ˆê±•ø‰…“I˜b¥Ÿ“—p“IB|@|›ˆê±DŽ–A‚‹»“IŽ–Xˆ×d—vB",-1,2)
+	MSG_EX("#S3#C0—và¡“Vàa“¾‚‹»“IŽ–C|A¥”íˆ·ˆ·•\—g—¹B|@|ˆöˆ×ã`¥˜aˆ·ˆ·Ýˆê‹NC|‰äæS“¾–³˜_Y›õŽ–î‘ü—v”÷Î–Ê›”A‰ÂˆÈ“n‰ß“ïèB|@|•ø—L”‡žé“I‘z–@—L±•sDˆÓŽvC|–³˜_”@‰½–ç•s”\ác–Ê›”ç»àB",-1,2)
+	jump NOTE_END
+
+Note2:
+	MSG_EX("#S3#C0ˆê“ñˆêZ”N@‹â˜T”VŒŽ“ñ\Žµ“ú",-1,2)
+	MSG_EX("#S3#C0ˆ·ˆ·Šùà]_–”—LŸ†Ž¿C|˜a‰ä”ä‹N˜Ò¬n‘½—¹B|@|•ƒ‰¤œn‰ä˜ìœk¬“IŽžŒóŠJŽnA\‰ä˜aˆ·ˆ·˜ô”äŠrC|ŠˆÈ—LŽžŒó‰äœk•s‚‹»B|@|—LˆêŒÂ—L”\—Í“Iˆ·ˆ·C|–ç¥Œ—Ýl“IŽ–šCB",-1,2)
+	MSG_EX("#S3#C0’A¥C”‡ŒÂ—DG“Iˆ·ˆ·|•Î•Îœn¬AàŽã‘½•aB",-1,2)
+	MSG_EX("#S3#C0¡“Vˆ·ˆ·gà•sDC|ŠˆÈŸ“—L™Ò‰Á™˜p—ûKB|‰ä—L±^Scc|@|‰ä‘zˆê˜ð™Z‹Žˆ·ˆ·“I–[ŠÔ|ŠÅŠÅç»“Iî‹µB",-1,2)
+	MSG_EX("#S3#C0AŽZ”‡žéC”@‰Ê‰ä˜aˆ·ˆ·”äæÎ“I˜bC|ç»ŠÒ¥”ä‰äà˜ŠQB|•sæS“¾—L±•s‡“¹—åhH",-1,2)
+	jump NOTE_END
+
+Note3:
+	MSG_EX("#S3#C0ˆê“ñˆêˆê”N@–P™€”VŒŽŽO\“ú",-1,2)
+	MSG_EX("#S3#C0¡“V“¦‰Û‹Ž’ÁãŠßB|@|ŠˆàCsCA¥ˆê“V“žíL“I›{KC|“s‰õ—v’‚‘§—¹B",-1,2)
+	MSG_EX("#S3#C0å«‘R’ÁãŠ—L“I’n•û‰ä“sŠìŸcC|’A‰äÅŠìŸc“IŠÒ—vÉŽsê—¹B|@|œn˜ÒŸ“—LŒ©‰ß“IŠí•¨A“®•¨AH•iC|ã`”VŸ“Œ©‰ß“I“Œ¼ˆê‘å‘ÍB|@|AŽZˆê®“V“s•ðÝ“ß—¡|–ç•s˜ðæS“¾‰}”ÏB",-1,2)
+	MSG_EX("#S3#C0AÝ‰ä‘åŒû‹h’˜”ƒ˜Ò“Ià‘S“IŽžŒóC|”í‰q•ºá¢Œ»›æ—¹‰ñ˜ÒB|@|˜VŽt˜ì”ñíšŽà˜’nËÓ—¹‰äC|à–¾“V“IŒP—û˜ð”ñíšŽŠiB|@|„Ë‰ä”c”‡±‘i—¹ˆ·ˆ·C|ŠÒ”íˆ·ˆ·Î˜b—¹B",-1,2)
+	MSG_EX("#S3#C0’A¥C‰äˆêà‘“s•sŒã‰÷B|”\àBŒ©Ž¯“ž“ß›õ‘½“Œ¼|Ë¥d—v“IŽ–îB|@|‘üâ|Ý–[ŠÔ—¡›{K‘¾˜Q”ï—¹B|”‡A¥‰ä“I¶‘¶”V“¹B",-1,2)
+	jump NOTE_END
+
+Note4:
+	MSG_EX("#S3#C0ˆê“ñˆêˆê”N@“V”n”VŒŽ\ˆê“ú",-1,2)
+	MSG_EX("#S3#C0¡“Vœnˆê‘å‘ŠJŽnAœkŸT–ãB|@|Ú‰º˜Ò‰ä•s“¾•s‹Ž™Ò‰Á|Ýé—¡§s“I•‘˜ð—¹B",-1,2)
+	MSG_EX("#S3#C0‰äˆêà‘“s•sKŠµúåãŽqˆ¦B|@|ˆ×Y›õˆê’è—vú“ßžé|ç¬•—à®“®“Iˆß•ž’µ•‘šCB",-1,2)
+	MSG_EX("#S3#C0åãŽq“I‰º²œk’·C|ŠˆÈ‰ºžê’ò“IŽžŒó•K{—vˆêŠKˆêŠK’n‰ºB|@|šQC‹Ž”NA¥à^ÝŽ©ŒÈ“Iåã²ãn—¹ˆêcc|@|ã`¥”í\˜Ò˜aˆ·ˆ·”äC|ŠˆÈˆêà‘”üD“I‰ñ‰¯–çŸ“—L™ÞB",-1,2)
+	MSG_EX("#S3#C0’A¥CÝ•‘˜ðã–ç”\‹h“žD‘½”ü–¡“IH•¨C|ŠˆÈŠÒ¥”E‘Ïˆê‰º™ÛB|@|“ß›õ‰ä”‡A‹Ž—¹B",-1,2)
+	jump NOTE_END
+
+Note5:
+	MSG_EX("#S3#C0ˆê“ñˆê“ñ”N@ˆêŠp”VŒŽŽµ“ú",-1,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Á˜VŽt“I‰Ûã|u—¹è‰—•sŽ€’¹“I™BàB|@|“ß¥‘¦ŽgÝå“ß“x|–ç•s—eˆÕŠÅ“ž“I‰i¶”V’¹B|@|ˆÈ‘O›€˜ì±‘§Ý_¹“I“´ŒŠ’†C|’A¥Å‹ßŽ—ŒÁŠÅ•s“ž›€˜ì—¹B",-1,2)
+	MSG_EX("#S3#C0™Bà•sŽ€’¹”\àB‹‹Š“ž”V™|›æ˜Òj•ŸB|@|–ç—Llàác¢ŠEèœ“ü¬˜ª”V’†ŽžC|›€”\‹‹—\l˜ìˆø“±B",-1,2)
+	MSG_EX("#S3#C0›€¥‰i¶“IC|‰i‰“’Ž‹’˜¢ŠEB|@|ãã—¹”‡ŒÂ™BàC|•s’mˆ×Y›õS’†Ÿ ‹NˆêŒÒ’gˆÓB",-1,2)
+	MSG_EX("#S3#C0‰äœk‘z”\Œ©“ž•sŽ€’¹C|štœ†‘ü—LˆêŽŸ–çDB|@|ˆ·ˆ·–çà‘zŠÅC|ŠˆÈ‰ä˜ìA–ñ’èˆê‹N‹ŽŠÅ•sŽ€’¹B|@|å«‘RŒ»Ý•ssC|’A¥^“I‘z—Lˆê“Vˆê‹N‹ŽŠÅˆ¦B",-1,2)
+	jump NOTE_END
+
+Note6:
+	MSG_EX("#S3#C0ˆê“ñˆê“ñ”N@–ì“e”VŒŽ\“ú",-1,2)
+	MSG_EX("#S3#C0ˆ·ˆ·ò“|—¹B",-1,2)
+	MSG_EX("#S3#C0–{˜ÒgàA•s¥œkDC|Ä‰Áã‰ß“x˜J—ÝB|@|Ý–‚p‰Ûãˆ·ˆ·ò“|—¹B",-1,2)
+	MSG_EX("#S3#C0å«‘RŒ»Ýç»Ý‹x‘§C|’A¥ä_FˆËäp•sDB",-1,2)
+	MSG_EX("#S3#C0•½“úííŠ|”O’˜‰ä“Iˆ·ˆ·A|ã`¥›”‰ä”÷Î“Iˆ·ˆ·cc|@|•sŠÇ‘½“ïC‰ä“s˜ð‘ã‘Öˆ·ˆ·“w—ÍC|Šó–]ˆ·ˆ·•s—v•×‹­Ž©ŒÈB",-1,2)
+	MSG_EX("#S3#C0‰ä›ßãS`‘õ•ƒe˜a’ñŸ^”b“Á˜VŽtœk‘½ŽŸ—¹C|’A¥Ž—ŒÁ•s¥“ß›õŠÈšdB|@|”@‰Ê”‡žé‰º‹Ž“I˜bCˆ·ˆ·ç»cc|“ï“¹Ÿ“—LY›õŽ–î‰ä‰ÂˆÈ˜ô“IåhH",-1,2)
+	MSG_EX("#S3#C0‰äccœn–¾“VŠJŽn˜ðX‰ÁX‰Á“w—ÍC|ˆ×—¹“¾“ž•s—A‰—ˆ·ˆ·“I—Í—ÊB|@|”‡žé“I˜bCˆê’ècc",-1,2)
+	jump NOTE_END
+
+Note7:
+	MSG_EX("#S3#C0ˆê“ñˆêŒÜ”N@Fà ”VŒŽŽO“ú",-1,2)
+	MSG_EX("#S3#C0¡“VŽw“±‰ä“I˜VŽt•\—g—¹‰äB",-1,2)
+	MSG_EX("#S3#C0Ž©œn‰äá¢¾—v’b—ùo•s—A‰—ˆ·ˆ·“I—Í—Ê”VŒãC|›ßãS‰ß—¹ŽO”N—¹ãìãìãì|@|‰äŽ©ŒÈ–ç”\Š´æS“ž|Ž©ŒÈ—i—L—¹˜aˆÈ‘O•s”\“¯“úŽ§Œê“I—Í—ÊB|@|Ý–‚p•û–Êå«‘RŠÒ“G•s‰ßˆ·ˆ·C|’A¥Ý™˜p˜aŽçŒì¸èË“IT§•û–Ê|œäŠY•s‘»F‰—ç»™ÛB",-1,2)
+	MSG_EX("#S3#C0“ßŒÂŽž”nãA—v“ž˜Ò—¹B",-1,2)
+	MSG_EX("#S3#C0ˆ×—¹‘¦›’“ž˜Ò“I“ßŒÂŽž˜ô€”õC|Šó–]”\A”‡žéˆê’¼iíM‰º‹ŽB",-1,2)
+	jump NOTE_END
+
+Note8:
+	MSG_EX("#S3#C0ˆê“ñˆê˜Z”N@”¼_”VŒŽ\Žl“ú",-1,2)
+	MSG_EX("#S3#C0¡“V¥‰ä‚P‚Uà}“I¶“úB|”nãC“ßˆêA—v“ž˜Ò—¹B|@|›”‰ä˜aˆ·ˆ·˜ÒàC|”ñí”ñíd—v“I“úŽqB",-1,2)
+	MSG_EX("#S3#C0•sŠÇ¥Y›õžé“IŒ‹‰ÊC|‰ä˜ì“s•K{ÚŽóB|ˆöˆ×“ß¥‹K’èD“IŽ–îB",-1,2)
+	MSG_EX("#S3#C0’A¥C”@‰Ê‰Â”\“I˜bcc|–½‰^—_ˆ¦C|Šó–]”I•s—v‘I‰äˆ·ˆ·C‘I‰ä™ÛB|@|å«‘R—L±ŠQœ†C’A“ß¥‰ä“IŠó–]B|ˆ×—¹”‡ŒÂC‘ü—v‰ä”\˜ô“I“s˜ô—¹B",-1,2)
+	MSG_EX("#S3#C0cc•K{—v‘–—¹B|@|“™‰äÄ‰ñ“ž”‡ŒÂ–[ŠÔ˜Ò“IŽžŒóC|“ž’ê˜ð¥Y›õžé“ISîšCcc",-1,2)
+	jump NOTE_END
+
+Note9:
+	MSG_EX("#S3#C0ˆê“ñˆê˜Z”N@”¼_”VŒŽ\ŒÜ“ú",-1,2)
+	MSG_EX("#S3#C0‰ä•ö’×—¹B",-1,2)
+	MSG_EX("#S3#C0“ž’ê¥ˆ×Y›õH|ˆ×Y›õ˜ðá¢¶”‡žé“IŽ–îcc",-1,2)
+	MSG_EX("#S3#C0“ž’êá¢¶—¹Y›õŽ–î‰ä–ç•s’m“¹B|’É‹êA”ßccˆ·ˆ·ccà¸à¸‰äcc",-1,2)
+	jump NOTE_END
+
+Note10:
+	MSG_EX("#S3#C0ˆê“ñˆê˜Z”N@”¼_”VŒŽ\Žµ“ú",-1,2)
+	MSG_EX("#S3#C0å«‘Rá¢¶—¹œk‘½Ž–îC’A“ßŒÂŽžI‰—“ž˜Ò—¹B|”í‘I¢“Il‘ü—L‰äB|@|Š—L“IˆêØ“sÝ“ß“VšÊ{—¹B|Ä–ç‰ñ•s“žœn‘O—¹B|@|ˆöˆ×ˆ·ˆ·‘–—¹B",-1,2)
+	MSG_EX("#S3#C0’A¥C‰äŠÒ—L‰ä“IŽg–½B|ˆ×—¹å“ß“xœäŠYŠ®¬“IŽg–½B|@|•sŠÇ¥‰ß‹ŽŠÒ¥‰ñ‰¯“s—vŽÌŠü{C|Œ»ÝC‰ä¬—¹••ˆó”V›Þ—B",-1,2)
+	jump NOTE_END
+
+Note11:
+	MSG_EX("#S3#C0ˆê“ñˆê˜Z”N@”¼_”VŒŽ\‹ã“ú",-1,2)
+	MSG_EX("#S3#C0¡“V•ƒ‰¤³Ž®Œü›’ŒR|‰º’B—¹“¢”°–½—ßB|@|‰ä¥’NH|¿Ý”‡—¡“™’˜^“IDåhH|@|•sC‰ä•K{—vàz´‘^B",-1,2)
+	MSG_EX("#S3#C0“ßŒÂl“IccàŸFV–º“I–{ˆÓB",-1,2)
+	MSG_EX("#S3#C0‘¦Žg‘ü—LˆêŒÂl‰ä–ç—v‹ŽB|@|ˆöˆ×”‡¥Ç—L‰äË”\˜ô“IC|‰äŽ©ŒÈ“IŽg–½B",-1,2)
+	jump NOTE_END
+
+Note12:
+	MSG_EX("#S3#C0ˆê“ñˆêŽµ”N@…ŽÖ”VŒŽ\˜Z“ú",-1,2)
+	MSG_EX("#S3#C0”‡‘åŠT¥‰äÅŒãˆêŽŸÝ”‡–{Žè‹L—¡‹LÚ—¹B",-1,2)
+	MSG_EX("#S3#C0œn’Áãoá¢›ßãSŽOŒÂŒŽ—¹B|@|‰ä“¾“ž—¹à¸•‰ä“Il˜ìC|Ž§ŠŽI‰—’²àz“ž—¹ãìãìãì|@|–‚‰¤˜aàŸFV–º“IŠÝ”V™|B",-1,2)
+	MSG_EX("#S3#C0–‚‰¤“IíNŒŠCŠïŠâéãìãìãì",-1,2)
+	MSG_EX("#S3#C0Œ»Ý‰ä˜ì‘¦›’i“ü“ß—¡B|à[‘ã“I›Þ—˜ìˆ¦C–³˜_”@‰½¿Ž’—\‰ä—Í—ÊB",-1,2)
+	jump NOTE_END
+
+NOTE_END:
+	// ”wŒiÁ‹Ž
+	novel_off(0)
+
+	// Ä‚ÑMENU‚Ö
+	jump NOTE_BOOK
+
+//--------------------------------------------------------------------
+
+PLATE_END:
+	CINEMA_OFF(0)
+	novel_off(0)
+
+	jump MENU4
+}

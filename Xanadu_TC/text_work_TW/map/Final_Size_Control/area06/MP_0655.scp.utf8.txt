@@ -1,0 +1,267 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// とりあえずストッパー消しとけ
+	INIT_SWITCH_ON("stop")
+
+	// 中ボス出現の前フリ
+	CHECK_GAME_FLAG(638)
+	ON_SKIP 1
+	stop_bgm(0,2000)
+
+	// 橋イベント
+	CHECK_GAME_FLAG(679)
+	OFF_JUMP EV
+
+	INIT_SWITCH_ON("sw")
+	CINEMA_OFF(0)
+
+	GAME_FLAG_OFF(679)
+	GAME_FLAG_ON(680)
+
+	// 壁出てくる
+	FOCUS_CHR("stop")
+	SWITCH_OFF("stop")
+	QUAKE(0,10,30)
+	WAIT(120)
+	FOCUS_CHR("sw")
+	WAIT(60)
+
+	// 小ボス曲
+	BGM(14,0,-1)
+
+	// バーサークミノタウロス
+//	PUT_MONSTER("m00",325,18,2,0,0)
+//	PUT_MONSTER("m01",325,18,2,0,1)
+//	PUT_MONSTER("m02",325,18,2,0,2)
+//	PUT_MONSTER("m03",325,18,2,0,3)
+//	PUT_MONSTER("m04",325,18,2,0,4)
+//	PUT_MONSTER("m05",325,18,2,0,5)
+//	PUT_MONSTER("m06",325,18,2,0,6)
+//	PUT_MONSTER("m07",325,18,2,0,7)
+//	PUT_MONSTER("m08",325,18,2,0,8)
+//	PUT_MONSTER("m09",325,18,2,0,9)
+//	PUT_MONSTER("m10",325,18,2,0,10)
+//	PUT_MONSTER("m11",325,18,2,0,11)
+//	PUT_MONSTER("m12",325,18,2,0,12)
+//	PUT_MONSTER("m13",325,18,2,0,13)
+//	PUT_MONSTER("m14",325,18,2,0,14)
+//	PUT_MONSTER("m15",325,18,2,0,15)
+	PUT_MONSTER("m16",325,18,2,0,16)
+	PUT_MONSTER("m17",325,18,2,0,17)
+	PUT_MONSTER("m18",325,18,2,0,18)
+	PUT_MONSTER("m19",325,18,2,0,19)
+	QUAKE(0,10,60)
+
+	WAIT(120)
+	CINEMA_OFF(0)
+
+	ROOM_FLAG_ON(1)
+
+EV:
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3951)
+	off_skip 1
+	room_flag_on(253)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1664)
+	ON_SKIP(2)
+	KAGI("d1664",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1664")
+
+	// 一度全滅させたならおわり
+	CHECK_GAME_FLAG(638)
+	OFF_SKIP(1)
+	INIT_SWITCH_ON("sw")
+}
+
+RES("EXIT")
+{
+	// 中ボスで消えたＢＧＭ對策
+	CHECK_GAME_FLAG(638)
+	ON_SKIP 1
+	BGM(-1, 0, -1)
+}
+
+// ボス倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(638)
+	ON_JUMP next
+
+		// きえる
+
+		GAME_FLAG_ON(638)
+//		GAME_FLAG_ON(679)
+
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("stop")
+		HIDE_CHR("stop")
+		WAIT(90)
+
+//		ENTRY_MAP("0654_0655")
+
+//		QUAKE(10,10,30)
+		WAIT(60)
+
+		bgm(-1,0,-1)
+		FOCUS_CHR("PC")
+		CINEMA_OFF(0)
+
+	next:
+}
+
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1664")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1664)
+}
+
+
+// ----------------------------------------------------------------------------
+// 破壞                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("obj")
+RES("KILL")
+{
+	KILL_CHR("obj",0,1,-1)
+	PAUSE_MONSTER(0,2)
+
+	SWITCH_OFF("stop")
+}
+
+
+// ----------------------------------------------------------------------------
+// 中ボスイベントトリガー
+// ----------------------------------------------------------------------------
+
+DEF("ev")
+RES("EVENT")
+{
+	// 既に倒しているのでは
+	CHECK_GAME_FLAG(638)
+	ON_JUMP next
+
+	// 二度目に踏んでも何も出ないよ
+	CHECK_ROOM_FLAG(1)
+	ON_JUMP next
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	INIT_WALK_DST("PC")
+	SET_WALK_DST("PC",0,0.75,0)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+
+	WAIT(30)
+	SWITCH_ON("sw")
+	WAIT(30)
+
+	SE("SE_SWITCH")
+
+	QUAKE(5,5,15)
+	SE("SE_LOCK")
+	WAIT(30)
+
+	CHECK_GAME_FLAG(680)
+	ON_JUMP next2
+	
+		GAME_FLAG_ON(679)
+		ENTRY_MAP("0654_0655")
+
+next2:
+
+	// 壁出てくる
+	FOCUS_CHR("stop")
+	SWITCH_OFF("stop")
+	QUAKE(0,10,30)
+	WAIT(120)
+	FOCUS_CHR("sw")
+	WAIT(60)
+
+	// 小ボス曲
+	BGM(14,0,-1)
+
+	// バーサークミノタウロス
+//	PUT_MONSTER("m00",325,18,2,0,0)
+//	PUT_MONSTER("m01",325,18,2,0,1)
+//	PUT_MONSTER("m02",325,18,2,0,2)
+//	PUT_MONSTER("m03",325,18,2,0,3)
+//	PUT_MONSTER("m04",325,18,2,0,4)
+//	PUT_MONSTER("m05",325,18,2,0,5)
+//	PUT_MONSTER("m06",325,18,2,0,6)
+//	PUT_MONSTER("m07",325,18,2,0,7)
+//	PUT_MONSTER("m08",325,18,2,0,8)
+//	PUT_MONSTER("m09",325,18,2,0,9)
+//	PUT_MONSTER("m10",325,18,2,0,10)
+//	PUT_MONSTER("m11",325,18,2,0,11)
+//	PUT_MONSTER("m12",325,18,2,0,12)
+//	PUT_MONSTER("m13",325,18,2,0,13)
+//	PUT_MONSTER("m14",325,18,2,0,14)
+//	PUT_MONSTER("m15",325,18,2,0,15)
+	PUT_MONSTER("m16",325,18,2,0,16)
+	PUT_MONSTER("m17",325,18,2,0,17)
+	PUT_MONSTER("m18",325,18,2,0,18)
+	PUT_MONSTER("m19",325,18,2,0,19)
+	QUAKE(0,10,60)
+
+	WAIT(120)
+	CINEMA_OFF(0)
+
+	ROOM_FLAG_ON(1)
+
+next:
+}
+
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3951)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈等級上升1級！",-1,0X00000200)
+	game_flag_on(3951)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

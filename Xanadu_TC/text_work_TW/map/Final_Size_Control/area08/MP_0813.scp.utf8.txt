@@ -1,0 +1,240 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1819)
+	ON_SKIP(2)
+	KAGI("d1819",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1819")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1820)
+	ON_SKIP(2)
+	KAGI("d1820",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1820")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1821)
+	ON_SKIP(2)
+	KAGI("d1821",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1821")
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3946)
+	off_skip 1
+	room_flag_on(253)
+
+	// SE再生
+	SE("SE_VOLCANO")
+
+set_rain_inf("EFC_HINOKO",1, 45, 15,45)
+rain(1)
+set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+	//0810で箱出してるかどうか關連のチェック
+	CHECK_GAME_FLAG(814)
+	OFF_JUMP NEXT
+	HIDE_CHR("stop")
+
+	//0810で箱開けてるかどうか關連のチェック
+	CHECK_GAME_FLAG(813)
+	OFF_JUMP NEXT
+	HIDE_CHR("tbox")
+
+
+
+NEXT:
+	//炎スイッチを押してたかどうか
+	CHECK_GAME_FLAG(800)
+	ON_JUMP NEXT2
+
+	SET_MOTION("msw1","STAND",0)
+	SET_MOTION("msw2","HOOK",0)
+	SET_MOTION("F1","HOOK",0)
+	SET_MOTION("F2","HOOK",0)
+	SET_MOTION("F3","HOOK",0)
+	SET_MOTION("F4","HOOK",0)
+	SET_MOTION("F5","STAND",0)
+	SET_MOTION("F6","STAND",0)
+	SET_MOTION("F7","STAND",0)
+	SET_MOTION("F8","STAND",0)
+	SET_MOTION("F9","HOOK",0)
+	SET_MOTION("F10","HOOK",0)
+	END
+
+NEXT2:
+	SET_MOTION("msw1","HOOK",0)
+	SET_MOTION("msw2","STAND",0)
+	SET_MOTION("F1","SATND",0)
+	SET_MOTION("F2","SATND",0)
+	SET_MOTION("F3","STAND",0)
+	SET_MOTION("F4","STAND",0)
+	SET_MOTION("F5","HOOK",0)
+	SET_MOTION("F6","HOOK",0)
+	SET_MOTION("F7","HOOK",0)
+	SET_MOTION("F8","HOOK",0)
+	SET_MOTION("F9","STAND",0)
+	SET_MOTION("F10","STAND",0)
+END
+}
+
+
+DEF("msw1")
+RES("STEP_ON")
+{
+
+	STOP_PC(0)
+
+//スイッチまで步く
+	INIT_WALK_DST("PC")
+	SET_WALK_DST("PC", 15.5, 24.1, 0)
+	walk_pos("PC",0,0.03)
+
+	WAIT(60)
+
+//スイッチ動く
+	SET_MOTION("msw1","DOWN",0)
+	SET_MOTION("msw2","STAND",10)
+	SHAKE(3,3)
+	WAIT(25)
+	SET_MOTION("msw1","HOOK",0)
+	WAIT(10)
+
+//ここからムービー
+	CINEMA_ON(0)
+	SE("SE_STOPPER")
+	FOCUS_CHR_EX("F6",80、0、1)
+	WAIT(120)
+
+	QUAKE(1,1,90)
+	SET_MOTION("F1","STAND",0)
+	SET_MOTION("F2","STAND",0)
+	SET_MOTION("F3","STAND",0)
+	SET_MOTION("F4","STAND",0)
+	SET_MOTION("F9","STAND",0)
+	SET_MOTION("F10","STAND",0)
+
+	SET_MOTION("F5","HOOK",0)
+	SET_MOTION("F6","HOOK",0)	
+	SET_MOTION("F7","HOOK",0)
+	SET_MOTION("F8","HOOK",0)
+	GAME_FLAG_ON(800)
+
+	WAIT(150)
+	CINEMA_OFF(0)
+
+END
+}
+
+
+DEF("msw2")
+RES("STEP_ON")
+{
+	STOP_PC(0)
+
+//スイッチまで步く
+	INIT_WALK_DST("PC")
+	SET_WALK_DST("PC", -13.1, 26.8, -5.6)
+	walk_pos("PC",0,0.03)
+
+	WAIT(60)
+
+//スイッチ動く
+	SET_MOTION("msw2","DOWN",0)
+	SET_MOTION("msw1","STAND",10)
+	SHAKE(3,3)
+	WAIT(25)
+	SET_MOTION("msw2","HOOK",0)
+	WAIT(10)
+
+//ここからムービー
+	CINEMA_ON(0)
+	SE("SE_STOPPER")
+	FOCUS_CHR_EX("F9",40、0、1)
+	WAIT(120)
+
+	QUAKE(1,1,90)
+	SET_MOTION("F1","HOOK",0)
+	SET_MOTION("F2","HOOK",0)	
+	SET_MOTION("F3","HOOK",0)
+	SET_MOTION("F4","HOOK",0)
+	SET_MOTION("F9","HOOK",0)
+	SET_MOTION("F10","HOOK",0)
+
+	SET_MOTION("F5","SATND",0)
+	SET_MOTION("F6","STAND",0)
+	SET_MOTION("F7","STAND",0)
+	SET_MOTION("F8","STAND",0)
+	GAME_FLAG_OFF(800)
+
+	WAIT(150)
+	CINEMA_OFF(0)
+
+END
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1819")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1819)
+}
+
+DEF("d1820")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1820)
+}
+
+DEF("d1821")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1821)
+}
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3946)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈等級上升1級！",-1,0X00000200)
+	game_flag_on(3946)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

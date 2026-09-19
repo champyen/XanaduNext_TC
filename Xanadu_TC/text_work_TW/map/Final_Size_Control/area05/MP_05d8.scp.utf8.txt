@@ -1,0 +1,358 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+//
+// ROOM_FLAG
+//	0 ドヴォルザーク
+//	1 ティオバルト
+//
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3944)
+	off_skip 1
+	room_flag_on(253)
+
+	// とりあえず消しとく
+	HIDE_CHR("Beatrice")
+	HIDE_CHR("Dvorak")
+	HIDE_CHR("Tiowald")
+
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	CHECK_GAME_FLAG(3603)
+	OFF_JUMP NEXT2
+	// EV B-6 地下道２Ｂ(ドヴォルザークとティオバルト)
+	CHECK_GAME_FLAG(3605)
+	ON_JUMP NEXT2
+
+	SHOW_CHR("Dvorak")
+	SHOW_CHR("Tiowald")
+
+NEXT2:
+	// カニグモ倒したか
+	CHECK_GAME_FLAG(1)
+	ON_JUMP NEXT3
+
+	SHOW_CHR("Beatrice")
+	SET_MOTION("Beatrice","STAND",0)
+	jump NEXT4
+
+NEXT3:
+	SHOW_CHR("Beatrice")
+	SET_MOTION("Beatrice","HOOK",0)
+
+NEXT4:
+	// カギ設定
+	CHECK_GAME_FLAG(1550)
+	ON_SKIP(2)
+	KAGI("d1550",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1550")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1551)
+	ON_SKIP(2)
+	KAGI("d1551",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1551")
+
+	// 岩をガントレットで破壞したか？
+	CHECK_GAME_FLAG(588)
+	OFF_SKIP(1)
+	HIDE_CHR("iwa")
+
+	// マップ讀み替え
+	CHECK_GAME_FLAG(1)
+	OFF_JUMP NEXT
+
+	LOAD_MAP("MP_05fc")
+	LOAD_HITMAP("MP_05fch")
+
+	END
+
+NEXT:
+
+	HIDE_CHR("iwa")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1550")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1550)
+}
+
+DEF("d1551")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1551)
+}
+
+
+// ----------------------------------------------------------------------------
+// 柵
+// ----------------------------------------------------------------------------
+
+DEF("iwa")
+RES("KILL")
+{
+	KILL_CHR("iwa",0,0,-1)
+	GAME_FLAG_ON(588)
+}
+
+
+// ----------------------------------------------------------------------------
+// セーブ
+// ----------------------------------------------------------------------------
+
+DEF("save")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	refresh("PC")
+	se("SE_HEAL")
+
+	SEL("　存檔嗎？　|#C2存檔|取消")
+	CHECK_SELECT(0)
+	OFF_JUMP SEL_A
+
+		CALL_SHOP(4)
+//		SE("SE_UP_PRM")
+//		SYS("#c2今までの冒險を記錄しました。")
+
+SEL_A:
+	CHECK_SELECT(1)
+
+	CINEMA_OFF(0)
+}
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ベアトリーチェ前イベント
+
+DEF("Beatrice")
+
+RES("INIT")
+{
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	CHECK_GAME_FLAG(3603)
+	OFF_JUMP EXIT
+	// EV B-6 地下道２Ｂ(ドヴォルザークとティオバルト)
+	CHECK_GAME_FLAG(3605)
+	ON_JUMP EXIT
+
+	set_skip_label("SKIP")
+
+//▼ベアトリーチェ石像前
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	STOP_PC(0)
+	SET_MOTION("PC","STAND",-1)
+	load_npc_eqp(7,00)
+	DVORAK(0)
+	SET_SPOT_ORG( 1, 0.58,0.00,8.73 )
+	// イベント汎用曲
+	BGM( 18, 1, 1000 )
+
+//　　マップに入るとイベント開始
+//　　ベアトリーチェの石像の前でドヴォルザークとティオバルトが
+//　　向かい合っている。
+
+//	set_deg_ex("Dvorak", "Beatrice")
+//	set_deg_ex("Tiowald", "Beatrice")
+	look_chr("Dvorak", "Beatrice")
+	look_chr("Tiowald", "Beatrice")
+
+	permit_script_camera(1)
+	set_script_camera(1.02,1.00,6.42, 3.5,200.0,0.0, 4.0, 15.0)
+	rotate_script_camera(0,-20,0, 600, 1)
+
+	CINEMA_ON(0)
+
+	MSG_EX("#S3#C0男人的聲音「是嗎，貝亞特里奇大人就在這裡……」",-1,2)
+
+	MSG_EX("#S3#C0老人的聲音「嗯，如果沒有她的保護，|　　　　　　決戰之前我們就已經被全殱了吧。」",-1,2)
+	MSG_EX("#S3#C0老人的聲音「其他五個人……|　　　　　　不、是四個人，他們也是這樣的狀況啊。」",-1,2)
+	MSG_EX("#S3#C0老人的聲音「被奪去了時間，|　　　　　　被石化分散在島上各處。」",-1,2)
+	wait(20)
+
+	cross_fade(40)
+	set_script_camera(0.97,2.00,4.15, -20,170.0,0.0, 5.0, 15.0)
+	rotate_script_camera(0,60,0,1500, 1)
+	wait(80)
+
+	set_motion("Dvorak", "ATTACK1", -1)
+	MSG_EX("#S3#C0德沃夏克「唉，多麼令人扼腕的事情啊……」",-1,2)
+	wait(50)
+
+//	set_deg("Dvorak", 291)
+	look_chr("Dvorak", "Tiowald")
+	MSG_EX("#S3#C0德沃夏克「那麼，那個人現在在哪裡？」",-1,2)
+	wait(60)
+	look_chr("Tiowald", "Dvorak")
+	wait(20)
+	MSG_EX("#S3#C0提歐巴特「還不知道……」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「但是，只有這一點可以肯定地説。」",-1,2)
+
+	wait(120)
+	cross_fade(60)
+	set_script_camera(0.29,1.00,5.96, -10.5,150.0,0.0, 4.0, 15.0)
+//	set_deg_ex("Tiowald", "Dvorak")
+	look_chr("Tiowald", "Dvorak")
+	set_deg("Tiowald", 60)
+	rotate_script_camera(0,-10,0, 1000, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0提歐巴特「有什麼事情已經開始發生了……」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「我和你的石化狀態都被解開了，|　　　　　這一點自然就會明白了。」",-1,2)
+	wait(60)
+
+	look_chr("Dvorak", "-")
+	set_motion("Dvorak", "ATTACK1", -1)
+	MSG_EX("#S3#C0德沃夏克「真讓人著急啊……」",-1,2)
+	wait(60)
+
+	look_chr("Tiowald", "-")
+	MSG_EX("#S3#C0提歐巴特「目前我們能做的事情，|　　　　　只有確認現在的情況了。」",-1,2)
+
+	// EV B-6 地下道２Ｂ(ドヴォルザークとティオバルト)
+	GAME_FLAG_ON(3605)
+
+	focus_chr("PC")
+	cross_fade(60)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 0, 1000 )
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+EXIT:
+	SET_SPOT_ORG( 0, 0.58,0.00,8.73 )
+	END
+
+SKIP:
+	// EV B-6 地下道２Ｂ(ドヴォルザークとティオバルト)
+	GAME_FLAG_ON(3605)
+
+	focus_chr("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	SET_SPOT_ORG( 0, 0.58,0.00,8.73 )
+	BGM( -1, 0, 1000 )
+	fade_in(60)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	END
+}
+
+RES("CLICK")
+{
+	//カニグモ倒したか
+	CHECK_GAME_FLAG(1)
+	ON_JUMP NEXT
+
+	SYS("石像是位正在張開雙手的|意志堅強的女性。")
+	END
+NEXT:
+	SYS("石頭的碎片到處散落。")
+}
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザーク
+
+DEF("Dvorak")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Dvorak")
+	SET_NAME("DVORAK", "德沃夏克")
+
+	MSG("……我們不承認失敗了。")
+	MSG("證據就是|我們這樣活了下來。")
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// ティオバルト
+
+DEF("Tiowald")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Tiowald")
+	SET_NAME("TIOWALD", "提歐巴特")
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+
+	check_room_flag(1)
+	on_jump TALK2
+
+	MSG("你很在意我們的真面目嗎？")
+	MSG("呵呵，飛快地跑上山|和一步一步慢慢走上去,|結果雖然是一樣的……")
+	MSG("不過，一步一步走上去|可以欣賞途中的美景和花草。")
+	MSG("只有堅實地走好每一步，|才能夠獲得自信。")
+
+	room_flag_on(1)
+	end
+//　　→以降繰り返し
+
+TALK2:
+	MSG("……從這間屋子深處|能感覺到一股不尋常的邪惡氣氛。")
+	MSG("這裡曾是貝亞特里奇|將巨大的魔物封印在冰壁裡的地方……")
+	MSG("你要是想前進的話，千萬要小心。")
+
+}
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3944)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈等級上升1級！",-1,0X00000200)
+	game_flag_on(3944)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

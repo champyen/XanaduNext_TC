@@ -1,0 +1,17 @@
+
+DEF("door")
+RES("CLICK")
+{
+	
+	SYS("#C2使用○○○○。|（臨時事件）")
+
+	//壁消え
+	SET_MOTION("door","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("door",0,0,80)
+
+
+	END
+
+
+}

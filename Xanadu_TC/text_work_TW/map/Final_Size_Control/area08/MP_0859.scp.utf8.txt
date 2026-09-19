@@ -1,0 +1,186 @@
+
+// ---------------------------------------------------------------
+// 初期狀態                                                                    
+// ---------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_WIND2")
+
+	// 岩をガントレットで破壞したか？
+	CHECK_GAME_FLAG(844)
+	OFF_SKIP(1)
+	HIDE_CHR("iwa")
+
+
+set_rain_inf("EFC_HINOKO2",1, 45, 15,240)
+rain(1)
+
+
+// 箱チェック
+	CHECK_GAME_FLAG(810)
+	OFF_JUMP BOX
+	SET_POS("box",-2.75,4,10.25)
+
+BOX:
+	CHECK_GAME_FLAG(811)
+	OFF_JUMP ELEB
+	SET_POS("box",-2.75,4,8.25)
+
+
+
+
+//エレベーター位置チェック
+ELEB:
+
+//上から來たら位置はそのまま	
+	CHECK_ENTRY_GATE("0859_0858")
+	ON_JUMP NEXT
+
+//下から著て、なお岩を壞してるかどうか
+	CHECK_GAME_FLAG(844)
+	OFF_JUMP NEXT
+
+	SET_POS("gate",-13.5,5,0)
+	SET_POS("switch",-13.25,7.2,0)
+	SET_POS("wall2",-14.515,6,0)
+	GAME_FLAG_ON(845)
+
+END
+
+NEXT:
+	GAME_FLAG_OFF(845)	
+
+}
+
+// ==============================================================
+// 箱
+// ==============================================================
+DEF("box")
+RES("PUSH")
+{
+	// 現在の木箱のグリッド座標は？
+	check_grid(1,0,"box")
+	on_jump next1
+
+	check_grid(1,1,"box")
+	on_jump next2
+	END
+	
+next1:
+	GAME_FLAG_ON(810)
+	END
+
+next2:
+	GAME_FLAG_ON(811)
+	END
+}
+
+
+
+// =============================================================
+// 昇降機
+// =============================================================
+
+DEF("switch")
+
+RES("CLICK")
+{
+	SEL("#C1升降機|#C2　拉動拉桿　|取消")
+	check_select(0)
+	on_jump SW_MOVE
+	END
+
+SW_MOVE:
+
+	//※エレベータに一度でも乘ったらどちらからでも乘れるようにしてみた。
+
+	CHECK_GAME_FLAG(845)
+	ON_JUMP NEXT2
+
+//下へ
+	SWITCH_RVS("switch")
+	WAIT(60)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(30)
+	SHAKE(0,5)
+
+	SE("SE_ELEV1")
+
+	WAIT(60)
+
+	focus_chr("PC")
+	SET_MOTION("gate","EMPTY1",0)
+
+	SE("SE_ELEV2")
+
+	MOVE_VEC("gate",0,-8.8,0,240)
+	MOVE_VEC("switch",0,-8.8,0,240)
+	MOVE_VEC("wall2",0,-8.8,0,240)
+
+	QUAKE(1,1,300)
+	GAME_FLAG_ON(845)
+	WAIT(240)
+
+	SE("SE_ELEV1")
+
+	SET_MOTION("gate","STAND",0)
+
+	CINEMA_OFF(0)
+END
+
+//上へ
+NEXT2:
+
+	SWITCH_RVS("switch")
+	WAIT(60)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(30)
+	SHAKE(0,5)
+
+	SE("SE_ELEV1")
+
+	WAIT(60)
+
+	focus_chr("PC")
+	SET_MOTION("gate","EMPTY2",0)
+
+	SE("SE_ELEV2")
+
+	MOVE_VEC("gate",0,8.8,0,240)
+	MOVE_VEC("switch",0,8.8,0,240)
+	MOVE_VEC("wall2",0,8.8,0,240)
+	QUAKE(1,1,300)
+	GAME_FLAG_OFF(845)
+	WAIT(240)
+
+	SE("SE_ELEV1")
+
+	SET_MOTION("gate","STAND",0)	
+
+	CINEMA_OFF(0)
+
+END
+}
+
+
+
+
+// ------------------------------------------------------------
+// 岩
+// ------------------------------------------------------------
+
+DEF("iwa")
+RES("KILL")
+{
+	KILL_CHR("iwa",0,0,-1)
+	GAME_FLAG_ON(844)
+}

@@ -1,0 +1,201 @@
+
+// ============================================================================
+// ＮＰＣテスト用（井上）
+// ============================================================================
+
+DEF("0060")
+RES("CLICK")
+{
+	
+	FOCUS_CHR("0060")
+	SET_NAME("0060","穿著紅色上衣，被稱為『紅衣服』的青年")
+	SET_MOTION("0060","ATTACK1",-1)
+
+	MSG("唔，把這個符號化是很重要的事。")
+	SET_MOTION("0060","STAND",-1)
+END
+}
+
+
+DEF("0070")
+RES("CLICK")
+{
+	FOCUS_CHR("0070")
+	SET_NAME("0070","被稱為『小桃』的命運之名")
+	SET_MOTION("0070","ATTACK1",-1)
+
+	MSG("小桃我啊！曾經是女主角的候補呢！好可悲！")
+	SET_MOTION("0070","STAND",-1)
+END
+}
+
+
+
+DEF("0080")
+RES("CLICK")
+{
+	FOCUS_CHR("0080")
+	SET_NAME("0080","尊敬老人的日本古文化")
+	SET_MOTION("0080","ATTACK1",-1)
+
+	MSG("是啊，如果不能尊敬前人的話。")
+	SET_MOTION("0080","STAND",-1)
+END
+}
+
+
+DEF("0090")
+RES("CLICK")
+{
+	FOCUS_CHR("0090")
+	SET_NAME("0090","我是銀，流星之銀")
+	SET_MOTION("0090","ATTACK1",-1)
+
+	MSG("但是，我會喵喵的叫呢。喵喵。")
+	SET_MOTION("0090","STAND",-1)
+END
+}
+
+
+DEF("0100")
+RES("CLICK")
+{
+	FOCUS_CHR("0100")
+	SET_NAME("0100","不想試著抓一下馬尾辮嗎")
+	SET_MOTION("0100","ATTACK1",-1)
+
+	MSG("那傢伙要是因為性騒擾被抓起來就好了。")
+	SET_MOTION("0100","STAND",-1)
+END
+}
+
+DEF("0110")
+RES("CLICK")
+{
+	FOCUS_CHR("0110")
+	SET_NAME("0110","流浪者")
+	SET_MOTION("0110","ATTACK1",-1)
+
+	MSG("娑婆的盒子，好溫暖啊。")
+	SET_MOTION("0110","STAND",-1)
+END
+}
+
+DEF("0120")
+RES("CLICK")
+{
+	FOCUS_CHR("0120")
+	SET_NAME("0120","少女A")
+	SET_MOTION("0120","ATTACK1",-1)
+
+	MSG("我其實是經常被登在報紙上的少女A。")
+	SET_MOTION("0120","STAND",-1)
+END
+}
+DEF("0130")
+RES("CLICK")
+{
+	FOCUS_CHR("0130")
+	SET_NAME("0130","人造人B子")
+	SET_MOTION("0130","ATTACK1",-1)
+
+	MSG("主人，我沒有説這種話的功能。")
+	SET_MOTION("0130","STAND",-1)
+END
+}
+DEF("0140")
+RES("CLICK")
+{
+	FOCUS_CHR("0140")
+	SET_NAME("0140","第三適格者")
+	SET_MOTION("0140","ATTACK1",-1)
+
+	MSG("因為我是第三個人……   ")
+	SET_MOTION("0140","STAND",-1)
+END
+}
+
+DEF("0150")
+RES("CLICK")
+{
+	FOCUS_CHR("0150")
+	SET_NAME("0150","不管怎樣都好的大叔")
+	SET_MOTION("0150","ATTACK1",-1)
+
+	MSG("Ｆ；ＳＦＦＨＳＦＨＳＨＦＶＳ；Ｈ。")
+	SET_MOTION("0150","STAND",-1)
+END
+}
+
+
+DEF("0180")
+RES("CLICK")
+{
+	FOCUS_CHR("0180")
+	SET_NAME("0180","孩子，無可替代的財產")
+	SET_MOTION("0180","ATTACK1",-1)
+
+	MSG("唔，人的價值觀各有不同。")
+	SET_MOTION("0180","STAND",-1)
+END
+}
+
+DEF("0190")
+RES("CLICK")
+{
+	FOCUS_CHR("0190")
+	SET_NAME("0190","１０歲的時候")
+	SET_MOTION("0190","ATTACK1",-1)
+
+	MSG("啊－嗚－啊－")
+	SET_MOTION("0190","STAND",-1)
+END
+}
+
+DEF("0210")
+RES("CLICK")
+{
+	FOCUS_CHR("0210")
+	SET_NAME("0210","門衛，守護什麼的存在")
+	SET_MOTION("0210","ATTACK1",-1)
+
+	MSG("難道不知道什麼是應該保護的東西嗎？")
+	SET_MOTION("0210","STAND",-1)
+END
+}
+
+DEF("0220")
+RES("CLICK")
+{
+	FOCUS_CHR("0220")
+	SET_NAME("0220","無袖上衣的小孩")
+	SET_MOTION("0220","ATTACK1",-1)
+
+	MSG("好冷。")
+	SET_MOTION("0220","STAND",-1)
+END
+}
+
+DEF("0230")
+RES("CLICK")
+{
+	FOCUS_CHR("0230")
+	SET_NAME("0230","媽媽")
+	SET_MOTION("0230","ATTACK1",-1)
+
+	MSG("媽媽好香啊～蟹宍味噌～")
+	SET_MOTION("0230","STAND",-1)
+END
+}
+
+DEF("0240")
+RES("CLICK")
+{
+	FOCUS_CHR("0240")
+	SET_NAME("0240","老爺爺")
+	SET_MOTION("0240","ATTACK1",-1)
+
+	MSG("老頭兒")
+	SET_MOTION("0240","STAND",-1)
+END
+}

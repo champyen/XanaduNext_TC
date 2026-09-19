@@ -1,0 +1,188 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+
+	// マスターゴブリン
+		put_monster("m00",391,14,0,0,0)
+		put_monster("m01",391,14,0,0,1)
+	put_monster("m02",183,14,0,0,2)
+		put_monster("m03",391,14,0,0,3)
+		put_monster("m04",391,14,0,0,4)
+	// ゴブリンシャーマン
+	put_monster("m05",182,14,0,0,5)
+	put_monster("m06",182,14,0,0,6)
+	put_monster("m07",182,14,0,0,7)
+	put_monster("m08",182,14,0,0,8)
+
+	CHECK_GAME_FLAG(926)
+	OFF_SKIP(2)
+	INIT_SWITCH_ON("lock")
+	HIDE_CHR("daiza")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1912)
+	ON_SKIP(2)
+	KAGI("d1912",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1912")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1914)
+	ON_SKIP(2)
+	KAGI("d1914",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1914")
+
+	// カギ設定
+	CHECK_GAME_FLAG(926)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1915)
+	ON_SKIP(2)
+	KAGI("d1915",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1915")
+
+//鍵チェック
+//	CHECK_GAME_FLAG(923)
+//	ON_JUMP next
+//	LOCK("lock",3)
+//	JUMP next2
+//next:
+//	INIT_SWITCH_ON("lock")
+
+//next2:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1912")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1912)
+}
+
+DEF("d1914")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1914)
+}
+
+DEF("d1915")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1915)
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(926)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1915)
+	ON_SKIP(2)
+	KAGI("d1915",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1915")
+
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板擋住了。")
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 鍵                                                                          
+// ----------------------------------------------------------------------------
+//DEF("lock")
+//RES("KEY")
+//{
+//	GAME_FLAG_ON(923)
+
+//	STOP_PC(0)
+//	CROSS_FADE(10)
+//	RESET_MAP_ROT_Y(0,1)
+//	WAIT(2)
+//	CINEMA_ON(0)
+//	PERMIT_SCRIPT_CAMERA(1)
+//	SET_SCRIPT_CAMERA_EX( "lock", -1, -45,0,0,10,32)
+//	WAIT(60)
+	
+//	SE("SE_KEY")
+//	SWITCH_ON("lock")
+//	WAIT(30)
+	
+//	CINEMA_OFF(0)
+//	CROSS_FADE(10)
+//	PERMIT_SCRIPT_CAMERA(0)
+//}
+
+
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09b6_09b3")
+RES("EVENT")
+{
+	ENTRY_MAP("09b3_09b6")
+}
+
+DEF("09b6_09b7")
+RES("EVENT")
+{
+	ENTRY_MAP("09b7_09b6")
+}
+
+DEF("09b6_09c2")
+RES("EVENT")
+{
+	ENTRY_MAP("09c2_09b6")
+}
+

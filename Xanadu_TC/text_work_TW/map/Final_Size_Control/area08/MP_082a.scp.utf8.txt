@@ -1,0 +1,118 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// スペクタクルズ通常動作
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_VOLCANO")
+
+	// サラマンダー
+	put_monster("m00",387,12,0,0,0)
+	// ポイズンスライム
+	put_monster("m01",386,12,0,0,1)
+	put_monster("m02",386,12,0,0,2)
+
+set_rain_inf("EFC_HINOKO",1, 45, 15,45)
+rain(1)
+set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+raster(1,1)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1810)
+	ON_SKIP(2)
+	KAGI("d1810",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1810")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1815)
+	ON_SKIP(2)
+	KAGI("d1815",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1815")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(839)
+	OFF_JUMP next
+
+	// アヴァランチ１
+//	SET_TREASURE("tbox",1,248,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(839)
+	OFF_JUMP ITEM
+
+ITEM:
+// アヴァランチ
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 248, 1.44,8,13, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(248, 1)
+	GAME_FLAG_ON(839)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1810")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1810)
+}
+
+DEF("d1815")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1815)
+}
+
+

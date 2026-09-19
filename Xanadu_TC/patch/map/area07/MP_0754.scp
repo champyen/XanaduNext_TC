@@ -1,0 +1,317 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ポータル關連
+	CHECK_GAME_FLAG(4013)
+	ON_SKIP(2)
+	LOAD_MAP("MP_075b")
+	HIDE_CHR("cover")
+
+	// SE再生
+	SE("SE_WIND2")
+
+	// 3607	EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	check_game_flag(3607)
+	on_jump NEXT
+	// 3625	EV B-7b 魔粧の森～イーグリット山入り口マップ
+	check_game_flag(3625)
+	on_jump NEXT
+	ENTRY_CHR( 0,  40)
+	PUT_CHR( 0, "Dvorak",     -0.26,1.50,24.22, 0)
+	load_npc_eqp(7,00)
+	DVORAK( 0 )
+	HIDE_CHR("Dvorak")
+NEXT:
+
+
+	CHECK_GAME_FLAG(4013)
+	OFF_JUMP P
+	SWITCH_ON("portal")
+	KILL_CHR("cover",0,0,1)
+
+P:
+
+	set_rain_inf("EFC_HINOKO2",1, 45, 15,480)
+	rain(1)
+
+	// フェード處理
+	CHECK_ENTRY_GATE("0754_0821")
+	OFF_JUMP NEXT3
+
+//	CINEMA_ON(0)
+	CINEMA_OFF(0)
+
+//	FADE_IN(-1)
+	GAME_FLAG_OFF(3000)
+
+	// エリアネーム表示
+	DISP_PLACE(6)
+
+NEXT3:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1802)
+//	ON_SKIP(2)
+	ON_JUMP skip
+	KAGI("d1802",1)
+//	SKIP(1)
+	end
+skip:
+	INIT_SWITCH_ON("d1802")
+
+}
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1802")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1802)
+}
+
+
+// ============================================================================
+// 門(exit)
+// ============================================================================
+
+DEF("gate")
+RES("CLICK")
+{
+	CINEMA_ON(0)
+
+	STOP_PC(0)
+	ACTIVE_CHR("SCREEN")
+	SEL("　要進去乕？　|#C2進去|取消")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL1
+	JUMP SEL2
+
+SEL1:
+	WAIT(30)
+	SWITCH_ON("gate")
+	FADE_OUT(-1)
+	GAME_FLAG_ON(3000)
+	WAIT(40)
+	SE("SE_CHG_AREA")
+	WAIT(20)
+	ENTRY_MAP("0821_0754")
+
+SEL2:
+	CINEMA_OFF(0)
+	END
+}
+
+
+// ----------------------------------------------------------------------------
+// 道標
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("伊格利特山")
+}
+
+
+// ============================================================================
+// ポータル
+// ============================================================================
+DEF("portal")
+
+RES("EVENT")
+{
+	INIT_WALK_DST("PC")
+
+	// ★05/06/20:Ｆクリスタルは最初の一回だけでいい事になりました（ひ）
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4013)
+	ON_JUMP NEXT
+
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-1.5,0,-6)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+
+	SE("SE_WARP1")
+	KILL_CHR("cover",0,1,120)
+	LOAD_MAP("MP_0754")
+	SHOW_CHR("cover")
+	SWITCH_ON("portal")
+	WAIT(120)
+	WAIT(120)
+
+	GAME_FLAG_ON(4013)
+	
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-1.5,0,-6)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+
+//////////////////////////////////////////////////////////////////////
+// Ｂ-７Ｂ　魔粧の森～イーグリット山入り口マップ
+
+DEF("EV_Dvorak")
+
+RES("EVENT")
+{
+	// 3607	EV B-8 イーグリット山(ベアトリーチェとアバターラハ)
+	check_game_flag(3607)
+	on_jump EXIT
+	// 3625	EV B-7b 魔粧の森～イーグリット山入り口マップ
+	check_game_flag(3625)
+	on_jump EXIT
+
+//--------------------------------------------------------------------
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_OFF(254)
+
+	STOP_PC(0)
+	PC_WEAPON( 0 , 1)
+	set_pos("PC",-0.57,1.50,33.19)
+	set_deg("PC",180)
+	SET_MOTION("PC","STAND",-1)
+	SHOW_CHR("Dvorak")
+	set_pos("Dvorak",     -0.26,1.50,24.22)
+
+	bgm(18, 0, 1000)
+
+	cross_fade(60)
+	permit_script_camera(1)
+	set_script_camera(-0.57,1.50,33.19 ,-45,225.0,0.0, 15, 15.0)
+	CINEMA_ON(0)
+	wait(60)
+
+	set_skip_label("SKIP")
+
+	wait(30)
+	MSG_EX("#S3#C0男人聲「我還以為是誰，原來是祢姶。」",-1,2)
+
+	move_script_look_at(0,0,-4, 400, 1)
+	scale_script_camera(2.0, 400, 1)
+	wait(60)
+
+	MSG_EX("#S3#C0熏沃夏克「祢能來到這裡，|　　　　　也就是説武技有所提高了。」",-1,2)
+
+	wait_camera(0)
+
+	rotate_script_camera(2,10,0, 1000, 1)
+	scale_script_camera(1.0, 1000, 1)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", -0.30,1.50,28.14)
+	walk_pos("Dvorak",0,0.025)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0熏沃夏克「正好，騎士姶……|　　　　　我有話想對祢説。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「以前把祢逼到死路這件事……|　　　　　我一熨也不後悔。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「像我們這樣為了戰熹不惜生命的人，|　　　　　必定會取得勝利。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「強則勝、弱則敗，|　　　　　弱者沒有生存下來的權利。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「祢是因為自己弱小才瀉了性命的……|　　　　　只是這樣而已。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「祢如果再次淪為弱者，|　　　　　無論多少次我一定會殺了祢的。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「即使我不殺祢，|　　　　　也會有人打敗祢取祢性命。」",-1,2)
+
+	cross_fade(60)
+	set_script_camera(-0.38,2.00,28.85 ,-45,225.0,0.0, 13, 15.0)
+	move_script_look_at(0,0,4.5, 400, 1)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 0.59,1.50,30.44)
+	set_walk_dst("Dvorak", 0.59,1.50,33.19)
+	walk_pos("Dvorak",0,0.025)
+	wait_walk("Dvorak")
+
+	LOOK_CHR("PC","Dvorak")
+	MSG_EX("#S3#C0熏沃夏克「如果祢自稱是騎士的話，|　　　　　那就活著證明給我們看。」",-1,2)
+	MSG_EX("#S3#C0熏沃夏克「如果不能的話，就捨棄騎士之名叺。」",-1,2)
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 0.44,1.50,42.85)
+	walk_pos("Dvorak",0,0.022)
+	wait(180)
+	LOOK_CHR("PC","-")
+
+	fade_out(60)
+	wait(60)
+	hide_chr("Dvorak")
+	wait(120)
+
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+
+	bgm(-1, 0, 1000)
+	fade_in(60)
+
+	// 3625	EV B-7b 魔粧の森～イーグリット山入り口マップ
+	game_flag_on(3625)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+EXIT:
+	end
+
+SKIP:
+	hide_chr("Dvorak")
+	// 3625	EV B-7b 魔粧の森～イーグリット山入り口マップ
+	game_flag_on(3625)
+	bgm(-1, 0, 1000)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+	end
+}
+

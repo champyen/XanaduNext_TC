@@ -1,0 +1,275 @@
+
+// ----------------------------------------------------------------------------
+// 水門２讀み替え                                                                 
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// 水マップ
+	SE("SE_MIZU")
+
+	CHECK_GAME_FLAG(537)
+	ON_JUMP NEXT
+
+	LOAD_MAP("MP_05a8")
+	LOAD_HITMAP("MP_05a8h")
+
+NEXT:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1531)
+	ON_SKIP(2)
+	KAGI("d1531",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1531")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1531")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1531)
+	// MP_05a5 の全滅とラップも解除したことにする
+	GAME_FLAG_ON(596)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(597)
+	OFF_JUMP NEXT
+
+//	CHECK_ROOM_MEMO(255)
+//	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox1")
+
+	INIT_SWITCH_ON("tbox1")
+
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+	CHECK_GAME_FLAG(597)
+	OFF_JUMP ITEM
+
+ITEM:
+// バデッドアーマー+1
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 96, -1,0.375,7, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【鎖甲＋１】！",-1,0X00000200)
+
+	GET_ITEM(96, 1)
+	GAME_FLAG_ON(597)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(598)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god06",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+	CHECK_GAME_FLAG(598)
+	OFF_JUMP ITEM
+
+// もしかしたらブラックオニキス
+BLACK_ONYX:
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 80, -1 )
+	OFF_JUMP GOLD
+
+	// バランス調整のため、ブラオニ禁止
+	JUMP GOLD
+
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 220, 11,-1,-1, 1,80,0)
+	WAIT(140)
+
+//	CHECK_MAX_ITEM(0)
+//	ON_JUMP ITEM_FULL
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP ITEM_FULL
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【黑瑪瑙】！",-1,0X00000200)
+
+	GET_ITEM(220,1)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM_FULL:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	end
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 225, 11,-1,-1, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【100Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(100)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 106, 11,-1,-1, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99CARD_GET","tbox2","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(6)
+	GAME_FLAG_ON(598)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【瓦納波特】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【瓦納波特】",-1,0X00000200)
+	SYS_EX("這是能提高宿主魅力的守護精靈。|買東西的時候價錢會打折。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+//DEF("ITEM2")
+//RES("CATCH")
+//{
+//	SE("SE_GETITEM")
+//	GAME_FLAG_ON(598)
+//}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("第三水閘")
+}
+

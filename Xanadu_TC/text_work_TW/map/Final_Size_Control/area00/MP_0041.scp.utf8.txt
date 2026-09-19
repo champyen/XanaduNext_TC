@@ -1,0 +1,220 @@
+
+// ============================================================================
+// ＮＰＣテスト用（井上）
+// ============================================================================
+
+DEF("rese")
+RES("CLICK")
+{
+	FOCUS_CHR("rese")
+	SET_NAME("SHALL","夏兒")
+	SET_MOTION("rese","ATTACK1",-1)
+
+	MSG("給你一樣好東西。")
+	GET_ITEM(37, 1)
+	GET_ITEM(89, 1)
+	GET_ITEM(90, 1)
+	GET_ITEM(91, 1)
+	GET_ITEM(92, 1)
+	GET_ITEM(93, 1)
+	GET_ITEM(94, 1)
+	GET_ITEM(95, 1)
+	GET_ITEM(96, 1)
+	GET_ITEM(97, 1)
+	GET_ITEM(98, 1)
+	GET_ITEM(384, 1)
+	GET_ITEM(38, 1)
+	SET_MOTION("rese","STAND",-1)
+}
+
+
+
+DEF("huro")
+RES("CLICK")
+{
+	
+	FOCUS_CHR("huro")
+	SET_NAME("YUINARU","尤伊娜爾")
+	SET_MOTION("huro","ATTACK1",-1)
+
+	MSG("我叫做芙洛。")
+	SET_MOTION("huro","STAND",-1)
+
+
+END
+
+}
+
+
+
+DEF("shall")
+RES("CLICK")
+{
+	FOCUS_CHR("shall")
+	SET_NAME("SHALL","夏兒")
+	SET_MOTION("shall","ATTACK1",-1)
+
+	MSG("我是有些早熟的夏兒，１１歲！")
+
+	SET_MOTION("shall","STAND",-1)
+}
+
+
+DEF("yuinaru")
+RES("CLICK")
+{
+	FOCUS_CHR("yuinaru")
+	SET_NAME("YUINARU","尤伊娜爾")
+	SET_MOTION("yuinaru","ATTACK1",-1)
+
+	MSG("我是尤伊娜爾。")
+
+	SET_MOTION("yuinaru","STAND",-1)
+}
+
+
+
+DEF("yome")
+RES("CLICK")
+{
+	FOCUS_CHR("yome")
+	SET_NAME("YOME","莉絲洛特")
+	SET_MOTION("yome","ATTACK1",-1)
+
+	MSG("我是新娘。心跳不止。")
+
+	SET_MOTION("yome","STAND",-1)
+}
+
+
+DEF("ti")
+RES("CLICK")
+{
+	FOCUS_CHR("ti")
+	SET_NAME("TI","智之祭司")
+	SET_MOTION("ti","ATTACK1",-1)
+
+	MSG("我是阿巴塔拉哈。")
+
+	SET_MOTION("ti","STAND",-1)
+}
+
+
+
+DEF("siki")
+RES("CLICK")
+{
+	FOCUS_CHR("siki")
+	SET_NAME("SIKI","識之祭司")
+	SET_MOTION("siki","ATTACK1",-1)
+
+	MSG("我是提歐巴特。")
+
+	SET_MOTION("siki","STAND",-1)
+}
+
+DEF("shou")
+RES("CLICK")
+{
+	FOCUS_CHR("shou")
+	SET_NAME("SHOU","捷之祭司")
+	SET_MOTION("shou","ATTACK1",-1)
+
+	MSG("我是修特威爾姆。")
+
+	SET_MOTION("shou","STAND",-1)
+}
+
+DEF("kou")
+RES("CLICK")
+{
+	FOCUS_CHR("kou")
+	SET_NAME("KOU","功之祭司")
+	SET_MOTION("kou","ATTACK1",-1)
+
+	MSG("我是剛達爾奇。")
+
+	SET_MOTION("kou","STAND",-1)
+}
+
+DEF("bu")
+RES("CLICK")
+{
+	FOCUS_CHR("bu")
+	SET_NAME("BU","武之祭司")
+	SET_MOTION("bu","ATTACK1",-1)
+
+	MSG("我是德沃夏克。")
+
+	SET_MOTION("bu","STAND",-1)
+}
+
+
+DEF("ma")
+RES("CLICK")
+{
+	FOCUS_CHR("ma")
+	SET_NAME("MA","魔之祭司")
+	SET_MOTION("ma","ATTACK1",-1)
+
+	MSG("我是貝亞特里奇。")
+
+	SET_MOTION("ma","STAND",-1)
+}
+
+
+DEF("mi")
+RES("CLICK")
+{
+	FOCUS_CHR("mi")
+	SET_NAME("MI","魅之祭司")
+	SET_MOTION("mi","ATTACK1",-1)
+
+	MSG("我是洛蕾萊。")
+
+	SET_MOTION("mi","STAND",-1)
+}
+
+
+DEF("Dusty")
+RES("CLICK")
+{
+
+	FOCUS_CHR("Dusty")
+	SET_MOTION("Dusty","ATTACK1",-1)
+	SET_NAME("DUSTY","達斯提")
+	MSG("我是達斯提。")
+	SET_MOTION("Dusty","STAND",-1)
+}
+
+
+DEF("Erick")
+RES("CLICK")
+{
+	FOCUS_CHR("Erick")
+	SET_MOTION("Erick","ATTACK1",-1)
+	SET_NAME("ERICK","埃裡克")
+	MSG("我是埃裡克。")
+	SET_MOTION("Erick","STAND",-1)
+}
+
+DEF("Lazarus")
+RES("CLICK")
+{
+	FOCUS_CHR("Lazarus")
+	SET_MOTION("Lazarus","ATTACK1",-1)
+	SET_NAME("LAZARUS","艾修")
+	MSG("我是艾修。")
+	SET_MOTION("Lazarus","STAND",-1)
+}
+
+
+DEF("Ned")
+RES("CLICK")
+{
+	FOCUS_CHR("Ned")
+	SET_MOTION("Ned","ATTACK1",-1)
+	SET_NAME("NED","內德")
+	MSG("我是內德。")
+	SET_MOTION("Ned","STAND",-1)
+}

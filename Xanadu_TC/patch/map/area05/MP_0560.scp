@@ -1,0 +1,388 @@
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv‰Šúİ’è                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+
+	// ƒXƒ‰ƒCƒ€
+	PUT_MONSTER("m00",004,3,0,0,0)
+	PUT_MONSTER("m01",004,3,0,0,1)
+	PUT_MONSTER("m02",004,3,0,0,2)
+	
+	// ƒ‚ƒ“ƒXƒ^[ˆê•C‚à‚¢‚È‚¯‚ê‚Î"door"‚ªŠJ‚­
+	check_monster(0)
+	on_jump skip
+
+	INIT_SWITCH_ON("door")
+
+skip:
+
+
+
+
+//SET_TREASURE("box",1,111,"a")
+
+// Î”ÅEè‹L‚ğ“Kác‚É“Ë‚Á‚ñ‚¾” 
+SET_TREASURE("box",1,270,"-")
+SET_TREASURE("box",1,272,"-")
+SET_TREASURE("box",1,278,"-")
+SET_TREASURE("box",1,292,"-")
+SET_TREASURE("box",1,301,"-")
+
+}
+
+
+
+
+
+// ƒIƒbƒTƒ“ ////////////////////////////////
+DEF("warp")
+RES("CLICK")
+{
+
+// —a‚©‚èŠTEST --------------
+	call_shop(3)
+	end
+
+
+
+
+
+	MSG("‹‹”IŒ¸­‰ğæ¤ŠÔ")
+	add_text_time(21600)
+	end
+
+
+
+
+
+
+
+
+
+	MSG("Œ»İŠJn’µçz")
+
+	ATTACH_EFC("EFC_WARP_T","warp","POS")
+	warp_chr("warp",0)
+
+	wait(180)
+
+	warp_chr("warp",1)
+
+	MSG("‰ä‰ñ˜Ò—¹")
+
+}
+
+
+
+
+
+
+// ƒŠ[ƒ[ ////////////////////////////////
+DEF("gal")
+RES("CLICK")
+{
+
+	// ñƒ`ƒFƒbƒN -----------------------------------
+	MSG("‰Ä™Z¨ä»ãN")
+	LOOK_CHR("girl","gal")
+	MSG("ä»ãN¨‚o‚b")
+	LOOK_CHR("gal","PC")
+	MSG("‚o‚b¨‰Ä™Z")
+	LOOK_CHR("PC","girl")
+	MSG("d’u")
+	LOOK_CHR("PC","-")
+	LOOK_CHR("girl","-")
+	LOOK_CHR("gal","-")
+	MSG("Œ‹‘©")
+
+}
+
+
+
+
+
+
+// ƒVƒƒƒ‹ /////////////////////////////////
+DEF("girl")
+RES("CLICK")
+{
+
+// ƒAƒCƒRƒ“ƒTƒ“ƒvƒ‹ -----------------------------------------------------
+
+	pop_item_icon("abc", 187, 3.0, 0.0, -0.24, 5.0, 180, 0)
+	wait(240)
+	del_item_icon("abc")
+	end
+// ----------------------------------------------------------------------
+
+
+// Î”ÅƒTƒ“ƒvƒ‹(START) -----------------------------------------------------
+
+	MSG("šÎ”Å‰{——‘ªš|¿\’˜Î”Åæ\áã‰äB")
+
+	// Î”Å‚Á‚Ä‚éHi0:Î”Å/1:è‹Lj
+	check_text_item(0)
+	off_jump skip
+	// ‘S•”Ÿ“¾i0:Î”Å/1:è‹Lj
+	MSG("•s—v\’˜Î”ÅI")
+	MSG("Ÿ“¾I")
+	pick_text_item(0)
+skip:
+
+
+	// ‚Æ‚è‚ ‚¦‚¸ƒVƒlƒXƒR
+	cinema_on(0)
+	wait(60)
+
+menu_start:
+	// Î”ÅMENUŒÄ‚Ño‚µi0:Î”Å/1:è‹Lj
+	call_text(0)
+
+	// call_text()àA‚ÅuƒLƒƒƒ“ƒZƒ‹(12)v‚ğ‘I‚ñ‚¾‚Í‚±‚±‚ÅƒXƒLƒbƒv‚³‚¹‚é
+	check_sel_text(12)
+	on_jump menu_end
+
+	// Î”Å—p”wŒi‚ğæ¤‚İ‚±‚İ
+	load_novel_bg("epitaph\plate")
+//	load_novel_bg("epitaph\paper")
+	// Î”Å—p”wŒi•\¦
+	novel_on(0)
+	wait(60)
+
+	// ‘I‚ñ‚¾Î”Å‚Éœä‚¶‚½•¶–Ê‚Ì•\¦
+	check_sel_text(0)
+	off_jump sel1
+	MSG_EX("Î”Â‡@“IàA—e",-1,0X00000010)
+	jump novel_end
+sel1:
+	check_sel_text(1)
+	off_jump sel2
+	MSG_EX("Î”Â‡A“IàA—e",-1,0X00000010)
+	jump novel_end
+sel2:
+
+	// ˆÈ‰ºAÎ”Å‡K‚Ü‚Åã”‚­c
+
+
+novel_end:
+	// Î”Å—p”wŒiÁ‹
+	novel_off(0)
+	wait(60)
+	
+	// Ä‚ÑÎ”ÅMENU‚Ö
+	jump menu_start
+
+menu_end:
+	// ƒVƒlƒXƒRÁ‹
+	cinema_off(0)
+	wait(60)
+	
+skip:
+
+	MSG("Œ‹‘©")
+	
+	end
+
+// Î”ÅƒTƒ“ƒvƒ‹(END) ----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	MSG("”I“I–¼š¥#N0I")
+	MSG("—p—Lãß¬à“I•—Šièû¦•¶šB|iŠÒ–¢äoíPs“Ièû¦‘Š›”œäj")
+
+	fade_out_ex(30,1,0x7f000000,0)
+	wait(30)
+
+	MSG_EX("íPác”ÏçN“IŒóC‰äAX´‘^’n”F¯“©ŒÈ¥‘½›õŸ“—pB|’A¥Šô”NŒãC‘¼”‡é›”‰äàB|uœŸ”VŠO‰äŸ“—L‘´‘¼“I¶‘¶ˆÓ‹`CŠˆÈ‰ä‘–ã—¹”‡Š“¹˜HBvãìãìãì|Œ»İ‰ñ‘z‹N˜ÒC›‰İ¥Œ”ñíœÎœÁ“I–îB|‰ä›”“ßŒÂlŠ®‘S•s—Ä‰ğB|@|‘I©‰Ä—Œ“ÁàK‚kàKˆÛ¢z’˜|uÅŒã“I‹Rmv@‘æ“ñÍ@àŸFV–º",-1,0X00000010)
+
+	fade_in_ex(30,1,0x7f000000,0)
+	wait(30)
+
+	MSG("Ú‰º˜Ò—p‘æ‚P‚UåjˆÈŒã“IŠÉÕæ¤æŠpF‘u™Û")
+
+	entry_chr(0,76)
+	put_chr(0,"abc",1,0,3,233)
+
+	MSG("Œ‹‘©")
+
+	end
+
+
+	// íMsƒ`ƒFƒbƒN ----------------------------------------
+	MSG("€”õcŠJnI")
+
+	LOOK_CHR("PC","girl")
+	LOOK_CHR("girl","PC")
+
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC",   1, 0, 4.00)
+	set_walk_dst("PC",-2.6,-1, 4.22)
+	set_walk_dst("PC",-4.4,-1, 1.32)
+	set_walk_dst("PC",-4.1, 0,-5.10)
+	set_walk_dst("PC",-0.2, 0,-4.45)
+	set_walk_dst("PC", 1.2, 0,-0.10)
+	walk_pos("PC",1,0.050000)
+	
+	wait(120)
+	
+//	stop_walk("PC")
+
+ENTRY_MAP("0710_0711")
+
+	wait_walk("PC")
+	
+	MSG("Ià‘")
+
+}
+
+
+
+
+
+
+
+
+
+
+// ƒhƒ”ƒHƒ‹ƒU[ƒN /////////////////////////////////
+DEF("dvorak")
+RES("CLICK")
+{
+	load_npc_eqp(7,105,0)
+	MSG("à—€‰Ä’Êí¨U“")
+	// U“ƒ‚[ƒVƒ‡ƒ“‚ÌÄ¶c
+	set_motion("dvorak","WEAPON_O")
+	// U“ƒ‚[ƒVƒ‡ƒ“Ä¶‘Ò‚¿c
+	wait(54)
+	// ƒ‚[ƒVƒ‡ƒ“ƒe[ƒuƒ‹æ¤‚İ‘Ö‚¦
+	dvorak(1)
+	// U“—pƒe[ƒuƒ‹‘¤‚ÌSTAND‚É
+	set_motion("dvorak","STAND")
+	
+	// ‘–‚ç‚¹‚Ä‚İ‚éc
+	MSG("U“s‘–")
+	INIT_WALK_DST("dvorak")
+	set_walk_dst("dvorak",   1, 0, 4.00)
+	set_walk_dst("dvorak",-2.6,-1, 4.22)
+	walk_pos("dvorak",0,0.040000)
+	wait_walk("dvorak")
+
+	// ƒ‚[ƒVƒ‡ƒ“ƒe[ƒuƒ‹–ß‚·
+	dvorak(0)
+
+	MSG("Œ‹‘©")
+}
+
+
+
+
+
+
+
+
+
+
+
+// ƒAƒjƒGƒX /////////////////////////////////
+DEF("aniece")
+RES("CLICK")
+{
+// åä”õ‚s‚d‚r‚s --------------------------------------------------------
+	MSG("Š·åäˆ¢“òäˆãN")
+	
+	MSG("ŠZbŒnC|œ—¹w½qŠZxw½bx”VŠO“s—L‘—¿B")
+	
+	load_npc_eqp(80,12)
+	MSG("’·åÚ")
+
+	load_npc_eqp(81,12)
+	MSG("•zåÌ")
+
+	load_npc_eqp(82,12)
+	MSG("”¼gŠZ")
+
+	load_npc_eqp(83,12)
+	MSG("”çb")
+
+//	load_npc_eqp(84,12)
+//	msg("ƒŠƒ“ƒOƒƒCƒ‹")
+
+	load_npc_eqp(85,12)
+	MSG("—Øb")
+
+	load_npc_eqp(86,12)
+	MSG("‘SgŠZ")
+
+//	load_npc_eqp(87,12)
+//	msg("ƒoƒfƒbƒgƒA[ƒ}[")
+
+	load_npc_eqp(88,12)
+	MSG("‘SgŒìŠZ")
+
+
+	MSG("’jŠß‰ÆœäŠY—Lˆê“…™˜A‚A“ªŠ€úİgãB")
+
+	load_npc_eqp(12,10)
+	MSG("‘š”Và€ˆó")
+
+	load_npc_eqp(65,11)
+	MSG("“ƒ‚")
+
+	load_npc_eqp(51,13)
+	MSG("••Œû“ªŠ€")
+
+
+// U“‚s‚d‚r‚s --------------------------------------------------------
+
+	MSG("ˆ¢“òäˆãN’Êí¨U“")
+	// ƒ‚[ƒVƒ‡ƒ“ƒe[ƒuƒ‹æ¤‚İ‘Ö‚¦
+	aniece(1)
+	// U“ƒ‚[ƒVƒ‡ƒ“‚ÌÄ¶c
+	set_motion("aniece","WEAPON_O")
+	wait(58)
+	// U“—pƒe[ƒuƒ‹‘¤‚ÌSTAND‚É
+	set_motion("aniece","STAND")
+
+	wait(60)
+
+// íMs‚s‚d‚r‚s --------------------------------------------------------
+
+	// ‘–‚ç‚¹‚Ä‚İ‚éc
+	MSG("ˆ¢“òäˆãNíMs")
+	INIT_WALK_DST("aniece")
+	set_walk_dst("aniece",3.28,0.00,-5.71)
+	set_walk_dst("aniece",3.32,0.00,-4.34, 45)
+	walk_pos("aniece",0,0.040000)
+	wait_walk("aniece")
+
+	// ƒ‚[ƒVƒ‡ƒ“ƒe[ƒuƒ‹–ß‚·
+	aniece(0)
+	// ’Êíƒe[ƒuƒ‹‘¤‚ÌSTAND‚É
+	set_motion("aniece","STAND")
+
+
+	end
+}

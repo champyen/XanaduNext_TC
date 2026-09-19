@@ -1,0 +1,240 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期狀態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1629)
+	ON_SKIP(2)
+	KAGI("d1629",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1629")
+
+	HIDE_CHR("tbox")
+
+	// 箱解き濟み
+//	CHECK_GAME_FLAG(647)
+	CHECK_GAME_FLAG(633)
+	OFF_SKIP(5)
+	SHOW_CHR("tbox")
+	MOVE_VEC("box1",0,0,3,1)
+	MOVE_VEC("box2",1.5,0,-3,1)
+	// 入室直後のイベント發生防止用
+	ROOM_FLAG_ON(7)
+	ROOM_FLAG_ON(8)
+
+	// 寶箱GET濟み
+	CHECK_GAME_FLAG(633)
+	OFF_SKIP(1)
+	KILL_CHR("tbox",0,0,1)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(633)
+	OFF_JUMP next
+
+	// ブレイズLV3
+//	SET_TREASURE("tbox",1,240,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+// ブレイズ
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 240, -5,3.875,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(240, 1)
+	GAME_FLAG_ON(633)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1629")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1629)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(633)
+	ON_JUMP NEXT2
+
+	// 入室直後のイベント發生防止用
+	CHECK_ROOM_FLAG(7)
+	OFF_SKIP(2)
+	ROOM_FLAG_OFF(7)
+	END
+
+	// このスイッチを押しているか
+	CHECK_SWITCH("sw1")
+	OFF_JUMP NEXT
+
+	// もう片方のスイッチも押されているか
+	CHECK_SWITCH("sw2")
+	OFF_JUMP NEXT2
+
+	// 寶箱現れる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",-5,3.875,0)
+		CHECK_GAME_FLAG(633)
+		ON_SKIP(1)
+		SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+//	GAME_FLAG_ON(647)
+	ROOM_FLAG_ON(47)
+
+	END
+
+NEXT:
+
+	// 既に寶箱が出ているなら消す
+//	CHECK_GAME_FLAG(647)
+	CHECK_ROOM_FLAG(47)
+	OFF_JUMP NEXT2
+
+	// 寶箱消える
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	ROOM_FLAG_OFF(10)
+	EFC("EFC_ADD_TREASURE",-5,3.875,0)
+	HIDE_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+//	GAME_FLAG_OFF(647)
+	ROOM_FLAG_OFF(47)
+
+	END
+
+NEXT2:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw2")
+
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(633)
+	ON_JUMP NEXT2
+
+	// 入室直後のイベント發生防止用
+	CHECK_ROOM_FLAG(8)
+	OFF_SKIP(2)
+	ROOM_FLAG_OFF(8)
+	END
+
+	// このスイッチを押しているか
+	CHECK_SWITCH("sw2")
+	OFF_JUMP NEXT
+
+	// もう片方のスイッチも押されているか
+	CHECK_SWITCH("sw1")
+	OFF_JUMP NEXT2
+
+	// 寶箱現れる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",-5,3.875,0)
+		CHECK_GAME_FLAG(633)
+		ON_SKIP(1)
+		SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+//	GAME_FLAG_ON(647)
+	ROOM_FLAG_ON(47)
+
+	END
+
+NEXT:
+
+	// 既に寶箱が出ているなら消す
+//	CHECK_GAME_FLAG(647)
+	CHECK_ROOM_FLAG(47)
+	OFF_JUMP NEXT2
+
+	// 寶箱消える
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	ROOM_FLAG_OFF(10)
+	EFC("EFC_ADD_TREASURE",-5,3.875,0)
+	HIDE_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+//	GAME_FLAG_OFF(647)
+	ROOM_FLAG_OFF(47)
+
+	END
+
+NEXT2:
+
+}
+

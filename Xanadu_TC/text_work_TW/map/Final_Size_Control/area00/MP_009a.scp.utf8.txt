@@ -1,0 +1,292 @@
+// ============================================================================
+// ギルド（初期化）
+// ============================================================================
+
+DEF("MAP")
+RES("INIT")
+{
+}
+
+
+DEF("door_gm")
+RES("INIT")
+{
+	// 外から入ってきた角度にあわせる
+	reset_map_rot_y(1,0)
+}
+
+
+// ＧＭのショップ內での臺詞
+	@gm_msg0
+{
+	MSG_EX("#C6★主人公被告知有事要拜託。|但是在此之前首先要做冒險的準備，|得到探索所必需的道具和金錢。",-1,0X00000008)
+
+	se("SE_GETITEM")
+	
+	get_item(0,1)
+
+	get_gold(1000)
+
+	get_item(210,3)
+
+	get_item(225,5)
+	get_item(224,3)
+	get_item(223,1)
+
+	SYS("得到【武器】|【藥水Ｘ３】|【食材】|【１０００Ｇ】。")
+
+	MSG_EX("#C6★在道場訓練之後，被告知再來，退出房間。",-1,0X00000008)
+
+	close_shop(0)
+}
+
+	@gm_msg1
+{
+	MSG_EX("#C6★如果確認已經準備好了的話、|得到【討伐棲息在地道里的魔物】的任務，遊戲開始！",-1,0X00000008)
+	MSG_EX("#C6★得到使用道具屋的許可。|並且被告知可以自由使用小鎮東側的空屋。",-1,0X00000008)
+	MSG_EX("#C6★而且以後只要付錢，|店主會直接傳授『技能』給你。",-1,0X00000008)
+	close_shop(0)
+}
+
+// ============================================================================
+// 騎士
+// ============================================================================
+
+DEF("knight")
+RES("CLICK")
+{
+	focus_chr("knight")
+	MSG("找協會主管有什麼事嗎？")
+}
+
+DEF("enter_gm")
+RES("EVENT")
+{
+	check_game_flag(3500)
+	on_jump skip
+	
+	stop_pc(0)
+	
+	set_deg_ex("knight","PC")
+	set_deg_ex("PC","knight")
+
+	focus_chr("knight")
+
+	active_chr("knight")
+	SYS("#C2★在這裡能聽到士兵呼喊自己的名字。")
+	call_shop(10)
+	SYS("#C2★確認姓名後，自動切換到店主的房間。")
+
+	focus_chr("PC")
+	set_deg_ex("PC","door_gm")
+	switch_on("door_gm")
+	wait(30)
+	
+	fade_out(60)
+	wait(60)
+	
+	// 臺詞セット
+		add_shop_script("gm_msg0")
+
+	call_shop(50000)
+
+	switch_off("door_gm")
+	set_pos_ex("PC","out_gm")
+	set_deg("PC",180)
+
+	fade_in(60)
+	wait(60)
+	
+	// 騎士のアドバイス -----------------------------------------------------
+	set_deg_ex("PC","knight")
+	focus_chr("knight")
+
+	active_chr("knight")
+	SYS("#C2★從士兵處打聽到，|付錢給這裡的六位老師就可以提升數值。")
+	SYS("#C2★但是掌管「魅力」的老師現在不在這裡，|不可以進行這方面的修行。")
+
+	focus_chr("PC")
+
+	game_flag_on(3500)
+	
+skip:
+}
+
+
+// ============================================================================
+// 師匠たち
+// ============================================================================
+
+@etr_pc
+{
+	stop_pc(0)
+//	set_color("PC",0x00000000,30,1)
+//	wait(30)
+	fade_out(30)
+	wait(30)
+	ret
+}
+@rtn_pc
+{
+//	set_color("PC",0xff000000,30,1)
+//	wait(30)
+	fade_in(30)
+	wait(30)
+	ret
+}
+
+@shutout
+{
+	check_game_flag(3500)
+	on_jump skip
+	stop_pc(0)
+	SYS("門緊緊關著……")
+	end
+skip:
+//	switch_on("CUR")
+}
+
+@shutout2
+{
+	check_game_flag(9999)
+	on_jump skip
+	stop_pc(0)
+	SYS("這裡好像是一間空屋子……")
+	end
+skip:
+//	switch_on("CUR")
+}
+
+// ============================================================================
+// STR
+// ============================================================================
+DEF("dojo_str")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40000)
+	switch_off("door_str")
+	set_pos_ex("PC","out_str")
+	set_deg("PC",90)
+	call rtn_pc
+}
+DEF("door_str")
+RES("CLICK")
+{
+	call shutout
+}
+// ============================================================================
+// CON
+// ============================================================================
+DEF("dojo_con")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40003)
+	switch_off("door_con")
+	set_pos_ex("PC","out_con")
+	set_deg("PC",90)
+	call rtn_pc
+}
+DEF("door_con")
+RES("CLICK")
+{
+	call shutout
+}
+// ============================================================================
+// REF
+// ============================================================================
+DEF("dojo_ref")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40002)
+	switch_off("door_ref")
+	set_pos_ex("PC","out_ref")
+	set_deg("PC",90)
+	call rtn_pc
+}
+DEF("door_ref")
+RES("CLICK")
+{
+	call shutout
+}
+// ============================================================================
+// INT
+// ============================================================================
+DEF("dojo_int")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40001)
+	switch_off("door_int")
+	set_pos_ex("PC","out_int")
+	set_deg("PC",270)
+	call rtn_pc
+}
+DEF("door_int")
+RES("CLICK")
+{
+	call shutout
+}
+// ============================================================================
+// MND
+// ============================================================================
+DEF("dojo_mnd")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40004)
+	switch_off("door_mnd")
+	set_pos_ex("PC","out_mnd")
+	set_deg("PC",270)
+	call rtn_pc
+}
+DEF("door_mnd")
+RES("CLICK")
+{
+	call shutout
+}
+// ============================================================================
+// CHR
+// ============================================================================
+DEF("dojo_chr")
+RES("EVENT")
+{
+	call etr_pc
+	call_shop(40005)
+	switch_off("door_chr")
+	set_pos_ex("PC","out_chr")
+	set_deg("PC",270)
+	call rtn_pc
+}
+DEF("door_chr")
+RES("CLICK")
+{
+	call shutout2
+}
+
+// ============================================================================
+// ギルドマスター
+// ============================================================================
+DEF("gm")
+RES("EVENT")
+{
+	call etr_pc
+
+// 準備が整った直後 -----------------------------------------------------------
+	check_game_flag(3501)
+	on_jump skip0
+		add_shop_script("gm_msg1")
+	game_flag_on(3501)
+skip0:
+
+	erase_shop_list(0)
+	entry_shop_list("228/229/230")
+	call_shop(50000)
+
+	switch_off("door_gm")
+	set_pos_ex("PC","out_gm")
+	set_deg("PC",180)
+	call rtn_pc
+}

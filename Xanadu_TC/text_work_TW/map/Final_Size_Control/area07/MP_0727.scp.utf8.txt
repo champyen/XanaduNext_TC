@@ -1,0 +1,475 @@
+//////////////////////////////////////////////////////////////////////
+// 
+// room_flag
+//	0 : ドヴォルザーク戰鬥結果
+//
+//
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	camera_off("ドヴォルザーク戰")
+
+	// SE再生
+	SE("SE_WIND")
+
+	HIDE_CHR("Dvorak")
+	HIDE_CHR("Tiowald")
+
+// ストッパーチェック
+	CHECK_GAME_FLAG(715)
+	OFF_JUMP NEXT
+	INIT_SWITCH_ON("stop")
+
+NEXT:
+
+	// トレントンを倒したか？
+	CHECK_GAME_FLAG(3)
+	OFF_JUMP NEXT2
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	CHECK_GAME_FLAG(3603)
+	ON_JUMP NEXT2
+
+	// ドヴォルザーク登場
+	SHOW_CHR("Dvorak")
+	SHOW_CHR("Tiowald")
+	load_npc_eqp(7,00)
+	DVORAK( 0 )
+	jump NEXT3
+
+NEXT2:
+	// リザードマン
+	put_monster("m00",008,6,0,0,0)
+	put_monster("m01",008,6,0,0,1)
+	put_monster("m02",008,6,0,0,2)
+	put_monster("m03",008,6,0,0,3)
+	put_monster("m04",008,6,0,0,4)
+	put_monster("m05",008,6,0,0,5)
+
+NEXT3:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1710)
+	ON_SKIP(2)
+	KAGI("d1710",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1710")
+
+	// カギ設定
+	CHECK_GAME_FLAG(715)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1711)
+	ON_SKIP(2)
+	KAGI("d1711",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1711")
+
+}
+
+RES("WIN")
+{
+	CHECK_GAME_FLAG(715)
+	ON_JUMP next
+
+		STOP_PC(0)
+		WAIT(60)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("stop")
+		SWITCH_ON("stop")
+		WAIT(90)
+		CINEMA_OFF(0)
+
+	GAME_FLAG_ON(715)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1711)
+	ON_SKIP(2)
+	KAGI("d1711",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1711")
+
+next:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1710")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1710)
+}
+
+DEF("d1711")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1711)
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザークイベント
+
+DEF("Dvorak")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Dvorak")
+	SET_NAME("DVORAK", "德沃夏克")
+
+	MSG("你可以繼續前進……|不過，千萬要當心。")
+	MSG("你要是成了我們的阻礙，|到時候我絕不會饒恕你的。")
+}
+
+RES("INIT")
+{
+
+	// トレントンを倒したか？
+	CHECK_GAME_FLAG(3)
+	OFF_JUMP EXIT
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	CHECK_GAME_FLAG(3603)
+	ON_JUMP EXIT
+
+//　　クラウンを手に入れて、岩を碎いてマップ727に入ったらイベ
+//　　ント開始。出たところでドヴォルザークが主人公を待ち構え
+//　　ている。
+	STOP_PC(0)
+	PC_FLAG(3, 1)
+	PC_WEAPON(0,1)
+
+	CINEMA_ON(0)
+	permit_script_camera(1)
+	BGM( 18, 1, 1000 )
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+	set_skip_label("SKIP2")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -0.10,0.00,3.0)
+	walk_pos("PC",0,0.03)
+	set_script_camera(-0.02,-0.46,5.86,  -30.5,205.0,0.0, 13, 15.0)
+
+	set_pos("Dvorak", 1.10,-0.00,-3.83)
+	set_pos("Tiowald", 2.92,-0.00,-2.03)
+	set_deg_EX("Dvorak", "PC")
+	set_deg_EX("Tiowald", "PC")
+
+	wait_walk("PC")
+
+	MSG_EX("#S3#C0男人的聲音「果然是你啊……」",-1,2)
+
+	move_script_look_at(2,0,-5, 120, 1)
+	wait_camera(0)
+	wait(60)
+
+//　　畫面スクロールしてドヴォルザークと老人の姿を見せる。
+//　　それと同時に身構えて腰間から劍を引き拔く主人公。
+
+	//武器もってなければ拔刀しない。
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(4)
+
+	PC_WEAPON(1)
+	wait(60)
+	MSG_EX("#S3#C0不可思議的老人「呵呵，年輕人有朝氣就好。」",-1,2)
+	WAIT(90)
+
+
+	cross_fade(100)
+	permit_script_camera(0)
+	reset_map_rot_y(3,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(1.86,-0.00,-1.51,  -30.5,315.0,0.0, 12, 15.0)
+	wait(100)
+
+
+	look_chr("Tiowald", "Dvorak")
+	MSG_EX("#S3#C0不可思議的老人「是你認識的人嗎？」",-1,2)
+
+	look_chr("Dvorak", "Tiowald")
+	MSG_EX("#S3#C0德沃夏克「真是奇妙的緣分啊。」",-1,2)
+	look_chr("Dvorak", "PC")
+	look_chr("Tiowald", "PC")
+	MSG_EX("#S3#C0德沃夏克「騎士啊，你還活著真讓人吃驚。」",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1", -1)
+	MSG_EX("#S3#C0不可思議的老人「……是守護精靈啊。」",-1,2)
+	MSG_EX("#S3#C0不可思議的老人「可以看到這個年輕人的生命|　　　　　　是由守護精靈在維繫著。」",-1,2)
+	MSG_EX("#S3#C0不可思議的老人「能夠這樣降服精靈，|　　　　　　在這個時代也有優秀的術者啊。」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「原來是這樣……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「而且，竟然能把|　　　　　　得到王冠之力量的怪物打敗……」",-1,2)
+
+//　　ドヴォルザーク、主人公に步いて近づく。
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 0.95,-0.00,-1.38)
+	walk_pos("Dvorak",0,0.03)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0德沃夏克「和以前在遺跡相遇時不同，|　　　　　你的眼中已經沒有了迷茫。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「呵呵，有趣……」",-1,2)
+
+//　　ドヴォルザーク、劍を拔く。
+	set_motion("Dvorak","WEAPON_O")
+	wait(34)
+	se("SE_WEAPON_O")
+	wait(35)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+
+	MSG_EX("#S3#C0德沃夏克「要不要現在來試一試這力量呢。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「看招！」",-1,2)
+
+
+SKIP2:
+//　　主人公とドヴォルザーク模擬戰鬥
+	fade_out(30)
+	wait(30)
+	// 中ボス曲
+	BGM( 15, 1, 1000 )
+	//room_flag_on(0)
+	//SET_SPOT_ORG(0, 0,0,0 )
+	
+
+	STOP_WALK("PC")
+	STOP_WALK("Dvorak")
+	set_pos("PC", -0.12,0.00,2.63)
+	set_pos("Dvorak", 0.95,-0.00,-1.38)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+
+	//　イベント用ドヴォルザーク非表示＆戰鬥用ドヴォルザーク配置
+	STOP_WALK("Dvorak")
+	hide_chr("Dvorak")
+	put_monster("m99",500,0,0,0x00000010,100)
+	set_pos("m99", 0.95,-0.00,-1.38)
+//	set_scroll_rect( 3,-4.5, 15,4.5)
+	camera_on("ドヴォルザーク戰")
+	lock_camera("ドヴォルザーク戰")
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	wait(30)
+	fade_in(30)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+
+
+DEF("m99")
+RES("PROG1")
+{
+//	room_flag_off(0)
+
+//	BGM( 15, 1, 1000 )
+
+	STOP_PC(0)
+	PC_FLAG(3, 0)
+
+	CINEMA_ON(0)
+	//オニキス使えるようにする。
+	room_flag_off(255)
+
+	fade_out(120)
+	wait(120)
+
+
+	camera_off("ドヴォルザーク戰")
+	unlock_camera("ドヴォルザーク戰")
+	hide_chr("m99")
+	delete_efc("m99")
+	show_chr("Dvorak")
+//	SET_SPOT_ORG(1, 13.25,-9,0 )
+	permit_script_camera(1)
+
+//--------------------------------------------------------------------
+//二人の處理
+	set_pos("Dvorak" , 0.91,-0.00,-0.98)
+	set_pos("PC", -0.12,0.00,2.63)
+	set_deg_ex("Dvorak", "PC")
+	set_deg_ex("PC", "Dvorak")
+
+	DELETE_EFC("Dvorak")
+	DELETE_EFC("PC")
+
+	//武器もってなければスルー
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(1,1)
+
+	set_motion("PC","STAND",0)
+	set_motion("Dvorak","STAND",0)
+
+	set_script_camera(1.02,-0.00,0.29,  -50.5,45.0,0.0, 13, 15.0)
+	fade_in(60)
+	wait(60)
+
+	set_skip_label("SKIP")
+
+	rotate_script_camera(0,-20,0, 1000, 1)
+
+	
+	// ★05/08/20:※room_flag(0)はゲーム內で立ててます。
+	check_room_flag(0)
+	on_jump lose
+
+//　　⇒イベント戰鬥勝利の場合
+
+	INIT_SWITCH_ON("beatdvorak")
+	MSG_EX("#S3#C0德沃夏克「呵呵……好像換了個人似的。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「能夠置於死地而後生，|　　　　　對對手毫無畏懼。」",-1,2)
+	skip(2)
+
+//　　⇒イベント戰鬥敗北の場合
+lose:
+	MSG_EX("#S3#C0德沃夏克「唔，雖然還差得遠……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「不過能夠置於死地而後生，|　　　　　對對手毫無畏懼，也算了不起。」",-1,2)
+
+//　　⇒ここで統合
+
+	MSG_EX("#S3#C0德沃夏克「來了就好，在這裡做個了斷吧。」",-1,2)
+	wait(40)
+	set_motion("Tiowald","ATTACK1",30)
+	MSG_EX("#S3#C0不可思議的老人「……哎呀，|　　　　　　你也真是會惹麻煩啊。」",-1,2)
+
+//　　ドヴォルザークを嗜めるティオバルト
+
+	look_chr("Dvorak", "Tiowald")
+	set_deg("Dvorak", 13)
+	MSG_EX("#S3#C0不可思議的老人「年輕人，放心好了。」",-1,2)
+	MSG_EX("#S3#C0不可思議的老人「在我提歐巴特的面前，|　　　　　　絕對不會再讓這小子出手的。」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「提歐巴特老頭？」",-1,2)
+
+	stop_bgm(0,3000)
+
+	set_motion("Dvorak","WEAPON_I",30)
+	wait(61)
+	dvorak(0)
+	SE("SE_WEAPON_I")
+	set_motion("Dvorak","WEAPON_I",0)
+	WAIT(120)
+
+
+	//武器もってなければスルー
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(0,0)
+
+
+	BGM( 18, 1, 1000 )
+
+	MSG_EX("#S3#C0提歐巴特「雖然我不知道發生了什麼事，|　　　　　不過給你帶來這些麻煩，非常抱歉。」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「雖然有守護精靈在維持，|　　　　　不過也活不了太久。」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「對了……」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「除非得到聖劍的力量。」",-1,2)
+
+	MSG_EX("#S3#C0德沃夏克「你説聖劍？　不是開玩笑吧……」",-1,2)
+	wait(60)
+	look_chr("Dvorak", "PC")
+	set_deg_EX("Dvorak", "PC")
+	wait(60)
+	MSG_EX("#S3#C0德沃夏克「哎呀……難道……？」",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1", -1)
+	MSG_EX("#S3#C0提歐巴特「呵呵……|　　　　　我只不過想到什麼就説出來了而已。」",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0德沃夏克「……………………」",-1,2)
+	wait(60)
+
+	cross_fade(40)
+	permit_script_camera(0)
+	reset_map_rot_y(1,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(0.50,-0.00,0.89,  -30.5,205.0,0.0, 12, 15.0)
+	rotate_script_camera(0,-10,0, 1000, 1)
+
+	SET_MOTION("Dvorak", "ATTACK1", -1)
+	MSG_EX("#S3#C0德沃夏克「……騎士啊。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「那個王冠，|　　　　　暫時就寄存在你那裡吧。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「……不過，你最好小心點。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「如果你阻礙了我們的話，|　　　　　到時候我決不饒你。」",-1,2)
+
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	game_flag_on(3603)
+
+	cross_fade(60)
+	reset_map_rot_y(3,0)
+	focus_chr("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 1, 1000 )
+
+
+	END
+
+SKIP:
+	// EV B-4 トレント戰後(ドヴォルザークとの會話)
+	game_flag_on(3603)
+
+	dvorak(0)
+	PC_WEAPON(0,1)
+	set_motion("Tiowald","STAND",0)
+	set_deg_EX("Dvorak", "PC")
+
+	WAIT(30)
+
+	cross_fade(60)
+	reset_map_rot_y(3,0)
+	focus_chr("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	BGM( -1, 1, 1000 )
+EXIT:
+
+	END
+
+}
+
+
+// 8/31版用ENDING
+@OSIMAI
+{
+	wait(60)
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("辛苦了。|這個版本就到這裡為止。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	call_title(0)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ティオバルト
+
+DEF("Tiowald")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Tiowald")
+	SET_NAME("TIOWALD", "提歐巴特")
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+	MSG("年輕人，要小心啊。")
+}
+

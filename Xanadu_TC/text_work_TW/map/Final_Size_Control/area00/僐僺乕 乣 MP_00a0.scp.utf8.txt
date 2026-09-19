@@ -1,0 +1,275 @@
+// =================================================================
+// プロローグ用湖面
+// =================================================================
+
+// -----------------------------------------------------------------
+// マップ                                                           
+// -----------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// ボート初期座標
+	set_pos("boat", -15.0, 2.0, -22.0)
+	set_deg("boat", 80.0)
+
+	// ボートに乘せる
+	set_pos("PC", -13.5, 2.6, -22.0)
+	set_deg("PC", 80.0)
+	set_pos("Char", -15.2, 2.6, -22.0)
+	set_deg("Char", 140.0)
+	set_pos("Boatman", -16.5, 2.6, -22)
+	set_deg("Boatman", 0.0)
+
+	fade_out(0)
+	stop_bgm(1,0)
+}
+
+//-----------------------------------------------------------------
+
+DEF("boat")
+
+RES("INIT")
+{
+	CINEMA_ON(0)
+	fade_out(0)
+	wait(30)
+
+		SET_MSG_TIME(-1,-1,)
+		MSG_EX("何と不器用な人だろうと私は苛立ちすら覺えました。|しかし後年、彼は私にこう語ったのです。|　|「この道より我を活かす道は無し、故に我は往く」と———|　|今にして思えば、とても恥ずかしい話です。|私はあの人のことを何も分かっていなかったのですから。|　|　　　　　　　　　　　　　シャーロット・Ｌ・ウェルズ著|　　　　　　　　　「最後の騎士」　第二章　黑き花嫁より",-1,0x00000010)
+
+	// ボート初期座標
+	set_pos("boat", -15.0, 2.0, -22.0)
+	set_deg("boat", 80.0)
+
+	// ボートに乘せる
+	set_pos("PC", -13.5, 2.6, -22.0)
+	set_deg("PC", 80.0)
+	set_pos("Char", -15.2, 2.6, -22.0)
+	set_deg("Char", 140.0)
+	set_pos("Boatman", -16.5, 2.6, -22)
+	set_deg("Boatman", 170.0)
+
+	// フェード處理
+	set_skip_label("SKIP")
+
+	SE("SE_NAMI")
+	wait(60)
+
+	permit_script_camera(1)
+	fade_in(120)
+
+	move_vec("boat", 26.0, 0.0, 8.0, 1200)
+
+	// ボートを中央に持ってくる
+	set_script_camera(20.0,0.0,-16.0,  -35.5,135.0,0.0, 30, 15.0)
+	move_script_look_at(-20,0,0, 800, 1)
+	rotate_script_camera(0,50,0, 800, 1)
+	wait(400)
+	scale_script_camera(0.8, 400, 1)
+	wait(400)
+	move_script_look_at( 20,-2,10, 400, 1)
+	rotate_script_camera(20,50,0, 400, 1)
+	wait(400)
+
+	// 
+	cross_fade(100)
+
+	// ボート座標
+	set_pos("boat", 10.0, 2.0, -55.0)
+	set_deg("boat", 80.0)
+
+	// ボートに乘せる
+	set_pos("PC", 11.5, 2.6, -55.0)
+	set_deg("PC", 80.0)
+	set_pos("Char", 10.2, 2.6, -54.5)
+	set_deg("Char", 140.0)
+	set_pos("Boatman", 8.5, 2.6, -55)
+	set_deg("Boatman", 170.0)
+	set_script_camera_EX("Char",1,-20.5,205.0,0.0, 8, 15.0)
+	wait(100)
+
+	rotate_script_camera(0,-5,0, 400, 1)
+	scale_script_camera(1.2, 400, 1)
+
+//　　シャルがあたりを見回す。
+	look_chr("Char","PC")
+	wait(60)
+	look_chr("Char","Boatman")
+	wait(60)
+	set_motion("Char","ATTACK1",-1)
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「霧が出てきたわ……」",-1,2)
+
+//　　シャル、主人公の方を向いて
+	wait(20)
+	look_chr("Char","PC")
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「ねえねえ、#N0。|　　　　オールストンの漁村を出て結構たつわね。」",-1,2)
+
+//　　主人公、輕くシャルにうなずく。
+//　　シャル、船頭のほうへ向く。
+	wait(20)
+	look_chr("PC","Char")
+	wait(60)
+
+	set_deg("Char", 190.0)
+	look_chr("Char","Boatman")
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「船頭さん、島まであとどれくらいなの？」",-1,2)
+	wait(20)
+	look_chr("PC","-")
+	set_motion("Boatman","ATTACK1",-1)
+	wait(10)
+
+		MSG_EX("#S3#C0船頭「そうだなぁ、もう半刻もかからないはずだ。」",-1,2)
+	wait(20)
+	look_chr("Char","-")
+
+		MSG_EX("#S3#C0シャル「う、まだそんなにかかるんだ……|　　　　オーウェル湖って結構廣いのね。」",-1,2)
+		MSG_EX("#S3#C0船頭「ははっ、まあな。|　　　それにしても正直驚いたぜ。」",-1,2)
+		MSG_EX("#S3#C0船頭「嬢ちゃんみたいな子が|　　　王立アカデミーの研究生とはな。」",-1,2)
+
+	wait(20)
+	look_chr("Char","Boatman")
+		MSG_EX("#S3#C0シャル「えへへ。|　　　　オーウェル湖って結構廣いのね。」",-1,2)
+		MSG_EX("#S3#C0船頭「ハーレック島は廣くはないが|　　　あちこち遺跡だらけの島さ。」",-1,2)
+		MSG_EX("#S3#C0船頭「確かに考古學の研究には|　　　もってこいかもしれねえなぁ。」",-1,2)
+
+//　　船頭、主人公のほうを見やって
+	wait(20)
+	look_chr("Boatman","PC")
+	wait(40)
+
+	move_script_look_at(1.5,0,0, 800, 1)
+	rotate_script_camera(0,10,0, 800, 1)
+	scale_script_camera(0.8, 800, 1)
+
+		MSG_EX("#S3#C0船頭「そっちの兄ちゃんは嬢ちゃんの護衛かい？」",-1,2)
+		MSG_EX("#S3#C0船頭「その格好……|　　　今時、騎士とは珍しいねぇ。」",-1,2)
+
+//　　シャルも主人公を見やる
+	wait(20)
+	look_chr("Char","PC")
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「北海騎士團にいたのよ。|　　　　わたしと同じ孤児院の出身なの。」",-1,2)
+		MSG_EX("#S3#C0船頭「へぇ、北海騎士團って|　　　あの有名な北海騎士團かい？」",-1,2)
+		MSG_EX("#S3#C0船頭「確か入團するには試驗で|　　　獅子一頭と戰わなきゃいけないんだろ。」",-1,2)
+		MSG_EX("#S3#C0シャル「うん、劍の腕はすごいのよ。」",-1,2)
+
+	wait(20)
+	look_chr("Char","-")
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「でも……あの戰爭ですっかり|　　　　氣力をなくしちゃったみたいなの……」",-1,2)
+		MSG_EX("#S3#C0船頭「『騎士戰爭』か、無理もねえよなぁ……」",-1,2)
+
+	wait(20)
+	look_chr("Boatman","Char")
+	wait(40)
+
+		MSG_EX("#S3#C0船頭「今まで王國のために戰ってきた|　　　騎士たちがお払い箱にされちまったんだ。」",-1,2)
+		MSG_EX("#S3#C0船頭「今じゃ、騎士團は全て解體されて|　　　軍隊はみんな傭兵らしいな。」",-1,2)
+		MSG_EX("#S3#C0船頭「ゾルディアス卿も何を考えているんだか。」",-1,2)
+
+//　　船頭、何かに氣づいたように邊りを見回す。
+	wait(20)
+
+	cross_fade(120)
+	set_script_camera_EX("Char",1,-20.5,205.0,0.0, 8, 15.0)
+	wait(120)
+
+	wait(20)
+	look_chr("Boatman","PC")
+	wait(40)
+	wait(20)
+	look_chr("Boatman","Char")
+	wait(40)
+	wait(20)
+	look_chr("Boatman","-")
+	wait(40)
+
+	look_chr("Char","Null")
+		MSG_EX("#S3#C0船頭「おや……」",-1,2)
+
+
+	WAIT(30)
+	look_chr("Char","Boatman")
+	wait(60)
+
+		MSG_EX("#S3#C0シャル「どうしたの？」",-1,2)
+		MSG_EX("#S3#C0船頭「霧がさらに濃くなってきやがった。」",-1,2)
+		MSG_EX("#S3#C0船頭「こんな日はアレが現れるかもしれねぇな。」",-1,2)
+	wait(10)
+	look_chr("Boatman","Char")
+	set_deg("Char", 220.0)
+		MSG_EX("#S3#C0シャル「アレ？　もしかして……」",-1,2)
+
+		MSG_EX("#S3#C0船頭「ほう、やっぱり知ってるのかい？」",-1,2)
+
+	set_motion("Char","ATTACK1",-1)
+		MSG_EX("#S3#C0シャル「うん、それが一番の目的だから。」",-1,2)
+		MSG_EX("#S3#C0船頭「なんだ、そうだったのかい。」",-1,2)
+
+//　　船頭が遠方の湖面を見やる。シャルと主人公もそちらへ向く。
+	wait(100)
+		MSG_EX("#S3#C0船頭「出たぞ！　近いな……」",-1,2)
+	set_motion("Boatman","EMPTY1",20)
+	WAIT(30)
+	set_deg("Boatman", 0)
+	look_chr("Boatman", "-")
+
+//　　霧に煙る湖面にぼんやりと巨大な城と岩のシルエットが浮かび上がる。
+//　　次第に輪郭がはっきりとするとともに鐘の音が鳴り響く。
+//	wait(200)
+	move_script_look_at(10,0,-5, 400, 1)
+	rotate_script_camera(15,-50,0, 400, 1)
+	scale_script_camera(1.8, 440, 1)
+	wait(20)
+	set_deg("Char", 0)
+	look_chr("Char", "-")
+	wait(40)
+	set_deg("PC", 0)
+	look_chr("PC", "-")
+	wait(340)
+
+	move_script_look_at(-5,3.2,0, 400, 1)
+	rotate_script_camera(7,5,0, 400, 1)
+		MSG_EX("#S3#C0船頭「あれが……」",400,2)
+
+	move_script_look_at(-5,0,0, 1200, 0)
+	rotate_script_camera(0,5.5,0, 1200, 0)
+		MSG_EX("#S3#C0船頭「オーウェルの奇岩城だ。」",600,2)
+
+//　　⇒畫面、フェードアウトしてオープニング開始
+	fade_out(120)
+	wait(200)
+
+		MSG_EX("オープニングムービー再生",300,0x00000010)
+	wait(200)
+
+	// EV プロローグのイベントを見た
+	game_flag_on(3500)
+	ENTRY_MAP("game_start")
+
+EXIT:
+	fade_in(20)
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	END
+
+
+SKIP:
+	fade_out(0)
+	wait(2)
+
+	// EV プロローグのイベントを見た
+	game_flag_on(3500)
+	ENTRY_MAP("game_start")
+	END
+}

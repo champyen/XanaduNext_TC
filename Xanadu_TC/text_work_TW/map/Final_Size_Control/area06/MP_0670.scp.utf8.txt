@@ -1,0 +1,310 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// スクリプトカメラ強制終了
+	STOP_CAMERA(0)
+
+	// シネスコOFF
+	CINEMA_OFF(0)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1683)
+	ON_SKIP(2)
+	KAGI("d1683",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1683")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1684)
+	ON_SKIP(2)
+	KAGI("d1684",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1684")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1686)
+	ON_SKIP(2)
+	KAGI("d1686",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1686")
+
+	// スイッチ１オンオフチェック
+	CHECK_GAME_FLAG(643)
+	OFF_SKIP(6)
+	INIT_SWITCH_ON("sw")
+	INIT_SWITCH_ON("gear1")
+	INIT_SWITCH_ON("gear2")
+	INIT_SWITCH_ON("gear3")
+	INIT_SWITCH_ON("gear4")
+	INIT_SWITCH_ON("gear5")
+
+	// 石版ストッパー
+	CHECK_GAME_FLAG(667)
+	OFF_SKIP(1)
+	HIDE_CHR("daiza")
+
+	// スイッチ１オンオフチェック
+//	CHECK_GAME_FLAG(643)
+//	OFF_JUMP L_B1
+
+//	MOVE_VEC("hashira",0,-2,0,1)
+//	HIDE_CHR("h1")
+//	HIDE_CHR("h2")
+//	HIDE_CHR("h3")
+//	HIDE_CHR("h4")
+//	HIDE_CHR("h5")
+//	HIDE_CHR("h6")
+//	HIDE_CHR("h7")
+//	MOVE_VEC("box",0,0,3,1)
+//	END
+
+L_B1:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1683")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1683)
+}
+
+DEF("d1684")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1684)
+}
+
+DEF("d1686")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1686)
+}
+
+
+// ----------------------------------------------------------------------------
+// スイッチ                                                                  
+// ----------------------------------------------------------------------------
+
+
+DEF("sw___")
+
+RES("FOOT")
+{
+	//フラグ狀態チェック
+	CHECK_GRID(2,2,"box")
+	OFF_JUMP L_B2
+
+	CALL DOWN
+	END
+
+L_B2:
+	CALL UP
+
+}
+
+
+// ----------------------------------------------------------------------------
+@DOWN
+{
+		CHECK_GAME_FLAG(643)
+		ON_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+			FOCUS_CHR("atari")
+			WAIT(30)
+			QUAKE(0,5,30)
+			WAIT(30)
+			MOVE_VEC("hashira",0,-2,0,240)
+			QUAKE(0,5,240)
+			WAIT(270)
+	GAME_FLAG_ON(643)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+		NEXT:
+RET
+}
+
+
+// ----------------------------------------------------------------------------
+@UP
+{
+		CHECK_GAME_FLAG(643)
+		OFF_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+			FOCUS_CHR("atari")
+			WAIT(30)
+			QUAKE(0,5,30)
+			WAIT(30)
+			MOVE_VEC("hashira",0,2,0,240)
+			QUAKE(0,5,240)
+			WAIT(270)
+	GAME_FLAG_OFF(643)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+		NEXT:
+RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 水門                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("sw")
+
+RES("CLICK")
+{
+	SEL("水閘的控制|#C2　拉動拉桿　|取消")
+	check_select(0)
+	on_jump SW_MOVE
+	jump EXIT
+	END
+
+SW_MOVE:
+
+	//フラグオフの場合
+	CINEMA_ON(0)
+	STOP_PC(0)
+		WAIT(60)
+
+	//スキップ
+//	CHECK_GAME_FLAG(681)
+//	ON_SKIP(1)
+	set_skip_label("SKIP")
+
+		SWITCH_RVS("sw")
+
+		WAIT(40)
+
+			SHAKE(0,10)
+			SE("SE_LOCK")
+
+		WAIT(40)
+
+			SE("SE_WHEEL")
+
+		SWITCH_RVS("gear3")
+			WAIT(5)
+		SWITCH_RVS("gear1")
+			WAIT(5)
+		SWITCH_RVS("gear2")
+			WAIT(5)
+		SWITCH_RVS("gear4")
+			WAIT(5)
+		SWITCH_RVS("gear5")
+
+	QUAKE(4,4,30)
+//	WAIT(90)
+
+	// スイッチ１オンオフチェック
+	CHECK_GAME_FLAG(643)
+	ON_SKIP(13)
+	MOVE_VEC("bar1",0,-0.4,0,30,1)
+	MOVE_VEC("bar2",0,-0.4,0,30,1)
+	MOVE_VEC("bar3",0,-0.4,0,30,1)
+	MOVE_VEC("bar4",0,-0.4,0,30,1)
+			WAIT(30)
+			WAIT(90)
+	QUAKE(4,4,420)
+	MOVE_VEC("bar1",0,-5.6,0,510,1)
+	MOVE_VEC("bar2",0,-5.6,0,510,1)
+	MOVE_VEC("bar3",0,-5.6,0,510,1)
+	MOVE_VEC("bar4",0,-5.6,0,510,1)
+			WAIT(420)
+	SKIP(12)
+	MOVE_VEC("bar1",0,0.4,0,30,1)
+	MOVE_VEC("bar2",0,0.4,0,30,1)
+	MOVE_VEC("bar3",0,0.4,0,30,1)
+	MOVE_VEC("bar4",0,0.4,0,30,1)
+			WAIT(30)
+			WAIT(90)
+	QUAKE(4,4,420)
+	MOVE_VEC("bar1",0,5.6,0,510,1)
+	MOVE_VEC("bar2",0,5.6,0,510,1)
+	MOVE_VEC("bar3",0,5.6,0,510,1)
+	MOVE_VEC("bar4",0,5.6,0,510,1)
+			WAIT(420)
+
+	GAME_FLAG_RVS(643)
+	GAME_FLAG_RVS(668)
+
+	CHECK_GAME_FLAG(681)
+	ON_SKIP(2)
+	GAME_FLAG_ON(681)
+	ENTRY_MAP("0687_EV")
+
+	CINEMA_OFF(0)
+		WAIT(60)
+
+END
+
+SKIP:
+
+	GAME_FLAG_RVS(643)
+	GAME_FLAG_RVS(668)
+	GAME_FLAG_ON(681)
+	fade_in(60)
+	CINEMA_OFF(0)
+	CROSS_FADE(60)
+	QUAKE(0,0,500)
+	ENTRY_MAP("0670_EV")
+
+EXIT:
+}
+
+
+// ----------------------------------------------------------------------------
+// 臺座
+// ----------------------------------------------------------------------------
+
+DEF("daiza")
+
+RES("CLICK")
+{
+	CHECK_ITEM(182)
+	OFF_JUMP NOKEY
+
+
+	// カギ有りイベント
+	STOP_PC(0)
+	SYS("#C2使用圓盤鑰匙")
+	CINEMA_ON(0)
+	FOCUS_CHR("daiza")
+	SET_MOTION("daiza","EMPTY1",0)
+	WAIT(170)
+	KILL_CHR("daiza",0,0,80)
+	CINEMA_OFF(0)
+
+
+
+	PICK_ITEM(182)
+	GAME_FLAG_ON(667)
+
+	END
+
+NOKEY:
+
+	// カギ無しイベント
+	SYS("#C2道路被有洞的石板擋住了。")
+
+}
+

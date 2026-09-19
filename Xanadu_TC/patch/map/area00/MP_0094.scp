@@ -1,0 +1,1074 @@
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv  “¹‹ï‚â
+// ----------------------------------------------------------------------------
+
+//-- ROOM_FLAG -------------------------------------------------------
+//  0 ƒXƒyƒ“ƒX˜ð˜b
+//  1 ƒŠƒlƒbƒg˜ð˜b
+//  2 ƒƒXƒ|˜ð˜b
+
+
+DEF("MAP")
+RES("INIT")
+{
+	// “Xˆõ‚ÆƒJƒEƒ“ƒ^[‚Ìè˜A•t‚¯
+	link_ev_pop("Spence2","Spence")
+
+//	// NPC‚Ì‚¤‚ë‚Â‚«‚Á‚Õ‚èÝ’è
+//	set_walk_range("pot", 3.0, 50, 30)
+//	set_walk_range("mins", 1.5, 50,90)
+//	set_walk_range("ril", 1.5, 50,90)
+//	set_walk_range("pat", 1.5, 50,90)
+
+	// 3720	TK ›Þ—à‡‚Ì‹|‚ð”ƒ‚Á‚½
+	check_game_flag(3720)
+	on_jump EXIT
+
+	// ƒCƒ“ƒtƒFƒ‹ƒm‚ð“|‚µ‚½‚©H
+	check_game_flag(4)
+	on_jump TK_ANIECE
+
+	// 3600	EV B-1 ¹™˜‚Ì’Tõ‚Ö(ƒVƒƒƒ‹‚Æ‚Ì˜ð˜b)
+	check_game_flag(3600)
+	on_jump EXIT
+
+TK_ANIECE:
+
+	SHOW_CHR("Aniece")
+	// ƒOƒ‰ƒfƒBƒEƒXAƒoƒbƒNƒ‰[Aƒ[ƒu
+	load_npc_eqp(00,10)
+	load_npc_eqp(60,11)
+	load_npc_eqp(80,12)
+
+	// 3600	EV B-1 ¹™˜‚Ì’Tõ‚Ö(ƒVƒƒƒ‹‚Æ‚Ì˜ð˜b)
+	check_game_flag(3600)
+	on_jump EXIT2
+
+	ENABLE_AUTO_TURN("Aniece", 0)
+	end
+
+EXIT:
+	HIDE_CHR("Aniece")
+EXIT2:
+	end
+}
+
+
+// “¹‹ï‰®ƒ|[ƒgƒŒƒCƒg™|— ///////////////////////////////////////////////
+
+// “¹‹ï‰®á`‘œ(512x512)æ¤‚Ýž‚Ý•ƒ`ƒbƒv“oàh
+@entry_DOUGUYA
+{
+	entry_img(0,"douguya_a",0)
+	entry_img(1,"douguya_b",0)
+	entry_img(2,"douguya_c",0)
+	entry_img(3,"douguya_d",0)
+	set_img( 0, 184, 10, 0, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(0)
+	set_img( 1, 440, 10, 1, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(1)
+	set_img( 2, 184,266, 2, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(2)
+	set_img( 3, 440,266, 3, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(3)
+	ret
+}
+
+// “¹‹ï‰®Á‹Ž
+@erase_DOUGUYA
+{
+	img_off(0)
+	img_off(1)
+	img_off(2)
+	img_off(3)
+	ret
+}
+
+// “¹‹ï‰®ƒtƒŒ[ƒ€IN
+@fi_DOUGUYA
+{
+	//move_img(0, -456,0, 30, 1)
+	color_img(0, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(1, -456,0, 30, 1)
+	color_img(1, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(2, -456,0, 30, 1)
+	color_img(2, 0xffffffff, 0xff000000, 30, 1)
+	//move_img(3, -456,0, 30, 1)
+	color_img(3, 0xffffffff, 0xff000000, 30, 1)
+	ret
+}
+
+// “¹‹ï‰®ƒtƒŒ[ƒ€OUT
+@fo_DOUGUYA
+{
+	//move_img(0, 456,0, 30, 1)
+	color_img(0, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(1, 456,0, 30, 1)
+	color_img(1, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(2, 456,0, 30, 1)
+	color_img(2, 0x00ffffff, 0xff000000, 30, 1)
+	//move_img(3, 456,0, 30, 1)
+	color_img(3, 0x00ffffff, 0xff000000, 30, 1)
+	ret
+}
+
+
+
+// ====================================================================
+// “¹‹ï‰®
+// ====================================================================
+
+DEF("Spence")
+
+RES("INIT")
+{
+	// ƒ}ƒbƒv‚Ì‰ñçzŠp“x‚ð‹­§ÌXiŠ—vŽžŠÔ 1 ƒtƒŒ[ƒ€‚Å•ûŒü 6 ‚É‰ñçzj
+	RESET_MAP_ROT_Y(1,1)
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("Spence")
+	SET_NAME("SPENCE","“¹‹ï“X˜VàJŽj–§Žz")
+	SET_MOTION("Spence","ATTACK1",-1)
+	MSG("›”•s‹NC|—v”ƒ“Œ¼“I˜b¿“žŸCäi‘OB")
+	SET_MOTION("Spence","STAND",-1)
+	END
+}
+
+// ============================================================================
+// “¹‹ï‰®iƒCƒxƒ“ƒgƒgƒŠƒK[j
+// ============================================================================
+
+//////////////////////////////////////////////////////////////////////
+// ƒXƒyƒ“ƒX
+
+DEF("Spence2")
+RES("CLICK")
+{
+	SET_DEG_EX("Spence","")
+	ACTIVE_CHR("Spence")
+	FOCUS_CHR("Spence")
+	SET_NAME("SPENCE","“¹‹ï“X˜VàJŽj–§Žz")
+	SET_MOTION("Spence","ATTACK1",-1)
+
+	// •sŽ€’¹‚Ì‰H‚ ‚éH
+	check_item(193)
+	off_jump NEXT2
+	// 3805	TK ƒXƒyƒ“ƒXA•sŽ€’¹‚Ì‰H˜ð˜b
+	check_game_flag(3805)
+	on_jump NEXT2
+
+	game_flag_on(3805)
+	MSG("š‰™ÞC¥‹RŽmæ¶ˆ¦B|“ß‰H–Ñ“ï“¹¥cc")
+	MSG("ˆ¦ˆ¦C‰Ê‘RB|”‡•sA¥w•sŽ€’¹“I‰H–ÑxåhB")
+	MSG("‰ä˜ì‰Æ‘ã‘ã‘Š™B’˜|•ïŽ¡•S•a“IèËåZ“I»ì•û–@B")
+	MSG("»‘¢”‡ŽíèËåZ•K”õ“IÞ—¿|A¥•sŽ€’¹“I‰H–ÑB")
+	MSG("^æ¨l‹h‹Áˆ¦C|Œ»Ýèí‘RŠÒ‘¶Ý’˜cc")
+	MSG("œƒ›õžéH|Žù—v“I˜bŒ»ÝA‰ÂˆÈà¸š†’²åZšGB")
+
+	call MAKE_POTION
+	jump EXIT
+
+NEXT2:
+	// TK “¹‹ï‰®‚Ì“XŽåƒXƒyƒ“ƒX‚ÌäiŽŒ
+	check_game_flag(3512)
+	off_jump TALK
+
+MENU:
+	// •sŽ€’¹‚Ì‰H‚ ‚éH
+	check_item(193)
+	on_jump MENU2
+
+	SEL("#C1@ŸcŒ}Œõ—ÕI@|#C2›”˜b|”ƒ“Œ¼|ŽæÁ")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump ITEM
+	jump EXIT
+
+MENU2:
+	// •sŽ€’¹‚Ì‰H‚ª‚ ‚éê‡
+	SEL("#C1@ŸcŒ}Œõ—ÕI@|#C2›”˜b|»ìåZ•¨|”ƒ“Œ¼|ŽæÁ")
+	check_select(0)
+	on_jump TALK
+	check_select(1)
+	on_jump POTION
+	check_select(2)
+	on_jump ITEM
+
+	jump EXIT
+
+POTION:
+	call MAKE_POTION
+	jump EXIT
+
+TALK:
+	call TALK_Spence
+	jump MENU
+
+ITEM:
+	erase_shop_list(0)
+	// Šî–{“¹‹ï
+//	entry_shop_list("210/211/212/213/214/215/216/217/220/222/227/228/229/230/231")
+//	entry_shop_list("210/211/212/213/214/215/216/217/220/222/227")
+	entry_shop_list("210/211/212/216/217/220/222/227")
+
+	// i‚Ý‹ï‡‚Åu™î•¶‘v‚Ì•i‘µ‚¦ƒ`ƒFƒ“ƒW
+	CHECK_GAME_FLAG(6)
+	ON_JUMP s5
+	CHECK_GAME_FLAG(4)
+	ON_JUMP s4
+	CHECK_GAME_FLAG(1)
+	ON_JUMP s3
+	CHECK_GAME_FLAG(3)
+	ON_JUMP s2
+
+//	entry_shop_list("228/229/230/231")
+	entry_shop_list("228/229/230/231")
+	JUMP next
+s2:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252")
+	entry_shop_list("232/236/243/250/238/245/252")
+	JUMP next
+s3:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255")
+	entry_shop_list("232/236/243/250/238/245/252/241/248/255")
+	JUMP next
+s4:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255/233/237/244/251")
+	entry_shop_list("233/237/244/251/238/245/252/241/248/255")
+	JUMP next
+s5:
+//	entry_shop_list("228/229/230/231/232/236/238/243/245/250/252/241/248/255/233/237/244/251/240/247/254")
+	entry_shop_list("233/237/244/251/240/247/254/241/248/255")
+	JUMP next
+
+next:
+	////////////////////////////////////////////////////
+	// š05/09/10:ƒVƒ‡ƒbƒvà–¾ƒXƒNƒŠƒvƒg‚ð“ü“XŽž‚ÉÄ¶
+	check_game_flag(74)
+	on_jump skip_help
+	game_flag_on(74)
+	add_shop_script("help")
+skip_help:
+	////////////////////////////////////////////////////
+	CALL_SHOP(2)
+	jump MENU
+
+EXIT:
+	SET_MOTION("Spence","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// èËåZ‚ðì‚Á‚Ä‚à‚ç‚¤
+
+@MAKE_POTION
+{
+	SEL("@»ìèËåZåhH@|#C2¥|”Û")
+	check_select(0)
+	on_jump YES
+
+//@@Ëu‚¢‚¢‚¦v‚Ìê‡
+
+	MSG("¥”‡žéˆ¦C|Žù—v“I˜bç¬Žž“s‰ÂˆÈ˜ÒQ‰äB")
+	ret
+
+//@@¨‘€ìƒtƒŠ[
+//@@Ä“x˜b‚µ‚©‚¯‚é‚Æƒƒjƒ…[‚É[åZ‚ðì‚Á‚Ä‚à‚ç‚¤]‚ð•\Ž¦B
+//@@‘I¢Žˆ‚ÉÚã”‚·‚éB
+
+//@@Ëu‚Í‚¢v‚Ìê‡
+YES:
+	MSG("“ß›õC¿âc“™ˆê‰ºB")
+	MSG("‰ä–ç¥‘æˆêŽŸ»ì”‡ŽíåZC|ŠˆÈ•sàzàz‘“I˜bcc™è™ècc")
+	MSG("š‰™Þ`‰ä›ßãS–ô–ô—~ŽŽ—¹B")
+
+//@@á`–Êƒuƒ‰ƒbƒNƒAƒEƒg•ƒtƒF[ƒhƒCƒ“
+	fade_out(60)
+	wait(300)
+	fade_in(60)
+	wait(60)
+
+	MSG("ccæ¨š†‹v“™—¹C›ßãS’²D—¹šGB")
+
+	SE("SE_GETITEM")
+	SYS_EX("“¾“žy•sŽ€’¹”VèËåZzB",-1,0X00000200)
+	PICK_ITEM(193)
+	GET_ITEM(194, 1)
+	// 3806	TK ƒXƒyƒ“ƒXA•sŽ€’¹‚ÌèËåZ‚ðì‚Á‚½
+	game_flag_on(3806)
+
+	MSG("”‡A¥œnå“ß“xŽž‘ãŠJŽn—¬™B“IC|˜A•sŽ¡”VÇ“s‰ÂˆÈŽ¡D“IèËåZB")
+	MSG("”@‰Ê—L•ü—F¶•a—¹“I˜bC|¿ˆê’è—væ¨‘¼Š…‰º”‡ŒÂB")
+	MSG("•Ûæš—L—ÃÁšGB")
+
+	ret
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒXƒyƒ“ƒX
+
+@TALK_Spence
+{
+	//¥á•ÇÁ–ÅŒã
+	check_game_flag(3710)
+	on_jump TALK7
+	//¥ŠïŠâéoŒ»Œã
+	check_game_flag(3702)
+	on_jump TALK6
+	//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+	check_game_flag(4)
+	on_jump TALK5
+	//¥ƒJƒjƒOƒ‚DŒã
+	check_game_flag(1)
+	on_jump TALK4
+	//¥ƒgƒŒƒ“ƒgDŒã
+	check_game_flag(3)
+	on_jump TALK3
+	//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+	check_game_flag(3532)
+	on_jump TALK2
+	// TK ƒŠ[ƒ[‚©‚çƒJƒM‚ð‚à‚ç‚Á‚½
+	check_game_flag(3517)
+	on_jump TALK1_5
+	//¥ƒQ[ƒ€ŠJŽn’¼Œã
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//¥á•ÇÁ–ÅŒã
+TALK7:
+	MSG("ccä»ãN¬ˆ·‘–—¹ˆ¦B")
+	MSG("‹RŽmæ¶cc›‰Ûã|Ý”‡—¢‹Z“Il’†—Lˆê•”•ª¥å“ß“x“I––åáB")
+	MSG("‰ä˜ì“I”C–±¥wŠm”Fxcc")
+	MSG("^¥ä…‹ê“I”C–±ˆ¦cc")
+	jump EXIT
+
+//¥ŠïŠâéoŒ»Œã
+TALK6:
+	MSG("‹RŽmæ¶cc|ŠïŠâéI‰—oŒ»—¹ˆ¦B")
+	MSG("”I›”œnŒ»Ý‹N˜ðá¢¶“IŽ–îcc")
+	MSG("•sccŸ“Y›õcc")
+	MSG("AŽZ‰äào˜ÒC|–ç•s¥Y›õDŽ–îˆ¦cc")
+	jump EXIT
+
+//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+TALK5:
+	// 3720	TK ›Þ—à‡‚Ì‹|‚ð”ƒ‚Á‚½
+	check_game_flag(3720)
+	off_jump TALK5_1
+
+	MSG("š‰™ÞCå«‘RãSí|Žó“žˆ¢“òäˆãN¬ˆ·š†“IÆŒÚcc")
+	MSG("•s‰ß‰ä•Lèí¥˜ô¶ˆÓ“IC|”‡ŒÂàY›õ–ç•s”\æ¨íMˆ¦B")
+	jump EXIT
+
+TALK5_1:
+	check_room_flag(0)
+	on_jump TALK5_2
+
+	MSG("‰ä˜ì“I‘cæœnœk‘ˆÈ‘O|AÝ”‡ˆê›æ‹ZB")
+	MSG("¥ˆ¦cc|‰ä‘z”‡¥Ý™ûàÅŽ’ÁŒš¬”V‘O“IŽ–î—¹B")
+	MSG("•s’m“¹¥Y›õŒ´ˆöC|Žüš¡“Il˜ìŽ—ŒÁ“sœk“¢‰}‰ä˜ìcc")
+	room_flag_on(0)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK5_2:
+	MSG("‰ä˜ì“I‘cæœnœk‘ˆÈ‘O|AÝ”‡ˆê›æ‹ZB")
+	MSG("•s’m“¹¥Y›õŒ´ˆöC|Žüš¡“Il˜ìŽ—ŒÁ“sœk“¢‰}‰ä˜ìcc")
+	jump EXIT
+//¥ƒJƒjƒOƒ‚DŒã
+TALK4:
+	check_room_flag(0)
+	on_jump TALK4_2
+
+TALK4_1:
+	MSG("¿ãã‰äàC‹RŽmæ¶B")
+	MSG("˜ô”ƒæÌŠÒ¥˜aå\‰Âe”äŠrDB|”‡žé”ƒæÌË”\˜ô“¾‡—˜B")
+	MSG("‰ä‘ü˜ð—p•s’âà˜b“I•û–@µ®ŒÚ‹qcc")
+	MSG("ccã`”V‰ä‘zà“I¥C|Ž—ŒÁ—L‰ÂˆÈæ¨l›{˜ð˜ô¶ˆÓ“IŽçŒì¸èË‘¶ÝšGB")
+	MSG("—v¥^—L“ßžé“IŽçŒì¸èË‘¶Ý“I˜bC|^‘zæ¨Ž©ŒÈàY‘ÙŠ·œˆ¦B")
+	room_flag_on(0)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK4_2:
+	MSG("Ž—ŒÁ—L‰ÂˆÈæ¨l|›{˜ð˜ô¶ˆÓ“IŽçŒì¸èË‘¶ÝšGB")
+	MSG("—v¥^—L“ßžé“IŽçŒì¸èË‘¶Ý“I˜bC|^‘zæ¨Ž©ŒÈàY‘ÙŠ·œˆ¦B")
+	jump EXIT
+//¥ƒgƒŒƒ“ƒgDŒã
+TALK3:
+	check_room_flag(0)
+	on_jump TALK3_2
+
+TALK3_1:
+	MSG("‹RŽmæ¶C‰äããà—¹šGB")
+	MSG("Å‹ß”IŽ—ŒÁ|˜aˆ¢“òäˆãN¬ˆ·ˆê‹N“žˆâÕ’Tõ‹Ž—¹™ÛB")
+	MSG("”@‰Êá¢Œ@“žY›õ“Œ¼|Ž§–”•sŽù—v“I˜bC|¿æÌ‹‹‰ä˜ì¬“XB")
+	MSG("‰ä˜ì“s˜ð”÷Î’˜•tŒ»‹à“IB")
+	room_flag_on(0)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK3_2:
+	MSG("Å‹ß”IŽ—ŒÁ|˜aˆ¢“òäˆãN¬ˆ·ˆê‹N“žˆâÕ’Tõ‹Ž—¹™ÛB")
+	MSG("”@‰Êá¢Œ@“žY›õ“Œ¼|Ž§–”•sŽù—v“I˜bC|¿æÌ‹‹‰ä˜ì¬“XB")
+	jump EXIT
+
+//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+TALK2:
+	check_room_flag(0)
+	on_jump TALK2_2
+
+TALK2_1:
+	MSG("‘ü”ƒ™î•¶‘“I˜bC|¥•s”\Žg—pw–‚–@x“IšGB")
+	MSG("•K{Žg—p™î•¶‘C|›’–‚–@›{˜ðË‰ÂˆÈB")
+	MSG("›{“ž“I–‚–@“¯‹Z”\ˆêžéC|Ý’èDˆÈŒãA‰ÂˆÈŽg—p—¹B")
+	MSG("è‰—”‡ŒÂ“IÚ×î‹µC|‹Ž–â•Ší“X—¡“IàZ—b•º™ÛB")
+	room_flag_on(0)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK2_2:
+	MSG("‘ü”ƒ™î•¶‘“I˜bC|¥•s”\Žg—pw–‚–@x“IšGB")
+	MSG("•K{Žg—p™î•¶‘C|›’–‚–@›{˜ðË‰ÂˆÈB")
+	MSG("›{“ž“I–‚–@“¯‹Z”\ˆêžéC|Ý’èDˆÈŒãA‰ÂˆÈŽg—p—¹B")
+	jump EXIT
+
+//¤ˆâÕ‚ÌŒ®‚ðŽè‚É“ü‚ê‚½Œã
+TALK1_5:
+	check_room_flag(1)
+	on_jump TALK1_6
+
+	MSG("›”—¹›”—¹C|‰ä‘zˆâÕ—¡–Ê˜ð—Lœk‘½‘Å•sŠJ“Iw–åxB")
+	MSG("ˆ×—¹ŠJàL–åC|–{“XæÌ“Iwèoúx¥•K”õ•¨•išGB")
+	MSG("”@‰Ê‹Ž’²àzˆâÕ“I˜bC|ÅD”ƒˆê±”õ—pB")
+	MSG("cc”‡›õà“I˜bC‰äD‘œ¥|ˆ×—¹æÌèoúË”cˆâÕ“I’nà‘‘i”I“IšvB")
+	MSG("™û™ûC‘´›‰“IŠm‰ÂˆÈ”‡›õàB")
+	MSG("‡•Ö‘i”IC|ˆöˆ×èoú“s¥ŽèH»ì“IC|ŠˆÈ”@‰ÊŒÉ‘¶Œ¸­“I˜bA˜ðŸû™JB")
+	MSG("”@‰Ê”I”\‹‹‰äìˆ×Þ—¿“I–‚à×”Vwœx“I˜bC|èoúA‰ÂˆÈ•Ö‹XæÌ‹‹”IšGB")
+	room_flag_on(1)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK1_6:
+	MSG("ˆ×—¹ŠJàLˆâÕ’†“I–åC|–{“XæÌ“Iwèoúx¥•K”õ•¨•išGB")
+	MSG("‡•Ö‘i”IC|ˆöˆ×èoú“s¥ŽèH»ì“IC|ŠˆÈ”@‰ÊŒÉ‘¶Œ¸­“I˜bA˜ðŸû™JB")
+	MSG("”@‰Ê”I”\‹‹‰äìˆ×Þ—¿“I–‚à×”Vwœx“I˜bC|èoúA‰ÂˆÈ•Ö‹XæÌ‹‹”IšGB")
+	jump EXIT
+
+//¥ƒQ[ƒ€ŠJŽn’¼Œã
+TALK1:
+	// TK “¹‹ï‰®‚Ì“XŽåƒXƒyƒ“ƒX‚ÌäiŽŒ
+	check_game_flag(3512)
+	on_jump TALK1_2
+
+	MSG("¿ãã‰äàC‹RŽmæ¶B")
+	MSG("Å‹ßC|ˆ×—¹Œš‘qŒÉŽ§ŒEŒ@’n–Ê“IŽžŒóC|ŒE“ž—¹’n‰ºˆâÕB")
+	MSG("–{˜Ò”‡ŒÂ“‡A“ž™|¥ˆâÕC|ŠˆÈ”‡–ç¥í—L“IŽ–cc")
+	MSG("ccš‰C”I–âˆâÕ“I’nà‘ˆ¦H|AÝ’ÁŽq“I“Œ–ÊB")
+	MSG("Œ»Ýˆ×—¹•sæ¨¬›wŽqi“üC|”c–å“s½ã—¹B")
+	MSG("èoúŠñ‘¶ÝÕŽiä»ãN¬ˆ·“ß—¡C|”I‹Ž–â–âç»™ÛB")
+	game_flag_on(3512)
+	jump EXIT
+
+//@@¦ˆÈ~AŒJ‚è•Ô‚µ—pƒƒbƒZ[ƒW
+TALK1_2:
+	MSG("ˆâÕAÝ’ÁŽq“I“Œ–ÊB")
+	MSG("èoúŠñ‘¶ÝÕŽiä»ãN¬ˆ·“ß—¡C|”I‹Ž–â–âç»™ÛB")
+	jump EXIT
+
+EXIT:
+	RET
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒŠƒlƒbƒg
+
+DEF("Lynette")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Lynette")
+	SET_NAME("LYNETTE","—Ô“Þ“Á")
+	SET_MOTION("Lynette", "ATTACK1",-1)
+
+	//¥á•ÇÁ–ÅŒã
+	check_game_flag(3710)
+	on_jump TALK7
+	//¥ŠïŠâéoŒ»Œã
+	check_game_flag(3702)
+	on_jump TALK6
+	//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+	check_game_flag(4)
+	on_jump TALK5
+	//¥ƒJƒjƒOƒ‚DŒã
+	check_game_flag(1)
+	on_jump TALK4
+	//¥ƒgƒŒƒ“ƒgDŒã
+	check_game_flag(3)
+	on_jump TALK3
+	//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+	check_game_flag(3532)
+	on_jump TALK2
+	//¥ƒQ[ƒ€ŠJŽn’¼Œã
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//¥á•ÇÁ–ÅŒã
+TALK7:
+	MSG("Ý‰ä˜ì“I‘cæ’†C|—LŒÂY›õ“s˜ð»‘¢“Iœk—¹•s‹N“IlI")
+	MSG("“ßŒÂlD‘œ‹©˜ô”~ŽB")
+	MSG("’A¥C•ƒe‹}’˜‘i‰ä”‡ŒŽ–C|‹†èí¥ˆ×Y›õšCH")
+	jump EXIT
+//¥ŠïŠâéoŒ»Œã
+TALK6:
+	MSG("Ž©œnéšÆoŒ»”VŒãC|•ƒe“IžéŽqAÌ“¾œkŠï‰ö—¹B")
+	MSG("•½Žžã`¥œn‘íŠJŽn|A˜ðà±–³ãÖ“IÎ˜bcc")
+	MSG("“ž’ê¥œƒ›õ‰ñŽ–ˆ¦H")
+	jump EXIT
+//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+TALK5:
+	MSG("‰äããà—LŽí•s‰ÂŽv‹c“I“¹‹ïC|—p›€‰ÂˆÈÝ…’†ŒÄ‹zB")
+	MSG("”@‰Ê^“I—L“ßŽí“Œ¼‘¶Ý“I˜bC|˜a‹›™Zˆê‹NŸà‰jAÄ–ç•s¥–²‘z—¹cc")
+	jump EXIT
+//¥ƒJƒjƒOƒ‚DŒã
+TALK4:
+	MSG("”@‰Ê—L•xàœ“IèA“I˜bC|”ƒ±àŸàóàí—a”õ’˜˜ðœk•û•ÖšGB")
+	MSG("Šù‰ÂˆÈ”nã‰ñ“ž’Á—¡C|–ç‰ÂˆÈ•Ô‰ñ’n‰º–À‹{—¡–ÊšGB|å«‘R‘ü”\—pˆêŽŸB")
+	jump EXIT
+//¥ƒgƒŒƒ“ƒgDŒã
+TALK3:
+	MSG("•ƒeã`¥’’•s‹xšCB")
+	MSG("•sŠYà“I˜b–çà“¾œk‹N™¤C|^¥æ¨‰ä^Sˆ¦B")
+	MSG("ŠˆÈC|‘¼æî•êe‘Š™|“¾–ç•s¥œk—ZŸ¨B")
+	jump EXIT
+
+//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+TALK2:
+	MSG("Ý’n‰º–À‹{“I–^™|‰Â”\˜ðQ“ž|‰ÂˆÈ‘Å”jŠâÎ˜aà­•Ç“I“¹‹ïB")
+	MSG("Ý”‡ŒÂ“‡ã–ç‹–ŠÒ—L‘´‘¼|ŠeŽíŠežé“I•s‰ÂŽv‹c“I“¹‹ï‘¶ÝB")
+	jump EXIT
+
+//¥ƒQ[ƒ€ŠJŽn’¼Œã
+TALK1:
+	check_room_flag(1)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("‰ä˜ì‰Æ‘°‘ã‘ã“s¥ŽèœkI“IlB")
+	MSG("¥ˆöˆ×”‡ŒÂC|•ƒe˜a–ê–êËãSšz“¹‹ï“X“IåhH")
+	jump EXIT
+
+//¤ƒAƒjƒGƒX‚ÌƒCƒxƒ“ƒg’¼Œã
+TALK1_2:
+	MSG("“ßŒÂ—l¥Å‹ß“Ií‹qB")
+	MSG("ç»ã`¥ÝˆâÕiiooC|“ž’ê¥‹ŽŠ²Y›õ“IšCH")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Lynette","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒƒXƒ|
+
+DEF("Rospo")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Rospo")
+	SET_NAME("ROSPO","—…Žz”Œ")
+	SET_MOTION("Rospo", "ATTACK1",-1)
+
+	//¥á•ÇÁ–ÅŒã
+	check_game_flag(3710)
+	on_jump TALK7
+	//¥ŠïŠâéoŒ»Œã
+	check_game_flag(3702)
+	on_jump TALK6
+	//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+	check_game_flag(4)
+	on_jump TALK5
+	//¥ƒJƒjƒOƒ‚DŒã
+	check_game_flag(1)
+	on_jump TALK4
+	//¥ƒgƒŒƒ“ƒgDŒã
+	check_game_flag(3)
+	on_jump TALK3
+	//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+	check_game_flag(3532)
+	on_jump TALK2
+	//¥ƒQ[ƒ€ŠJŽn’¼Œã
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+//¥á•ÇÁ–ÅŒã
+TALK7:
+	check_room_flag(2)
+	on_jump TALK7_2
+
+	MSG("Ž©œn“ßŒÂéšÆoŒ»ˆÈ˜ÒC|˜A”’ê“I“V‹ó“sÌ“¾¨ˆÃ—¹B")
+	MSG("•sŠÇœƒ›õŠÅ–çŠÅ•so|”‡¥—LDŽ–îá¢¶“I‘O’›ˆ¦B")
+	MSG("–ç—L™B•·à—ÌŽå‘ål“I•aî|‰z˜Ò‰zœ¦‰»—¹B")
+	MSG("‘¼—™ZD‘œ–çŸ“—L‰ñ˜ÒC|^¥‰Â—÷ˆ¦cc")
+	MSG("cc—ÑàŽ¢ŒÎŒQ’n™½|ˆÈŒã“ž’ê˜ðÌ¬Y›õžéŽqšCH")
+	room_flag_on(2)
+	jump EXIT
+
+//@@™ŒJ‚è•Ô‚µ
+TALK7_2:
+	MSG("Ž©œn“ßŒÂéšÆoŒ»ˆÈ˜ÒC|˜A”’ê“I“V‹ó“sÌ“¾¨ˆÃ—¹B")
+	MSG("–ç—L™B•·à—ÌŽå‘ål“I•aî|‰z˜Ò‰zœ¦‰»—¹B")
+	MSG("cc—ÑàŽ¢ŒÎŒQ’n™½|ˆÈŒã“ž’ê˜ðÌ¬Y›õžéŽqšCH")
+	jump EXIT
+//¥ŠïŠâéoŒ»Œã
+TALK6:
+	MSG("í˜Ò”‡ŒÂ“X“I“ßŒÂ‘åˆ·|D‘œ‹Ž—¹ŠïŠâéB")
+	MSG("•s’m“¹ç»Ý‘zY›õC|èí‘R—v‹Ž“ßŽíæ¨l–Ñœœž‘R“IéšÆB")
+	MSG("ç»“ž’ê—LY›õ–Ú“Icc")
+	jump EXIT
+//¥ƒCƒ“ƒtƒFƒ‹ƒmDŒã
+TALK5:
+	check_room_flag(2)
+	on_jump TALK5_2
+
+	MSG("”‡ŒÂ—ÑàŽ¢ŒÎŒQ’n™½“I—ÌŽå|¥ˆÊœk˜aå\“IlB")
+	MSG("•s‰ßˆöˆ×“¾—¹ˆêŽí‹©˜ôç”N–²“I•aC|”‡±”Nˆê’¼‰ç•aÝ°B")
+	MSG("‹L“¾—ÌŽå—LˆêŒÂàÕ¶—C|•s‰ßcc")
+	MSG("Ÿà˜aã‹•ê“IèŒn™|“¾•sDC|ŠˆÈ—£‰Æo‘–—¹B")
+	room_flag_on(2)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK5_2:
+	MSG("”‡ŒÂ—ÑàŽ¢ŒÎŒQ’n™½“I—ÌŽå|¥ˆÊœk˜aå\“IlB")
+	MSG("•s‰ßˆöˆ×“¾—¹ˆêŽí‹©˜ôç”N–²“I•aC|”‡±”Nˆê’¼‰ç•aÝ°B")
+	MSG("‹L“¾—ÌŽå—LˆêŒÂàÕ¶—C|•s‰ßcc")
+	MSG("Ÿà˜aã‹•ê“IèŒn™|“¾•sDC|ŠˆÈ—£‰Æo‘–—¹B")
+	jump EXIT
+
+//¥ƒJƒjƒOƒ‚DŒã
+TALK4:
+	MSG("¸èË“°“Iä»ãN¬ˆ·å«‘R”NçjC|™È¥ŒÂ—âèÎŽ§–”—LˆÐšŽ“IlB")
+	MSG("Ž§ŠŽCŠÒ¥ŒÂ‘å”ü—šCB")
+	MSG("å«‘R”‡›õà—L±Ž¸âXC|”I•sæS“¾”‡æ¨l—L±î•sŽ©‹ÖåhH")
+	jump EXIT
+//¥ƒgƒŒƒ“ƒgDŒã
+TALK3:
+	MSG("”‡—¡“I“XŽåãSí²oˆê•›˜a‘P“I–ÊEC|•s‰ß‘´›‰¥ŒÂ”ñíŠæŒÅ“IàMàEB")
+	MSG("å«‘R•½Žž‘¼›”‰äœkeØC|•s‰ß‰äã`‰ù‹^¥•s¥—LY›õàAîB")
+	jump EXIT
+
+//¥ƒK[ƒfƒBƒAƒ“Žæ“¾Œã
+TALK2:
+	MSG("”‡ŒÂ“‡“IˆâÕ—¡|“ž™|“sÝ’è—¹ŠeŽ®Šežé“IèœâvB")
+	MSG("‘´’†–ç—Lˆê±|Žù—viá¶”]`Ë”\‰ðŒˆ“IB")
+	MSG("‘ü—Là—Í¥•ss“Iˆ¦B")
+	jump EXIT
+
+//¥ƒQ[ƒ€ŠJŽn’¼Œã
+TALK1:
+	check_room_flag(2)
+	on_jump TALK1_2
+
+TALK1_1:
+	MSG("ˆÈ‘OŸ“—LŒ©‰ß”Iˆ¦cc|¥˜Ò—·s“IåhH")
+	MSG("ˆ½ŽÒ¥˜Ò’TõˆâÕ“I|à›àØlH")
+	MSG("•sŠÇœƒ›õàC|Œ»Ý•s”\“ž’ÁŠO‹Ž—¹B")
+	MSG("ããà–kç²“IˆâÕ„„á¢¶—¹Y›õˆÄŒB")
+	MSG("šQCŽbŽž˜V›‰’n•ðÝ’Á—¡™ÛB")
+	room_flag_on(2)
+	jump EXIT
+
+//@@šŒJ‚è•Ô‚µ
+TALK1_2:
+	MSG("Œ»Ý•s”\“ž’ÁŠO‹Ž—¹B")
+	MSG("ããà–kç²“IˆâÕ„„á¢¶—¹Y›õˆÄŒB")
+	jump EXIT
+
+EXIT:
+	SET_MOTION("Rospo","STAND",-1)
+	END
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒAƒjƒGƒX
+
+DEF("Aniece")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Aniece")
+	SET_NAME("ANIECE","ˆ¢“òäˆãN")
+
+	// TK ›Þ—à‡‚Ì‹|‚ð”ƒ‚Á‚½
+	check_game_flag(3720)
+	on_jump TALK4
+
+	// TK ƒAƒjƒGƒX‚Æ›Þ—à‡‚Ì‹|‚É‚Â‚¢‚Ä‚Ì˜ð˜b
+	check_game_flag(3722)
+	on_jump TALK3
+
+	// 4 ƒCƒ“ƒtƒFƒ‹ƒm“|‚µ‚½
+	check_game_flag(4)
+	on_jump TALK2
+
+	jump TALK1
+
+//--------------------------------------------------------------------
+
+// ”ƒ‚Á‚½Œã
+TALK4:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("›”—¹›”—¹C|”I’m“¹Y›õè‰—ŠïŠâé“IŽ–åhH")
+	MSG("‰äããà”I¥˜a|ˆêŒÂ›{ŽÒ›wŽqˆê‹N˜Ò“IB")
+	MSG("”@‰Ê—LY›õè‰—ˆâÕ“Iu‘§C|¿‘i‰äB")
+
+	jump EXIT
+
+
+//--------------------------------------------------------------------
+//@@Ð‚Á‚½Œã‚ÉÄ“x˜b‚µ‚©‚¯‚½‚çˆÈ‰º‚ÌƒƒbƒZ[ƒWB
+TALK3:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("œƒ›õžéC‘z”ƒ”‡’£‹|åhH")
+	MSG("”‡žé“I˜bC|‰ä”…–{‘åWæÌ‚R‚O‚O‚OæÌ‹‹”I—¹B")
+
+	SEL("@”ƒ‹|åhH@|#C2”ƒ|•s”ƒ")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL_YES3_1
+
+//@@Ëu”ƒ‚í‚È‚¢v‚Ìê‡
+	MSG("ŒÄC•s’m“¹”‡”c‹|“I™JàaC|^¥—LJ‹RŽm”V–¼ˆ¦B")
+	MSG("ŽZ—¹C”I—v¥‰üÌŽåˆÓÄ˜Ò–çsB")
+
+	jump EXIT
+
+//@@Ëu”ƒ‚¤v‚Ìê‡
+SEL_YES3_1:
+	MSG("^“IH")
+	MSG("“ß›õA¿\D—¹I")
+
+	CHECK_GOLD(3000)
+	ON_JUMP YES3_2
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("ccš_C”@‰ÊŸ“èA“I˜b¥•s˜ð‹‹”I“IšGB")
+	MSG("”cèA€”õD—¹Ä˜Ò™ÛB")
+	jump EXIT
+
+YES3_2:
+	CHECK_MAX_ITEM(0)
+	OFF_JUMP YES3_3
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("ccš_C”I“Is—››ßãSåäŸÞ—¹B")
+	MSG("®—D”VŒãÄ˜Ò™ÛB")
+	jump EXIT
+
+YES3_3:
+	SE("SE_GETITEM")
+//	sys("#C2›Þ—à‡‚Ì‹|‚ðŽè‚É“ü‚ê‚½")
+	SYS_EX("“¾“žy›Þ—ŒöŽå”V‹|zB",-1,0X00000200)
+	GET_GOLD(-3000)
+	GET_ITEM(70, 1)
+
+
+	MSG("š‰™Þ`•sœÁ¥‹RŽmC^¥ŒdŠáˆ¦I")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("›”—¹›”—¹C|”I’m“¹Y›õè‰—ŠïŠâé“IŽ–åhH")
+	MSG("‰äããà”I¥˜a|ˆêŒÂ›{ŽÒ›wŽqˆê‹N˜Ò“IB")
+	MSG("”@‰Ê—LY›õè‰—ˆâÕ“Iu‘§C|¿‘i‰äB")
+	MSG("”@‰Ê”\æÏèA“I˜bC|–³˜_Y›õ‰ä“sà¸”IB")
+
+	// TK ›Þ—à‡‚Ì‹|‚ð”ƒ‚Á‚½
+	game_flag_on(3720)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+TALK2:
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("‰äÝˆâÕ’†Q“ž—¹ˆê”cŠï‰ö“I‹|B")
+	MSG("ŠÅ”‡ŒÂåäüA’m“¹—¹C|m’è¥”N‘ã‹v‰““I“Œ¼Ÿ“öcc")
+	MSG("•s‰ßC‹|Œ·˜¹‘Rœk—L’e—ÍC|‹|g–çˆêà‘–‘¹“sŸ“—LB")
+	MSG("šICªŸ‰ä“IàÈ‘ªC|”‡”c‹|èªåU’˜•s‰ÂŽv‹c“I—Í—ÊB")
+	MSG("cc›”—¹I")
+	MSG("š_C”I•s‘z—v”‡”c‹|åhH")
+	MSG("ŠÅÝ”I‰äŒðî•sö“I˜Ìã•Ö‹XæÌ‹‹”I—¹B")
+	MSG("Œ»Ý“Á•Ê‘åŒ¸™JC|‚S‚O‚O‚O‚fœƒ›õžéH")
+
+	// EV C-1 ›Þ—à‡‚Ì‹|
+	game_flag_on(3722)
+
+	SEL("@”ƒ‹|åhH@|#C2”ƒ|•s”ƒ")
+
+	CHECK_SELECT(0)
+	ON_JUMP SEL_YES
+
+//@@Ëu”ƒ‚í‚È‚¢v‚Ìê‡
+	MSG("ŒÄC•s’m“¹”‡”c‹|“I™JàaC|^¥—LJ‹RŽm”V–¼ˆ¦B")
+	MSG("ŽZ—¹C”I—v¥‰üÌŽåˆÓÄ˜Ò–çsB")
+
+	jump EXIT
+
+//@@Ëu”ƒ‚¤v‚Ìê‡
+SEL_YES:
+	MSG("^“IH")
+	MSG("“ß›õA¿\D—¹I")
+
+	CHECK_GOLD(4000)
+	ON_JUMP YES2
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("ccš_C”@‰ÊŸ“èA“I˜b¥•s˜ð‹‹”I“IšGB")
+	MSG("”cèA€”õD—¹Ä˜Ò™ÛB")
+	jump EXIT
+
+YES2:
+	CHECK_MAX_ITEM(0)
+	OFF_JUMP YES3
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("ccš_C”I“Is—››ßãSåäŸÞ—¹B")
+	MSG("®—D”VŒãÄ˜Ò™ÛB")
+	jump EXIT
+
+YES3:
+	SE("SE_GETITEM")
+//	sys("#C2›Þ—à‡‚Ì‹|‚ðŽè‚É“ü‚ê‚½")
+	SYS_EX("“¾“žy›Þ—ŒöŽå”V‹|zB",-1,0X00000200)
+	GET_GOLD(-4000)
+	GET_ITEM(70, 1)
+
+	MSG("š‰™Þ`•sœÁ¥‹RŽmC^¥ŒdŠáˆ¦I")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("›”—¹›”—¹C|”I’m“¹Y›õè‰—ŠïŠâé“IŽ–åhH")
+	MSG("‰äããà”I¥˜a|ˆêŒÂ›{ŽÒ›wŽqˆê‹N˜Ò“IB")
+	MSG("”@‰Ê—LY›õè‰—ˆâÕ“Iu‘§C|¿‘i‰äB")
+	MSG("”@‰Ê”\æÏèA“I˜bC|–³˜_Y›õ‰ä“sà¸”IB")
+
+	// TK ›Þ—à‡‚Ì‹|‚ð”ƒ‚Á‚½
+	game_flag_on(3720)
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+TALK1:
+
+	SET_NAME("ANIECE","‚˜ü“I—«")
+	MSG("”‡A¥••ˆó—¹ŽçŒì¸èË“I“»•Ðˆ¦cc")
+	//set_motion("Aniece", "EMPTY20",-1)àÕ‚èŒ¾‚ç‚µ‚¢‚Ì‚ÅƒJƒbƒg
+	MSG("”@‰Ê‰ä–ç”\—p“I˜bC|–ç‹–’TõˆâÕA˜ðÌ“¾çj¼‹–‘½—¹B")
+
+	jump EXIT
+
+EXIT:
+	RET
+}
+
+RES("INIT")
+{
+	// 3700	EV C-1 ›Þ—à‡‚Ì‹|
+	check_game_flag(3700)
+	on_jump EXIT
+
+	// ƒCƒ“ƒtƒFƒ‹ƒm‚ð“|‚µ‚½‚©H
+	check_game_flag(4)
+	on_jump EV2
+
+	// EV “¹‹ï‰®‚ÌƒAƒjƒGƒX‚ÆƒXƒyƒ“ƒX‚Ì˜ð˜b
+	check_game_flag(3523)
+	on_jump EXIT
+
+	// EV hŽðê‚ÌƒCƒxƒ“ƒg(’²àzŠJŽn)
+	check_game_flag(3502)
+	on_jump EV1
+
+	jump EXIT
+
+//--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+//@@ƒC[ƒOƒŠƒbƒgŽR‚ÌƒCƒ“ƒtƒFƒ‹ƒm‚ð“|‚µ‚½ŒãA“¹‹ï‰®‚ð–K‚ê‚é‚Æ
+//@@‹­§“I‚ÉƒCƒxƒ“ƒgŠJŽnBƒAƒjƒGƒX‚Æ“XŽå‚ÌƒXƒyƒ“ƒX‚ª¤’k‚ð‚µ
+//@@‚Ä‚¢‚éB
+
+EV2:
+	permit_script_camera(1)
+	RESET_MAP_ROT_Y(1,1)
+	CINEMA_ON(0)
+	STOP_PC(0)
+	stop_camera(0)
+	set_script_camera_EX("PC",0, -55.5,240.0,0.0, 12, 15.0)
+
+	set_deg_ex("Aniece", "Spence")
+	set_deg_ex("Spence", "Aniece")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -3.39,0.00,-3.39)
+	walk_pos("PC",0,0.05)
+
+	move_script_look_at(0,0,5, 180, 1)
+	wait(140)
+
+	ACTIVE_CHR("Aniece")
+	MSG("‚R‚O‚O‚OI")
+
+	ACTIVE_CHR("Spence")
+	MSG("‚Q‚V‚O‚Oœƒ›õžéH")
+
+	ACTIVE_CHR("Aniece")
+	MSG("•ssC‚Q‚X‚O‚OI")
+
+	ACTIVE_CHR("Spence")
+	MSG("‚Q‚W‚O‚OB")
+
+	ACTIVE_CHR("Aniece")
+	MSG("“ßA‚Q‚W‚T‚OI")
+
+	ACTIVE_CHR("Spence")
+	MSG("ccšI`›”‰ä˜Òà|‚Q‚W‚O‚OA›ßãS¥‹ÉŒÀ—¹ˆ¦B")
+	MSG("”@‰Ê¥™˜“I˜bC|ácìŒÃ“ŸæÌ‹‹‹M‘°˜ð—LŒÂD™JèA“Icc")
+	MSG("AŽZ¥ˆ¢“òäˆãN¬ˆ·”I‹‰äC|–ç•s”\”ä”‡ŒÂ™JèAÄ‚—¹B")
+
+	ACTIVE_CHR("Aniece")
+	MSG("š–C²’˜ˆê•›à]˜a“I•\îC|™ÈŠÒ¥“ß›õ“ï›”•tˆ¦cc")
+
+	set_deg("Aniece", 0)
+	set_deg("Spence", 261)
+	FOCUS_CHR("PC")
+
+	cross_fade(80)
+	CINEMA_OFF(0)
+	permit_script_camera(0)
+
+	wait(80)
+
+	// 3700	EV C-1 ›Þ—à‡‚Ì‹|
+	game_flag_on(3700)
+	jump EXIT
+
+
+//--------------------------------------------------------------------
+//@@“¹‹ï‰®‚ÉˆÚ“®‚·‚é‚ÆˆÈ‰º‚ÌƒCƒxƒ“ƒg‚ªá¢“®B•Ší‰®‚Å“XŽå‚ÆƒA
+//@@ƒjƒGƒX‚ª˜ð˜b‚µ‚Ä‚¢‚éBŽålŒö‚Í“ü‚èŒû‚ÉƒtƒBƒbƒNƒX‚µ‚½‚Ü‚ÜA
+//@@ƒJƒƒ‰‚ð“ñl‚ÉU‚éB
+
+EV1:
+	permit_script_camera(1)
+	RESET_MAP_ROT_Y(1,1)
+	STOP_PC(0)
+	CINEMA_ON(0)
+	stop_camera(0)
+	set_script_camera_EX("PC",0, -55.5,240.0,0.0, 12, 15.0)
+
+	set_deg_ex("Aniece", "Spence")
+	set_deg_ex("Spence", "Aniece")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -3.39,0.00,-3.39)
+	walk_pos("PC",0,0.05)
+
+	move_script_look_at(0,0,5, 180, 1)
+	wait(140)
+
+//	FOCUS_CHR("Aniece")
+//	SET_NAME("Aniece", "ƒAƒjƒGƒX")
+	SET_NAME("ANIECE","‚˜ü“I—«")
+
+	SET_NAME("SPENCE","“¹‹ï“X˜VàJŽj–§Žz")
+	SET_MOTION("Spence", "ATTACK1",-1)
+
+	ACTIVE_CHR("Aniece")
+	MSG("Å‹ßC‰äÝˆâÕ—¡Q“ž—¹•`ã‰’˜¸èËš¤ˆÄ“I_Šï“»•ÐB")
+
+	ACTIVE_CHR("Spence")
+	MSG("_Šï“I“»•Ð¥åhH|•s‰îˆÓ“I˜b¿æ¨‰äŠÅŠÅB")
+	MSG("cc”‡•s¥••ˆó’˜wŽçŒì¸èËx“I“»•ÐåhH")
+
+	ACTIVE_CHR("Aniece")
+	MSG("ŽçŒì¸èËH")
+
+	ACTIVE_CHR("Spence")
+	MSG("Ý—ÑàŽ¢ŒÎŒQ’n™½|œnœk‹vˆÈ‘OA—¬™B’˜ˆêŽí•—‘­B")
+	MSG("¬›wŽqˆê¶‰º˜ÒA—vÝ¸èË“°ÚŽóôâXC|Ý‘¼gãŠñhŽçŒì¸èËB")
+
+	ACTIVE_CHR("Aniece")
+	MSG("šI`|˜ô”‡žé“IŽ–î—LY›õì—påhH")
+
+	ACTIVE_CHR("Spence")
+	MSG("l¶‰º˜Ò“I“ßˆêuŠÔCªŸ–½‰^”V¯C|‘¼“I”\—Í˜a«ŠiA›ßãSŒˆ’è—¹B")
+	MSG("”ä”@à—ÍA–‚—ÍA‰^Ÿ†AŽèèËIäo”Ûcc")
+	MSG("AŽZ“§‰ß¬’·˜a“w—ÍŽ§—LŠ’ñ‚C|’A¥Šel”VŠÔ“I·‹——D—òŠÒ˜¹‘R˜ð‘¶Ý“IB")
+	MSG("“§‰ßŽçŒì¸èË|A‰ÂˆÈ›””‡±”\—Íisœ\•â˜a’ñ‚B")
+
+	ACTIVE_CHR("Aniece")
+	set_motion("Aniece", "EMPTY20",-1)
+	MSG("š“`|^¥‘åŠJŠáŠE—¹ˆ¦B")
+
+	ACTIVE_CHR("Spence")
+	MSG("ŠñhÝgãˆê”yŽq“IŽçŒì¸èË|‘ü”\¥Å‰‘Io“IˆêÇB")
+	MSG("ŠˆÈ›wŽq“I•êeˆ×—¹‘IˆêŒÂD“I¸èË|’Êí˜ðiá¶”]`‘z”j“ªB")
+
+	ACTIVE_CHR("Aniece")
+	MSG("Œ´˜Ò¥”‡žécc")
+	MSG("’A¥C|”‡Ží¸èË‘ü”\Ý„o¶“IŽžŒóŠñhB")
+	MSG("•sŠÇœƒ›õàC|”‡ŒÂ“»•Ð›”‰ä˜Òà¥Ÿ“Y›õ—p—¹B")
+
+	ACTIVE_CHR("Spence")
+	MSG("¥åhC^ˆâŠ¶cc")
+
+	FOCUS_CHR("PC")
+	cross_fade(80)
+	CINEMA_OFF(0)
+	set_deg("Aniece", 0)
+	set_deg("Spence", 261)
+
+	permit_script_camera(0)
+	wait(80)
+
+	game_flag_on(3523)
+
+	// ƒŠƒlƒbƒg‚ÌÅ‰‚Ì˜ð˜b—p
+	room_flag_on(1)
+
+EXIT:
+	end
+}
+
+
+
+
+
+
+
+
+
+// 05/09/10
+//////////////////////////////////////////////////////////////////////
+// ‰“ü“XŽžHELPƒƒbƒZ[ƒWi“¹‹ï‰®•Òj
+@help
+{
+	MSG_EX("#W0@",70,0X00000002)
+	SYS_EX("#F0#C2è‰—y“¹‹ï“Xz",-1,0X20000400)
+	SYS_EX("#F0#C2Ý“¹‹ï“X‰ÂˆÈw”ƒ“ž›”’Tè¨—L—p“I“¹‹ïB",-1,0X20000400)
+	SYS_EX("#F0#C2œ—¹åZ…“™‰ñ•œåZ•i”VŠOC|ŠÒošSèoú˜a™î•¶‘B",-1,0X20000400)
+	SYS_EX("#F0#C2‘I¢¤•i—ñ•\ã–Ê•\Ž¦Œ^•Ê“I•WâÜC|‘RŒãà‘Œ‚Žù—v“I¤•iB",-1,0X20000400)
+	SYS_EX("#F0#C2”@‰Ê‘zæÌ{•sŽù—v“I•¨•iC|¿à‘Œ‚ŠŽ—L•¨•i“Iš¤•WB",-1,0X20000400)
+}

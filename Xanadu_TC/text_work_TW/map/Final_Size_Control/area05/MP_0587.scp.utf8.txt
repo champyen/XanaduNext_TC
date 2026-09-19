@@ -1,0 +1,126 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	CHECK_GAME_FLAG(599)
+	ON_SKIP(1)
+	HIDE_CHR("tbox")
+
+	// バット
+	put_monster("m00",319,4,0,0,0)
+	put_monster("m01",319,4,0,0,1)
+	put_monster("m02",319,4,0,0,2)
+	// レッドスライム
+	put_monster("m03",063,4,0,0,3)
+	put_monster("m04",063,4,0,0,4)
+	put_monster("m05",063,4,0,0,5)
+	put_monster("m06",063,4,0,0,6)
+
+	// 水マップ
+	SE("SE_MIZU")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1507)
+	ON_SKIP(2)
+	KAGI("d1507",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1507")
+
+}
+
+// 倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(599)
+	ON_JUMP next
+
+	STOP_PC(0)
+
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",-5.5,0,-1)
+	SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+
+	GAME_FLAG_ON(599)
+
+next:
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(500)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,227,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(500)
+	OFF_JUMP ITEM
+
+ITEM:
+// 鍵
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 227, -5.5,0,-1, 1,80,0)
+	WAIT(140)
+
+//	CHECK_MAX_ITEM(0)
+//	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(227, 1)
+	GAME_FLAG_ON(500)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1507")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1507)
+}
+

@@ -1,0 +1,204 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// スペクタクルズ通常動作
+	ROOM_FLAG_ON(254)
+
+	// 既に取っているのでは
+	CHECK_GAME_FLAG(664)
+	OFF_JUMP next
+
+	// ダークサラマンダー
+//	put_monster("m00",321,17,0,0,0)
+//	put_monster("m01",321,17,0,0,1)
+//	put_monster("m02",321,17,0,0,2)
+//	put_monster("m03",321,17,0,0,3)
+	// フローズンサラマンダー
+//	put_monster("m04",412,17,0,0,4)
+//	put_monster("m05",412,17,0,0,5)
+//	put_monster("m06",412,17,0,0,6)
+
+next:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1637)
+	ON_SKIP(2)
+	KAGI("d1637",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1637")
+}
+
+RES("WIN")
+{
+	AREA_FLAG_ON(100)
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1637")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1637)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(664)
+	OFF_JUMP next
+	// ブラッドロータス
+//	SET_TREASURE("tbox",1,21,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+// ブラッドロータス
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 21, -6.6,0.375,3, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【嗜血戰槌】！",-1,0X00000200)
+
+	GET_ITEM(21, 1)
+	GAME_FLAG_ON(664)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// スペクイベントトリガー
+// ----------------------------------------------------------------------------
+
+DEF("trg1")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg2")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg3")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg4")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg5")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg6")
+RES("EVENT")
+{
+	CALL EV
+}
+
+DEF("trg7")
+RES("EVENT")
+{
+	CALL EV
+}
+
+@EV
+{
+	// 既に取っているのでは
+	CHECK_GAME_FLAG(664)
+	ON_JUMP next
+
+	// 二度目に踏んでも何も出ないよ
+	CHECK_ROOM_FLAG(1)
+	ON_JUMP next
+
+	// イベント開始
+	QUAKE(0,10,60)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",-6.6,0.375,3)
+
+
+
+	HIDE_CHR("tbox")
+	WAIT(60)
+	FOCUS_CHR("PC")
+
+	// ダークサラマンダー
+//	put_monster("m00",321,17,2,0,0)
+//	put_monster("m01",321,17,2,0,1)
+//	put_monster("m02",321,17,2,0,2)
+//	put_monster("m03",321,17,2,0,3)
+	// フローズンサラマンダー
+//	put_monster("m04",412,17,2,0,4)
+//	put_monster("m05",412,17,2,0,5)
+//	put_monster("m06",412,17,2,0,6)
+
+	// 敵がもう居ないなら飛ばし
+//	CHECK_AREA_FLAG(100)
+//	ON_SKIP(2)
+
+//	QUAKE(0,10,60)
+//	WAIT(120)
+	CINEMA_OFF(0)
+
+	ROOM_FLAG_ON(1)
+
+next:
+
+	RET
+}
+
+

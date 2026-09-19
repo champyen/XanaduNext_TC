@@ -1,0 +1,197 @@
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	INIT_SWITCH_ON("stop")
+
+	CHECK_GAME_FLAG(518)
+	OFF_JUMP next
+	// マミー
+	put_monster("m00",012,10,0,0,0)
+	put_monster("m01",012,10,0,0,1)
+	put_monster("m02",012,10,0,0,2)
+//	put_monster("m03",012,10,0,0,3)
+//	put_monster("m04",012,10,0,0,4)
+
+next:
+
+	// 死神出さない
+	PERMIT_DEATH(0)
+	// 出現數（最小、最大）
+	SET_MAX_MONSTER(1,1)
+	// だんだん強くなる（出現回數每＋、夜はさらに＋)
+	SET_MONSTER_LVUP(1,5)
+	// 出現モンスター（モンスター番號、レベル、晝１２３４、夜１２３４、出現確率、名前）
+	// デス（鐘守り）
+	ENTRY_MONSTER(316,  8,"1234","1234",100,"")
+	// 出現一時停止
+	PAUSE_MONSTER(1,0)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1554)
+	ON_SKIP(2)
+	KAGI("d1554",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1554")
+
+	// 中ボス出現の前フリ
+	CHECK_GAME_FLAG(518)
+	ON_SKIP 1
+	stop_bgm(0,2000)
+}
+
+RES("EXIT")
+{
+	// 中ボスで消えたＢＧＭ對策
+	CHECK_GAME_FLAG(518)
+	ON_SKIP 1
+	BGM(-1, 0, -1)
+}
+
+
+// ボス倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(518)
+	ON_JUMP next
+
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null2")
+	EFC("EFC_ADD_TREASURE",7.5,0,-1)
+	SHOW_CHR("tbox2")
+	WAIT(60)
+	CINEMA_OFF(0)
+//		STOP_PC(0)
+//		WAIT(60)
+//		SE("SE_STOPPER")
+//		CINEMA_ON(0)
+//		FOCUS_CHR("stop")
+//		SWITCH_ON("stop")
+//		WAIT(90)
+//		CINEMA_OFF(0)
+
+		bgm(-1,0,-1)
+
+	GAME_FLAG_ON(518)
+
+next:
+}
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1554")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1554)
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱空け
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	CHECK_GAME_FLAG(518)
+	OFF_SKIP(1)
+	HIDE_CHR("tbox")
+
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	OPEN_BOX("CUR")
+	WAIT(60)
+
+//	FOCUS_CHR("stop")
+//	QUAKE(0,10,60)
+//	SWITCH_OFF("stop")
+//	WAIT(60)
+//	FOCUS_CHR("null")
+
+	// 小ボス曲
+	BGM(14,0,-1)
+
+	// スケルトンブリースト
+	put_monster("m00",522,10,2,0,0)
+	// スケルトンウォーリアー
+//	put_monster("m01",378,10,2,0,1)
+//	put_monster("m02",378,10,2,0,2)
+//	put_monster("m03",012,10,2,0,3)
+//	put_monster("m04",012,10,2,0,4)
+
+	QUAKE(0,10,60)
+	WAIT(120)
+	CINEMA_OFF(0)
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox2")
+RES("INIT")
+{
+	//ボス倒したかどうか
+	CHECK_GAME_FLAG(518)
+	OFF_JUMP next
+
+	//開けたかどうか
+	CHECK_GAME_FLAG(521)
+	OFF_SKIP(1)
+
+	INIT_SWITCH_ON("tbox2")
+	END
+
+next:
+	HIDE_CHR("tbox2")
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 25, 7.5,0,-1, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+
+	SYS_EX("得到【雷鳴長劍】！",-1,0X00000200)
+
+	GET_ITEM(25,1)
+	GAME_FLAG_ON(521)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+}

@@ -1,0 +1,248 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// ゴブリンシャーマン
+	put_monster("m00",402,16,0,0,0)
+	put_monster("m01",402,16,0,0,1)
+	put_monster("m02",402,16,0,0,2)
+	put_monster("m03",402,16,0,0,3)
+	put_monster("m04",402,16,0,0,4)
+	put_monster("m05",402,16,0,0,5)
+	put_monster("m06",402,16,0,0,6)
+	put_monster("m07",402,16,0,0,7)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1613)
+	ON_SKIP(2)
+	KAGI("d1613",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1613")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1614)
+	ON_SKIP(2)
+	KAGI("d1614",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1614")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1615)
+	ON_SKIP(2)
+	KAGI("d1615",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1615")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1616)
+	ON_SKIP(2)
+	KAGI("d1616",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1616")
+
+// スイッチ１オンオフチェック
+	CHECK_GAME_FLAG(601)
+	OFF_JUMP L_B1
+
+	INIT_SWITCH_ON("sw")
+	SET_POS("bar",-4.25,0,-14)
+
+L_B1:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1613")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1613)
+}
+
+DEF("d1614")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1614)
+}
+
+DEF("d1615")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1615)
+}
+
+DEF("d1616")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1616)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw")
+
+RES("CLICK")
+{
+	SEL("#C1柵欄的控制|#C2　拉動拉桿　|放棄")
+	check_select(0)
+	on_jump SW_MOVE
+	END
+
+SW_MOVE:
+
+	CHECK_SWITCH("sw")
+	ON_JUMP L_B2
+	
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(60)
+	SWITCH_ON("sw")
+			WAIT(60)
+			MOVE_VEC("bar",0,-4,0,240)
+	SE("SE_HEDGE")
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+	GAME_FLAG_ON(601)
+	CINEMA_OFF(0)
+	WAIT(60)
+	END
+
+L_B2:
+	CINEMA_ON(0)
+	STOP_PC(0)
+	WAIT(60)
+	SWITCH_OFF("sw")
+			WAIT(60)
+			MOVE_VEC("bar",0,4,0,240)
+	SE("SE_HEDGE")
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+			SHAKE(0,5)
+			WAIT(10)
+	CINEMA_OFF(0)
+	WAIT(60)
+	GAME_FLAG_OFF(601)
+}
+
+

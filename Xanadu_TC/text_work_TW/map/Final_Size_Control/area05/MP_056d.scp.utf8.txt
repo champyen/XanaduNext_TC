@@ -1,0 +1,164 @@
+
+// ----------------------------------------------------------------------------
+// 水門１讀み替え                                                                 
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// カギ設定
+	CHECK_GAME_FLAG(1559)
+	ON_SKIP(2)
+	KAGI("d1559",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1559")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1559")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1559)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(501)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(501)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 1.8,2,-10.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【80Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(80)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//手記２      憧憬の古文書 1210年 銀狼の月27日
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 291, 1.8,2,-10.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【憧憬之古文書】！",-1,0X00000200)
+
+	GET_ITEM(291, 1)
+	GAME_FLAG_ON(501)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(504)
+	OFF_JUMP next
+
+	// 毒の腕輪
+//	SET_TREASURE("tbox2",1,150,"ITEM2")
+	INIT_SWITCH_ON("tbox2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+	CHECK_GAME_FLAG(504)
+	OFF_JUMP ITEM
+
+ITEM:
+// 毒の腕輪
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 150, -1.8,2,-10.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+
+	SYS_EX("得到【毒蛇之手鐲】！",-1,0X00000200)
+
+	GET_ITEM(150, 1)
+	GAME_FLAG_ON(504)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+

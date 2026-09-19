@@ -1,0 +1,266 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1532)
+	ON_SKIP(2)
+	KAGI("d1532",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1532")
+
+// ギアオンオフチェック
+
+	CHECK_GAME_FLAG(538)
+	OFF_JUMP GEAREND
+
+	INIT_SWITCH_ON("gear")
+	INIT_SWITCH_ON("sw")
+	SET_POS("rope",1,-4,1.5)
+
+GEAREND:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1532")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1532)
+}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kanban")
+RES("CLICK")
+{
+	FOCUS_CHR("kanban")
+	SET_NAME("KANBAN","告示")
+	SYS("第二閘門　開關")
+}
+
+
+// ----------------------------------------------------------------------------
+// 水門３                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("sw")
+
+RES("CLICK")
+{
+	CHECK_GAME_FLAG(538)
+	ON_JUMP a
+
+		//フラグオンの場合
+	SEL("水閘的控制|#C2　拉下拉桿　|取消")
+	check_select(0)
+	on_jump SW_DOWN
+	jump EXIT
+
+SW_DOWN:
+	CINEMA_ON(0)
+	STOP_PC(0)
+		WAIT(60)
+		SWITCH_ON("sw")
+		WAIT(60)
+
+		SWITCH_ON("gear")
+	MOVE_VEC("rope",0,-4,0,200)
+			SHAKE(0,20)
+SE("SE_WALL_HIT")
+			WAIT(10)
+			WAIT(10)
+			SHAKE(0,20)
+SE("SE_WALL_HIT")
+			WAIT(10)
+			WAIT(10)
+			WAIT(10)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+
+	CINEMA_OFF(0)
+		WAIT(60)
+
+		GAME_FLAG_ON(538)
+		END
+a:
+		//フラグオフの場合
+
+	SEL("水閘的控制|#C2　推上拉桿　|取消")
+	check_select(0)
+	on_jump SW_UP
+	jump EXIT
+
+SW_UP:
+	CINEMA_ON(0)
+	STOP_PC(0)
+		WAIT(60)
+		SWITCH_OFF("sw")
+		WAIT(60)
+
+		SWITCH_OFF("gear")
+	MOVE_VEC("rope",0,4,0,200)
+			SHAKE(0,20)
+SE("SE_WALL_HIT")
+			WAIT(10)
+			WAIT(10)
+			SHAKE(0,20)
+SE("SE_WALL_HIT")
+			WAIT(10)
+			WAIT(10)
+			WAIT(10)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+SE("SE_WALL_HIT")
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+
+	CINEMA_OFF(0)
+		WAIT(60)
+
+		GAME_FLAG_OFF(538)
+		END
+
+EXIT:
+	end
+}
+
+

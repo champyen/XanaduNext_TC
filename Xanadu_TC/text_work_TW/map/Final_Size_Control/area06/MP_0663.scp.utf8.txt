@@ -1,0 +1,186 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// 縮小マップ（赤）
+	GAME_FLAG_ON(210)
+
+
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	HIDE_CHR("tbox")
+
+	// スイッチ１オンオフチェック
+	CHECK_GAME_FLAG(641)
+	OFF_JUMP next
+	SHOW_CHR("tbox")
+	MOVE_VEC("box",0,0,3,1)
+	ROOM_FLAG_ON(7)
+	HIDE_CHR("1")
+	HIDE_CHR("2")
+	HIDE_CHR("3")
+	HIDE_CHR("4")
+	HIDE_CHR("5")
+	HIDE_CHR("6")
+	HIDE_CHR("7")
+
+next:
+
+	// 寶箱GET濟み
+//	CHECK_GAME_FLAG(654)
+//	OFF_SKIP(1)
+//	HIDE_CHR("tbox")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1673)
+	ON_SKIP(2)
+	KAGI("d1673",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1673")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1674)
+	ON_SKIP(2)
+	KAGI("d1674",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1674")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1673")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1673)
+}
+
+DEF("d1674")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1674)
+}
+
+
+// ----------------------------------------------------------------------------
+// スイッチ                                                                  
+// ----------------------------------------------------------------------------
+
+
+DEF("sw")
+
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(654)
+	ON_JUMP NEXT2
+
+	// 入室直後のイベント發生防止用
+	CHECK_ROOM_FLAG(7)
+	OFF_SKIP(2)
+	ROOM_FLAG_OFF(7)
+	END
+
+	//フラグ狀態チェック
+	CHECK_GRID(1,0,"box")
+	OFF_JUMP NOBOX
+
+	CHECK_SWITCH("sw")
+	OFF_JUMP NEXT
+
+	// 寶箱現れる
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",0,4.25,8)
+		CHECK_GAME_FLAG(654)
+		ON_SKIP(1)
+		SHOW_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+	GAME_FLAG_ON(641)
+	END
+
+NOBOX:
+	CHECK_GAME_FLAG(641)
+	ON_JUMP NEXT
+	END
+
+NEXT:
+	// 寶箱消える
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	ROOM_FLAG_OFF(10)
+	EFC("EFC_ADD_TREASURE",0,4.25,8)
+	HIDE_CHR("tbox")
+	WAIT(60)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(641)
+	END
+
+NEXT2:
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(654)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,182,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+// 圓盤の鍵
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 182, 0,4.25,8, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(654)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+

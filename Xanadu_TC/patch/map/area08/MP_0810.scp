@@ -1,0 +1,150 @@
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_VOLCANO")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1806)
+	ON_SKIP(2)
+	KAGI("d1806",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1806")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1807)
+	ON_SKIP(2)
+	KAGI("d1807",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1807")
+
+	set_rain_inf("EFC_HINOKO",1, 45, 15,60)
+	rain(1)
+	set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+	raster(1,1)
+
+	// サラマンダー
+	put_monster("m00",387,12,0,0,0)
+	put_monster("m01",387,12,0,0,1)
+	put_monster("m02",387,12,0,0,2)
+	put_monster("m03",387,12,0,0,3)
+	put_monster("m04",387,12,0,0,4)
+	put_monster("m05",387,12,0,0,5)
+
+	// 敵を倒したことがある
+	CHECK_GAME_FLAG(814)
+	OFF_JUMP next
+	SHOW_CHR("tbox")
+	END
+
+	//箱を開けたかどうか
+	CHECK_GAME_FLAG(813)
+	OFF_JUMP next
+	SHOW_CHR("tbox")
+	END
+
+NEXT:
+	HIDE_CHR("tbox")
+
+}
+
+
+
+RES("WIN")
+{
+	CHECK_GAME_FLAG(814)
+	ON_JUMP next
+
+		// きえる
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("tbox")
+		EFC("EFC_ADD_TREASURE",-6.712,0,11)
+		SHOW_CHR("tbox")
+		WAIT(60)
+		CINEMA_OFF(0)
+
+	GAME_FLAG_ON(814)
+
+NEXT:
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1806")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1806)
+}
+
+DEF("d1807")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1807)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(813)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,152,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(813)
+	OFF_JUMP ITEM
+
+ITEM:
+// 靜寂の腕輪
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 152, -6.712,0,11, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【寂靜之手澳】！",-1,0X00000200)
+
+	GET_ITEM(152, 1)
+	GAME_FLAG_ON(813)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

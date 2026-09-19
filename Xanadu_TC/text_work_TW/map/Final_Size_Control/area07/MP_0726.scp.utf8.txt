@@ -1,0 +1,201 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+//
+// ROOM_FLAG 0 Tiowald2
+//
+//
+//
+
+DEF("MAP")
+
+RES("INIT")
+{
+
+//-- 石像配置のため、モンスターを削除 --------------------------------
+//	// ゴブリンアーチャー
+//	put_monster("m00",001,6,0,0,0)
+//	put_monster("m01",001,6,0,0,1)
+//	put_monster("m02",001,6,0,0,2)
+//	put_monster("m03",001,6,0,0,3)
+//	put_monster("m04",001,6,0,0,4)
+//	put_monster("m05",001,6,0,0,5)
+
+
+	HIDE_CHR("Tiowald2")
+
+	// イベント見た
+	CHECK_GAME_FLAG(747)
+	OFF_JUMP NEXT2
+
+	// 石像を消去
+	SET_MOTION("Tiowald","HOOK",0)
+	jump NEXT
+NEXT2:
+
+	SET_MOTION("Tiowald","STAND",0)
+NEXT:
+	// カギ設定
+	CHECK_GAME_FLAG(1710)
+	ON_SKIP(2)
+	KAGI("d1710",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1710")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1710")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1710)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ティオパルト
+
+DEF("Tiowald")
+
+RES("CLICK")
+{
+
+NEXT:
+	SYS("石頭的碎片到處散落。")
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ティオパルトイベント
+
+DEF("EV_TIO")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(747)
+	ON_JUMP NEXT
+
+	STOP_PC(0)
+	SET_POS("PC",0,0,2)
+	SET_DEG_EX("PC","Tiowald2")
+	PC_WEAPON( 0, 1)
+
+	CROSS_FADE(60)
+	CINEMA_ON(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA( 0,0,8, -30,180,0, 13, 15 )	
+	MOVE_SCRIPT_LOOK_AT( 0,0,2, 200, 1 )
+	stop_bgm(1,2000)
+
+	set_skip_label("SKIP")
+
+//主人公近寄って止まる
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 0,0,5)
+	walk_pos("PC",0,0.025)
+	WAIT_WALK("PC")
+	QUAKE(1,1,-1)
+	WAIT(200)
+	SE("SE_EVENT_52")
+	ATTACH_EFC("EFC_07TEOPALT1","Tiowald","POS")
+	wait(250)
+
+//カメラ切り替え（斜めから）
+	CROSS_FADE(30)
+	SET_SCRIPT_CAMERA( 0,1.5,11, -20,220,0, 4, 15 )
+	ROTATE_SCRIPT_CAMERA( 5,-20,0,500, 1)
+	DELETE_EFC("Tiowald")
+	BLUR(20)
+
+	SET_MOTION("Tiowald","HOOK",0)
+	ATTACH_EFC("EFC_07TEOPALT2","Tiowald","POS")
+	WAIT(400)
+
+
+// 白フェード
+	FADE_OUT_EX( 100, 0, "0xffffffff", 0)
+	wait(100)
+	QUAKE(0,0,0)
+	BLUR(0)
+	DELETE_EFC("Tiowald")
+	SHOW_CHR("Tiowald2")
+	SET_MOTION("Tiowald2","STAND",0)
+	wait(200)
+	SET_SCRIPT_CAMERA( 0,1.3,11, -30,180,0, 10, 15 )
+	SCALE_SCRIPT_CAMERA( 0.9, 1000, 0)
+	FADE_IN_EX( 60, 0, "0xffffffff", 0)
+
+	//後語り
+	WAIT(60)
+	MSG_EX("#S3#C0不可思議的老人「咳……這是……」",-1,2)
+	SET_MOTION("Tiowald2","EMPTY17",20)
+	WAIT(180)
+	MSG_EX("#S3#C0不可思議的老人「雖然這地方還像原來一樣，|　　　　　　不過已經長滿了苔蘚……」",-1,2)
+	WAIT(60)
+
+	//後處理
+	BGM( -1, 0, 1000)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	CROSS_FADE(60)
+	CINEMA_OFF(0)
+	GAME_FLAG_ON(747)
+	END
+
+
+SKIP:
+	//後處理
+	QUAKE(0,0,0)
+	BLUR(0)
+	
+	SET_MOTION("Tiowald","HOOK",0)
+	DELETE_EFC("Tiowald")
+	SHOW_CHR("Tiowald2")
+	SET_MOTION("Tiowald2","STAND",0)
+
+	STOP_WALK("PC")
+	SET_POS("PC",0,0,5)
+	SET_DEG_EX("PC","Tiowald2")
+
+	STOP_SE("SE_EVENT_52")
+
+	BGM( -1, 0, 1000)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+	CINEMA_OFF(0)
+	GAME_FLAG_ON(747)
+	FADE_IN(60)
+
+NEXT:
+}
+
+//////////////////////////////////////////////////////////////////////
+// 
+
+DEF("Tiowald2")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Tiowald2")
+	SET_NAME("TIOWALD2", "不可思議的老人")
+
+	CHECK_ROOM_FLAG(0)
+	ON_JUMP TALK2
+
+	MSG("年輕人，這裡到底是……")
+	MSG("……歐威魯湖的哈萊克島？")
+	MSG("呼，事情變得越來越奇妙了……")
+	ROOM_FLAG_ON(0)
+	end
+
+TALK2:
+//　　⇒以降、繰り返し
+
+	MSG("你很在意我的事情嗎？")
+	MSG("不過我自己|也不是很明白啊。")
+	end
+}

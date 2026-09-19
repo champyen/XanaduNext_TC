@@ -1,0 +1,4 @@
+Xanadu_TW Traditional Chinese build
+built: 2026-09-19T19:59:38
+dict entries: 164
+map scripts: 205

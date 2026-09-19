@@ -1,0 +1,339 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	ROOM_FLAG_ON(101)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1518)
+	ON_SKIP(2)
+	KAGI("d1518",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1518")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1521)
+	ON_SKIP(2)
+	KAGI("d1521",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1521")
+
+// 移動床オンチェック
+	CHECK_GAME_FLAG(560)
+	OFF_JUMP NEXT
+
+	ROOM_FLAG_ON(001)
+	ROOM_FLAG_ON(002)
+	ROOM_FLAG_ON(003)
+	ROOM_FLAG_ON(004)
+	MOVE_VEC("yuka",0,0,0,1)
+	SET_POS("box1",-1.25,-4,-1.75)
+	SET_POS("box2",3.25,-4,-1.75)
+	SET_POS("box3",-1.25,-4,-6.25)
+	SET_POS("box4",3.25,-4,-6.25)
+
+	// 燧った箱を畫面外に飛ばす
+	SET_POS("box5",3.25,-8,-6.25)
+
+NEXT:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1518")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1518)
+}
+
+DEF("d1521")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1521)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+
+RES("FOOT")
+{
+	// マップ初期戝態
+	CHECK_ROOM_FLAG(001)
+	ON_JUMP NEXT
+
+	// 降りたときにフラグも下げる
+	CHECK_GAME_FLAG(560)
+	ON_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+DOWN:
+	GAME_FLAG_OFF(560)
+	END
+
+NEXT:
+	ROOM_FLAG_OFF(001)
+
+}
+
+DEF("sw2")
+
+RES("FOOT")
+{
+	// マップ初期戝態
+	CHECK_ROOM_FLAG(002)
+	ON_JUMP NEXT
+
+	// 降りたときにフラグも下げる
+	CHECK_GAME_FLAG(560)
+	ON_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+DOWN:
+	GAME_FLAG_OFF(560)
+	END
+
+NEXT:
+	ROOM_FLAG_OFF(002)
+
+}
+
+DEF("sw3")
+
+RES("FOOT")
+{
+	// マップ初期戝態
+	CHECK_ROOM_FLAG(003)
+	ON_JUMP NEXT
+
+	// 降りたときにフラグも下げる
+	CHECK_GAME_FLAG(560)
+	ON_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+DOWN:
+	GAME_FLAG_OFF(560)
+	END
+
+NEXT:
+	ROOM_FLAG_OFF(003)
+
+}
+
+DEF("sw4")
+
+RES("FOOT")
+{
+	// マップ初期戝態
+	CHECK_ROOM_FLAG(004)
+	ON_JUMP NEXT
+
+	// 降りたときにフラグも下げる
+	CHECK_GAME_FLAG(560)
+	ON_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+DOWN:
+	GAME_FLAG_OFF(560)
+	END
+
+NEXT:
+	ROOM_FLAG_OFF(004)
+
+}
+
+// ----------------------------------------------------------------------------
+// バー關連サブルーチン                                                        
+// ----------------------------------------------------------------------------
+
+// スイッチ全部押されていたら動く
+@SW_CHECK
+{
+	CHECK_SWITCH("sw1")
+	ON_JUMP SC1
+	END
+
+SC1:
+	CHECK_SWITCH("sw2")
+	ON_JUMP SC2
+	END
+
+SC2:
+	CHECK_SWITCH("sw3")
+	ON_JUMP SC3
+	END
+
+SC3:
+	CHECK_SWITCH("sw4")
+	ON_JUMP SC4
+	END
+
+SC4:
+	CALL hako
+
+	// マップ初期戝態迴避
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("yuka")
+			WAIT(60)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+		CHECK_ROOM_FLAG(102)
+		ON_JUMP NEXT
+	MOVE_VEC("yuka",0,0,0,1)
+		NEXT:
+	GAME_FLAG_ON(560)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+	// パズルクリア================
+	clear_puzzle(0)
+	// ============================
+
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 箱關連サブルーチン                                                        
+// ----------------------------------------------------------------------------
+
+// スイッチの上に乘っているのは３つの箱のうちのどれかかい
+@hako
+{
+	CHECK_GRID(0,0,"box1")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box2")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box3")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box4")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box5")
+	ON_JUMP H1
+	END
+
+H1:
+	CHECK_GRID(3,0,"box1")
+	ON_JUMP H2
+	CHECK_GRID(3,0,"box2")
+	ON_JUMP H2
+	CHECK_GRID(3,0,"box3")
+	ON_JUMP H2
+	CHECK_GRID(3,0,"box4")
+	ON_JUMP H2
+	CHECK_GRID(3,0,"box5")
+	ON_JUMP H2
+	END
+
+H2:
+	CHECK_GRID(0,3,"box1")
+	ON_JUMP H3
+	CHECK_GRID(0,3,"box2")
+	ON_JUMP H3
+	CHECK_GRID(0,3,"box3")
+	ON_JUMP H3
+	CHECK_GRID(0,3,"box4")
+	ON_JUMP H3
+	CHECK_GRID(0,3,"box5")
+	ON_JUMP H3
+	END
+
+H3:
+	CHECK_GRID(3,3,"box1")
+	ON_JUMP H4
+	CHECK_GRID(3,3,"box2")
+	ON_JUMP H4
+	CHECK_GRID(3,3,"box3")
+	ON_JUMP H4
+	CHECK_GRID(3,3,"box4")
+	ON_JUMP H4
+	CHECK_GRID(3,3,"box5")
+	ON_JUMP H4
+	END
+
+H4:
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 浮遊石                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("yuka")
+RES("GOAL")
+{
+	// 動いているよフラグ
+	ROOM_FLAG_ON(102)
+
+	CHECK_GAME_FLAG(560)
+	OFF_JUMP EXIT
+
+	// 上がりON 下りOFF
+	CHECK_ROOM_FLAG(101)
+	ON_JUMP UP
+	JUMP DOWN
+
+UP:
+	// 上がり
+	MOVE_VEC("yuka",0,3.75,0,240)
+	ROOM_FLAG_OFF(101)
+	END
+
+DOWN:
+	// 下り
+	MOVE_VEC("yuka",0,-3.75,0,240)
+	ROOM_FLAG_ON(101)
+	END
+
+EXIT:
+	ROOM_FLAG_OFF(102)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kami")
+RES("CLICK")
+{
+	FOCUS_CHR("kami")
+	SET_NAME("KAMI","貼紙")
+	SYS("前方　廢墟　西")
+}
+

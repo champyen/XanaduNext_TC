@@ -1,0 +1,339 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+// 移動床オンチェック
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP NEXT
+
+	ROOM_FLAG_ON(001)
+
+	SET_POS("box1",-2,0,-1)
+	SET_POS("box2",1,0,-1)
+	SET_POS("box3",4,0,-1)
+
+	MOVE_VEC("move1",0,0,0,1)
+	MOVE_VEC("move2",0,0,0,1)
+
+NEXT:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1533)
+	ON_SKIP(2)
+	KAGI("d1533",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1533")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1533")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1533)
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(549)
+	OFF_JUMP next
+
+//	SET_TREASURE("box",1,182,"ITEM")
+	INIT_SWITCH_ON("box")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box")
+
+	CHECK_GAME_FLAG(549)
+	OFF_JUMP ITEM
+
+ITEM:
+// 圓盤の鍵
+	SWITCH_ON("box")
+	POP_ITEM_ICON("box", 182, 1,5,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box")
+	ATTACH_EFC("EFC_99ITEM_GET","box","POS")
+
+	SYS_EX("得到【圓盤鑰匙】！",-1,0X00000200)
+
+	GET_ITEM(182, 1)
+	GAME_FLAG_ON(549)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+
+RES("FOOT")
+{
+	// 降りたときにフラグも下げる
+	CHECK_SWITCH("sw1")
+	OFF_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+:DOWN
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP NEXT
+	CALL SW_REV
+	END
+
+}
+
+DEF("sw2")
+
+RES("FOOT")
+{
+	// 降りたときにフラグも下げる
+	CHECK_SWITCH("sw2")
+	OFF_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+:DOWN
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP NEXT
+	CALL SW_REV
+	END
+
+}
+
+DEF("sw3")
+
+RES("FOOT")
+{
+	// 降りたときにフラグも下げる
+	CHECK_SWITCH("sw3")
+	OFF_JUMP DOWN
+
+	// サブルーチン
+	CALL SW_CHECK
+	END
+
+:DOWN
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP NEXT
+	CALL SW_REV
+	END
+
+}
+
+
+// ----------------------------------------------------------------------------
+// バー關連サブルーチン                                                        
+// ----------------------------------------------------------------------------
+
+// スイッチ全部押されていたら動く
+@SW_CHECK
+{
+	CHECK_SWITCH("sw1")
+	ON_JUMP SC1
+	END
+
+SC1:
+	CHECK_SWITCH("sw2")
+	ON_JUMP SC2
+	END
+
+SC2:
+	CHECK_SWITCH("sw3")
+	ON_JUMP SC3
+	END
+
+SC3:
+	CALL hako
+
+	// マップ初期狀態
+	CHECK_GAME_FLAG(563)
+	ON_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("move1")
+			WAIT(60)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+			WAIT(5)
+			SHAKE(0,5)
+
+	MOVE_VEC("move1",0,0,0,1)
+	MOVE_VEC("move2",0,0,0,1)
+
+	GAME_FLAG_ON(563)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+NEXT:
+	RET
+}
+
+// スイッチ全部押されていたら動く
+@SW_REV
+{
+
+	GAME_FLAG_OFF(563)
+	ROOM_FLAG_OFF(001)
+
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 箱關連サブルーチン                                                        
+// ----------------------------------------------------------------------------
+
+// スイッチの上に乘っているのは３つの箱のうちのどれかかい
+@hako
+{
+	CHECK_GRID(0,0,"box1")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box2")
+	ON_JUMP H1
+	CHECK_GRID(0,0,"box3")
+	ON_JUMP H1
+	END
+
+H1:
+	CHECK_GRID(2,0,"box1")
+	ON_JUMP H2
+	CHECK_GRID(2,0,"box2")
+	ON_JUMP H2
+	CHECK_GRID(2,0,"box3")
+	ON_JUMP H2
+	END
+
+H2:
+	CHECK_GRID(4,0,"box1")
+	ON_JUMP H3
+	CHECK_GRID(4,0,"box2")
+	ON_JUMP H3
+	CHECK_GRID(4,0,"box3")
+	ON_JUMP H3
+	END
+
+H3:
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// 浮遊石                                                                      
+// ----------------------------------------------------------------------------
+
+DEF("move1")
+RES("GOAL")
+{
+	// 動いているよフラグ
+	ROOM_FLAG_ON(102)
+
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP EXIT
+
+	// 上がりON 下りOFF
+	CHECK_ROOM_FLAG(101)
+	ON_JUMP UP
+	JUMP DOWN
+
+UP:
+	// 上がり
+	MOVE_VEC("move1",0,2,0,240)
+	ROOM_FLAG_OFF(101)
+	END
+
+DOWN:
+	// 下り
+	MOVE_VEC("move1",0,-2,0,240)
+	ROOM_FLAG_ON(101)
+	END
+
+EXIT:
+	ROOM_FLAG_OFF(102)
+
+}
+
+DEF("move2")
+RES("GOAL")
+{
+	// 動いているよフラグ
+	ROOM_FLAG_ON(104)
+
+	CHECK_GAME_FLAG(563)
+	OFF_JUMP EXIT
+
+	// 上がりON 下りOFF
+	CHECK_ROOM_FLAG(103)
+	ON_JUMP UP
+	JUMP DOWN
+
+UP:
+	// 上がり
+	MOVE_VEC("move2",0,2,0,240)
+	ROOM_FLAG_OFF(103)
+	END
+
+DOWN:
+	// 下り
+	MOVE_VEC("move2",0,-2,0,240)
+	ROOM_FLAG_ON(103)
+	END
+
+EXIT:
+	ROOM_FLAG_OFF(104)
+
+}
+
+

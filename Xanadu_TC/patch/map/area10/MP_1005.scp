@@ -1,0 +1,154 @@
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// 3525	EV チュートリアル、ジャンプについて
+	check_game_flag(3525)
+	on_skip(2)
+	ENTRY_CHR( 0, 234)
+	PUT_CHR( 0, "jump",  1.11,0.00,0.13, 97)
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1021)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox1",1,8,"ITEM1")
+	INIT_SWITCH_ON("tbox1")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+// ワールウインド
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 8, 8,0.375,2, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+
+	SYS_EX("得到【旋風斧】！",-1,0X00000200)
+
+	GET_ITEM(8, 1)
+	GAME_FLAG_ON(1021)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+		sysu_ex("これ以上荷物を持てない。",-1,0x00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1026)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox2",1,228,"ITEM2")
+	INIT_SWITCH_ON("tbox2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+// ニードル
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 228, 8,0.375,-2, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+
+	SYS_EX("得到【咒文書】！",-1,0X00000200)
+
+	GET_ITEM(228, 1)
+	GAME_FLAG_ON(1026)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ジャンプ、チュートリアル
+
+DEF("jump")
+RES("INIT")
+{
+	// 3525	EV チュートリアル、ジャンプについて
+	check_game_flag(3525)
+	on_jump EXIT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("jump")
+
+	GAME_FLAG_ON(3525)
+
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於【跳躍】",-1,0X00000200)
+	SYS_EX("像這種地上的裂縫，|只要向對面助銕，|就會自動【跳躍】過去。",-1,0X00000200)
+	SYS_EX("如果猶猶豫豫地走過去，|就會跳不過去而拵到下面，請注意。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	HIDE_CHR("jump")
+
+//--------------------------------------------------------------------
+
+EXIT:
+	end
+
+}

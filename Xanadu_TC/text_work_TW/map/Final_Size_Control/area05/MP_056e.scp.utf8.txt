@@ -1,0 +1,564 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	CHECK_GAME_FLAG(509)
+	OFF_JUMP NEXT
+	HIDE_CHR("tbox_h")
+	END
+
+NEXT:
+	HIDE_CHR("tbox2")
+}
+
+
+// ----------------------------------------------------------------------------
+// 冰
+// ----------------------------------------------------------------------------
+DEF("i01")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i01","POS")
+	KILL_CHR("i01",0,0,150)
+
+NEXT:
+}
+
+DEF("i02")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i02","POS")
+	KILL_CHR("i02",0,0,150)
+
+NEXT:
+}
+
+DEF("i03")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i03","POS")
+	KILL_CHR("i03",0,0,150)
+
+NEXT:
+}
+
+DEF("i04")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i04","POS")
+	KILL_CHR("i04",0,0,150)
+
+NEXT:
+}
+
+DEF("i05")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i05","POS")
+	KILL_CHR("i05",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i09","POS")
+//	KILL_CHR("i09",0,0,150)
+
+NEXT:
+}
+
+DEF("i06")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i06","POS")
+	KILL_CHR("i06",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i09","POS")
+//	KILL_CHR("i09",0,0,150)
+
+NEXT:
+}
+
+DEF("i07")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i07","POS")
+	KILL_CHR("i07",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i04","POS")
+//	KILL_CHR("i04",0,0,150)
+
+NEXT:
+}
+
+DEF("i08")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i08","POS")
+	KILL_CHR("i08",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i09","POS")
+//	KILL_CHR("i09",0,0,150)
+
+	CHECK_GAME_FLAG(509)
+	ON_SKIP(2)
+	SHOW_CHR("tbox2")
+	HIDE_CHR("tbox_h")
+
+NEXT:
+}
+
+DEF("i09")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i09","POS")
+	KILL_CHR("i09",0,0,150)
+
+NEXT:
+}
+
+DEF("i10")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i10","POS")
+	KILL_CHR("i10",0,0,150)
+
+NEXT:
+}
+
+DEF("i11")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i11","POS")
+	KILL_CHR("i11",0,0,150)
+
+NEXT:
+}
+
+DEF("i12")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i12","POS")
+	KILL_CHR("i12",0,0,150)
+
+NEXT:
+}
+
+DEF("i13")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i13","POS")
+	KILL_CHR("i13",0,0,150)
+
+NEXT:
+}
+
+DEF("i14")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i14","POS")
+	KILL_CHR("i14",0,0,150)
+
+NEXT:
+}
+
+DEF("i15")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i15","POS")
+	KILL_CHR("i15",0,0,150)
+
+NEXT:
+}
+
+DEF("i16")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i16","POS")
+	KILL_CHR("i16",0,0,150)
+
+NEXT:
+}
+
+DEF("i17")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i17","POS")
+	KILL_CHR("i17",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i19","POS")
+//	KILL_CHR("i19",0,0,150)
+
+NEXT:
+}
+
+DEF("i18")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i18","POS")
+	KILL_CHR("i18",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i19","POS")
+//	KILL_CHR("i19",0,0,150)
+
+NEXT:
+}
+
+DEF("i19")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i19","POS")
+	KILL_CHR("i19",0,0,150)
+
+NEXT:
+}
+
+DEF("i20")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i20","POS")
+	KILL_CHR("i20",0,0,150)
+
+NEXT:
+}
+
+DEF("i21")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i21","POS")
+	KILL_CHR("i21",0,0,150)
+
+NEXT:
+}
+
+DEF("i22")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i22","POS")
+	KILL_CHR("i22",0,0,150)
+
+NEXT:
+}
+
+DEF("i23")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i23","POS")
+	KILL_CHR("i23",0,0,150)
+
+NEXT:
+}
+
+DEF("i24")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i24","POS")
+	KILL_CHR("i24",0,0,150)
+
+NEXT:
+}
+
+DEF("i25")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i25","POS")
+	KILL_CHR("i25",0,0,150)
+
+NEXT:
+}
+
+DEF("i26")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i26","POS")
+	KILL_CHR("i26",0,0,150)
+
+NEXT:
+}
+
+DEF("i27")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i27","POS")
+	KILL_CHR("i27",0,0,150)
+
+NEXT:
+}
+
+DEF("i28")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i28","POS")
+	KILL_CHR("i28",0,0,150)
+
+NEXT:
+}
+
+DEF("i29")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i29","POS")
+	KILL_CHR("i29",0,0,150)
+
+NEXT:
+}
+
+DEF("i30")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i30","POS")
+	KILL_CHR("i30",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i32","POS")
+//	KILL_CHR("i32",0,0,150)
+
+NEXT:
+}
+
+DEF("i31")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i31","POS")
+	KILL_CHR("i31",0,0,150)
+//	ATTACH_EFC("EFC_05KOORI","i32","POS")
+//	KILL_CHR("i32",0,0,150)
+
+NEXT:
+}
+
+DEF("i32")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i32","POS")
+	KILL_CHR("i32",0,0,150)
+
+NEXT:
+}
+
+DEF("i33")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i33","POS")
+	KILL_CHR("i33",0,0,150)
+
+NEXT:
+}
+
+DEF("i34")
+RES("HIT")
+{
+	//炎が當たると消す
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP NEXT
+
+	ATTACH_EFC("EFC_05KOORI","i34","POS")
+	KILL_CHR("i34",0,0,150)
+
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(509)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox2")
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox2")
+
+	CHECK_GAME_FLAG(509)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 225, -8.7,0,-0.85, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【80Ｇ】！",-1,0X00000200)
+
+	GET_GOLD( 80)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板⑦　天秤の石板
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 276, -8.7,0,-0.85, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【天秤之石板】！",-1,0X00000200)
+
+	GET_ITEM(276, 1)
+	GAME_FLAG_ON(509)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+

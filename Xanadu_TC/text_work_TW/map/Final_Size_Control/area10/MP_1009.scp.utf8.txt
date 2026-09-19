@@ -1,0 +1,550 @@
+//////////////////////////////////////////////////////////////////////
+// 
+// room_flag
+//	0 : ドヴォルザークとの戰鬥中を判定
+//
+//
+
+
+//--------------------------------------------------------------------
+// チュートリアル遺跡　一番奧の寶箱部屋
+//--------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// 05/05/19追記：イベント戰鬥用カメラOFF
+	camera_off("ドヴォルザーク戰")
+	
+	// 05/05/19追記：ブラックオニキス使用禁止
+	room_flag_on(255)
+	
+	HIDE_CHR("Dvorak")
+
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// ドヴォルザーク
+
+DEF("EV_Dvorak")
+
+RES("EVENT")
+{
+	// ★05/05/19追記：ドヴォルザークと現在戰鬥中ならイベントトリガー無視
+	check_room_flag(0)
+	on_jump EXIT
+
+	// EV 宿酒場のイベント(調查開始)
+	check_game_flag(3502)
+	off_jump EXIT
+	// EV ドヴォルザークとの對決イベント
+	check_game_flag(3520)
+	on_jump EXIT
+
+//------------------------------------------------------------
+	// 寶箱を２個とも開けていたら、イベント發動
+	// ひとつだけならストッパー發動
+	// まったく開けていなければ、自由に通行可能
+
+	// 一つ目あいてる？
+	check_game_flag(1024)
+	on_jump NEXT1
+	// 二つ目あいてる？
+	check_game_flag(1025)
+	on_jump STOPPER
+
+	// 兩方とも開けていないので、通行可能
+	jump EXIT
+
+NEXT1:
+	// 二つ目あいてる？
+	check_game_flag(1025)
+	on_jump EVENT
+
+// どちらかがまだ開けてないので、通せんぼ
+STOPPER:
+	stop_pc(0)
+	SYS("還未開啟所有的寶箱。")
+	cross_fade(60)
+	set_pos("PC", 20.0,-9.00,0.0)
+	set_deg("PC", 90)
+	jump EXIT
+
+// 兩方とも開けていた場合
+
+//--------------------------------------------------------------------
+EVENT:
+	STOP_PC(0)
+	CINEMA_ON(0)
+
+	// ★05/05/19追記：「戰鬥直前までスキップ」に變更
+//	set_skip_label("SKIP")
+	set_skip_label("SKIP2")
+
+//　　地下遺跡の最奧まで來ると、古びた臺座の上に寶箱が２つ並ん
+//　　でいる。中に入っていた「クラウン」と「いにしえの石板」を
+//　　入手して引き返そうとすると、不意に入り口から聲をかけられ
+//　　る。
+
+	cross_fade(120)
+	reset_map_rot_y(1,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(17.30,-8.00,-0.13,  -25.5,225.0,0.0, 12, 15.0)
+	move_script_look_at(-7,0,0, 600, 1)
+	rotate_script_camera(0,30,0, 600, 1)
+
+	STOP_SE(0)
+	set_pos("PC", 16.75,-10.00, 0.0)
+	set_deg("PC", 270)
+	PC_WEAPON(0,1)
+	set_motion("PC", "STAND",-1)
+	show_chr("Dvorak")
+	load_npc_eqp(7,00)
+	dvorak(0)
+	set_pos("Dvorak", 4.86,-10.00, 0.00)
+	set_deg("Dvorak", 90)
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", 15.35,-10.00,0.0)
+	walk_pos("PC",0,0.025)
+
+	// イベント汎用曲
+	BGM( 18, 1, 1000 )
+	wait(60)
+
+	MSG_EX("#S3#C0謎之劍士「……哦，閣下是騎士？」",-1,2)
+
+	set_motion("Dvorak","STAND",-1)
+	look_chr("Dvorak", "-")
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 10.35,-10.00,0.0)
+	walk_pos("Dvorak",0,0.025)
+
+	MSG_EX("#S3#C0謎之劍士「在這樣的地方做些像盜賊一樣的勾當，|　　　　　騎士也墮落了。」",-1,2)
+	wait_walk("Dvorak")
+	wait_camera(0)
+
+	cross_fade(100)
+	SET_SPOT_ORG(1, 13.25,-9,0 )
+	permit_script_camera(0)
+	reset_map_rot_y(7,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(10.35,-9.00,0.0,  -25.5,155.0,0.0, 12, 15.0)
+	move_script_look_at(2.5,0,0, 500, 1)
+	rotate_script_camera(0,-40,0, 500, 1)
+	wait(100)
+
+	MSG_EX("#S3#C0謎之劍士「算了……|　　　　　我想要你手中的王冠。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「在它落入那個人手中之前。」",-1,2)
+
+
+//　　ドヴォルザークが主人公の前まで悠然と步いて移動。
+//　　主人公はやや後退。
+
+	MSG_EX("#S3#C0謎之劍士「你不知道……|　　　　　那個王冠是什麼樣的東西。」",-1,2)
+	wait(40)
+	stop_camera(0)
+
+
+//　　劍を拔き、身構える主人公。
+//　　不都合あったのでカット。主人公の首振りで
+	wait(20)
+	cross_fade(20)
+	set_script_camera_EX("PC",2,  -25.5,105.0,0.0, 10, 15.0)
+	WAIT(30)
+
+
+	set_motion("PC","EMPTY24",10)
+	WAIT(144)
+
+	STOP_BGM(0, 3000)
+	wait(25)
+	move_script_look_at(-0.75,0,0, 150, 1)
+	wait_camera(0)
+
+	MSG_EX("#S3#C0謎之劍士「我不想浪費口舌。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「騎士不能做無謂的後退嗎……」",-1,2)
+	wait(20)
+
+
+//　　ドヴォルザーク、劍を拔く。
+	set_motion("Dvorak","WEAPON_O")
+	wait(34)
+	se("SE_WEAPON_O")
+	wait(35)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+	MSG_EX("#S3#C0謎之劍士「也許你也有自己的理由，|　　　　　不過如果不給我的話，那就沒辦法了。」",-1,2)
+
+
+SKIP2:
+//　　主人公とドヴォルザーク模擬戰鬥
+	fade_out(30)
+	wait(30)
+	// 中ボス曲
+	BGM( 15, 1, 1000 )
+	wait(30)
+	room_flag_on(0)
+	
+	permit_script_camera(0)
+	SET_SPOT_ORG(0, 0,0,0 )
+	
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+
+	//　イベント用ドヴォルザーク非表示＆戰鬥用ドヴォルザーク配置
+	// ↓05/05/28追記：イベント移動中かもしれないので強制停止させてます。
+	STOP_WALK("Dvorak")
+	hide_chr("Dvorak")
+	put_monster("m00",500,0,0,0x00000010,0)
+	set_scroll_rect( 3,-4.5, 15,4.5)
+	camera_on("ドヴォルザーク戰")
+	lock_camera("ドヴォルザーク戰")
+
+	fade_in(30)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+// ★戰鬥の前／後で↑↓のスクリプトを分斷しました ----------------------------
+
+DEF("m00")
+RES("PROG1")
+{
+	room_flag_off(0)
+
+//	BGM( 15, 1, 1000 )
+
+	STOP_PC(0)
+	CINEMA_ON(0)
+
+//	cross_fade(60)
+
+	fade_out(120)
+	wait(120)
+	
+	// PCの劍振りモーションをリセット
+	set_motion("PC","STAND",0)
+	delete_efc("PC")
+
+	camera_off("ドヴォルザーク戰")
+	unlock_camera("ドヴォルザーク戰")
+	set_scroll_rect(-10000,-10000, 10000,10000)
+	hide_chr("m00")
+	delete_efc("m00")
+	show_chr("Dvorak")
+	SET_SPOT_ORG(1, 13.25,-9,0 )
+	permit_script_camera(1)
+
+// ★05/05/19追記分（ココマデ） ==============================================
+
+
+//模擬戰鬥終わって一言どうぞ
+	STOP_PC(0)
+	set_script_camera(11.5,-9,0,  -25.5,225.0,0.0, 10, 15.0)
+	rotate_script_camera(0,15,0, 1000, 1)
+	set_pos("Dvorak" , 8.5,-10.00,0.0)
+	set_deg("Dvorak", 90)
+	set_pos("PC", 15,-10.00, 0.0)
+	set_deg("PC", 270)
+	DELETE_EFC("PC")
+	DELETE_EFC("Dvorak")
+	fade_in(60)
+	set_skip_label("SKIP")
+	wait(120)
+	MSG_EX("#S3#C0謎之劍士「來吧！」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「哈，相當不錯嘛……」",-1,2)
+
+
+//劍構える
+	cross_fade(30)
+	set_script_camera(9.8,-8.5,0, 5,180,0, 4.5, 15)
+	move_script_look_at( -0.5,0,0, 1000, 0)
+	//↓文字數が長くてエラーになるのでちょと變えました
+	//MSG_EX("#S3#C0謎の劍士「そのような鈍らな劍(こころ)では|　　　　　このドヴォルザークには屆かぬぞ。」",-1,2)
+	MSG_EX("#S3#C0謎之劍士「害怕了嗎……|　　　　　不，應該説是迷惑了吧。」",-1,2)
+	wait(80)
+	SET_MOTION("Dvorak","EMPTY18",10)
+	wait(70)
+	se("SE_WEAPON_I")
+	//ATTACH_EFC("EFC_DOV_AURA","Dvorak","pos")
+	SET_MOTION("Dvorak","EMPTY19",0)
+	wait(40)
+	se("SE_EVENT_02")
+	MSG_EX("#S3#C0謎之劍士「用這樣遲鈍的劍，|　　　　　是比不過我德沃夏克的。」",-1,2)
+	wait(100)
+
+	MSG_EX("#S3#C0德沃夏克「喝啊——！！」",-1,2)
+
+//技撃つ
+	SET_MOTION("Dvorak","EMPTY20",5)
+	wait(10)
+	stop_env_se("SE_EVENT_02",1000)
+
+	se("SE_EVENT_03")
+	wait(25)
+	FADE_OUT_EX(10, 0, "0xffffffff",0)
+//	wait(10)
+//	se("SE_DAMAGE_P")
+//	wait(5)
+//	se("SE_DAMAGE_P")
+//	wait(5)
+//	se("SE_DAMAGE_P")
+//	wait(5)
+//	se("SE_DAMAGE_P")
+//	wait(20)
+//	se("SE_DAMAGE_P")
+//	wait(60)
+
+	STOP_BGM(0, 3000)
+	WAIT(180)
+
+//　　技を受けて膝から崩れ落ちる主人公。その周りは花が咲くよう
+//　　に血だまりが廣がっていく。
+	set_script_camera(14.5,-9.7,0, -25,90,0, 7, 30)
+	rotate_script_camera(-20,0,0, 500, 1)
+	scale_script_camera( 1.4, 500, 1)
+	set_script_fov( 15, 500, 1)
+	fade_in_ex(15, 0, "0xffffffff",0)
+	set_motion("PC", "DOWN",0)
+	wait(60)
+	se("SE_EVENT_04")
+	wait(70)
+	se("SE_EVENT_05")
+	wait(6)
+	set_motion("PC", "DEAD",0)
+	EFC("EFC_DOV_BLOOD",15,-10,0)
+	wait(200)
+	fade_out(30)
+	wait(30)
+
+
+//ドヴォルザーク、主人公の懐からクラウンを取り出す。
+	set_pos("Dvorak", 13,-10,0,)
+	set_deg("Dvorak", 90)
+	dvorak(0)
+	set_motion("Dvorak","STAND")
+	set_script_camera_EX("Dvorak",0,  -25.5,225.0,0.0, 10, 15.0)
+	fade_in(60)
+	move_script_look_at(2,0,0, 400, 1)
+	wait(160)
+
+	MSG_EX("#S3#C0德沃夏克「至少能勇敢戰死，|　　　　　堅持騎士的尊嚴也不錯。」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「我本來想認真應戰的。|　　　　　結果也只是這種程度啊……」",-1,2)
+	MSG_EX("#S3#C0德沃夏克「看來沒有救了……」",-1,2)
+
+	set_turn_spd("Dvorak", 16)
+	set_deg("Dvorak", 270)
+
+//	MSG_EX("#S3#C0ドヴォルザーク「さて、急がなくては……」",-1,2)
+
+	fade_out(120)
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 2,-10.,0.0)
+	walk_pos("Dvorak",0,0.035)
+	wait(200)
+
+	// クラウンと石版を消す。その他後處理。
+//	PICK_ITEM(270)
+	PICK_ITEM(187)
+	pick_text_item(0)
+
+	SET_SPOT_ORG(0, 0,0,0 )
+	PC_WEAPON(0,1)
+	wait(100)
+	game_flag_on(3520)
+	entry_map("0091_1009")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+
+EXIT:
+	END
+
+SKIP:
+	fade_out(0)
+	wait(1)
+
+	// クラウンと石版を消す
+//	PICK_ITEM(270)
+	PICK_ITEM(187)
+	pick_text_item(0)
+
+	STOP_ENV_SE("SE_EVENT_02",2000)
+	STOP_ENV_SE("SE_EVENT_03",2000)
+
+	SET_SPOT_ORG(0, 0,0,0 )
+	PC_WEAPON(0,1)
+	wait(60)
+	game_flag_on(3520)
+	entry_map("0091_1009")
+
+	END
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1024)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox1")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+	CHECK_GAME_FLAG(1024)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 225, 26.5,-7.625,1.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【20Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(20)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板①　白羊の石板
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 270, 26.5,-7.625,1.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【白羊之石板】！",-1,0X00000200)
+
+	GET_ITEM(270, 1)
+	GAME_FLAG_ON(1024)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+//////////////////////////////////////////////////////////////////////
+// クラウン寶箱
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(1025)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox2")
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+
+RES("CLICK")
+{
+	FADE_OUT(30)
+	WAIT(60)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "tbox2", -2, -30,60,0, 4, 15)
+	ROTATE_SCRIPT_CAMERA( 5,20,0, 300, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,0.5,0, 300,1)
+	SET_POS("PC",25.15,-7.5,-1.5)
+	SET_DEG_EX("PC","tbox2")
+	PC_WEAPON(0,1)
+//	STOP_BGM(0, 2000)
+	FADE_BGM( 0, 10, 2000)
+	WAIT(20)
+
+	//カメラ１
+	SET_MOTION("PC","OPENBOX",0)
+	SWITCH_ON("tbox2")
+	ATTACH_EFC("EFC_99K1","tbox2","POS")
+	FADE_IN(30)
+	WAIT(240)
+
+	//カメラ２
+	CROSS_FADE(20)
+	SET_SCRIPT_CAMERA_EX("PC", -3, -30,180,0, 4, 10)
+	ROTATE_SCRIPT_CAMERA( 5,0,0, 300, 1)
+	SCALE_SCRIPT_CAMERA( 1.05, 300,1)
+	WAIT(240)
+
+//荷物が一杯かどうかチェック。
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	GET_ITEM(187, 1)
+	GAME_FLAG_ON(1025)
+
+	//後處理
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+//	HIDE_CHR("tbox2")
+	DELETE_EFC("tbox2")
+	PERMIT_SCRIPT_CAMERA(0)
+	SE("SE_GETITEM")
+	SYS_EX("得到【王冠扎格琉伊勒斯】！",-1,0X00000200)
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+	END
+
+EXIT:
+	CROSS_FADE(60)
+	DELETE_EFC("tbox2")
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(30)
+	SE("SE_ERROR")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+}

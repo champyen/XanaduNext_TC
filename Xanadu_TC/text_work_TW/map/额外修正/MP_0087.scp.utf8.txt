@@ -1,0 +1,328 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// BGM
+	BGM( 7, 0, 0)
+
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+	SET_COLOR("d3300",0x7f000000,1,0)
+
+	// カギ設定
+	CHECK_GAME_FLAG(3300)
+	ON_SKIP(2)
+	KAGI("d3300",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d3300")
+
+	// カギ設定
+	CHECK_GAME_FLAG(3301)
+	ON_SKIP(2)
+	KAGI("d3301",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d3301")
+
+	// ビホルダー隱す
+	hide_chr("eye")
+}
+
+// ボス倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+
+		STOP_PC(0)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("zin2")
+		SWITCH_OFF("zin2")
+		WAIT(90)
+		CINEMA_OFF(0)
+		
+		GAME_FLAG_ON(3303)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ドアたち
+// ----------------------------------------------------------------------------
+DEF("d3300")
+RES("CLICK")
+{
+	// 鈴木土下座衛門倒したよフラグ
+	CHECK_GAME_FLAG(3303)
+	ON_JUMP NEXT
+	wait(0)
+NEXT:
+}
+RES("KAGI")
+{
+	GAME_FLAG_ON(3300)
+}
+
+
+DEF("d3301")
+RES("CLICK")
+{
+	// 鈴木土下座衛門倒したよフラグ
+	CHECK_GAME_FLAG(3303)
+	ON_JUMP NEXT
+	wait(0)
+NEXT:
+}
+RES("KAGI")
+{
+	GAME_FLAG_ON(3301)
+}
+
+
+// ----------------------------------------------------------------------------
+// アスコモイド
+// ----------------------------------------------------------------------------
+DEF("eye")
+RES("KILL")
+{
+	stop_pc(0)
+	CINEMA_ON(0)
+	
+	// ★ピカっと光らせて都合の惡いものを一度に消しちゃう /////////////////////
+	FADE_IN_EX( 15, 1, 0xffffffff, 1)
+	
+	// 子分の消去 ////////////////////
+	DELETE_EFC("hit1")
+	DELETE_EFC("hit2")
+	DELETE_EFC("hit3")
+	DELETE_EFC("hit4")
+	DELETE_EFC("hit5")
+	DELETE_EFC("hit6")
+	DELETE_EFC("hit7")
+	DELETE_EFC("hit8")
+	kill_chr("hit1",0,0,0)
+	kill_chr("hit2",0,0,0)
+	kill_chr("hit3",0,0,0)
+	kill_chr("hit4",0,0,0)
+	kill_chr("hit5",0,0,0)
+	kill_chr("hit6",0,0,0)
+	kill_chr("hit7",0,0,0)
+	kill_chr("hit8",0,0,0)
+
+	// 魔方陣の消去 ///////////////////
+	DELETE_EFC("zin2")
+	KILL_CHR("zin2",0,0,0)
+
+	// 本體の死亡 /////////////////////
+	DELETE_EFC("eye")
+	SE("SE_B4_70200")
+	ATTACH_EFC("EFC_SPI_DEAD","eye","CTR")
+	SET_MOTION("eye","WALK2",0)
+	SET_TARGET_CHR("-")
+
+	QUAKE(0,20,20)
+	SLOW(1)
+	BLUR(50)
+	// 05/09/07:"EFC_SPI_DEAD"內に含まれているのでここでは鳴らさない
+	wait(20)
+//	SE("SE_B3_67000")
+	WAIT(10)
+//	SE("SE_B1_60900")
+	wait(120)
+
+	// ぱぁー
+	FADE_OUT_EX(400, 1, 0xffffffff, 1)
+
+	wait(60)
+	kill_chr("eye",0,1,340)
+	wait(340)
+
+	BLUR(0)
+	SLOW(0)
+	
+	// 戻る
+	FADE_IN_EX( 90, 1, 0xffffffff, 1)
+	wait(90)
+
+	// ドアOPEN
+	SWITCH_ON("d3300")
+//	SWITCH_ON("door2")
+	SET_COLOR("d3300",0xff000000,120,1)
+	SET_COLOR("d3301",0xff000000,120,1)
+
+	// BGM
+	BGM( 7, 0, -1)
+
+	// 倒したよフラグON
+	GAME_FLAG_ON(3303)
+	KAGI("d3301",1)
+
+	CINEMA_OFF(0)
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 魔方陣イベんト
+// ----------------------------------------------------------------------------
+
+DEF("zin2")
+RES("INIT")
+{
+	// 鈴木土下座衛門倒したよフラグ
+	CHECK_GAME_FLAG(3303)
+	ON_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	set_skip_label("SKIP")
+
+	INIT_WALK_DST("PC")
+	SET_WALK_DST("PC",-8,0,0)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	WAIT(30)
+
+	INIT_WALK_DST("PC")
+	WAIT(30)
+
+	//
+//	set_scroll_rect(-9.0,-7.5,10,7.5)
+	set_scroll_rect(-7.0,-7.5,10,7.5)
+	SET_COLOR("d3300",0x3f00004f,120,0)
+	SET_COLOR("d3301",0x7f00004f,120,0)
+	SWITCH_OFF("d3300")
+	KAGI("d3301",0)
+	//
+
+	WAIT(30)
+
+	// BGM
+	BGM( 15, 0, -1)
+
+	SET_DEG_EX("PC","zin2")
+	FOCUS_CHR("zin2")
+
+	QUAKE(0,9,270)
+	WAIT(120)
+
+	ATTACH_EFC("EFC_BDR_START","zin2","POS")
+	ATTACH_EFC("EFC_00ZIN","zin2","POS")
+	SE("SE_B4_69100")
+
+	WAIT(30)
+	SE("SE_B1_61000")
+	SWITCH_ON("zin2")
+	WAIT(60)
+
+	// 鈴木土下座衛門出現
+//	PUT_MONSTER("m00",449,3,2,0,0)
+
+	show_chr("eye")
+	WARP_CHR("eye",1)
+	SE("SE_B4_69101")
+
+	set_target_chr("eye")
+
+	wait(60)
+	CALL NAME
+	wait(150)
+	CALL NAME_ERASE
+	wait(30)
+
+	CINEMA_OFF(0)
+
+END
+
+SKIP:
+	STOP_PC(0)
+	SET_POS("PC",-8,0,0.026)
+	SET_DEG("PC",0)
+	FOCUS_CHR("PC")
+
+	SWITCH_ON("zin2")
+	DELETE_EFC("zin2")
+
+	CALL NAME_ERASE2
+
+//	set_scroll_rect(-9.0,-7.5,10,7.5)
+	set_scroll_rect(-7.0,-7.5,10,7.5)
+	SET_COLOR("d3300",0x3f00004f,120,0)
+	SET_COLOR("d3301",0x7f00004f,120,0)
+	SWITCH_OFF("d3300")
+	KAGI("d3301",0)
+
+	show_chr("eye")	
+	DELETE_EFC("eye")
+	set_target_chr("eye")
+
+	QUAKE(0,0,0)
+	stop_se(0)
+
+	// BGM
+	BGM( 15, 0, -1)
+
+	fade_in(60)
+	CINEMA_OFF(0)
+
+NEXT:
+}
+
+@NAME
+{
+	ENTRY_IMG(0,"BOSS04",0)
+
+	// αが'1'の時は'加算モード'なので「透明」にする時は、
+	// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+	//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+	SET_IMG( 0, 192,346, 0,  0,192,255, 64, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+
+	// 發生までに'間'が欲しい場合はこんな風にします。
+//	SUSPEND_IMG(0,45)
+
+	// フェードイン
+	COLOR_IMG    (0, 0xffffffff, 0xff000000, 30, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 45, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE2
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 1, 1)
+//	COLOR_IMG(2, 0xff000000, 0xff000000, 1, 1)
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// マップ移動
+// ----------------------------------------------------------------------------
+
+DEF("0087")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3302)
+	ON_JUMP NEXT
+	
+	ENTRY_MAP("0088_0087")
+	END
+
+NEXT:
+	ENTRY_MAP("008c_0087")
+}

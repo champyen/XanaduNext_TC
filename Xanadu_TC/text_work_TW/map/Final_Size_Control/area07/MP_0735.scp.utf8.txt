@@ -1,0 +1,312 @@
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_CRICKETS")
+
+	SET_MOTION("sign","EMPTY2",0)
+
+	//バリアを解いたかどうか
+	CHECK_GAME_FLAG(724)
+	OFF_JUMP NEXT2
+
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(723)
+	OFF_JUMP NEXT
+
+	//バリアを解いて箱もあけた
+	MOVE_VEC("box1",-1.5,0,0,1)
+	MOVE_VEC("box2",1.5,0,0,1)
+	SHOW_CHR("tbox")
+	END
+
+NEXT:
+	//バリアを解いて箱はまだ
+	MOVE_VEC("box1",-1.5,0,0,1)
+	MOVE_VEC("box2",1.5,0,0,1)
+	SHOW_CHR("tbox")
+	END
+
+NEXT2:	
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(723)
+	OFF_JUMP NEXT3
+
+	//バリアを解いないけど箱はあけた
+	SHOW_CHR("tbox")
+	END
+
+NEXT3:	
+
+	HIDE_CHR("tbox")
+
+END
+
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+RES("FOOT")
+{
+	
+	CHECK_SWITCH("sw1")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(4,0,"box2")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(724)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(724)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(4,0,"box2")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,0,"box1")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(724)
+NEXT3:
+	END
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+
+	CHECK_SWITCH("sw2")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,0,"box1")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(724)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(724)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,0,"box1")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(4,0,"box2")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(724)
+NEXT3:
+END
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(723)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god07",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(723)
+	OFF_JUMP ITEM
+
+// もしかしたらブラックオニキス
+BLACK_ONYX:
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 80, -1 )
+	OFF_JUMP GOLD
+
+	// バランス調整のため、ブラオニ禁止
+	JUMP GOLD
+
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 220, 0,2.2,0, 1,80,0)
+	WAIT(140)
+
+//	CHECK_MAX_ITEM(0)
+//	ON_JUMP ITEM_FULL
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP ITEM_FULL
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【黑瑪瑙】！",-1,0X00000200)
+
+	GET_ITEM(220,1)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM_FULL:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	end
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 0,2.2,0, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【200Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(200)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 107, 0,2.2,0, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99CARD_GET","tbox","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(7)
+	GAME_FLAG_ON(723)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【翼蛇】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【翼蛇】",-1,0X00000200)
+	SYS_EX("這是可以增加經驗獲得量的守護精靈。|裝備此守護精靈可以加快宿主的成長速度。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+

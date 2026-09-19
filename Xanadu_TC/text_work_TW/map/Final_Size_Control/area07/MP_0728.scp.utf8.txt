@@ -1,0 +1,281 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// 石像使用濟みなら明滅アニメを止めておく
+	check_game_flag(3945)
+	off_skip 1
+	room_flag_on(253)
+
+	// ポータル關連
+	CHECK_GAME_FLAG(4012)
+	ON_SKIP(2)
+	LOAD_MAP("MP_072a")
+	HIDE_CHR("cover")
+
+	// SE再生
+	SE("SE_BIRD")
+
+	// エリアネーム表示
+	CHECK_ENTRY_GATE("0728_0732")
+	OFF_SKIP(1)
+	DISP_PLACE(2)
+
+
+	CHECK_GAME_FLAG(4012)
+	OFF_JUMP NEXT
+	SWITCH_ON("portal")
+	KILL_CHR("cover",0,0,1)
+
+// 移動床オンチェック
+	CHECK_GAME_FLAG(713)
+	ON_JUMP L_B1
+	JUMP NEXT
+L_B1:
+	MOVE_VEC("gate",0,2.75,0,1)
+//	SET_POS("gate",-2,2.75,0)
+	SWITCH_ON("hi1")
+	SWITCH_ON("hi2")
+	KILL_CHR("hit1",0,0,-1)
+	KILL_CHR("hit2",0,0,-1)
+
+NEXT:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// 地名錶示用フラグ
+// ----------------------------------------------------------------------------
+
+DEF("0728_0732")
+RES("EVENT")
+{
+	GAME_FLAG_ON(744)
+}
+
+
+// ----------------------------------------------------------------------------
+// 炎                                                                          
+// ----------------------------------------------------------------------------
+
+DEF("hit1")
+RES("HIT")
+{
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP RET
+
+	SWITCH_ON("hi1")
+	KILL_CHR("hit1",0,0,-1)
+
+	CALL fire_on
+RET:
+}
+
+DEF("hit2")
+RES("HIT")
+{
+	CHECK_HIT_ATTR(0)
+	OFF_JUMP RET
+
+	SWITCH_ON("hi2")
+	KILL_CHR("hit2",0,0,-1)
+
+	CALL fire_on
+RET:
+}
+
+// ----------------------------------------------------------------------------
+// 炎チェックサブルーチン                                                      
+// ----------------------------------------------------------------------------
+
+@fire_on
+{
+		//	暫定處理
+		wait(1)
+	CHECK_SWITCH("hi1")
+	OFF_JUMP NEXT
+
+	CHECK_SWITCH("hi2")
+	OFF_JUMP NEXT
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("gate")
+	WAIT(60)
+	QUAKE(0,5,80)
+//	SWITCH_ON("gate")
+	MOVE_VEC("gate",0,2.75,0,60)
+	WAIT(60)
+	CINEMA_OFF(0)
+	WAIT(60)
+	GAME_FLAG_ON(713)
+
+NEXT:
+
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+// はりがみ
+// ----------------------------------------------------------------------------
+
+DEF("kami")
+RES("CLICK")
+{
+	FOCUS_CHR("kami")
+	SET_NAME("KAMI","貼紙")
+	SYS("對不能分辨真偽的人來説，（到對岸去）很難。")
+}
+
+
+// ============================================================================
+// ポータル
+// ============================================================================
+DEF("portal")
+RES("EVENT")
+{
+	INIT_WALK_DST("PC")
+
+	// ★05/06/20:Ｆクリスタルは最初の一回だけでいい事になりました（ひ）
+
+	// 既にあけているか？
+	CHECK_GAME_FLAG(4012)
+	ON_JUMP NEXT
+
+	// ファイアクリスタルを持っているか？
+	CHECK_ITEM(177,1)
+	OFF_JUMP NEXT2
+
+	// 出現イベント
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-36,-7.5,28)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	
+	CROSS_FADE(60)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "portal", -2, -45,-15,0, 12, 32)
+	ROTATE_SCRIPT_CAMERA( 0,30,0,999, 0)
+	WAIT(60)
+SE("SE_WARP1")
+	KILL_CHR("cover",0,1,120)
+	LOAD_MAP("MP_0728")
+	SHOW_CHR("cover")
+	SWITCH_ON("portal")
+	WAIT(120)
+	WAIT(120)
+
+	GAME_FLAG_ON(4012)
+
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(60)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+	END
+
+NEXT:
+
+	// ポータル
+	STOP_PC(0)
+	CINEMA_ON(0)
+	SET_WALK_DST("PC",-36,-7.5,28)
+	WALK_POS("PC",0,0.026)
+	WAIT_WALK("PC")
+	INIT_WALK_DST("PC")
+	WAIT(30)
+	CALL_PORTAL(0)
+	CINEMA_OFF(0)
+
+NEXT2:
+
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(732)
+	OFF_JUMP next
+
+	// 500GP
+//	SET_TREASURE("tbox",0,500,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(732)
+	OFF_JUMP ITEM
+
+ITEM:
+// 500ゴールド
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, -27,-12,25, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【500Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(500)
+	GAME_FLAG_ON(732)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+}
+
+// ----------------------------------------------------------------------------
+// 石像のリアクション
+// ----------------------------------------------------------------------------
+DEF("Statue")
+RES("CLICK")
+{
+	check_game_flag(3945)
+	on_jump no_res
+
+	check_spirit_lv_max(0)
+	on_jump max_lv
+
+	// まだLVが上げられるならレベルアップ
+	room_flag_on(253)
+	attach_efc("EFC_SPIRIT_LVUP2","Statue","POS")
+	wait(50)
+	spirit_lv_up( 1 )
+	SYS_EX("守護精靈的等級上升1級！",-1,0X00000200)
+	game_flag_on(3945)
+	end
+
+max_lv:
+	SYS("現在寄宿中的守護精靈|已經不能再升級。")
+	end
+
+no_res:
+	SYS("好像沒有任何反應。")
+	end
+}

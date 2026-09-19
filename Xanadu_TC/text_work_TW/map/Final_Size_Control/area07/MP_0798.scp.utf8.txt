@@ -1,0 +1,516 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期化                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// ★05/05/18:ブラックオニキス禁止フラグON
+	room_flag_on(255)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1712)
+	ON_SKIP(2)
+	KAGI("d1712",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1712")
+
+		SET_MOTION("start","EMPTY2",0)
+		SET_MOTION("me1","EMPTY2",0)
+		SET_MOTION("me2","EMPTY2",0)
+		SET_MOTION("me3","EMPTY2",0)
+		SET_MOTION("me4","EMPTY2",0)
+		SET_MOTION("me5","EMPTY2",0)
+		SET_MOTION("me6","EMPTY2",0)
+		SET_MOTION("me7","EMPTY2",0)
+
+
+	// 0799からきたならシネマをONに
+	CHECK_AREA_FLAG(1)
+	OFF_SKIP (1)
+	CINEMA_ON(0)
+
+	// 死神出さない
+	PERMIT_DEATH(0)
+	SET_MOTION("ude2","EMPTY2",0)
+	
+	// スポット出さない
+//	PERMIT_SPOT(0)
+
+	// ボス倒し濟み
+	CHECK_GAME_FLAG(3)
+	OFF_SKIP(1)
+	CALL BOSSKESHI
+}
+
+
+// ボス消し
+@BOSSKESHI
+{
+	// イベント用カメラオフ
+	CAMERA_OFF("EVENT")
+
+	// ボスオブジェクト消し
+	// bodyとikiは、なぜかbreakを1にしないと死んでくれない <- 內部でオブジェ屬性に變更しているため
+//	KILL_CHR("ude1",0,0,1)
+//	KILL_CHR("ude2",0,0,1)
+//	KILL_CHR("ude3",0,0,1)
+//	KILL_CHR("ude4",0,0,1)
+//	KILL_CHR("body",0,1,1)
+	// 05/01/20:KILL系の內部處理修正に伴いHIDE_CHRに變更（KILL_CHRだと消え中が見えちゃうようになった）
+	HIDE_CHR("ude1")
+	HIDE_CHR("ude2")
+	HIDE_CHR("ude3")
+	HIDE_CHR("ude4")
+	HIDE_CHR("body")
+	HIDE_CHR("tentacle")
+
+	//KILL_CHR("iki",0,1,1)
+	// 岩を壞したかい
+	CHECK_GAME_FLAG(716)
+	ON_JUMP IWAKESHI
+
+	// 壞していなけれは岩を下に移動
+	MOVE_VEC("iwa", 0,-19,0, 10)
+	RET
+IWAKESHI:
+
+	HIDE_CHR("iwa")
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1712")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1712)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボス倒しイベント                                                            
+// ----------------------------------------------------------------------------
+
+DEF("start")
+RES("INIT")
+{
+	// 0799からきたかい
+	CHECK_AREA_FLAG(1)
+	OFF_JUMP EVENT
+
+	// 忘れないうちにフラグを戻す
+	AREA_FLAG_OFF(1)
+
+	// ボス倒し後にきたらイベントとばす（＝寶箱から中身を取ったら）
+	CHECK_GAME_FLAG(717)
+	ON_JUMP EVENT
+
+	// PCの動きを止める
+	STOP_PC(0)
+
+				// カメラをスクリプトに渡す
+				PERMIT_SCRIPT_CAMERA(1)
+
+
+				// 位置指定
+				SET_SCRIPT_CAMERA( 0,0,0, -30,180,0, 20, 31.5 )
+
+				//カメラをズーム
+				SCALE_SCRIPT_CAMERA( 0.75, 360, 0 )
+
+	// 0799からきているならフェード切り替え
+	FADE_IN_EX( 60, 0, ("0xffffffff"), 0)
+	bgm(-1,0,-1)
+
+	// ウェイト
+	WAIT(120)
+
+	// 出現エフェクト再生
+	EFC("EFC_ADD_TREASURE",0,0,0)
+//	SE("SE_BOX5")
+	// 寶箱移動
+	GAME_FLAG_ON(746)
+	MOVE_VEC("box",0,6,0,1)
+
+	// 寶箱移動
+	SHOW_CHR("BOX2")
+
+	// ウェイト
+	WAIT(120)
+
+	// シネマOFF
+	CINEMA_OFF(0)
+
+				// クロスで切り替え
+				CROSS_FADE(60)
+
+				// カメラをゲームに返す
+				PERMIT_SCRIPT_CAMERA(0)
+	
+
+	// 05/08/15
+	FOCUS_CHR_EX("PC",0,1,1)
+	// 全快！
+	refresh("PC")
+	// 05/01/14
+//	WAIT(60)
+	// PCにフォーカス戻す
+//	FOCUS_CHR_EX("PC",60,1,1)
+	// 全快！
+//	refresh("PC")
+	// EXP獲得
+//	get_exp(100)
+//	sys("#c2100EXPを手に入れた！")
+	// 地圖元に戻す
+//	enable_system_window(0,1)
+
+EVENT:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// イベント發生                                                                
+// ----------------------------------------------------------------------------
+
+DEF("EV1")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3)
+	ON_SKIP(1)
+	CALL ENTRANCE
+}
+
+DEF("EV2")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3)
+	ON_SKIP(1)
+	CALL ENTRANCE
+}
+
+DEF("EV3")
+RES("EVENT")
+{
+	CHECK_GAME_FLAG(3)
+	ON_SKIP(1)
+	CALL ENTRANCE
+}
+
+@ENTRANCE
+{
+	// プレイヤーキャラ止め
+	STOP_PC(0)
+	SET_POS("PC",0,1,-22)
+	SET_DEG_EX("PC","body")
+
+	// シネマ開始
+	CINEMA_ON(0)
+	CROSS_FADE(60)
+
+
+	// BGM變更
+	bgm(15,0,-1)
+
+// ★NEWスキップ處理(05/01/13)
+	set_skip_label("SKIP")
+	
+		// カメラ制御開始
+		PERMIT_SCRIPT_CAMERA(1)
+		SET_MOTION("ude2","EMPTY2",0)
+		SET_SCRIPT_CAMERA   ( 0,2,-23,-135,0,0, 15,10)
+		MOVE_SCRIPT_LOOK_AT ( 0,2,0,   540, 1)
+		ROTATE_SCRIPT_CAMERA( -40,0,0, 540, 1)
+		SET_SCRIPT_FOV      ( 36,      540, 1)
+		SCALE_SCRIPT_CAMERA ( 0.75,    540, 1)
+		WAIT(180)
+		SE("SE_B1_61000")
+		WAIT(180)
+		SET_MOTION("ude2","EMPTY1",0)
+		WAIT(180)
+
+	// 岩移動
+	MOVE_VEC("iwa",0,-20,0,30)
+	WAIT(25)
+	BLUR(30)
+	// ちょっと早めにエフェクトだしてる
+	EFC("EFC_07IWA",0,1,-26.5)
+	WAIT(5)
+	// 地震
+	SE("SE_MG_01-02")
+	QUAKE(0,20,60)
+	WAIT(60)
+	BLUR(0)
+	// ボスアップなのです（お名前紹介）
+	cross_fade(30)
+	SET_SCRIPT_CAMERA( 0,4,0, -5,200,0, 15, 0)
+	rotate_script_camera(0,5,0, 240, 1)
+	scale_script_camera(1.2, 240, 1)
+
+	BLUR(30)
+	SLOW(1)
+
+	wait(30)
+	SE("SE_B3_66004")
+	CALL NAME
+	wait(150)
+	CALL NAME_ERASE
+	wait(30)
+
+	cross_fade(30)
+	SET_SCRIPT_CAMERA( 0,4,0, -5,180,0, 15, 0)
+	rotate_script_camera(3,0,0, 300, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,-1,0, 100,0)
+	scale_script_camera(1.2, 300, 1)
+
+	//コアを出すタイミング。このタイミングから120フレーム後に口を開き始めます。
+	GAME_FLAG_ON(750)
+	WAIT(120)
+	SET_MOTION("body","EMPTY1",10)
+	WAIT(180)
+
+	FADE_OUT_EX( 60, 0, "0xffffffff", 0)
+	WAIT(60)
+
+	BLUR(0)
+	SLOW(0)
+
+	// ボスマップへ飛ばす
+	// （移動先でシネスコオフするでやんす）
+	ENTRY_MAP("0799_boss")
+	
+	ret
+
+// ★スキップボタンを押した時は一瞬で最後の狀態にしちゃう ----------------------
+SKIP:
+
+	// 早めの黑フェード
+	FADE_OUT(30)
+	WAIT(30)
+	// 演出關連初期化
+	BLUR(0)
+	SLOW(0)
+	QUAKE(0,0,0)
+	STOP_SE(0)
+	// ボスマップへ飛ばす
+	ENTRY_MAP("0799_boss")
+
+	ret
+}
+
+@NAME
+{
+	ENTRY_IMG(0,"BOSS04",0)
+
+	// αが'1'の時は'加算モード'なので「透明」にする時は、
+	// ディフューズを'0x00ffffff'ではなく'0xff000000'としないといけないのデス。
+	//  ｽﾌﾟﾗｲﾄ 表示位置 Tex TX  TY  TW  TH α ディフューズ スペキュラ 擴大 回 中 Fit
+	SET_IMG( 0, 192,346, 0,  0,  0,255, 64, 1, 0xff000000, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+
+	// 發生までに'間'が欲しい場合はこんな風にします。
+//	SUSPEND_IMG(0,45)
+
+	// フェードイン
+	COLOR_IMG    (0, 0xffffffff, 0xff000000, 30, 1)
+	RET
+}
+
+// マップ名消すぞ--------------------------------------------------------------
+@NAME_ERASE
+{
+	COLOR_IMG(0, 0xff000000, 0xff000000, 45, 1)
+	RET
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 岩
+// ----------------------------------------------------------------------------
+
+DEF("iwa")
+RES("KILL")
+{
+	KILL_CHR("iwa",0,0,-1)
+	GAME_FLAG_ON(716)
+	INIT_SWITCH_ON("beatberilard")
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("box")
+RES("INIT")
+{
+	//ボス倒してなければそのまま
+	CHECK_GAME_FLAG(746)
+	OFF_JUMP NEXT
+	MOVE_VEC("box",0,6,0,1)
+
+	CHECK_GAME_FLAG(745)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box")
+	INIT_SWITCH_ON("box")
+NEXT:
+}
+
+
+RES("CLICK")
+{
+	FADE_OUT(30)
+	WAIT(60)
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA_EX( "box", -2, -30,60,0, 4, 15)
+	ROTATE_SCRIPT_CAMERA( 5,20,0, 300, 1)
+	MOVE_SCRIPT_LOOK_AT( 0,0.5,0, 300,1)
+	SET_POS("PC",0,1,-1.35)
+	SET_DEG_EX("PC","box")
+	PC_WEAPON(0,1)
+//	STOP_BGM(0, 2000)
+	FADE_BGM( 0, 10, 2000)
+	WAIT(20)
+
+	//カメラ１
+	SET_MOTION("PC","OPENBOX",0)
+	SWITCH_ON("box")
+	ATTACH_EFC("EFC_99K3","box","POS")
+	FADE_IN(30)
+	WAIT(240)
+
+	//カメラ２
+	CROSS_FADE(20)
+	SET_SCRIPT_CAMERA_EX("PC", -3, -30,180,0, 4, 10)
+	ROTATE_SCRIPT_CAMERA( 5,0,0, 300, 1)
+	SCALE_SCRIPT_CAMERA( 1.05, 300,1)
+	WAIT(240)
+
+//荷物が一杯かどうかチェック。
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	GET_ITEM(188, 1)
+	GAME_FLAG_ON(745)
+
+	//後處理
+	FOCUS_CHR("PC")
+	CROSS_FADE(60)
+//	HIDE_CHR("box")
+	DELETE_EFC("box")
+	PERMIT_SCRIPT_CAMERA(0)
+	SE("SE_GETITEM")
+	SYS_EX("得到【王冠庫奧基】！",-1,0X00000200)
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+	END
+
+
+EXIT:
+	CROSS_FADE(60)
+	DELETE_EFC("box")
+	PERMIT_SCRIPT_CAMERA(0)
+	WAIT(30)
+	SE("SE_ERROR")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+//	BGM( -1,0,2000 )
+	FADE_BGM( 0, 100, 2000)
+}
+
+
+
+
+DEF("box2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(717)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("box2")
+	INIT_SWITCH_ON("box2")
+NEXT:
+}
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box2")
+
+//ガンとレット
+	SWITCH_ON("box2")
+	POP_ITEM_ICON("box2", 176, 0,1,24, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("box2")
+	ATTACH_EFC("EFC_99ITEM_GET","box2","POS")
+//	WAIT(45)
+
+	GET_ITEM(176, 1)
+	GAME_FLAG_ON(717)
+
+	SYS_EX("得到【金屬護手】！",-1,0X00000200)
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於特殊道具【金屬護手】",-1,0X00000200)
+	SYS_EX("裝備上【金屬護手】，|可以破壞平時無法破壞的#C2硬物#C0。",-1,0X00000200)
+	SYS_EX("在裝備著它的狀態下對對象進行攻撃即可。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+//	SET_COLOR("box2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("box2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("box2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ストッパー
+
+DEF("EV_Stop")
+RES("EVENT")
+{
+	// まだボス登場していない
+	CHECK_GAME_FLAG(3)
+	OFF_JUMP EXIT
+
+	// もう寶箱取った
+	CHECK_GAME_FLAG(745)
+	ON_JUMP EXIT
+
+	stop_pc(0)
+	SYS("寶箱還未開啟。")
+	cross_fade(60)
+	set_pos("PC", 0.0,1.00,-23.0)
+	set_deg("PC", 0)
+
+EXIT:
+	end
+}

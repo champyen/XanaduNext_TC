@@ -1,0 +1,484 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期戝態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// リーゼイベント終わらせるまでブラオニ禁止
+	CHECK_GAME_FLAG(3710)
+	ON_SKIP(1)	
+	ROOM_FLAG_ON(255)
+
+//	// 3732	EV C-10c 結界裝置 プレートを讀んだ
+//	check_game_flag(3732)
+//	on_skip(1)
+//	HIDE_CHR("atari")
+
+	CHECK_GAME_FLAG(3709)
+	ON_JUMP NO_SOUND
+	SE(SE_EVENT_29)
+NO_SOUND:
+
+	//3709	EV C-10 結界裝置
+	HIDE_CHR("atari2")
+	CHECK_GAME_FLAG(678)
+	OFF_JUMP NEXT
+
+	HIDE_CHR("atari")
+	SHOW_CHR("atari2")
+	SET_MOTION("machine","TURN_R")
+
+	CHECK_GAME_FLAG(3709)
+	OFF_JUMP NEXT
+	HIDE_CHR("barrier")
+	HIDE_CHR("atari2")
+
+	SET_MOTION("machine","WALK2")
+	DELETE_EFC("machine")
+
+NEXT:
+// 移動床オンチェック
+	CHECK_GAME_FLAG(600)
+	OFF_JUMP L_B1
+
+	SET_POS("bar1",-5,-2,-5)
+	SET_POS("bar2",-5,-2,-9)
+	SET_POS("bar3",-5,-2,-13)
+	SET_POS("bar4",-1,-2,-13)
+	SET_POS("bar5",3,-2,-13)
+
+	SET_POS("box1",-5.3,-2,14.25)
+	SET_POS("box2",-2.25,-2,14.25)
+	SET_POS("box3",0.75,-2,14.25)
+
+	HIDE_CHR("box4")
+	HIDE_CHR("box5")
+
+L_B1:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1601)
+	ON_SKIP(2)
+	KAGI("d1601",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1601")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1602)
+	ON_SKIP(2)
+	KAGI("d1602",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1602")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1603)
+	ON_SKIP(2)
+	KAGI("d1603",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1603")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1601")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1601)
+}
+
+DEF("d1602")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1602)
+}
+
+DEF("d1603")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1603)
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+DEF("sw1")
+RES("FOOT")
+{
+	CHECK_SWITCH("sw1")
+	ON_JUMP L_B2
+
+		// 降りたときに柱も下げる
+		CHECK_GAME_FLAG(600)
+		ON_JUMP DOWN
+		END
+
+		:DOWN
+		CALL DOWN
+
+		GAME_FLAG_OFF(600)
+		END
+
+L_B2:
+	CHECK_SWITCH("sw2")
+	ON_JUMP L_B3
+	END
+
+L_B3:
+	CHECK_SWITCH("sw3")
+	ON_JUMP L_B4
+	END
+
+L_B4:
+		// マップ初期チェック迴避
+		CHECK_GAME_FLAG(600)
+		ON_JUMP NEXT
+
+		CALL UP
+
+NEXT:
+
+}
+
+
+// ----------------------------------------------------------------------------
+DEF("sw2")
+RES("FOOT")
+{
+	CHECK_SWITCH("sw1")
+	ON_JUMP L_B2
+	END
+
+L_B2:
+	CHECK_SWITCH("sw2")
+	ON_JUMP L_B3
+
+		// 降りたときに柱も下げる
+		CHECK_GAME_FLAG(600)
+		ON_JUMP DOWN
+		END
+
+		:DOWN
+		CALL DOWN
+
+		GAME_FLAG_OFF(600)
+		END
+
+L_B3:
+	CHECK_SWITCH("sw3")
+	ON_JUMP L_B4
+	END
+
+L_B4:
+		// マップ初期チェック迴避
+		CHECK_GAME_FLAG(600)
+		ON_JUMP NEXT
+
+		CALL UP
+
+NEXT:
+
+}
+
+
+// ----------------------------------------------------------------------------
+DEF("sw3")
+RES("FOOT")
+{
+	CHECK_SWITCH("sw1")
+	ON_JUMP L_B2
+	END
+
+L_B2:
+	CHECK_SWITCH("sw2")
+	ON_JUMP L_B3
+	END
+
+L_B3:
+	CHECK_SWITCH("sw3")
+	ON_JUMP L_B4
+
+		// 降りたときに柱も下げる
+		CHECK_GAME_FLAG(600)
+		ON_JUMP DOWN
+		END
+
+		:DOWN
+		CALL DOWN
+
+		GAME_FLAG_OFF(600)
+		END
+
+L_B4:
+		// マップ初期チェック迴避
+		CHECK_GAME_FLAG(600)
+		ON_JUMP NEXT
+
+		CALL UP
+
+NEXT:
+
+}
+
+// ----------------------------------------------------------------------------
+@UP
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("bar4")
+	WAIT(60)
+	MOVE_VEC("bar1",0,4.2,0,240)
+	MOVE_VEC("bar2",0,4.2,0,240)
+	MOVE_VEC("bar3",0,4.2,0,240)
+	MOVE_VEC("bar4",0,4.2,0,240)
+	MOVE_VEC("bar5",0,4.2,0,240)
+	MOVE_VEC("bar6",0,4.2,0,240)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-5.5)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-9)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-12.5)
+		EFC("EFC_99SMOKE_L",-4,-2,-12.5)
+		EFC("EFC_99SMOKE_L",-0.5,-2,-12.5)
+		EFC("EFC_99SMOKE_L",3,-2,-12.5)
+	QUAKE(0,5,240)
+	WAIT(240)
+	GAME_FLAG_ON(600)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+	RET
+}
+
+
+// ----------------------------------------------------------------------------
+@DOWN
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("bar4")
+	WAIT(60)
+	MOVE_VEC("bar1",0,-4.2,0,240)
+	MOVE_VEC("bar2",0,-4.2,0,240)
+	MOVE_VEC("bar3",0,-4.2,0,240)
+	MOVE_VEC("bar4",0,-4.2,0,240)
+	MOVE_VEC("bar5",0,-4.2,0,240)
+	MOVE_VEC("bar6",0,-4.2,0,240)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-5.5)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-9)
+		EFC("EFC_99SMOKE_L",-7.5,-2,-12.5)
+		EFC("EFC_99SMOKE_L",-4,-2,-12.5)
+		EFC("EFC_99SMOKE_L",-0.5,-2,-12.5)
+		EFC("EFC_99SMOKE_L",3,-2,-12.5)
+	QUAKE(0,5,240)
+	WAIT(240)
+	GAME_FLAG_ON(600)
+	CINEMA_OFF(0)
+	WAIT(60)
+
+	RET
+}
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// ★05/04/18:バリア發生裝置（サンプル）
+// ※二段階で壞れるようにしてあります。演出等は適當です。
+
+DEF("atari")
+RES("HIT")
+{
+	HIDE_CHR("atari")
+	SHOW_CHR("atari2")
+	// 裝置壞れアニメ①（外郭破壞）
+	STOP_PC(0)
+
+	SE(SE_EVENT_31)
+	shake(0,32)
+	SET_MOTION("machine","TURN_L")
+	WAIT(120)
+	SET_MOTION("machine","TURN_R")
+
+	game_flag_on(678)
+
+	end
+}
+
+DEF("atari2")
+RES("HIT")
+{
+	// 裝置壞れアニメ②（漓部破壞）
+	shake(0,32)
+
+	STOP_PC(0)
+	CHECK_PC_EQUIP( 0, -1)
+	ON_JUMP HAND
+	// 武器攻撃モーション
+	SET_MOTION("PC","EMPTY12",0)
+	JUMP NEXT
+HAND:
+	// 素手攻撃モーション（ガントレット）
+	SET_MOTION("PC","EMPTY12",0)
+NEXT:
+	SET_MOTION("machine","WALK1")
+	SE(SE_EVENT_32)
+
+	SLOW(4)
+	BLUR(20)
+	QUAKE(2,2,300)
+
+	CINEMA_ON(0)
+	CROSS_FADE(30)
+	PERMIT_SCRIPT_CAMERA(1)
+	SET_SCRIPT_CAMERA( 3.5,-0.3,0, -40,-110,0, 6, 15 )
+	ROTATE_SCRIPT_CAMERA( 0,20,0,100, 0)
+	WAIT(60)
+
+	//スキップ
+	set_skip_label("SKIP")
+
+	// 破壞エフェクト出しながらホワイトアウト
+	SE(SE_EVENT_33)
+	WAIT(40)
+	FADE_OUT_EX( 60, 1, 0xffffffff, 1)
+	WAIT(60)
+
+	SLOW(0)
+	BLUR(0)
+
+	//3709	EV C-10 結界裝置
+	GAME_FLAG_ON(3709)
+	ENTRY_MAP("0602_0089")
+
+SKIP:
+	STOP_SE(0)
+	QUAKE(0,0,1)
+	HIDE_CHR("barrier")
+	HIDE_CHR("atari2")
+	SET_MOTION("machine","WALK2")
+	SET_MOTION("PC","STAND",0)
+	STOP_ENV_SE("SE_EVENT_29")
+	DELETE_EFC("machine")
+	SLOW(0)
+	BLUR(0)
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	GAME_FLAG_ON(3727)
+
+	// 3728	EV C-10c 城全景を見終わった
+	GAME_FLAG_ON(3728)
+
+	//3709	EV C-10 結界裝置
+	GAME_FLAG_ON(3709)
+
+	CROSS_FADE(60)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+
+	WAIT(60)
+
+	CINEMA_OFF(0)
+	fade_in(60)
+
+}
+
+//-- バリア ----------------------------------------------------------
+
+DEF("barrier")
+
+RES("INIT")
+{
+	// 城全景のバリア解除後に戻ってくる
+
+	// 3727	EV C-10b 決壞裝置を壞したときに、城全景を見せる
+	CHECK_GAME_FLAG(3727)
+	OFF_JUMP EXIT
+
+	// 3728	EV C-10c 城全景を見終わった
+	CHECK_GAME_FLAG(3728)
+	ON_JUMP EXIT
+
+	// バリアを消去＆裝置をオフにしてホワイトイン
+	QUAKE(0,0,1)
+	HIDE_CHR("barrier")
+	HIDE_CHR("atari2")
+	SET_MOTION("machine","WALK2")
+	SET_MOTION("PC","STAND",0)
+	DELETE_EFC("machine")
+
+
+	// 3728	EV C-10c 城全景を見終わった
+	GAME_FLAG_ON(3728)
+
+	SET_DEG("PC",90)
+
+
+	CROSS_FADE(60)
+	FOCUS_CHR("PC")
+	PERMIT_SCRIPT_CAMERA(0)
+
+	wait(60)
+	fade_in(60)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// 石碑
+
+DEF("plate")
+
+RES("INIT")
+{
+	// 3731	EV C-10b 結界裝置 部屋に入ったときのメッセージ
+	check_game_flag(3731)
+	on_jump EXIT
+
+	STOP_PC(0)
+	FOCUS_CHR("atari")
+	SYS("從巨大的魔導具中|放出邪惡的波動。")
+
+	game_flag_on(3731)
+
+EXIT:
+	end
+}
+
+RES("CLICK")
+{
+	FOCUS_CHR("plate")
+	SYS("#N0用手觸矼，|發光的文字浮現了出來。")
+
+	SYS("來這裡造訪的人類之子姶，|保護奇岩城的是不朽的城牆。|　|如果想在這裡開闢道路，|就請破壞我製造的魔道具，|並淨化其中的波動之珠叺。|　|　　　　　　　　　魔匠賽森")
+	SYS("補記冐冐冐")
+	SYS("即使我的身熕在魔城中腐壞，|我的靈魂依然在保護我的子孫。")
+
+	// 3732	EV C-10c 結界裝置 プレートを讀んだ
+	game_flag_on(3732)
+//	SHOW_CHR("atari")
+
+}EXIT:
+	end
+
+

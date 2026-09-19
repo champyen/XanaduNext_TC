@@ -1,0 +1,222 @@
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_CRICKETS")
+
+	SET_MOTION("sign","EMPTY1",0)
+
+	//バリアを解いたかどうか
+	CHECK_GAME_FLAG(726)
+	OFF_JUMP NEXT2
+
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(725)
+	OFF_JUMP NEXT
+
+	//バリアを解いて箱もあけた
+	MOVE_VEC("box1",0,0,-1.5,1)
+	MOVE_VEC("box2",1.5,0,0,1)
+	SHOW_CHR("tbox")
+	END
+
+NEXT:
+	//バリアを解いて箱はまだ
+	MOVE_VEC("box1",0,0,-1.5,1)
+	MOVE_VEC("box2",1.5,0,0,1)
+	SHOW_CHR("htbox")
+	END
+
+NEXT2:	
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(725)
+	OFF_JUMP NEXT3
+
+	//バリアを解いないけど箱はあけた
+	SHOW_CHR("tbox")
+	END
+
+NEXT3:	
+
+	HIDE_CHR("tbox")
+
+END
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+RES("FOOT")
+{
+	
+	CHECK_SWITCH("sw1")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(4,1,"box2")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(726)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(726)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(4,1,"box2")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,1,"box1")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(726)
+NEXT3:
+END
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+
+	CHECK_SWITCH("sw2")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,1,"box1")
+	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(726)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(726)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,1,"box1")
+	OFF_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("tbox")
+	EFC("EFC_ADD_TREASURE",0,2.2,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(4,1,"box2")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(726)
+NEXT3:
+END
+}
+
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(725)
+	OFF_JUMP next
+
+//	SET_TREASURE("tbox",1,155,"ITEM")
+	INIT_SWITCH_ON("tbox")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(725)
+	OFF_JUMP ITEM
+
+ITEM:
+// 束縛の腕輪
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 155, 0,2.2,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+
+	SYS_EX("得到【束縛之手澳】！",-1,0X00000200)
+
+	GET_ITEM(155, 1)
+	GAME_FLAG_ON(725)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+
+
+
+

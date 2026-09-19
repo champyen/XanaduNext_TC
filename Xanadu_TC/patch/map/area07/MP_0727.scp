@@ -1,0 +1,475 @@
+//////////////////////////////////////////////////////////////////////
+// 
+// room_flag
+//	0 : ƒhƒ”ƒHƒ‹ƒU[ƒNDà”Œ‹‰Ê
+//
+//
+
+// ----------------------------------------------------------------------------
+// ƒ}ƒbƒv‰Šú‰»                                                                
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	camera_off("ƒhƒ”ƒHƒ‹ƒU[ƒND")
+
+	// SEÄ¶
+	SE("SE_WIND")
+
+	HIDE_CHR("Dvorak")
+	HIDE_CHR("Tiowald")
+
+// ƒXƒgƒbƒp[ƒ`ƒFƒbƒN
+	CHECK_GAME_FLAG(715)
+	OFF_JUMP NEXT
+	INIT_SWITCH_ON("stop")
+
+NEXT:
+
+	// ƒgƒŒƒ“ƒgƒ“‚ð“|‚µ‚½‚©H
+	CHECK_GAME_FLAG(3)
+	OFF_JUMP NEXT2
+	// EV B-4 ƒgƒŒƒ“ƒgDŒã(ƒhƒ”ƒHƒ‹ƒU[ƒN‚Æ‚Ì˜ð˜b)
+	CHECK_GAME_FLAG(3603)
+	ON_JUMP NEXT2
+
+	// ƒhƒ”ƒHƒ‹ƒU[ƒN“oê
+	SHOW_CHR("Dvorak")
+	SHOW_CHR("Tiowald")
+	load_npc_eqp(7,00)
+	DVORAK( 0 )
+	jump NEXT3
+
+NEXT2:
+	// ƒŠƒU[ƒhƒ}ƒ“
+	put_monster("m00",008,6,0,0,0)
+	put_monster("m01",008,6,0,0,1)
+	put_monster("m02",008,6,0,0,2)
+	put_monster("m03",008,6,0,0,3)
+	put_monster("m04",008,6,0,0,4)
+	put_monster("m05",008,6,0,0,5)
+
+NEXT3:
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1710)
+	ON_SKIP(2)
+	KAGI("d1710",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1710")
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(715)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1711)
+	ON_SKIP(2)
+	KAGI("d1711",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1711")
+
+}
+
+RES("WIN")
+{
+	CHECK_GAME_FLAG(715)
+	ON_JUMP next
+
+		STOP_PC(0)
+		WAIT(60)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("stop")
+		SWITCH_ON("stop")
+		WAIT(90)
+		CINEMA_OFF(0)
+
+	GAME_FLAG_ON(715)
+
+	// ƒJƒMÝ’è
+	CHECK_GAME_FLAG(1711)
+	ON_SKIP(2)
+	KAGI("d1711",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1711")
+
+next:
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ƒJƒMŠJ‚¯
+// ----------------------------------------------------------------------------
+
+DEF("d1710")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1710)
+}
+
+DEF("d1711")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1711)
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ƒhƒ”ƒHƒ‹ƒU[ƒNƒCƒxƒ“ƒg
+
+DEF("Dvorak")
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Dvorak")
+	SET_NAME("DVORAK", "à—€‰ÄŽ")
+
+	MSG("”I‰ÂˆÈã‹ã”‘Oicc|•s‰ßCçäÝ—vácSB")
+	MSG("”I—v¥¬—¹‰ä˜ì“I‘jâGC|“žŽžŒó‰äà¹•s˜ðà›š”I“IB")
+}
+
+RES("INIT")
+{
+
+	// ƒgƒŒƒ“ƒgƒ“‚ð“|‚µ‚½‚©H
+	CHECK_GAME_FLAG(3)
+	OFF_JUMP EXIT
+	// EV B-4 ƒgƒŒƒ“ƒgDŒã(ƒhƒ”ƒHƒ‹ƒU[ƒN‚Æ‚Ì˜ð˜b)
+	CHECK_GAME_FLAG(3603)
+	ON_JUMP EXIT
+
+//@@ƒNƒ‰ƒEƒ“‚ðŽè‚É“ü‚ê‚ÄAŠâ‚ðáê‚¢‚Äƒ}ƒbƒv727‚É“ü‚Á‚½‚çƒCƒx
+//@@ƒ“ƒgŠJŽnBo‚½‚Æ‚±‚ë‚Åƒhƒ”ƒHƒ‹ƒU[ƒN‚ªŽålŒö‚ð‘Ò‚¿\‚¦
+//@@‚Ä‚¢‚éB
+	STOP_PC(0)
+	PC_FLAG(3, 1)
+	PC_WEAPON(0,1)
+
+	CINEMA_ON(0)
+	permit_script_camera(1)
+	BGM( 18, 1, 1000 )
+
+	// š05/05/18:ƒuƒ‰ƒbƒNƒIƒjƒLƒX‹ÖŽ~ƒtƒ‰ƒOON
+	room_flag_on(255)
+
+	set_skip_label("SKIP2")
+
+	INIT_WALK_DST("PC")
+	set_walk_dst("PC", -0.10,0.00,3.0)
+	walk_pos("PC",0,0.03)
+	set_script_camera(-0.02,-0.46,5.86,  -30.5,205.0,0.0, 13, 15.0)
+
+	set_pos("Dvorak", 1.10,-0.00,-3.83)
+	set_pos("Tiowald", 2.92,-0.00,-2.03)
+	set_deg_EX("Dvorak", "PC")
+	set_deg_EX("Tiowald", "PC")
+
+	wait_walk("PC")
+
+	MSG_EX("#S3#C0’jl“Iãß‰¹u‰Ê‘R¥”Iˆ¦ccv",-1,2)
+
+	move_script_look_at(2,0,-5, 120, 1)
+	wait_camera(0)
+	wait(60)
+
+//@@á`–ÊƒXƒNƒ[ƒ‹‚µ‚Äƒhƒ”ƒHƒ‹ƒU[ƒN‚Æ˜Vl‚ÌŽp‚ðŒ©‚¹‚éB
+//@@‚»‚ê‚Æ“¯Žž‚Ég\‚¦‚Ä˜ŠÔ‚©‚ç™˜‚ðˆø‚«U‚­ŽålŒöB
+
+	//•Ší‚à‚Á‚Ä‚È‚¯‚ê‚ÎU“‚µ‚È‚¢B
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(4)
+
+	PC_WEAPON(1)
+	wait(60)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlu™è™èC”Nçjl—L’©Ÿ†ADBv",-1,2)
+	WAIT(90)
+
+
+	cross_fade(100)
+	permit_script_camera(0)
+	reset_map_rot_y(3,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(1.86,-0.00,-1.51,  -30.5,315.0,0.0, 12, 15.0)
+	wait(100)
+
+
+	look_chr("Tiowald", "Dvorak")
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlu¥”I”FŽ¯“IlåhHv",-1,2)
+
+	look_chr("Dvorak", "Tiowald")
+	MSG_EX("#S3#C0à—€‰ÄŽu^¥Šï–­“IíQ•ªˆ¦Bv",-1,2)
+	look_chr("Dvorak", "PC")
+	look_chr("Tiowald", "PC")
+	MSG_EX("#S3#C0à—€‰ÄŽu‹RŽmˆ¦C”IŠÒŠˆ’˜^æ¨l‹h‹ÁBv",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1", -1)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlucc¥ŽçŒì¸èËˆ¦Bv",-1,2)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlu‰ÂˆÈŠÅ“ž”‡ŒÂ”Nçjl“I¶–½|@@@@@@¥—RŽçŒì¸èËÝˆÛà‚’˜Bv",-1,2)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlu”\àB”‡žé~•ž¸èËC|@@@@@@Ý”‡ŒÂŽž‘ã–ç—L—DG“IpŽÒˆ¦Bv",-1,2)
+
+	MSG_EX("#S3#C0à—€‰ÄŽuŒ´˜Ò¥”‡žéccv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽuŽ§ŠŽCèí‘R”\”c|@@@@@@“¾“ž‰¤Š¥”V—Í—Ê“I‰ö•¨‘Å”sccv",-1,2)
+
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒNAŽålŒö‚ÉíM‚¢‚Ä‹ß‚Ã‚­B
+
+	INIT_WALK_DST("Dvorak")
+	set_walk_dst("Dvorak", 0.95,-0.00,-1.38)
+	walk_pos("Dvorak",0,0.03)
+	wait_walk("Dvorak")
+
+	MSG_EX("#S3#C0à—€‰ÄŽu˜aˆÈ‘OÝˆâÕ‘Š‹öŽž•s“¯C|@@@@@”I“IŠá’†›ßãSŸ“—L—¹–Àä©Bv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽu™è™èC—LŽïccv",-1,2)
+
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒNA™˜‚ðU‚­B
+	set_motion("Dvorak","WEAPON_O")
+	wait(34)
+	se("SE_WEAPON_O")
+	wait(35)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+
+	MSG_EX("#S3#C0à—€‰ÄŽu—v•s—vŒ»Ý˜ÒŽŽˆêŽŽ”‡—Í—ÊšCBv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽuŠÅµIv",-1,2)
+
+
+SKIP2:
+//@@ŽålŒö‚Æƒhƒ”ƒHƒ‹ƒU[ƒN–Í‹[Dà”
+	fade_out(30)
+	wait(30)
+	// ’†ƒ{ƒX‹È
+	BGM( 15, 1, 1000 )
+	//room_flag_on(0)
+	//SET_SPOT_ORG(0, 0,0,0 )
+	
+
+	STOP_WALK("PC")
+	STOP_WALK("Dvorak")
+	set_pos("PC", -0.12,0.00,2.63)
+	set_pos("Dvorak", 0.95,-0.00,-1.38)
+	dvorak(1)
+	set_motion("Dvorak","STAND")
+
+	//@ƒCƒxƒ“ƒg—pƒhƒ”ƒHƒ‹ƒU[ƒN”ñ•\Ž¦•Dà”—pƒhƒ”ƒHƒ‹ƒU[ƒN”z’u
+	STOP_WALK("Dvorak")
+	hide_chr("Dvorak")
+	put_monster("m99",500,0,0,0x00000010,100)
+	set_pos("m99", 0.95,-0.00,-1.38)
+//	set_scroll_rect( 3,-4.5, 15,4.5)
+	camera_on("ƒhƒ”ƒHƒ‹ƒU[ƒND")
+	lock_camera("ƒhƒ”ƒHƒ‹ƒU[ƒND")
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	wait(30)
+	fade_in(30)
+	CINEMA_OFF(0)
+
+EXIT:
+	end
+}
+
+
+
+DEF("m99")
+RES("PROG1")
+{
+//	room_flag_off(0)
+
+//	BGM( 15, 1, 1000 )
+
+	STOP_PC(0)
+	PC_FLAG(3, 0)
+
+	CINEMA_ON(0)
+	//ƒIƒjƒLƒXŽg‚¦‚é‚æ‚¤‚É‚·‚éB
+	room_flag_off(255)
+
+	fade_out(120)
+	wait(120)
+
+
+	camera_off("ƒhƒ”ƒHƒ‹ƒU[ƒND")
+	unlock_camera("ƒhƒ”ƒHƒ‹ƒU[ƒND")
+	hide_chr("m99")
+	delete_efc("m99")
+	show_chr("Dvorak")
+//	SET_SPOT_ORG(1, 13.25,-9,0 )
+	permit_script_camera(1)
+
+//--------------------------------------------------------------------
+//“ñl‚Ì™|—
+	set_pos("Dvorak" , 0.91,-0.00,-0.98)
+	set_pos("PC", -0.12,0.00,2.63)
+	set_deg_ex("Dvorak", "PC")
+	set_deg_ex("PC", "Dvorak")
+
+	DELETE_EFC("Dvorak")
+	DELETE_EFC("PC")
+
+	//•Ší‚à‚Á‚Ä‚È‚¯‚ê‚ÎƒXƒ‹[
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(1,1)
+
+	set_motion("PC","STAND",0)
+	set_motion("Dvorak","STAND",0)
+
+	set_script_camera(1.02,-0.00,0.29,  -50.5,45.0,0.0, 13, 15.0)
+	fade_in(60)
+	wait(60)
+
+	set_skip_label("SKIP")
+
+	rotate_script_camera(0,-20,0, 1000, 1)
+
+	
+	// š05/08/20:¦room_flag(0)‚ÍƒQ[ƒ€àA‚Å—§‚Ä‚Ä‚Ü‚·B
+	check_room_flag(0)
+	on_jump lose
+
+//@@ËƒCƒxƒ“ƒgDà”Ÿ—˜‚Ìê‡
+
+	INIT_SWITCH_ON("beatdvorak")
+	MSG_EX("#S3#C0à—€‰ÄŽu™è™èccD‘œŠ·—¹ŒÂlŽ—“IBv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽu”\àB’u‰—Ž€’nŽ§Œã¶C|@@@@@›”›”ŽèŸ|–³ˆØœôBv",-1,2)
+	skip(2)
+
+//@@ËƒCƒxƒ“ƒgDà””s–k‚Ìê‡
+lose:
+	MSG_EX("#S3#C0à—€‰ÄŽušICå«‘RŠÒ·“¾‰“ccv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽu•s‰ß”\àB’u‰—Ž€’nŽ§Œã¶C|@@@@@›”›”ŽèŸ|–³ˆØœôC–çŽZ—¹•s‹NBv",-1,2)
+
+//@@Ë‚±‚±‚Å“‡
+
+	MSG_EX("#S3#C0à—€‰ÄŽu˜Ò—¹ADCÝ”‡—¡˜ôŒÂ—¹Ð™ÛBv",-1,2)
+	wait(40)
+	set_motion("Tiowald","ATTACK1",30)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vluccš‰™ÞC|@@@@@@”I–ç^¥˜ðŽä–ƒ”Ïˆ¦Bv",-1,2)
+
+//@@ƒhƒ”ƒHƒ‹ƒU[ƒN‚ðšn‚ß‚éƒeƒBƒIƒoƒ‹ƒg
+
+	look_chr("Dvorak", "Tiowald")
+	set_deg("Dvorak", 13)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜Vlu”NçjlC•úSD—¹Bv",-1,2)
+	MSG_EX("#S3#C0•s‰ÂŽv‹c“I˜VluÝ‰ä’ñŸ^”b“Á“I–Ê‘OC|@@@@@@à¹›”•s˜ðÄæ¨”‡¬ŽqoŽè“IBv",-1,2)
+
+	MSG_EX("#S3#C0à—€‰ÄŽu’ñŸ^”b“Á˜V“ªHv",-1,2)
+
+	stop_bgm(0,3000)
+
+	set_motion("Dvorak","WEAPON_I",30)
+	wait(61)
+	dvorak(0)
+	SE("SE_WEAPON_I")
+	set_motion("Dvorak","WEAPON_I",0)
+	WAIT(120)
+
+
+	//•Ší‚à‚Á‚Ä‚È‚¯‚ê‚ÎƒXƒ‹[
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(0,0)
+
+
+	BGM( 18, 1, 1000 )
+
+	MSG_EX("#S3#C0’ñŸ^”b“Áuå«‘R‰ä•s’m“¹á¢¶—¹Y›õŽ–C|@@@@@•s‰ß‹‹”I›æ˜Ò”‡±–ƒ”ÏC”ñí•øŸ]Bv",-1,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áuå«‘R—LŽçŒì¸èËÝˆÛŽC|@@@@@•s‰ß–çŠˆ•s—¹‘¾‹vBv",-1,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áu›”—¹ccv",-1,2)
+	MSG_EX("#S3#C0’ñŸ^”b“Áuœ”ñ“¾“ž¹™˜“I—Í—ÊBv",-1,2)
+
+	MSG_EX("#S3#C0à—€‰ÄŽu”Ià¹™˜H@•s¥ŠJŠßÎ™Ûccv",-1,2)
+	wait(60)
+	look_chr("Dvorak", "PC")
+	set_deg_EX("Dvorak", "PC")
+	wait(60)
+	MSG_EX("#S3#C0à—€‰ÄŽuš‰™Þcc“ï“¹ccHv",-1,2)
+
+	SET_MOTION("Tiowald", "ATTACK1", -1)
+	MSG_EX("#S3#C0’ñŸ^”b“Áu™è™ècc|@@@@@‰ä‘ü•s‰ß‘z“žY›õAào˜Ò—¹Ž§›ßBv",-1,2)
+	wait(60)
+	MSG_EX("#S3#C0à—€‰ÄŽuccccccccv",-1,2)
+	wait(60)
+
+	cross_fade(40)
+	permit_script_camera(0)
+	reset_map_rot_y(1,1)
+	wait(2)
+	permit_script_camera(1)
+	set_script_camera(0.50,-0.00,0.89,  -30.5,205.0,0.0, 12, 15.0)
+	rotate_script_camera(0,-10,0, 1000, 1)
+
+	SET_MOTION("Dvorak", "ATTACK1", -1)
+	MSG_EX("#S3#C0à—€‰ÄŽucc‹RŽmˆ¦Bv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽu“ßŒÂ‰¤Š¥C|@@@@@ŽbŽžAŠñ‘¶Ý”I“ß—¡™ÛBv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽucc•s‰ßC”IÅD¬Sà‘Bv",-1,2)
+	MSG_EX("#S3#C0à—€‰ÄŽu”@‰Ê”I‘jâG—¹‰ä˜ì“I˜bC|@@@@@“žŽžŒó‰äŒˆ•sà›”IBv",-1,2)
+
+	// EV B-4 ƒgƒŒƒ“ƒgDŒã(ƒhƒ”ƒHƒ‹ƒU[ƒN‚Æ‚Ì˜ð˜b)
+	game_flag_on(3603)
+
+	cross_fade(60)
+	reset_map_rot_y(3,0)
+	focus_chr("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	BGM( -1, 1, 1000 )
+
+
+	END
+
+SKIP:
+	// EV B-4 ƒgƒŒƒ“ƒgDŒã(ƒhƒ”ƒHƒ‹ƒU[ƒN‚Æ‚Ì˜ð˜b)
+	game_flag_on(3603)
+
+	dvorak(0)
+	PC_WEAPON(0,1)
+	set_motion("Tiowald","STAND",0)
+	set_deg_EX("Dvorak", "PC")
+
+	WAIT(30)
+
+	cross_fade(60)
+	reset_map_rot_y(3,0)
+	focus_chr("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	BGM( -1, 1, 1000 )
+EXIT:
+
+	END
+
+}
+
+
+// 8/31”Å—pENDING
+@OSIMAI
+{
+	wait(60)
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("h‹ê—¹B|”‡ŒÂ”Å–{A“ž”‡—¡ˆ×Ž~B",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	call_title(0)
+}
+
+//////////////////////////////////////////////////////////////////////
+// ƒeƒBƒIƒoƒ‹ƒg
+
+DEF("Tiowald")
+
+RES("CLICK")
+{
+	FOCUS_CHR("Tiowald")
+	SET_NAME("TIOWALD", "’ñŸ^”b“Á")
+	SET_MOTION("Tiowald", "ATTACK1",-1)
+	MSG("”NçjlC—v¬Sˆ¦B")
+}
+

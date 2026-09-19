@@ -1,0 +1,956 @@
+//////////////////////////////////////////////////////////////////////
+// ランダムマップ直前の橋のマップ
+//
+// ROOM_FLAG
+//    0:ガンダルチュア
+//
+//
+
+
+
+// -------------------------------------------------------------------
+// 初期狀態                                                                    
+// -------------------------------------------------------------------
+
+DEF("MAP")
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	HIDE_CHR("Sturm")
+	HIDE_CHR("Tiowald")
+	HIDE_CHR("Beatrice")
+	HIDE_CHR("Avatarlaha")
+
+	// EV C-7 ガンダルチュア
+	check_game_flag(3725)
+	off_jump NEXT2
+
+	HIDE_CHR("Gandaltua")
+
+NEXT2:
+	// EV C-7c ガンダルチュアとシュトゥルムの會話イベント
+	check_game_flag(3725)
+	on_jump NEXT3
+	// EV C-7b ガンダルチュアとの會話後、ランダムマップに飛んだ
+	check_game_flag(3724)
+	off_jump NEXT3
+	// BGM異界イベント用
+	BGM(22, 0, -1)
+
+NEXT3:
+	// 中ボスストッパー隱し
+	INIT_SWITCH_ON("stop")
+
+	CHECK_GAME_FLAG(936)
+	OFF_JUMP next
+	// ガーディアン
+	put_monster("m00",332,14,0,0,0)
+	put_monster("m01",332,14,0,0,1)
+	put_monster("m02",332,14,0,0,2)
+	put_monster("m03",332,14,0,0,3)
+	put_monster("m04",332,14,0,0,4)
+	put_monster("m05",332,14,0,0,5)
+	put_monster("m06",332,14,0,0,6)
+	put_monster("m07",332,14,0,0,7)
+	HIDE_CHR("tbox2")
+next:
+
+	// カギ設定
+	CHECK_GAME_FLAG(1915)
+	ON_SKIP(2)
+	KAGI("d1915",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1915")
+
+	// カギ設定
+	CHECK_GAME_FLAG(936)
+	OFF_SKIP(5)
+	CHECK_GAME_FLAG(1921)
+	ON_SKIP(2)
+	KAGI("d1921",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1921")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1922)
+	ON_SKIP(2)
+	KAGI("d1922",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1922")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1923)
+	ON_SKIP(2)
+	KAGI("d1923",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1923")
+
+//	CHECK_ENTRY_GATE("09c2_09c3")
+//	OFF_JUMP BGMCHK
+//	CHECK_GAME_FLAG(936)
+//	ON_JUMP BGMCHK
+//	stop_bgm(0,2000)
+//BGMCHK:
+
+}
+
+// ボス倒したぞ--------------------------------------------------------------
+RES("WIN")
+{
+	CHECK_GAME_FLAG(936)
+	ON_JUMP next
+
+		STOP_PC(0)
+		WAIT(60)
+		SE("SE_STOPPER")
+		CINEMA_ON(0)
+		FOCUS_CHR("stop")
+		SWITCH_ON("stop")
+
+		// 寶箱消去
+		SHOW_CHR("tbox1")
+		SHOW_CHR("tbox3")
+		SHOW_CHR("tbox4")
+		EFC("EFC_ADD_TREASURE",-6.802379,0,-12.968599)
+		EFC("EFC_ADD_TREASURE",12.821179,0,6.965584)
+		EFC("EFC_ADD_TREASURE",0.024324,0,14.597500)
+
+		WAIT(90)
+		CINEMA_OFF(0)
+
+		bgm(-1,0,-1)
+
+	// カギ設定
+	KAGI("d1921",1)
+
+	GAME_FLAG_ON(936)
+
+next:
+}
+
+//RES("EXIT")
+//{
+//	// 中ボスで消えたＢＧＭ對策
+//	CHECK_GAME_FLAG(936)
+//	ON_SKIP(1)
+//	BGM(-1, 0, -1)
+//}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1915")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1915)
+}
+
+DEF("d1921")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1921)
+}
+
+DEF("d1922")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1922)
+}
+
+DEF("d1923")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1923)
+}
+
+
+// ----------------------------------------------------------------------------
+// マップ移動                                                                  
+// ----------------------------------------------------------------------------
+
+DEF("09c2_09b6")
+RES("EVENT")
+{
+	ENTRY_MAP("09b6_09c2")
+}
+
+DEF("09c2_09c3")
+RES("EVENT")
+{
+//	// 中ボスで消えたＢＧＭ對策
+//	CHECK_GAME_FLAG(936)
+//	ON_SKIP 1
+//	BGM(-1, 0, -1)
+//
+//	wait(1)
+
+	ENTRY_MAP("09c3_09c2")
+}
+
+DEF("09c2_09c4")
+RES("EVENT")
+{
+	ENTRY_MAP("09c4_09c2")
+}
+
+DEF("09c2_09c6")
+RES("EVENT")
+{
+	ENTRY_MAP("09c6_09c2")
+}
+
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(918)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god09",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(918)
+	OFF_JUMP ITEM
+
+// もしかしたらブラックオニキス
+BLACK_ONYX:
+	RANDOM( 0, 100 )
+	CHECK_RANDOM( 80, -1 )
+	OFF_JUMP GOLD
+
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 220, -12.981764,10,5.330022, 1,80,0)
+	WAIT(140)
+
+//	CHECK_MAX_ITEM(0)
+//	ON_JUMP ITEM_FULL
+	CHECK_STACK_ITEM(220, 1)
+	OFF_JUMP ITEM_FULL
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【黑瑪瑙】！",-1,0X00000200)
+
+	GET_ITEM(220,1)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM_FULL:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	end
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, -12.981764,10,5.330022, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【500Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(500)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 109, -12.981764,10,5.330022, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99CARD_GET","tbox","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(9)
+	GAME_FLAG_ON(918)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【灰色死神】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【灰色死神】",-1,0X00000200)
+	SYS_EX("這是可以提高手鐲效果的守護精靈。|裝備此守護精靈就可以更容易發動手鐲的特殊效果。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+
+DEF("tbox1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(941)
+	OFF_JUMP next
+	INIT_SWITCH_ON("tbox1")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox1")
+
+	CHECK_GAME_FLAG(941)
+	OFF_JUMP ITEM
+
+ITEM:
+// ヒールポーションＬ
+	SWITCH_ON("tbox1")
+	POP_ITEM_ICON("tbox1", 212, -6.802379,0,-12.968599, 1,80,0)
+	WAIT(140)
+
+	CHECK_STACK_ITEM(212, 1)
+	OFF_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox1")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox1","POS")
+
+	SYS_EX("得到【回復藥水Ｌ】！",-1,0X00000200)
+
+	GET_ITEM(212, 1)
+	GAME_FLAG_ON(941)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+//	BGM(-1, 0, -1)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox1")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox1")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+DEF("tbox3")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(942)
+	OFF_JUMP next
+	INIT_SWITCH_ON("tbox3")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox3")
+
+	CHECK_GAME_FLAG(942)
+	OFF_JUMP ITEM
+
+ITEM:
+// マジックポーション
+	SWITCH_ON("tbox3")
+	POP_ITEM_ICON("tbox3", 215, 12.821179,0,6.965584, 1,80,0)
+	WAIT(140)
+
+	CHECK_STACK_ITEM(215, 1)
+	OFF_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox3")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox3","POS")
+
+	SYS_EX("得到【魔法藥水】！",-1,0X00000200)
+
+	GET_ITEM(215, 1)
+	GAME_FLAG_ON(942)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+//	BGM(-1, 0, -1)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox3")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox3")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+DEF("tbox4")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(943)
+	OFF_JUMP next
+	INIT_SWITCH_ON("tbox4")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox4")
+
+	CHECK_GAME_FLAG(943)
+	OFF_JUMP ITEM
+
+ITEM:
+// ヒールポーションＬ
+	SWITCH_ON("tbox4")
+	POP_ITEM_ICON("tbox4", 212, 0.024324,0,14.597500, 1,80,0)
+	WAIT(140)
+
+	CHECK_STACK_ITEM(212, 1)
+	OFF_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox4")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox4","POS")
+
+	SYS_EX("得到【回復藥水Ｌ】！",-1,0X00000200)
+
+	GET_ITEM(212, 1)
+	GAME_FLAG_ON(943)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+//	BGM(-1, 0, -1)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox4")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox4")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+
+
+// ----------------------------------------------------------------------------
+// 中ボスイベントトリガー
+// ----------------------------------------------------------------------------
+
+DEF("tbox2")
+RES("CLICK")
+{
+	// 既に倒しているのでは
+	CHECK_GAME_FLAG(936)
+	ON_JUMP next
+
+	// 二度目に踏んでも何も出ないよ
+//	CHECK_ROOM_FLAG(1)
+//	ON_JUMP next
+
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+	OPEN_BOX("CUR")
+	WAIT(60)
+
+	// イベント開始
+	FOCUS_CHR("stop")
+	QUAKE(0,10,60)
+	SWITCH_OFF("stop")
+	WAIT(60)
+	FOCUS_CHR("null")
+
+	// 小ボス曲
+	BGM(14,0,-1)
+
+	// 寶箱消去
+	HIDE_CHR("tbox1")
+	HIDE_CHR("tbox3")
+	HIDE_CHR("tbox4")
+
+	// ガーディアン
+	put_monster("m00",332,14,2,0,0)
+	put_monster("m01",332,14,2,0,1)
+	put_monster("m02",332,14,2,0,2)
+	put_monster("m03",332,14,2,0,3)
+	put_monster("m04",332,14,2,0,4)
+	put_monster("m05",332,14,2,0,5)
+	put_monster("m06",332,14,2,0,6)
+	put_monster("m07",332,14,2,0,7)
+	QUAKE(0,10,60)
+
+	WAIT(120)
+	CINEMA_OFF(0)
+
+//	ROOM_FLAG_ON(1)
+
+next:
+}
+
+
+//DEF("hi")
+//RES("INIT")
+//{
+//	// 既に倒しているのでは
+//	CHECK_GAME_FLAG(936)
+//	ON_JUMP NEXT
+//
+//	// 下から入ったときは直ぐに敵を出そう。
+//
+//	CHECK_ENTRY_GATE("09c2_09c3")
+//	OFF_JUMP NEXT
+//
+//	// イベント開始
+//	QUAKE(0,10,60)
+//	SWITCH_OFF("stop")
+//
+//	CINEMA_ON(0)
+//	STOP_PC(0)
+//
+//	WAIT(60)
+//	FOCUS_CHR("null")
+//
+//	// 小ボス曲
+//	BGM(14,0,-1)
+//
+//	// ガーディアン
+//	put_monster("m00",332,14,2,0,0)
+//	put_monster("m01",332,14,2,0,1)
+//	put_monster("m02",332,14,2,0,2)
+//	put_monster("m03",332,14,2,0,3)
+//	put_monster("m04",332,14,2,0,4)
+//	put_monster("m05",332,14,2,0,5)
+//	put_monster("m06",332,14,2,0,6)
+//	put_monster("m07",332,14,2,0,7)
+//	QUAKE(0,10,60)
+//
+//	QUAKE(0,10,60)
+//	WAIT(120)
+//	CINEMA_OFF(0)
+//
+//	ROOM_FLAG_ON(1)
+//
+//NEXT:
+//
+//}
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// ガンダルチュアイベント
+
+DEF("EV_Gandaltua")
+
+RES("EVENT")
+{
+	// EV C-7 ガンダルチュア
+	check_game_flag(3706)
+	on_jump EXIT
+
+	// シネスコ時スペクタクルズONFF
+	ROOM_FLAG_OFF(254)
+
+	BGM(18, 0, -1)
+
+	CINEMA_ON(0)
+	stop_pc(0)
+	set_pos("PC",4.82,16.00,-0.04)
+	set_deg("PC", 94)
+
+	cross_fade(120)
+	permit_script_camera(1)
+	set_script_camera(11.67,16.00,-0.29, -15.5,250.0,0.0, 20, 15.0)
+	rotate_script_camera(0,30,0, 300, 1)
+
+	//武器もってなければスキップ。
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(1,1)
+
+	set_skip_label("SKIP")
+
+//　　祠の中に入って、ゲートの直前マップまで進むとイベント開始。
+//　　橋の上に巨漢の男、ガンダルチュアが立っている。
+
+	MSG_EX("#S3#C0壯漢「果然來了啊……」",-1,2)
+
+	wait_camera(0)
+
+//　　身構える主人公。
+//　　武器もってなければスキップ。
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(5)
+	scale_script_camera(0.8, 20, 1)
+	cross_fade(60)
+	wait(60)
+	MSG_EX("#S3#C0壯漢「哎呀，看我體形這麼巨大，|　　　可不要把我當成魔物啊。」",-1,2)
+	MSG_EX("#S3#C0壯漢「就算是這樣也是容易受傷的。」",-1,2)
+
+	WAIT(60)
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0壯漢「本大爺名叫剛達爾奇。」",-1,2)
+
+	MSG_EX("#S3#C0剛達爾奇「是你也認識的石頭劍客，|　　　　　德沃夏克的朋友。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「在這麼危險的地方等著你是有原因的……」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「其實是有事情拜託你。」",-1,2)
+
+//　　劍を鞘に收める主人公。
+
+	set_script_camera(11.67,16.00,-0.29, -15.5,270.0,0.0, 15, 15.0)
+	cross_fade(60)
+
+
+	//武器もってなければスキップ。
+	CHECK_PC_EQUIP(0,-1)
+	ON_SKIP(1)
+	PC_WEAPON(0)
+
+	wait(60)
+	SET_MOTION("PC","EMPTY23",-1)
+	WAIT(100)
+
+	MSG_EX("#S3#C0剛達爾奇「嘿嘿……你這麼通情達理，|　　　　　真是幫了我們大忙。」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0剛達爾奇「雖然和你的目的不同，|　　　　　不過我們也是衝著奇岩城來的。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「前面是時間和空間都被扭曲了的地方，|　　　　　被稱作『時之縫隙』。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「如果能夠順利的透過那裡，|　　　　　就應該可以進入奇岩城。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「我們已經弄清楚解除障壁的裝置就在城堡裡面。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「希望你能夠找到它，|　　　　　並解除障壁。」",-1,2)
+	wait(60)
+
+	set_script_camera(6.33,16.00,-0.33, -15.5,0.0,0.0, 12, 15.0)
+	move_script_look_at(2,0,0, 600, 1)
+	cross_fade(60)
+
+	MSG_EX("#S3#C0剛達爾奇「……不過，|　　　　　要到那裡需要先解決一個大難題。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「在時之縫隙裡關著一個脾氣很壞的魔女。」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0剛達爾奇「雖然德沃夏克先進去了，|　　　　　不過很可能打不過她。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「如果遇到他的話，|　　　　　你們最好合力戰鬥。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「怎麼樣，我們覺得你是個有能力的騎士，|　　　　　請一定要幫忙。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「你一定能幫助我們的……|　　　　　我的直覺告訴我。」",-1,2)
+
+	fade_out(60)
+	WAIT(90)
+
+
+SKIP:
+	PC_WEAPON(0,1)
+
+	game_flag_on(3706)
+	bgm(-1,0,-1)
+
+	FOCUS_CHR("PC")
+	permit_script_camera(0)
+	CINEMA_OFF(0)
+	fade_in(60)
+	wait(60)
+
+	// シネスコ時スペクタクルズONFF
+	ROOM_FLAG_ON(254)
+
+EXIT:
+	end
+}
+
+//////////////////////////////////////////////////////////////////////
+// ガンダルチュア
+
+DEF("Gandaltua")
+
+RES("INIT")
+{
+	// EV C-7c ガンダルチュアとシュトゥルムの會話イベント
+	check_game_flag(3725)
+	on_jump EXIT
+
+	// EV C-7b ガンダルチュアとの會話後、ランダムマップに飛んだ
+	check_game_flag(3724)
+	off_jump EXIT
+
+//--------------------------------------------------------------------
+
+	// シネスコ時スペクタクルズONFF
+	ROOM_FLAG_OFF(254)
+
+	CINEMA_ON(0)
+	stop_pc(0)
+
+
+	HIDE_CHR("PC")
+
+	stop_camera(0)
+	BLUR(0)
+	SLOW(0)
+
+	fade_out(0)
+	wait(60)
+
+	permit_script_camera(1)
+	set_script_camera(12.67,16.00,-0.29, -15.5,270.0,0.0, 12, 15.0)
+
+	set_deg("Gandaltua", 90)
+
+	fade_in(120)
+	wait(120)
+
+	set_skip_label("SKIP")
+
+//　　主人公がゲートに入って時の狹間に移動したら、畫面ブラック
+//　　アウト。フェードアウト拔けて、再び祠のガンダルチュア。
+//　　主人公の去った扉のほうを見つめている。
+
+	SHOW_CHR("Sturm")
+	SHOW_CHR("Tiowald")
+	SHOW_CHR("Beatrice")
+	SHOW_CHR("Avatarlaha")
+	set_pos("Sturm",      -2.27,16.00,-1.22)
+	set_pos("Tiowald",    -5.09,16.00,-0.31)
+	set_pos("Beatrice",   -1.42,16.00,0.42)
+	set_pos("Avatarlaha", -5.24,16.00,1.18)
+	set_deg("Sturm",      90)
+	set_deg("Tiowald",    90)
+	set_deg("Beatrice",   90)
+	set_deg("Avatarlaha", 90)
+
+	MSG_EX("#S3#C0貝亞特里奇「好像走了……」",-1,2)
+
+	move_script_look_at(-4,1,0, 600, 1)
+	rotate_script_camera(10,0,0, 600, 1)
+
+	INIT_WALK_DST("Beatrice")
+	set_walk_dst("Beatrice",  4.05,16.00,0.54)
+
+	INIT_WALK_DST("Sturm")
+	set_walk_dst("Sturm",  1.71,16.00,-1.27)
+
+	INIT_WALK_DST("Avatarlaha")
+	set_walk_dst("Avatarlaha",  0.16,16.00,1.19)
+
+	INIT_WALK_DST("Tiowald")
+	set_walk_dst("Tiowald",  -2.42,16.00,-0.34)
+
+	walk_pos("Beatrice",0,0.05)
+	walk_pos("Sturm",0,0.05)
+	wait(40)
+	walk_pos("Avatarlaha",0,0.05)
+	walk_pos("Tiowald",0,0.05)
+
+	wait_walk("Beatrice")
+	set_deg("Beatrice", 111)
+	look_chr("Beatrice","Gandaltua")
+
+	wait_walk("Sturm")
+	set_deg("Sturm", 171)
+
+	wait_walk("Avatarlaha")
+	set_deg_ex("Avatarlaha", "Sturm")
+	look_chr("Avatarlaha","Gandaltua")
+
+	wait(120)
+//	wait_camera(0)
+
+	MSG_EX("#S3#C0剛達爾奇「啊啊，要是能趕上就好了。」",-1,2)
+
+//	set_deg_ex("Gandaltua","Tiowald")
+	set_deg("Gandaltua" 170)
+	wait(5)
+	INIT_WALK_DST("Gandaltua")
+	set_walk_dst("Gandaltua",  8.39,16.00,-0.27)
+	walk_pos("Gandaltua",0,0.03)
+	wait_walk("Gandaltua")
+
+	SET_MOTION("Avatarlaha", "ATTACK1",-1)
+	MSG_EX("#S3#C0阿巴塔拉哈「和那個洛蕾萊交手，|　　　　　　我們的力量遠遠不夠……」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「只能拜託|　　　　　　他們兩個人了。」",-1,2)
+
+	set_motion("Sturm", "ATTACK1", -1)
+	MSG_EX("#S3#C0修特威爾姆「……但是，這個時代的騎士|　　　　　不是已經失去力量被毀滅了嗎。」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「真的沒問題嗎？」",-1,2)
+
+//	set_deg_ex("Beatrice","Sturm")
+	set_deg("Beatrice",190)
+	look_chr("Beatrice","Sturm")
+//	SET_MOTION("Beatrice", "ATTACK1",-1)
+
+	MSG_EX("#S3#C0貝亞特里奇「我見識了他在遺跡裡與得到王冠之力的魔物的戰鬥。」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「在戰鬥中他不斷成長。」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「雖然聽説是他為了自己能活得長久才戰鬥，|　　　　　　不過應該還背負著更重要的事情吧？」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「雖然不知道那是什麼……」",-1,2)
+	MSG_EX("#S3#C0貝亞特里奇「不過那樣才是騎士啊。」",-1,2)
+	wait(100)
+
+//	cross_fade(60)
+//	set_script_camera(2.56,17.00,0.99, -10.5,250.0,0.0, 10, 15.0)
+//	rotate_script_camera(0,-5,0, 2000, 1)
+
+	MSG_EX("#S3#C0提歐巴特「………………」",-1,2)
+
+	set_deg("Avatarlaha", 208)
+	look_chr("Avatarlaha","Tiowald")
+	wait(40)
+
+	MSG_EX("#S3#C0阿巴塔拉哈「提歐巴特老頭，怎麼了？」",-1,2)
+
+//	set_deg_ex("Tiowald","Avatarlaha")
+	wait(20)
+	set_deg_ex("Beatrice","Sturm")
+	look_chr("Beatrice","Tiowald")
+
+	wait(40)
+	look_chr("Tiowald","Avatarlaha")
+	MSG_EX("#S3#C0提歐巴特「……有些事情希望大家認清聽好。」",-1,2)
+	MSG_EX("#S3#C0提歐巴特「來這裡之前，|　　　　我進行了占星。」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0阿巴塔拉哈「哦哦，提歐巴特老頭的占卜，|　　　　　　鎮上的人都説很靈驗的。」",-1,2)
+	MSG_EX("#S3#C0阿巴塔拉哈「那麼，占星看到了些什麼？」",-1,2)
+	wait(40)
+	MSG_EX("#S3#C0提歐巴特「……我看到了他的三顆星星合成了一顆。」",-1,2)
+
+	wait(20)
+//	SET_MOTION("Sturm", "ATTACK1",-1)
+	set_deg("Sturm", 180)
+	look_chr("Sturm","Tiowald")
+	wait(20)
+	MSG_EX("#S3#C0修特威爾姆「三顆星星……」",-1,2)
+	MSG_EX("#S3#C0修特威爾姆「難道是希琉加之星嗎？",-1,2)
+	wait(40)
+	look_chr("Tiowald","Gandaltua")
+	MSG_EX("#S3#C0提歐巴特「在這次戰鬥中應該就能明白一切了。」",-1,2)
+
+	wait(40)
+//	move_script_look_at(1,1,0, 200, 1)
+
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+	MSG_EX("#S3#C0剛達爾奇「這不是全部託付給他了嗎。」",-1,2)
+	MSG_EX("#S3#C0剛達爾奇「我們和……」",-1,2)
+	wait(60)
+	scale_script_camera(1.5, 220, 1)
+	fade_out(180)
+
+	MSG_EX("#S3#C0剛達爾奇「芙羅蕾特大人的命運。」",-1,2)
+
+	wait_camera(0)
+
+//　　畫面フェードアウト拔けて、時の狹間マップ。
+//　　操作フリーに。
+
+	// ランダムマップにつなぐ
+
+SKIP:
+	wait(120)
+
+	wait(2)
+	SHOW_CHR("PC")
+	game_flag_on(3725)
+
+	ENTRY_RANDOM_MAP(0, 5,5, 3,4, "rndmap_0998")
+
+//--------------------------------------------------------------------
+EXIT:
+
+	END
+}
+
+
+
+RES("CLICK")
+{
+
+	FOCUS_CHR("Gandaltua")
+	SET_NAME("AVATARLAHA", "阿巴塔拉哈")
+	SET_MOTION("Gandaltua", "ATTACK1",-1)
+
+//	check_room_flag(0)
+//	on_jump TALK1_2
+
+TALK1_1:
+	MSG("希望你能穿過時之縫隙，|從奇岩城內部將障壁解除。")
+	MSG("你一定能幫助我們……|我有這樣的感覺。")
+	room_flag_on(0)
+	jump EXIT
+
+////　　以降、繰り返し用メッセージ
+//TALK1_2:
+//	MSG("ドヴォルザークを助けてやってくれ。")
+//	MSG("思うところは色々あるだろうが|ここは目的が同じもの同士、|協力し合おうじゃないか。")
+//	MSG("あんたはきっと助けてくれる。|そんな氣がするんだよな。")
+	
+EXIT:
+	SET_MOTION("Gandaltua","STAND",-1)
+	END
+}

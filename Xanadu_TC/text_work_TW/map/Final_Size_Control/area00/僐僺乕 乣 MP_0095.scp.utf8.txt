@@ -1,0 +1,303 @@
+
+
+// 町長ポートレイト處理 ////////////////////////////////////////////
+
+// 町長畫像(512x512)讀み込み＆チップ登錄
+@entry_ELC
+{
+	entry_img(0,"pic_elc_a",0)
+	entry_img(1,"pic_elc_b",0)
+	entry_img(2,"pic_elc_c",0)
+	entry_img(3,"pic_elc_d",0)
+	set_img( 0, 184,  0, 0, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(0)
+	set_img( 1, 440,  0, 1, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(1)
+	set_img( 2, 184,256, 2, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(2)
+	set_img( 3, 440,256, 3, 0,0,256,256, 0, 0x00ffffff, 0xff000000, 1,1, 0, 0,1)
+	img_on(3)
+	ret
+}
+
+// 町長消去
+@erase_ELC
+{
+	img_off(0)
+	img_off(1)
+	img_off(2)
+	img_off(3)
+	ret
+}
+
+// 町長フレームIN
+@fi_ELC
+{
+	color_img(0, 0xffffffff, 0xff000000, 30, 1)
+	color_img(1, 0xffffffff, 0xff000000, 30, 1)
+	color_img(2, 0xffffffff, 0xff000000, 30, 1)
+	color_img(3, 0xffffffff, 0xff000000, 30, 1)
+	ret
+}
+
+// 町長フレームOUT
+@fo_ELC
+{
+	color_img(0, 0x00ffffff, 0xff000000, 30, 1)
+	color_img(1, 0x00ffffff, 0xff000000, 30, 1)
+	color_img(2, 0x00ffffff, 0xff000000, 30, 1)
+	color_img(3, 0x00ffffff, 0xff000000, 30, 1)
+	ret
+}
+
+
+
+// =================================================================
+// エリック町長
+// =================================================================
+
+DEF("elc")
+RES("INIT")
+{
+	// マップの回轉角度を強制變更（所要時間 1 フレームで方向 6 に回轉）
+	RESET_MAP_ROT_Y(1,1)
+
+	// カニグモ倒した話を聞いたか？
+//	CHECK_GAME_FLAG(3302)
+//	ON_JUMP NEXT3
+	
+	// カニグモを倒したか？
+//	CHECK_GAME_FLAG(1)
+//	ON_JUMP NEXT2
+
+	KILL_CHR("momo",0,0,-1)
+	CAMERA_OFF("start")
+	KILL_CHR("cam",0,0,-1)
+	END
+
+NEXT2:
+	// 部屋變え
+//	LOAD_MAP("MP_0092")
+//	HIDE_CHR("door")
+	
+	//フェードイン
+	FADE_IN(-1)
+	WAIT(128)
+	FOCUS_CHR("elc")
+		SET_NAME("elc","エリック町長)
+	SET_MOTION("elc","HOOK",-1)
+		MSG("おぉ！なんとお禮を言ったらよいものか…")
+		MSG("ふむ、そうですか……。|ついに恐れていたことがおき始めたのですな。")
+	wait(200)
+		MSG("……はるか昔、この地は|「ザナドゥ」という名をもっておりました。")
+		MSG("この世で最も天界に近いとされる、|神の祝福を受けた桃源鄉だったのです。")
+		MSG("しかし強き光集まる所、|強き闇も生まれるもの……。")
+		MSG("その異常なまでの力場に目をつけ、|闇の底より現れた魔物がいたのです。")
+	wait(100)
+		MSG("…その魔物の名はガルシス。")
+	//MSG("かつて「神」であったソレは、|天上界を我が物にせんと反亂を起こし、")
+	//MSG("大戰に敗れ、暗黑宇宙に|幽閉されていたのです。")
+	wait(200)
+		MSG("闇の王と恐れられたガルシスは、|この地から天界に攻め入ろうとしたのです。")
+		MSG("その時、再び闇へと追いやった聖劍こそが、|その劍「#c2ドラゴンスレイヤー#c*」なのです。")
+		MSG("遺跡に現れた巨大クモは|恐らくガルシスの放った尖兵。")
+		MSG("唯一ガルシスを封じえる聖劍を|隱そうとしたのでしょう。")
+	wait(200)
+//	MSG("ガルシスは自身の靈體を現世に留めるため、|強力な魔力に守られた#c2器#c*に宿るといいます。")
+//	MSG("その魔力を一時的に封じ込めるために、|この魔法が必要なのです。")
+		MSG("劍士樣！どうか再びこの世界が闇に包まれぬよう手をお貸し下さい！")
+	SET_MOTION("elc","STAND",-1)
+	GAME_FLAG_ON(3302)
+	WAIT(30)
+
+	// フェードアウト
+	FADE_OUT(-1)
+	WAIT(128)
+	CAMERA_OFF("start")
+	CINEMA_OFF(0)
+//	LOAD_MAP("MP_0095")
+//	SHOW_CHR("door")
+
+	// 部屋變え
+//	LOAD_MAP("MP_0095")
+//	SHOW_CHR("door")
+
+	//フェードイン
+	FADE_IN(-1)
+	WAIT(60)
+	KILL_CHR("cam",0,0,-1)
+	END
+
+NEXT3:
+	CAMERA_OFF("start")
+	KILL_CHR("cam",0,0,-1)
+	END
+}
+
+RES("CLICK")
+{
+	call entry_ELC
+
+	cinema_on(0)
+	
+	set_deg_ex("elc","")
+	active_chr("elc")
+	focus_chr("elc")
+		set_name("elc","町長")
+	
+	call fi_ELC
+	wait(30)
+
+	//選擇肢を通らない話分岐
+	CHECK_GAME_FLAG(3303)
+	ON_JUMP talk_second
+	//----------------------
+	CHECK_GAME_FLAG(3300)
+	OFF_JUMP talk_first
+	//----------------------
+
+
+sel_menu:
+	sel_ex("　どういったご用でしょうか？　|#c2　　　・話す|　　　・休む|　　　・やめる",-1,4)
+	check_select(0)
+	off_jump sel1
+
+	// "話す"
+	call talk_menu
+	jump sel_menu
+
+sel1:
+	check_select(1)
+	off_jump sel2
+
+	// "休む"
+	call rest_menu
+	jump sel_menu
+
+sel2:
+		msg_ex("お氣をつけて。",-1,4)
+
+erase:
+	call fo_ELC
+	wait(30)
+
+	cinema_off(0)
+
+	call erase_ELC
+
+	end
+
+//スタートの依頼話斷っている
+talk_second:
+	sel_ex("娘をどうか、お願いします……|#c2　　　・はい|　　　・いいえ",-1,4)
+	check_select(0)
+	off_jump talk_second_2
+
+	// "はい"
+		MSG_EX("おぉ、引き受けてくださいますか。",-1,4)
+		MSG_EX("少ないですが旅の支度に|役立ててください。",-1,4)
+	GAME_FLAG_OFF(3303)
+	WAIT(30)
+	SE("SE_GETITEM")
+		SYS("#c2400Gold受け取った！")
+	GET_GOLD(400)
+	jump erase
+
+talk_second_2:
+	// "いいえ"
+		MSG_EX("そうですか・・・。",-1,4)
+		MSG_EX("いたしかたありませんな。",-1,4)
+	jump erase
+
+talk_second_end:
+
+//スタートの依頼話
+talk_first:
+		MSG_EX("このような邊境まで|ようこそお越し下さいました。",-1,4)
+		MSG_EX("實は、ぜひお願いしたい|ことがあるのです。",-1,4)
+		MSG_EX("うちの娘が姿を|消したきり戻らないのです。",-1,4)
+		MSG_EX("お願いです、娘のモモを探し出して|もらえないでしょうか。",-1,4)
+		MSG_EX("おそらく廢墟に足を|踏み入れてしまったのではないかと…。",-1,4)
+	sel_ex("どうか、お願いします……|#c2　　　・はい|　　　・いいえ",-1,4)
+	check_select(0)
+	off_jump talk_first_2
+
+	// "はい"
+		MSG_EX("おぉ、引き受けてくださいますか。",-1,4)
+		MSG_EX("少ないですが旅の支度に|役立ててください。",-1,4)
+	GAME_FLAG_ON(3300)
+	GAME_FLAG_OFF(3303)
+	WAIT(30)
+	SE("SE_GETITEM")
+		SYS("#c2４００ＧＯＬＤ受け取った！")
+	GET_GOLD(400)
+	jump erase
+
+talk_first_2:
+	// "いいえ"
+		MSG_EX("そうですか…。",-1,4)
+		MSG_EX("いたしかたありませんな。",-1,4)
+	GAME_FLAG_ON(3300)
+	GAME_FLAG_ON(3303)
+	jump erase
+
+}
+
+// "町長とお話" //////////////////////////////////////////////////
+@talk_menu
+{
+//會話２（かにグモ倒したあと）
+//	CHECK_GAME_FLAG(1)
+//	ON_JUMP TALK2
+
+//會話１（一度ダンジョンへ＠かにボス前）
+	CHECK_GAME_FLAG(3301)
+	ON_JUMP TALK1
+
+//會話０
+		MSG_EX("なぜ、娘が姿を|消してしまったのか……。",-1,4)
+		MSG_EX("胸騒ぎがするのです、|どうか探し出して下さい。",-1,4)
+	ret
+
+//會話１
+TALK1:
+		MSG_EX("娘は見つかりませんでしたか……。",-1,4)
+		MSG_EX("お願いです。娘を|探し出してやってください。",-1,4)
+		MSG_EX("どうぞ、こちらを|お持ちになってください。",-1,4)
+//	SYS("#c2「ヒールポーション」を手に入れた",-1,4)
+	GET_ITEM(210,1)
+	off_jump item_over
+		SYS("#c2「ヒールポーション」を手に入れた",-1,4)
+	GAME_FLAG_OFF(3301)
+	ret
+item_over:
+		SYS("#c2持ち物が一杯で、|「ヒールポーション」を手に入れられなかった…。",-1,4)
+	ret
+
+//會話２
+TALK2:
+		MSG_EX("よろしく頼みますぞよ。",-1,4)
+	ret
+
+}
+
+// "休息充電とセーブ" ////////////////////////////////////////////
+@rest_menu
+{
+		msg_ex("ゆっくりとお休みください。",-1,4)
+	SET_MOTION("elc","STAND",-1)
+		FADE_OUT(-1)
+		WAIT(60)
+		REFRESH("PC")
+		set_time(6,00)
+		SE("SE_INN")
+		CALL_SHOP(4)
+		WAIT(120)
+			SYS("#c2今までの冒險を記錄しました。")
+		WAIT(120)
+		FADE_IN(-1)
+		WAIT(50)
+		SE("SE_MORNING")
+		WAIT(70)
+	ret
+}

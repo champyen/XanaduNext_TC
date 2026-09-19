@@ -1,0 +1,112 @@
+
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// SE再生
+	SE("SE_WIND2")
+
+	// フローズンサラマンダー
+	put_monster("m00",320,13,0,0,0)
+	put_monster("m01",320,13,0,0,1)
+	put_monster("m02",320,13,0,0,2)
+
+	// グリフォン
+	put_monster("m03",326,13,0,0,3)
+	put_monster("m04",326,13,0,0,4)
+	put_monster("m05",326,13,0,0,5)
+	put_monster("m06",326,13,0,0,6)
+	put_monster("m07",326,13,0,0,7)
+
+	// フローズンサラマンダー
+	put_monster("m08",320,13,0,0,8)
+
+	set_rain_inf("EFC_HINOKO3",1, 45, 15,30)
+	rain(1)
+	set_raster_info( 1, 5,5, 0.0005,0.0005, 1,0, -1,-1, 0.35)
+	raster(1,1)
+
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(832)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(832)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 14,36,-3, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【200Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(200)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//手記10      使命の古文書 1216年 半神の月17日
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 299, 14,36,-3, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【使命之古文書】！",-1,0X00000200)
+
+	GET_ITEM(299, 1)
+	GAME_FLAG_ON(832)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

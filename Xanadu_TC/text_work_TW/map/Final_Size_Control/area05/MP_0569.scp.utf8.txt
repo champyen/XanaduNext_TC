@@ -1,0 +1,241 @@
+
+// ----------------------------------------------------------------------------
+// 水門１讀み替え                                                                 
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// カギ設定
+	CHECK_GAME_FLAG(1503)
+	ON_SKIP(2)
+	KAGI("d1503",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1503")
+
+	CHECK_GAME_FLAG(536)
+	OFF_JUMP NEXT
+
+	LOAD_MAP("MP_0586")
+	LOAD_HITMAP("MP_0586h")
+
+END
+
+NEXT:
+
+	// 水マップ
+	SE("SE_MIZU")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1503")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1503)
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(503)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(503)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 17,-4,0.5, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【50Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(50)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+// 石板⑫　雙魚の石板　『悲劇の名工』
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 281, 17,-4,0.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【雙魚之石板】！",-1,0X00000200)
+
+	GET_ITEM(281, 1)
+	GAME_FLAG_ON(503)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+//DEF("tbox")
+//RES("INIT")
+//{
+//	CHECK_GAME_FLAG(503)
+//	ON_JUMP next
+//
+//	// 石板⑫　雙魚の石板　『悲劇の名工』
+//	SET_TREASURE("tbox",1,281,"ITEM")
+//	END
+//
+//next:
+//	HIDE_CHR("tbox")
+//	END
+//}
+//
+//DEF("ITEM")
+//RES("CATCH")
+//{
+//	SE("SE_GETITEM")
+//	STOP_PC(0)
+//	GAME_FLAG_ON(503)
+//}
+
+
+
+
+
+DEF("tbox2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(519)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox2")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+
+ITEM:
+// ムーンストーン
+	SWITCH_ON("tbox2")
+	POP_ITEM_ICON("tbox2", 219, 17,-4,-2.5, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox2")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox2","POS")
+//	WAIT(45)
+
+	GET_ITEM(219, 1)
+	GAME_FLAG_ON(519)
+
+	SYS_EX("得到【月長石】！",-1,0X00000200)
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於特殊道具【月長石】",-1,0X00000200)
+	SYS_EX("使用【月長石】，可以#C2瞬間回到城鎮#C0。|反復使用也不會損壞。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+//	SET_COLOR("tbox2",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox2")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox2")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+//DEF("tbox2")
+//RES("INIT")
+//{
+//	CHECK_GAME_FLAG(519)
+//	ON_JUMP next
+//
+//	// ムーンストーン
+//	SET_TREASURE("tbox2",1,219,"ITEM2")
+//	END
+//
+//next:
+//	HIDE_CHR("tbox2")
+//	END
+//}
+//
+//DEF("ITEM2")
+//RES("CATCH")
+//{
+//	stop_pc(0)
+//	
+//	SE("SE_GETITEM")
+//	GAME_FLAG_ON(519)
+//
+//	sys("#C2【ムーンストーン】を手に入れた！")
+//	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+//	sys_ex("特殊アイテム【ムーンストーン】について",-1,0x00000100)
+//	sys_ex("【ムーンストーン】を使うと瞬時に街へ戻ることができます。|何度使っても壞れません。",-1,0x00000100)
+//	novel_off(0)
+//	wait(60)
+//	//----------------------------
+//
+//}
+

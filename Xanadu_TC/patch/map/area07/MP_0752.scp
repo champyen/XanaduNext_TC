@@ -1,0 +1,392 @@
+
+// ----------------------------------------------------------------------------
+// マップ初期戝態                                                              
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// 水マップ
+	SE("SE_MIZU")
+
+	//バリアを解いたかどうか
+	CHECK_GAME_FLAG(719)
+	OFF_JUMP NEXT2
+
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(718)
+	OFF_JUMP NEXT
+
+	//バリアを解いて箱もあけた
+	MOVE_VEC("box1",0,0,-1.5,1)
+	MOVE_VEC("box2",0,0,-1.5,1)
+	MOVE_VEC("box3",0,0,1.5,1)
+	MOVE_VEC("box4",0,0,1.5,1)
+	SHOW_CHR("tbox")
+	END
+
+NEXT:
+	//バリアを解いて箱はまだ
+	MOVE_VEC("box1",0,0,-1.5,1)
+	MOVE_VEC("box2",0,0,-1.5,1)
+	MOVE_VEC("box3",0,0,1.5,1)
+	MOVE_VEC("box4",0,0,1.5,1)
+	SHOW_CHR("tbox")
+	END
+
+NEXT2:	
+	//寶箱を開けたかどうか
+	CHECK_GAME_FLAG(718)
+	OFF_JUMP NEXT3
+
+	//バリアを解いないけど箱はあけた
+	KILL_CHR("tbox",0,0,1)
+	END
+
+NEXT3:	
+
+	HIDE_CHR("tbox")
+
+}
+
+
+// ----------------------------------------------------------------------------
+// ボタンが押されているかチェック                                              
+// ----------------------------------------------------------------------------
+
+
+DEF("sw1")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(718)
+	ON_JUMP NEXT3
+	
+	CHECK_SWITCH("sw1")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 乘ってすぐ降りたときの「消える」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(719)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(719)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 降りてすぐ乘ったときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	ON_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,6,"box1")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(719)
+
+NEXT3:
+}
+
+DEF("sw2")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(718)
+	ON_JUMP NEXT3
+
+	CHECK_SWITCH("sw2")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 乘ってすぐ降りたときの「消える」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(719)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(719)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 降りてすぐ乘ったときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	ON_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(2,6,"box2")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(719)
+
+NEXT3:
+}
+
+DEF("sw3")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(718)
+	ON_JUMP NEXT3
+
+	CHECK_SWITCH("sw3")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 乘ってすぐ降りたときの「消える」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(719)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(719)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,0,"box4")
+	OFF_JUMP NEXT3
+
+	// 降りてすぐ乘ったときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	ON_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(0,0,"box3")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(719)
+
+NEXT3:
+}
+
+DEF("sw4")
+RES("FOOT")
+{
+	CHECK_GAME_FLAG(718)
+	ON_JUMP NEXT3
+
+	CHECK_SWITCH("sw4")
+	ON_JUMP NEXT2
+
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+
+	// 乘ってすぐ降りたときの「消える」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	OFF_JUMP NEXT3
+
+	// 再びバリアが現れる。
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	HIDE_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+	GAME_FLAG_OFF(719)
+	END
+
+
+NEXT2:
+
+	//バリア
+	CHECK_GAME_FLAG(719)
+	ON_JUMP NEXT3
+
+	// 他のスイッチも押されているか
+	CHECK_GRID(0,6,"box1")
+	OFF_JUMP NEXT3
+	CHECK_GRID(0,0,"box3")
+	OFF_JUMP NEXT3
+	CHECK_GRID(2,6,"box2")
+	OFF_JUMP NEXT3
+
+	// 降りてすぐ乘ったときの「あらわれる」發生迴避よう
+//	CHECK_GAME_FLAG(719)
+//	ON_JUMP NEXT3
+
+	// バリアが消える處理
+	STOP_PC(0)
+	SE("SE_STOPPER")
+	CINEMA_ON(0)
+	FOCUS_CHR("null")
+	EFC("EFC_ADD_TREASURE",1.25,0.25,0)
+	SHOW_CHR("tbox")
+	WAIT(90)
+	CINEMA_OFF(0)
+
+	CHECK_GRID(2,0,"box4")
+	OFF_SKIP(1)
+	GAME_FLAG_ON(719)
+
+NEXT3:
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(718)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+//ういんぐどぶーつ
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 179, 1.25,0.25,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	GET_ITEM(179, 1)
+	GAME_FLAG_ON(718)
+
+	SYS_EX("得到【羽翼之靴】！",-1,0X00000200)
+	//----------------------------
+	novel_on(0,1)
+	wait(60)
+	SYS_EX("關於特殊道具【羽翼之靴】",-1,0X00000200)
+	SYS_EX("裝備上【羽翼之靴】，|可以在#C2空中行走#C0一段時間。",-1,0X00000200)
+	SYS_EX("在裝備著它的戝態下跳起來即可。",-1,0X00000200)
+	novel_off(0)
+	wait(60)
+	//----------------------------
+
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}

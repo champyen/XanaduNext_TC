@@ -1,0 +1,137 @@
+
+// ----------------------------------------------------------------------------
+// 初期狀態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+	// サラマンダー
+	put_monster("m00",387,12,0,0,0)
+//	put_monster("m01",387,12,0,0,1)
+	put_monster("m02",387,12,0,0,2)
+//	put_monster("m03",387,12,0,0,3)
+	put_monster("m04",387,12,0,0,4)
+//	put_monster("m05",387,12,0,0,5)
+
+
+//set_rain_inf("EFC_HINOKO",1, 45, 15,45)
+//rain(1)
+//set_raster_info( 1, 120,180, 0.0025,0.0025, 1,0, -1,-1, 0.35)
+//raster(1,1)
+
+	// カギ設定
+	CHECK_GAME_FLAG(1817)
+	ON_SKIP(2)
+	KAGI("d1817",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1817")
+
+	// カギ設定
+	CHECK_GAME_FLAG(1816)
+	ON_SKIP(2)
+	KAGI("d1816",1)
+	SKIP(1)
+	INIT_SWITCH_ON("d1816")
+
+}
+
+
+// ----------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------
+DEF("tbox")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(829)
+	OFF_JUMP NEXT
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("tbox")
+NEXT:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("tbox")
+
+	CHECK_GAME_FLAG(829)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 225, 6,8,0, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【300Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(300)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+//石板⑨　人馬の石板
+	SWITCH_ON("tbox")
+	POP_ITEM_ICON("tbox", 278, 6,8,0, 1,80,0)
+	WAIT(140)
+
+	CHECK_MAX_ITEM(0)
+	ON_JUMP EXIT
+
+	DEL_ITEM_ICON("tbox")
+	ATTACH_EFC("EFC_99ITEM_GET","tbox","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【人馬之石板】！",-1,0X00000200)
+
+	GET_ITEM(278, 1)
+	GAME_FLAG_ON(829)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("tbox",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+	SE("SE_ERROR")
+	DEL_ITEM_ICON("tbox")
+	SYS_EX("拿不動更多行李了。",-1,0X00000200)
+	SWITCH_OFF("tbox")
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+}
+
+
+// ----------------------------------------------------------------------------
+// カギ開け
+// ----------------------------------------------------------------------------
+
+DEF("d1817")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1817)
+}
+
+DEF("d1816")
+RES("KAGI")
+{
+	GAME_FLAG_ON(1816)
+}
+
+

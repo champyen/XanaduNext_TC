@@ -1,0 +1,180 @@
+// ----------------------------------------------------------------------------
+// 初期戝態                                                                    
+// ----------------------------------------------------------------------------
+
+DEF("MAP")
+
+RES("INIT")
+{
+	// シネスコ時スペクタクルズON
+	ROOM_FLAG_ON(254)
+
+
+	// 水マップ
+	SE("SE_MIZU")
+
+}
+
+// ----------------------------------------------------------------------------
+// 寶箱                                                                        
+// ----------------------------------------------------------------------------
+
+DEF("box1")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(583)
+	OFF_JUMP next
+	CHECK_ROOM_MEMO(255)
+	OFF_JUMP NEXT
+// ★05/06/21:イベントアイテム箱→開けっぱで殘す。
+//	HIDE_CHR("tbox")
+	INIT_SWITCH_ON("box1")
+NEXT:
+}
+
+// ----------------------------------------------------------------------------
+// カード入手演出
+@draw_card
+{
+	novel_on(0,1)
+	wait(60)
+
+	SE("SE_GDN_CRD")
+	ENTRY_IMG(6,"card\god05",0)
+	SET_IMG( 0, 236,160, 6,  0,  0,168,224, 0, 0x00ffffff, 0xff000000, 1,1, 0, 1,1)
+	IMG_ON(0)
+	MOVE_IMG(0, 0,-32, 60, 1)
+	COLOR_IMG(0, 0xffffffff, 0xff000000, 60, 1)
+	wait(60)
+	wait(90)
+//	COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+//	wait(60)
+//	IMG_OFF(0)
+
+//	novel_off(0)
+//	wait(60)
+
+	ret
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box1")
+
+	CHECK_GAME_FLAG(583)
+	OFF_JUMP ITEM
+
+//２回目以降は、お金
+GOLD:
+	SWITCH_ON("box1")
+	POP_ITEM_ICON("box1", 225, 2,-1,1, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("box1")
+	ATTACH_EFC("EFC_99ITEM_GET","box1","POS")
+//	WAIT(45)
+
+	SYS_EX("得到【150Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(150)
+	ROOM_MEMO_ON(255)
+//	SET_COLOR("box1",0x00000000,45,1)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+ITEM:
+	SWITCH_ON("box1")
+	POP_ITEM_ICON("box1", 105, 2,-1,1, 1,80,0)
+	WAIT(140)
+
+//	call draw_card
+
+	DEL_ITEM_ICON("box1")
+	ATTACH_EFC("EFC_99CARD_GET","box1","POS")
+
+WAIT(60)
+
+	GET_SPIRIT(5)
+	GAME_FLAG_ON(583)
+	ROOM_MEMO_ON(255)
+	SYS_EX("得到守護精靈峠片【矮人】！",-1,0X00000200)
+
+call draw_card
+
+	//----------------------------
+//	novel_on(0,1)
+//	wait(60)
+COLOR_IMG(0, 0xb0ffffff, 0xff000000, 30, 1)
+wait(30)
+	SYS_EX("關於守護精靈【矮人】",-1,0X00000200)
+	SYS_EX("這是使道具出現率上升的守護精靈。|殱滅怪物時掉落的寶箱中|有道具出現的機率升高。",-1,0X00000200)
+	novel_off(0)
+COLOR_IMG(0, 0x00ffffff, 0xff000000, 60, 1)
+	wait(60)
+IMG_OFF(0)
+	//----------------------------
+	
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+
+	END
+}
+
+//DEF("ITEM1")
+//RES("CATCH")
+//{
+//	SE("SE_GETITEM")
+//	GAME_FLAG_ON(583)
+//}
+
+
+
+
+
+
+
+
+
+DEF("box2")
+RES("INIT")
+{
+	CHECK_GAME_FLAG(584)
+	OFF_JUMP next
+
+//	SET_TREASURE("box2",0,500,"ITEM2")
+	INIT_SWITCH_ON("box2")
+
+next:
+}
+
+RES("CLICK")
+{
+	CINEMA_ON(0)
+	STOP_PC(0)
+	FOCUS_CHR("box2")
+
+	CHECK_GAME_FLAG(584)
+	OFF_JUMP ITEM
+
+ITEM:
+// 500ゴールド
+	SWITCH_ON("box2")
+	POP_ITEM_ICON("box2", 225, -2,-1,1, 1,80,0)
+	WAIT(140)
+
+	DEL_ITEM_ICON("box2")
+	ATTACH_EFC("EFC_99ITEM_GET","box2","POS")
+
+	SYS_EX("得到【500Ｇ】！",-1,0X00000200)
+
+	GET_GOLD(500)
+	GAME_FLAG_ON(584)
+	FOCUS_CHR("PC")
+	CINEMA_OFF(0)
+	END
+
+EXIT:
+}
