@@ -6,14 +6,17 @@
 ## 版本
 
 - TW patch v0.2（與 `Xanadu_TC/xanadu_tc.md` 記錄的流程同步）
-- 適用遊戲版本：GOG 版 Xanadu Next（exe 由 GOG 版打補丁）
-  Steam 版 1.0.2.0 需要以 Steam exe 為底重新打 `Text/exe内文本` 补丁，
-  本包 exe 不適用 Steam 版。
+- `GOG.exe/`：GOG 版主程序＋設定工具（繁體）。
+- `Steam.exe/`：Steam 版 1.0.2.0 主程序＋設定工具
+ （`Xanadu_TC/tools/port_steam_exe.py` 由 GOG 流程移植）。
 
 ## 安裝說明
 
-將本目錄內所有文件覆蓋至遊戲根目錄（`XANADU.exe` 所在目錄）。
-如需恢復，請使用 GOG Galaxy 的驗證/修復功能。
+將 `DATA/` 覆蓋至遊戲根目錄，再依遊戲版本二選一：
+- GOG 版：將 `GOG.exe/` 內兩個 exe 覆蓋至遊戲根目錄。
+- Steam 版（1.0.2.0）：將 `Steam.exe/` 內兩個 exe 覆蓋至遊戲根目錄
+  （以 Steam 版 exe 為底移植，文本內容與 GOG 版相同）。
+如需恢復，請使用 GOG Galaxy / Steam 的驗證/修復功能。
 
 ## 內容
 

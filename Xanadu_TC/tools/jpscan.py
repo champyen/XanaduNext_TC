@@ -34,7 +34,7 @@ def build_map():
 
 def load_sub():
     """UNENCODABLE TW char -> SUB slot char (TW dict, col3)."""
-    work = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
+    work = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
     sub = {}
     for line in open(os.path.join(work, "Missing_Kanji_Dictionary_TW.txt"),
                      encoding="utf-8"):

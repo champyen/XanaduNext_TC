@@ -15,9 +15,9 @@ if (sys.stdout.encoding or '').lower().replace('-', '') != 'utf8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
                                   errors='backslashreplace')
 
-SIMP_DICT = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\Tool"
+SIMP_DICT = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Tool"
              r"\Missing_Kanji_Dictionary.txt")
-TW_DICT = (r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
+TW_DICT = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
            r"\Missing_Kanji_Dictionary_TW.txt")
 
 _rev = None

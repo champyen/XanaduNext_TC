@@ -17,12 +17,12 @@ from g32 import decode_to_rgba  # noqa: E402
 from g32enc import encode_rgba  # noqa: E402
 from PIL import Image, ImageDraw, ImageFont, ImageFilter  # noqa: E402
 
-CN_ARC = r"C:\Users\champ\workspace\Xanadu_Steam_CN\MainData\DATA\picture\picture.arc"
-CN_DIR = r"C:\Users\champ\workspace\Xanadu_Steam_CN\MainData\DATA\picture\picture.dir"
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch\picture"
+CN_ARC = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\MainData\DATA\picture\picture.arc"
+CN_DIR = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\MainData\DATA\picture\picture.dir"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\picture"
 QADIR = r"C:\Users\champ\AppData\Local\Temp\opencode\pic6q"
 KAI = r"C:\Windows\Fonts\kaiu.ttf"
-SERIF = r"C:\Users\champ\workspace\Xanadu_TC\sources\fonts\NotoSerifTC.ttf"
+SERIF = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\sources\fonts\NotoSerifTC.ttf"
 
 # name: (kind, lines|subs, bands)
 # title bands: [(title_rows, refl_rows)], glossary: [sub_row_centers]

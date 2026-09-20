@@ -7,13 +7,13 @@ import sys
 if (sys.stdout.encoding or '').lower().replace('-', '') != 'utf8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
                                   errors='backslashreplace')
-sys.path.insert(0, r"C:\Users\champ\workspace\Xanadu_TC\tools")
+sys.path.insert(0, r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\tools")
 from jpnorm import normalize  # noqa: E402
 from opencc import OpenCC  # noqa: E402
 
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch\xanadu_cfg.exe"
-GOGP = r"C:\Users\champ\workspace\XanaduNext\xanadu_cfg.exe"
-CNP = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\GOG\GOG_xanadu_cfg.exe")
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\xanadu_cfg.exe"
+GOGP = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\xanadu_cfg.exe"
+CNP = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\GOG\GOG_xanadu_cfg.exe")
 
 blob = open(PATCH, "rb").read()
 gog = open(GOGP, "rb").read()

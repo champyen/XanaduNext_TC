@@ -183,7 +183,7 @@ RES("CLICK")
 	SET_NAME("0230","媽媽")
 	SET_MOTION("0230","ATTACK1",-1)
 
-	MSG("媽媽好香啊～蟹宍味噌～")
+	MSG("媽媽好香啊～蟹肉味噌～")
 	SET_MOTION("0230","STAND",-1)
 END
 }

@@ -29,7 +29,7 @@ from fontmap import idx_of_char  # noqa: E402
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 from fontTools.ttLib import TTFont  # noqa: E402
 
-WORK = r"C:\Users\champ\workspace\Xanadu_TC"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC"
 SRC = os.path.join(WORK, "sources")
 PATCH = os.path.join(WORK, "patch")
 DICT = os.path.join(WORK, "text_work_TW", "Missing_Kanji_Dictionary_TW.txt")

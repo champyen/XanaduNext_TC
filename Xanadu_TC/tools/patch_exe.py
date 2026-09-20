@@ -19,9 +19,9 @@ if (sys.stdout.encoding or "").lower().replace("-", "") != "utf8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                                   errors="backslashreplace")
 
-GOG_DIR = r"C:\Users\champ\workspace\XanaduNext"
-CN_GOG = r"C:\Users\champ\workspace\Xanadu_Steam_CN\GOG"
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch"
+GOG_DIR = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext"
+CN_GOG = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\GOG"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch"
 
 JOBS = [("XANADU.exe", "GOG_XANADU.exe", "XANADU.exe", None),
         # xanadu_cfg: the hunk stage only establishes the CN baseline

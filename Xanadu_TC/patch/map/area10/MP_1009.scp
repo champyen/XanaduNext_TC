@@ -282,7 +282,7 @@ RES("PROG1")
 
 	MSG_EX("#S3#C0熏沃夏克「喝姶冐冐！！」",-1,2)
 
-//技撃つ
+//技潘つ
 	SET_MOTION("Dvorak","EMPTY20",5)
 	wait(10)
 	stop_env_se("SE_EVENT_02",1000)

@@ -78,7 +78,7 @@ Check head behavior
 Character details
 顯示角色詳細
 Display attack range
-顯示攻撃有效距離
+顯示攻擊有效距離
 Display MAP
 顯示MAP
 Display EFC
@@ -237,7 +237,7 @@ Paid %d gold.
 %s: %s → %s takes %d damage.
 %s的%s→%s受到了%d點的傷害.
 Attack
-攻撃
+攻擊
 Trap! → %s took %d damage.
 命中!→%s受到了%d點的傷害
 was defeated.
@@ -247,7 +247,7 @@ has fainted...
 %s %s → %s dodges!attacks
 %s的%s→%sＭＩＳＳ!
 attacks
-攻撃
+攻擊
 
 %s split into %d!
 %s分離為%d個!
@@ -339,11 +339,11 @@ SKILL - %s
 None
 無
 ATTACK - %d
-攻撃力 - %d
+攻擊力 - %d
 ATTACK - %d + %d
-攻撃力 - %d + %d
+攻擊力 - %d + %d
 ATTACK - ATTACK
-攻撃力 - 攻撃力
+攻擊力 - 攻擊力
 One-handed weapon
 單手武器
 Two-handed weapon
@@ -564,11 +564,11 @@ Castle Strangerock - Central
 奇岩城　中央處
 
 Strength attribute.Affects physical attack power.
-表示肌宍力量。
-主要影響物理攻撃力。
+表示肌肉力量。
+主要影響物理攻擊力。
 Intelligence attribute.Affects magic power.
 表示知識。
-主要影響魔法攻撃力。
+主要影響魔法攻擊力。
 Reflex attribute.Affects hit accuracy and evasion rate.
 表示反射神經。
 主要影響命中率和迴避率。
@@ -640,9 +640,9 @@ These are spent to use a selected skill or spell.
 選擇中技能/魔法的使用次數,各技能上限不同。
 
 Strength attribute.Affects physical attack power.
-表示肌宍力量。主要影響物理攻撃力。
+表示肌肉力量。主要影響物理攻擊力。
 Intelligence attribute.Affects magic power.
-表示知識。主要影響魔法攻撃力。
+表示知識。主要影響魔法攻擊力。
 Reflex attribute.Affects hit accuracy and evasion rate.
 表示反射神經。主要影響命中率和迴避率。
 Constitution attribute.Affects physical defense and vitality.
@@ -651,7 +651,7 @@ Mind attribute. Affects magic resistance.
 表示精神力。主要影響魔法防禦力。
 
 Physical attack strength.
-表示綜合物理攻撃力。
+表示綜合物理攻擊力。
 Magical attack power.
 表示魔法的威力。
 Physical attack resistance
@@ -659,9 +659,9 @@ Physical attack resistance
 Magical attack resistance.
 表示對魔法的抗性。
 Accuracy of physical attacks.
-表示武器攻撃的命中機率。
+表示武器攻擊的命中機率。
 Ability to evade physical attacks.
-表示對物理攻撃的迴避機率。
+表示對物理攻擊的迴避機率。
 Current level of the Guardian dwelling within.
 表示現在附身的精靈的等級。
 Amount of experience shared with the Guardian dwelling within.
@@ -832,43 +832,43 @@ Lines ④ (Time of purchase)
 技能魔法説明 英文含換行
 Thrust（以下均保留第一個英文） 
 Thrust
-刺撃.
+刺擊.
 A piercing strike that knocks enemies down. 
-使用尖鋭的刺撃，可以使敵人倒地。
+使用尖鋭的刺擊，可以使敵人倒地。
 Bash
 吹飛
 A powerful blow that knocks enemies off balance.
-用力一撃將對手吹飛。
+用力一擊將對手吹飛。
 Sweep Attack
 Knockback
 橫斬
 A flashing strike that mows down foes in front of you.
-使用一閃，對前方的敵人進行橫向的斬撃。
+使用一閃，對前方的敵人進行橫向的斬擊。
 Cyclone Attack
 Cyclone
-迴旋攻撃
+迴旋攻擊
 An intense whirlwind that sends nearby enemies flying.
 卷起激烈的旋風，將周圍的敵人弾飛。
 Battle Cry
 戰歌
 A powerful shout that raises attack power for a set time.
-發出雄壯的呼喊，在一定時間內提高攻撃力。
+發出雄壯的呼喊，在一定時間內提高攻擊力。
 Charge
 突進
 A rushing move that propels you forward,hitting anything along the way.
-能使用可以連鎖攻撃的衝撞。
+能使用可以連鎖攻擊的衝撞。
 Power Thrust
 強突
 A stronger version of the [Thrust] skill. Hits repeatedly.
-突刺的強化版，連續多段攻撃。
+突刺的強化版，連續多段攻擊。
 Force Blast
 劍氣
 A radiating blast of energy that sends nearby enemies flying.
-放射大範圍劍氣，攻撃周圍全部敵人。
+放射大範圍劍氣，攻擊周圍全部敵人。
 Dragon slayer
 屠龍斬
 A mighty blow that strikes down evil.
-發出可以斬殺邪龍的強力攻撃。
+發出可以斬殺邪龍的強力攻擊。
 Fire Weapon
 Searing Blade
 火焰之劍
@@ -881,14 +881,14 @@ Imbues the weapon with ice.
 給武器附加冰結屬性。
 Lightning Weapon
 Jolting Blade
-雷撃之劍
+雷擊之劍
 Imbues the weapon with electricity.
 給武器附加雷屬性。
 Concentration
 Focus
 集中
 Increases the damage of critical hits.
-會心一撃的威力上升。
+會心一擊的威力上升。
 Great Strength
 Strong Arm
 豪腕
@@ -921,16 +921,16 @@ Drastically increases the gold obtained from enemies.
 Sneak Attack
 背刺
 Deals even greater damage when attacking an enemy from behind.
-從敵人背後攻撃的時候傷害更高。
+從敵人背後攻擊的時候傷害更高。
 Interception
 Intercept
-迎撃
+迎擊
 A fixed chance to counter an enemy's attack.
-將敵人的物理攻撃以一定機率反弾回去。
+將敵人的物理攻擊以一定機率反弾回去。
 Shield Mastery
 熟練之盾
 Increases the chance for an enemy attack to be blocked with a shield.
-用盾成功防禦敵人攻撃的機率上升。
+用盾成功防禦敵人攻擊的機率上升。
 One-Hand Wield
 One-Handed
 單手裝備
@@ -944,17 +944,17 @@ A fixed chance to survive a mortal blow with some HP.
 Berserk
 兇暴化
 Increases attack power at the cost of defense.
-以減少防禦力為代價提高攻撃力。
+以減少防禦力為代價提高攻擊力。
 Defensive Stance
 Providence
 防禦之勢
 Increases defense at the cost of attack power.
-以降低攻撃力為代價提高防禦力。
+以降低攻擊力為代價提高防禦力。
 Blood Rage
 Blood Fury
 血之激憤
 As HP decreases, attack power increases.
-HP越低，攻撃力越高。
+HP越低，攻擊力越高。
 Fast Move
 Veda's Gift
 疾跑
@@ -962,9 +962,9 @@ Increases movement speed.
 移動速度上升。
 Rapid Attack
 Rapidfire
-高速攻撃
+高速攻擊
 Increases attack speed.
-攻撃速度上升。
+攻擊速度上升。
 Insight
 看破
 View enemy stats.
@@ -1005,7 +1005,7 @@ Frost Bell
 Frost
 霜凍術
 Shoots a massive chunk of ice that shatters into frozen shards on impact.
-放出冷氣塊，在撃中點產生冰柱。
+放出冷氣塊，在擊中點產生冰柱。
 Avalanche
 Freezing
 強凍術
@@ -1015,7 +1015,7 @@ Blitz Arrow
 Thunder
 雷箭術
 Fires a bolt of thunder.
-向前方施放電撃。
+向前方施放電擊。
 Lightning
 Blitz
 雷鳴術
@@ -1025,7 +1025,7 @@ Toal Hammer
 Lightning
 閃電術
 Calls forth a storm cloud that strikes nearby enemies.
-召喚閃電，打撃周圍的敵人。
+召喚閃電，打擊周圍的敵人。
 Heal
 回復術(敵)
 Recover magic expressly for the Goblin Healer.

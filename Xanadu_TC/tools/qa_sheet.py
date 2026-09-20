@@ -2,12 +2,12 @@
 import os
 import sys
 
-sys.path.insert(0, r"C:\Users\champ\workspace\Xanadu_TC\tools")
+sys.path.insert(0, r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\tools")
 from fontmap import idx_of_char
 from PIL import Image, ImageDraw
 
-WORK = r"C:\Users\champ\workspace\Xanadu_TC"
-CN = r"C:\Users\champ\workspace\Xanadu_Steam_CN"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC"
+CN = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN"
 
 tw_raw = open(os.path.join(WORK, "patch", "font_scn_TW.raw"), "rb").read()
 gog = open(os.path.join(WORK, "sources", "font_scn.raw"), "rb").read()

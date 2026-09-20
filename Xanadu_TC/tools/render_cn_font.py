@@ -14,10 +14,10 @@ from fontmap import idx_of_char  # noqa: E402
 from chr_compress import compress_container_multi, validate_container  # noqa: E402
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
-WORK = r"C:\Users\champ\workspace\Xanadu_TC"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC"
 SRC = os.path.join(WORK, "sources")
 OUT = os.path.join(WORK, "patch", "cn_test")
-SIMP_DICT = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\Tool"
+SIMP_DICT = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Tool"
              r"\Missing_Kanji_Dictionary.txt")
 FONTDIR = os.path.join(SRC, "fonts")
 

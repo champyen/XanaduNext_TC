@@ -302,6 +302,23 @@ Run `python3 Xanadu_TC/tools/verify_1_3.py` — 23 checks, must be ALL PASS.
   a `continue` that skipped the index advance = infinite loop (0-byte
   log + timeout is the signature — check loop-variable progress first,
   not speed).
+- Round 12 (user: Steam exes + split GOG.exe/Steam.exe dirs): no pristine
+  Steam English base exists, so `tools/port_steam_exe.py` ports GOG-flow
+  conversions by CN-byte search (same translation => same bytes) with
+  fit gates. Lessons, each proven by a real corruption:
+  * collect ALL writes first, claim biggest-first — short strings
+    (窗口模式) otherwise clobber longer ones they sit inside (无边框…).
+  * exact spans need a CJK text-likeness gate — 1-2 byte version drift
+    otherwise rewrites thousands of binary spots (killed 5 imports:
+    GetDeviceCaps/FreeLibrary/IsDebuggerPresent/LoadLibraryA/
+    VirtualAlloc/EnableWindow via single 0x62->0xDB inside the names).
+  * refuse writes below the first section AND inside import structures
+    (descriptors, ILT/IAT, hint/name ranges via pefile) AND inside
+    executable sections — a 2-byte span matched e_lfanew and killed
+    the binary outright.
+  * verify imports per-DLL (134/134) not just parseability; audit terms
+    with readable contexts (残鉄転続 hits were binary soup, not text).
+  Steam TW exes validate (5/202, 4/134), sizes byte-identical.
 - Round 7 (user: 視窗模式 shows ?敦耀宅 on their machine; 手柄->手把):
   GBK(視窗模式) decoded as Big5 == reported garbage, PROVING their
   system codepage is 950 — so KEEP_TW selections are now encoded BIG5

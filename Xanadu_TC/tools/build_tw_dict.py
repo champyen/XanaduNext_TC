@@ -16,9 +16,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fontmap import idx_of_char
 
-SIMP_DICT = r"C:\Users\champ\workspace\Xanadu_Steam_CN\Tool\Missing_Kanji_Dictionary.txt"
-WORK = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
-OUT = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW\Missing_Kanji_Dictionary_TW.txt"
+SIMP_DICT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Tool\Missing_Kanji_Dictionary.txt"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
+OUT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW\Missing_Kanji_Dictionary_TW.txt"
 
 
 def main():

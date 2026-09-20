@@ -13,7 +13,7 @@ if (sys.stdout.encoding or "").lower().replace("-", "") != "utf8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                                   errors="backslashreplace")
 
-WS = r"C:\Users\champ\workspace"
+WS = r"C:\Users\champ\workspace\XanaduNext_workspace"
 GOG = os.path.join(WS, "XanaduNext")
 TW = os.path.join(WS, "Xanadu_TW")
 PATCH = os.path.join(WS, "Xanadu_TC", "patch")

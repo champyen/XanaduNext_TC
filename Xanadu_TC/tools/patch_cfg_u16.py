@@ -20,7 +20,7 @@ if (sys.stdout.encoding or '').lower().replace('-', '') != 'utf8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
                                   errors='backslashreplace')
 
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch\xanadu_cfg.exe"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\xanadu_cfg.exe"
 
 # UTF-16LE units: printable ASCII, CJK, kana, CJK punct, fullwidth forms
 # (pattern built by build_pat() below to avoid escaping pain)
@@ -64,9 +64,9 @@ def main():
     # diff-driven: only touch strings the Simplified author changed
     # (GOG-vs-CN byte diffs). Untouched regions stay byte-identical, so
     # binary lookalikes elsewhere can never be corrupted.
-    gog = open(r"C:\Users\champ\workspace\XanaduNext\xanadu_cfg.exe",
+    gog = open(r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\xanadu_cfg.exe",
                "rb").read()
-    cn0 = open(r"C:\Users\champ\workspace\Xanadu_Steam_CN\GOG\GOG_xanadu_cfg.exe",
+    cn0 = open(r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\GOG\GOG_xanadu_cfg.exe",
                "rb").read()
     diff = set(i for i, (x, y) in enumerate(zip(gog, cn0)) if x != y)
     pat = build_pat()

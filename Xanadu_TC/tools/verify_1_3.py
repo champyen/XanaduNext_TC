@@ -12,7 +12,7 @@ from chr_decompress import decompress  # noqa: E402
 from g32 import decode_to_rgba as _g32dec  # noqa: E402
 from render_tw_font import SLOT_SPECIAL as _SLOT_SPECIAL  # noqa: E402
 
-WS = r"C:\Users\champ\workspace"
+WS = r"C:\Users\champ\workspace\XanaduNext_workspace"
 TC = os.path.join(WS, "Xanadu_TC")
 TW = os.path.join(TC, "text_work_TW")
 SRC = os.path.join(TC, "sources")

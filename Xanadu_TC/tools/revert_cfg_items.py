@@ -20,8 +20,8 @@ if (sys.stdout.encoding or "").lower().replace("-", "") != "utf8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                                   errors="backslashreplace")
 
-GOGP = r"C:\Users\champ\workspace\XanaduNext\xanadu_cfg.exe"
-TWP = r"C:\Users\champ\workspace\Xanadu_TC\patch\xanadu_cfg.exe"
+GOGP = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\xanadu_cfg.exe"
+TWP = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\xanadu_cfg.exe"
 
 # Runs whose TW text is in this set are KEPT in Traditional — but encoded
 # as BIG5, not GBK: GBK bytes decode as garbage on Traditional-codepage

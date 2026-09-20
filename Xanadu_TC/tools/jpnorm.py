@@ -9,6 +9,7 @@ patch_cfg_u16, build paths (never by font rendering).
 # phrases first, then single chars (apply() handles order)
 JPNORM = [
     ("弁当", "便當"),
+    ("戰斗", "戰鬥"),
     ("霊", "靈"),
     ("剣", "劍"),
     ("徳", "德"),
@@ -262,6 +263,8 @@ JPNORM = [
     ("殴", "毆"),
     ("遅", "遲"),
     ("閑", "閒"),
+    ("撃", "擊"),
+    ("宍", "肉"),
 ]
 
 # manual translation corrections (CN-source errors, not conversion issues)

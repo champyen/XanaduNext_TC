@@ -282,7 +282,7 @@ def validate_container(blob, raw):
 
 def self_test():
     for name in ("font_scn.dat", "font_sys.dat"):
-        p = r"C:\Users\champ\workspace\Xanadu_TC\sources\\" + name
+        p = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\sources\\" + name
         comp = open(p, "rb").read()
         raw = decompress(comp)
         rt = decompress(compress_container(raw))

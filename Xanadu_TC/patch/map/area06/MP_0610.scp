@@ -332,11 +332,11 @@ RES("HIT")
 	STOP_PC(0)
 	CHECK_PC_EQUIP( 0, -1)
 	ON_JUMP HAND
-	// 武器攻撃モーション
+	// 武器攻潘モーション
 	SET_MOTION("PC","EMPTY12",0)
 	JUMP NEXT
 HAND:
-	// 素手攻撃モーション（ガントレット）
+	// 素手攻潘モーション（ガントレット）
 	SET_MOTION("PC","EMPTY12",0)
 NEXT:
 	SET_MOTION("machine","WALK1")

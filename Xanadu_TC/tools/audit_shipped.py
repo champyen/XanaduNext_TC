@@ -24,10 +24,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from jpnorm import JPNORM  # noqa: E402
 from tblpatch import compute_groups, _decode_span  # noqa: E402
 
-TW = r"C:\Users\champ\workspace\Xanadu_TW"
-TC = r"C:\Users\champ\workspace\Xanadu_TC"
-GOGP = r"C:\Users\champ\workspace\XanaduNext\XANADU.exe"
-CNP = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\GOG\GOG_XANADU.exe")
+TW = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TW"
+TC = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC"
+GOGP = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\XANADU.exe"
+CNP = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\GOG\GOG_XANADU.exe")
 
 # SUB slot char -> TW char (translate slot bytes to intended meaning)
 SUB2TW = {}

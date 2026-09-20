@@ -59,7 +59,7 @@ RES("HIT")
 	CINEMA_ON(0)
 	pick_item(191)
 
-	//直撃のフラッシュピカーーーッ！
+	//直擊のフラッシュピカーーーッ！
 	FADE_OUT_EX(10, 0, "0xffffffff", 1)
 	WAIT(10)
 	FADE_IN_EX(5, 0, "0xffffffff", 1)

@@ -12,9 +12,9 @@ if (sys.stdout.encoding or '').lower().replace('-', '') != 'utf8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
                                   errors='backslashreplace')
 
-CN_TEXT = r"C:\Users\champ\workspace\Xanadu_Steam_CN\Text"
-WORK = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch"
+CN_TEXT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Text"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch"
 DICT = os.path.join(WORK, "Missing_Kanji_Dictionary_TW.txt")
 
 JOBS = [("equip/guardian.tbl", "equip/guardian.tbl")]

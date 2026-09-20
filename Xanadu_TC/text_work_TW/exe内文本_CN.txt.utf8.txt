@@ -76,7 +76,7 @@ Check head behavior
 Character details
 顯示角色詳細
 Display attack range
-顯示攻撃有效距離
+顯示攻擊有效距離
 Display MAP
 顯示MAP
 Display EFC

@@ -17,13 +17,13 @@ if (sys.stdout.encoding or '').lower().replace('-', '') != 'utf8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
                                   errors='backslashreplace')
 
-GOG = r"C:\Users\champ\workspace\XanaduNext\DATA\chr\Object.tbl"
-CN = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\MainData\DATA\chr"
+GOG = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\DATA\chr\Object.tbl"
+CN = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\MainData\DATA\chr"
       r"\Object.tbl")
-WORK = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch\chr\Object.tbl"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\chr\Object.tbl"
 DICT = os.path.join(WORK, "Missing_Kanji_Dictionary_TW.txt")
-SIMP_DICT = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\Tool"
+SIMP_DICT = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Tool"
              r"\Missing_Kanji_Dictionary.txt")
 
 

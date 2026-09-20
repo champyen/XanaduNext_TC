@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fontmap import idx_of_char  # noqa: E402
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
-WORK = r"C:\Users\champ\workspace\Xanadu_TC"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC"
 TW_RAW = os.path.join(WORK, "patch", "font_scn_TW.raw")
 DICT = os.path.join(WORK, "text_work_TW", "Missing_Kanji_Dictionary_TW.txt")
 OUT = r"C:\Users\champ\AppData\Local\Temp\opencode\proof_scn_p{}.png"

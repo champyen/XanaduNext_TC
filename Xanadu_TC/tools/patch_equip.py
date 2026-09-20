@@ -20,13 +20,13 @@ def arc_get(arc, dirp, want):
     raise KeyError(want)
 
 
-GOG_ARC = r"C:\Users\champ\workspace\XanaduNext\DATA\equip\equip.arc"
-GOG_DIR = r"C:\Users\champ\workspace\XanaduNext\DATA\equip\equip.dir"
-CN_ARC = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\MainData\DATA\equip"
+GOG_ARC = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\DATA\equip\equip.arc"
+GOG_DIR = r"C:\Users\champ\workspace\XanaduNext_workspace\XanaduNext\DATA\equip\equip.dir"
+CN_ARC = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\MainData\DATA\equip"
           r"\equip.arc")
-CN_DIR = (r"C:\Users\champ\workspace\Xanadu_Steam_CN\MainData\DATA\equip"
+CN_DIR = (r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\MainData\DATA\equip"
           r"\equip.dir")
-OUT = r"C:\Users\champ\workspace\Xanadu_TC\patch\equip\EQUIP.tbl"
+OUT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\equip\EQUIP.tbl"
 
 
 def main():

@@ -13,9 +13,9 @@ Writes UTF-8 working copies to text_work_TW/ mirroring the source tree.
 import os
 import sys
 
-SRC = r"C:\Users\champ\workspace\Xanadu_Steam_CN\Text"
-DST = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
-DICT = r"C:\Users\champ\workspace\Xanadu_Steam_CN\Tool\Missing_Kanji_Dictionary.txt"
+SRC = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Text"
+DST = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
+DICT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Tool\Missing_Kanji_Dictionary.txt"
 
 # (Taiwan terms + JP-form normalization live in jpnorm.normalize,
 # applied after OpenCC in main().)

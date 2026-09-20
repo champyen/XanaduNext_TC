@@ -20,10 +20,10 @@ if sys.stdout.encoding and sys.stdout.encoding.lower().replace("-", "") != "utf8
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
                                   errors="backslashreplace")
 
-CN_TEXT = r"C:\Users\champ\workspace\Xanadu_Steam_CN\Text"
+CN_TEXT = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_Steam_CN\Text"
 MAP_SRC = os.path.join(CN_TEXT, "map", "Final_Size_Control")
-WORK = r"C:\Users\champ\workspace\Xanadu_TC\text_work_TW"
-PATCH = r"C:\Users\champ\workspace\Xanadu_TC\patch\map"
+WORK = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\text_work_TW"
+PATCH = r"C:\Users\champ\workspace\XanaduNext_workspace\Xanadu_TC\patch\map"
 DICT = os.path.join(WORK, "Missing_Kanji_Dictionary_TW.txt")
 
 CANON = re.compile(r"^MP_([0-9a-f]{4})\.scp$", re.IGNORECASE)
